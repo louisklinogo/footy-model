@@ -1,0 +1,28 @@
+{
+  "name": "footy-model",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "auth": "node src/auth.js",
+    "scrape": "node src/scraper.js",
+    "rank": "node src/rank.js",
+    "standardize": "node src/standardize.js",
+    "load-data": "node src/load_data.js",
+    "discover:fixtures": "node scrapers/discover_upcoming_ids.js",
+    "discover:slug-smoke": "node scrapers/check_league_slugs.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axios": "^1.13.5",
+    "crawlee": "^3.16.0",
+    "csv-parse": "^6.1.0",
+    "csv-stringify": "^6.6.0",
+    "dotenv": "^17.3.1",
+    "playwright": "^1.58.2"
+  }
+}

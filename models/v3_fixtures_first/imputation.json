@@ -1,0 +1,218 @@
+{
+  "global_medians": {
+    "home_sample_size": 0.0,
+    "home_rolling_xg": 0.0,
+    "home_rolling_xg_against": 0.0,
+    "home_rolling_xgot": 0.0,
+    "home_rolling_xgot_against": 0.0,
+    "home_rolling_xa": 0.0,
+    "home_rolling_xa_against": 0.0,
+    "home_rolling_box_touches": 0.0,
+    "home_rolling_box_touches_against": 0.0,
+    "home_rolling_big_chances": 0.0,
+    "home_rolling_big_chances_against": 0.0,
+    "home_rolling_crosses": 0.0,
+    "home_rolling_crosses_against": 0.0,
+    "home_rolling_sot": 0.0,
+    "home_rolling_sot_against": 0.0,
+    "home_rolling_corners": 0.0,
+    "home_rolling_corners_against": 0.0,
+    "home_rolling_goals_prevented": 0.0,
+    "home_rolling_goals_prevented_against": 0.0,
+    "away_sample_size": 0.0,
+    "away_rolling_xg": 0.0,
+    "away_rolling_xg_against": 0.0,
+    "away_rolling_xgot": 0.0,
+    "away_rolling_xgot_against": 0.0,
+    "away_rolling_xa": 0.0,
+    "away_rolling_xa_against": 0.0,
+    "away_rolling_box_touches": 0.0,
+    "away_rolling_box_touches_against": 0.0,
+    "away_rolling_big_chances": 0.0,
+    "away_rolling_big_chances_against": 0.0,
+    "away_rolling_crosses": 0.0,
+    "away_rolling_crosses_against": 0.0,
+    "away_rolling_sot": 0.0,
+    "away_rolling_sot_against": 0.0,
+    "away_rolling_corners": 0.0,
+    "away_rolling_corners_against": 0.0,
+    "away_rolling_goals_prevented": 0.0,
+    "away_rolling_goals_prevented_against": 0.0,
+    "odds_over_15": 0.0,
+    "odds_under_15": 0.0,
+    "odds_over_25": 0.0,
+    "odds_under_25": 0.0,
+    "xg_net_diff": 0.0,
+    "xgot_net_diff": 0.0,
+    "xa_net_diff": 0.0,
+    "corners_net_diff": 0.0,
+    "sample_size_diff": 0.0,
+    "implied_over15": 0.0,
+    "implied_under15": 0.0,
+    "implied_over25": 0.0,
+    "implied_under25": 0.0,
+    "odds_gap_15": 0.0,
+    "odds_gap_25": 0.0
+  },
+  "league_medians": {
+    "home_sample_size": {
+      "E0": 0.0
+    },
+    "home_rolling_xg": {
+      "E0": 0.0
+    },
+    "home_rolling_xg_against": {
+      "E0": 0.0
+    },
+    "home_rolling_xgot": {
+      "E0": 0.0
+    },
+    "home_rolling_xgot_against": {
+      "E0": 0.0
+    },
+    "home_rolling_xa": {
+      "E0": 0.0
+    },
+    "home_rolling_xa_against": {
+      "E0": 0.0
+    },
+    "home_rolling_box_touches": {
+      "E0": 0.0
+    },
+    "home_rolling_box_touches_against": {
+      "E0": 0.0
+    },
+    "home_rolling_big_chances": {
+      "E0": 0.0
+    },
+    "home_rolling_big_chances_against": {
+      "E0": 0.0
+    },
+    "home_rolling_crosses": {
+      "E0": 0.0
+    },
+    "home_rolling_crosses_against": {
+      "E0": 0.0
+    },
+    "home_rolling_sot": {
+      "E0": 0.0
+    },
+    "home_rolling_sot_against": {
+      "E0": 0.0
+    },
+    "home_rolling_corners": {
+      "E0": 0.0
+    },
+    "home_rolling_corners_against": {
+      "E0": 0.0
+    },
+    "home_rolling_goals_prevented": {
+      "E0": 0.0
+    },
+    "home_rolling_goals_prevented_against": {
+      "E0": 0.0
+    },
+    "away_sample_size": {
+      "E0": 0.0
+    },
+    "away_rolling_xg": {
+      "E0": 0.0
+    },
+    "away_rolling_xg_against": {
+      "E0": 0.0
+    },
+    "away_rolling_xgot": {
+      "E0": 0.0
+    },
+    "away_rolling_xgot_against": {
+      "E0": 0.0
+    },
+    "away_rolling_xa": {
+      "E0": 0.0
+    },
+    "away_rolling_xa_against": {
+      "E0": 0.0
+    },
+    "away_rolling_box_touches": {
+      "E0": 0.0
+    },
+    "away_rolling_box_touches_against": {
+      "E0": 0.0
+    },
+    "away_rolling_big_chances": {
+      "E0": 0.0
+    },
+    "away_rolling_big_chances_against": {
+      "E0": 0.0
+    },
+    "away_rolling_crosses": {
+      "E0": 0.0
+    },
+    "away_rolling_crosses_against": {
+      "E0": 0.0
+    },
+    "away_rolling_sot": {
+      "E0": 0.0
+    },
+    "away_rolling_sot_against": {
+      "E0": 0.0
+    },
+    "away_rolling_corners": {
+      "E0": 0.0
+    },
+    "away_rolling_corners_against": {
+      "E0": 0.0
+    },
+    "away_rolling_goals_prevented": {
+      "E0": 0.0
+    },
+    "away_rolling_goals_prevented_against": {
+      "E0": 0.0
+    },
+    "odds_over_15": {
+      "E0": 0.0
+    },
+    "odds_under_15": {
+      "E0": 0.0
+    },
+    "odds_over_25": {
+      "E0": 0.0
+    },
+    "odds_under_25": {
+      "E0": 0.0
+    },
+    "xg_net_diff": {
+      "E0": 0.0
+    },
+    "xgot_net_diff": {
+      "E0": 0.0
+    },
+    "xa_net_diff": {
+      "E0": 0.0
+    },
+    "corners_net_diff": {
+      "E0": 0.0
+    },
+    "sample_size_diff": {
+      "E0": 0.0
+    },
+    "implied_over15": {
+      "E0": 0.0
+    },
+    "implied_under15": {
+      "E0": 0.0
+    },
+    "implied_over25": {
+      "E0": 0.0
+    },
+    "implied_under25": {
+      "E0": 0.0
+    },
+    "odds_gap_15": {
+      "E0": 0.0
+    },
+    "odds_gap_25": {
+      "E0": 0.0
+    }
+  }
+}

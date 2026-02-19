@@ -1,0 +1,47 @@
+[
+  {
+    "market": "o15",
+    "train_n": 1,
+    "test_n": 1,
+    "base_rate_train": 1.0,
+    "base_rate_test": 1.0,
+    "auc": null,
+    "accuracy": 1.0,
+    "brier": 0.0,
+    "calibrated": false,
+    "train_start_utc": "2025-08-15 18:00:00+00:00",
+    "train_end_utc": "2025-08-15 18:00:00+00:00",
+    "test_start_utc": "2025-08-16 13:00:00+00:00",
+    "test_end_utc": "2025-08-16 13:00:00+00:00"
+  },
+  {
+    "market": "o25",
+    "train_n": 1,
+    "test_n": 1,
+    "base_rate_train": 1.0,
+    "base_rate_test": 1.0,
+    "auc": null,
+    "accuracy": 1.0,
+    "brier": 0.0,
+    "calibrated": false,
+    "train_start_utc": "2025-08-15 18:00:00+00:00",
+    "train_end_utc": "2025-08-15 18:00:00+00:00",
+    "test_start_utc": "2025-08-16 13:00:00+00:00",
+    "test_end_utc": "2025-08-16 13:00:00+00:00"
+  },
+  {
+    "market": "c85",
+    "train_n": 1,
+    "test_n": 1,
+    "base_rate_train": 1.0,
+    "base_rate_test": 1.0,
+    "auc": null,
+    "accuracy": 1.0,
+    "brier": 0.0,
+    "calibrated": false,
+    "train_start_utc": "2025-08-15 18:00:00+00:00",
+    "train_end_utc": "2025-08-15 18:00:00+00:00",
+    "test_start_utc": "2025-08-16 13:00:00+00:00",
+    "test_end_utc": "2025-08-16 13:00:00+00:00"
+  }
+]

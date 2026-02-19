@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fixture Detail</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="container">
+    <p><a href="/predictions">Back to predictions</a></p>
+    <h1>{{ fixture.home_team }} vs {{ fixture.away_team }}</h1>
+    <p>
+      {{ fixture.match_datetime_utc }} UTC | {{ fixture.league_code or "-" }} | status: {{ fixture.status }}
+    </p>
+
+    <h2>Model predictions ({{ model_name }}/{{ model_version }})</h2>
+    {% if market_rows %}
+      <table>
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>P(Model)</th>
+            <th>Metadata</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in market_rows %}
+            <tr>
+              <td>{{ row.market }}</td>
+              <td>{{ "%.3f"|format(row.p_model) if row.p_model is not none else "-" }}</td>
+              <td><code>{{ row.metadata if row.metadata is not none else "-" }}</code></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="empty">No predictions saved for this fixture and model version.</p>
+    {% endif %}
+  </main>
+</body>
+</html>
