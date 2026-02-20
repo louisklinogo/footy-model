@@ -223,7 +223,7 @@ node scrapers/premium_enricher_v4.js T1 --ids-root data/v1/ids --out-root data/v
 python scrapers/ingest_premium_fixtures_v1.py --league T1
 ```
 
-18) Greece Super League (`G1`)
+18) Greece Super League (`G1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_G1.json`

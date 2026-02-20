@@ -36,6 +36,24 @@ pnpm-debug.log*
 # Playwright / browser profiles and crawler storage (local artifacts)
 user_data/
 storage/
+storage.bak*/
+
+# Data and Artifacts
+data/
+archive/
+
+# Models
+models/**/*.pkl
+models/legacy/
+models/v2_clean/
+models/v3_fixtures_first/
+
+# Agent/Tooling
+.sisyphus/
+.agent/
+.agents/
+.geminiignore
+skills/
 
 # Editor / OS
 .idea/
