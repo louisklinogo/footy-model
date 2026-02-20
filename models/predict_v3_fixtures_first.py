@@ -257,6 +257,18 @@ def main() -> None:
     features, imputation, models = load_artifacts()
 
     fixtures = fetch_candidate_fixtures(days=args.days, league=args.league, limit=args.limit)
+    fixtures["match_datetime_utc"] = pd.to_datetime(fixtures["match_datetime_utc"], utc=True, errors="coerce")
+    fixtures["odds_snapshot_time_utc"] = pd.to_datetime(fixtures["odds_snapshot_time_utc"], utc=True, errors="coerce")
+    post_kickoff_mask = (
+        fixtures["match_datetime_utc"].notna()
+        & fixtures["odds_snapshot_time_utc"].notna()
+        & (fixtures["odds_snapshot_time_utc"] > fixtures["match_datetime_utc"])
+    )
+    if post_kickoff_mask.any():
+        bad_rows = int(post_kickoff_mask.sum())
+        raise RuntimeError(
+            f"Detected {bad_rows} fixture(s) with post-kickoff odds snapshots; re-ingest odds or fix snapshot timing semantics."
+        )
     if fixtures.empty:
         print("No eligible fixtures found.")
         return

@@ -33,11 +33,21 @@ def main():
     else:
         league_codes = load_enabled_leagues()
 
+    total = len(league_codes)
     results = []
-    for code in league_codes:
-        results.append(ingest_league(code, limit=None))
+    failed = []
+    for i, code in enumerate(league_codes, 1):
+        try:
+            result = ingest_league(code, limit=None)
+            results.append(result)
+            print(f"[{i}/{total}] {code}: {result['inserted']} fixtures ingested, {result['skipped']} skipped")
+        except Exception as exc:
+            failed.append(code)
+            print(f"[{i}/{total}] {code}: FAILED - {exc}", file=sys.stderr)
 
-    print(json.dumps(results, indent=2))
+    print(f"\nDone: {len(results)}/{total} leagues succeeded.")
+    if failed:
+        print(f"Failed: {failed}", file=sys.stderr)
 
 
 if __name__ == "__main__":

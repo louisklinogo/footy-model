@@ -1,64 +1,74 @@
 # footy-model
 
-Canonical workspace for Flashscore-first migration and clean pre-match modeling.
+Fixtures-first, DB-first football modeling pipeline keyed by `fixtures.flashscore_id`.
 
-## Current status
+## Quickstart
 
-- Active clean model stack (leakage-free) is in `models/v2_clean`.
-- Daily prediction output is `data/daily/predictions_v2_clean.csv`.
-- Legacy scripts still exist but are not the primary production path.
+1. Install JS dependencies (Bun only):
 
-## Single entrypoints (active)
+```bash
+bun install
+```
 
-Use `daily_pipeline.py` for the full cycle:
+2. Set `DATABASE_URL` in your environment.
+3. Bootstrap the v1 schema:
+
+```bash
+python scrapers/bootstrap_fixtures_schema_v1.py
+```
+
+4. Run the daily fixtures-first pipeline:
+
+```bash
+python daily_pipeline.py --mode incremental --days 3
+```
+
+## Main entrypoints
+
+Daily pipeline (discover -> ingest -> enrich -> ingest premium -> readiness -> snapshots -> predict -> export -> score):
 
 ```bash
 python daily_pipeline.py
 ```
 
-Or use `models/run_v2_clean.py` for specific steps:
+Frequent tick job (settle -> predict -> score for due fixtures):
 
 ```bash
-python models/run_v2_clean.py train
-python models/run_v2_clean.py predict
-python models/run_v2_clean.py eval-day --date 2026-02-17
+python jobs/tick_due_fixtures_v1.py --leagues E0
 ```
 
-Under the hood:
+Web app (prediction browser):
 
-- Train/evaluate holdout: `models/train_v2_prematch_clean.py`
-- Predict upcoming: `models/predict_v2_prematch_clean.py`
-- Evaluate one prediction day: `models/evaluate_prediction_day.py`
+```bash
+python -m uvicorn webapp.main:app --reload
+```
 
-## Directory intent
+Model scripts:
 
-- `models/`: training, prediction, and evaluation code.
-- `models/v2_clean/`: model artifacts and metrics for the clean stack.
-- `models/legacy/`: archived scripts and models from previous iterations.
-- `scrapers/`: Flashscore enrichment and ingestion tooling.
-- `scrapers/legacy/`: archived scrapers and experimental scripts.
-- `data/`: outputs (daily predictions, slips, mappings, training exports).
-- `daily/`: operational daily notes/work products.
+```bash
+python models/train_v3_fixtures_first.py
+python models/predict_v3_fixtures_first.py --league E0 --days 3
+python models/export_predictions_v3_fixtures_first.py --league E0 --days 3
+python models/score_predictions_v3_fixtures_first.py --league E0
+```
 
-## Legacy vs active scripts
+## Output paths (`data/v1/`)
 
-Active now:
+- Discovery fixtures: `data/v1/discovery/discovery_fixtures_<league>.json`
+- Fixture ID lists: `data/v1/ids/match_ids_<league>.json`, `data/v1/ids/upcoming_ids_<league>.json`
+- Tick ID batches: `data/v1/ids/tick/<timestamp>/`
+- Discovery reports: `data/v1/reports/seed_summary_<mode>.json`
+- Premium match payloads: `data/v1/premium/<league>/<flashscore_id>.json`
+- Daily prediction export CSV: `data/v1/daily/predictions_v3_fixtures_first.csv`
 
-- `models/train_v2_prematch_clean.py`
-- `models/predict_v2_prematch_clean.py`
-- `models/evaluate_prediction_day.py`
-- `models/run_v2_clean.py`
+## Odds as-of semantics and leakage guards
 
-Legacy/research (keep, but do not use as default production path):
+- Train and predict both use odds snapshots with as-of semantics: latest snapshot where `snapshot_time_utc <= match_datetime_utc`.
+- `models/train_v3_fixtures_first.py` has a hard guard: if any row has post-kickoff odds (`odds_snapshot_time_utc > match_datetime_utc`), training aborts.
+- `models/predict_v3_fixtures_first.py` has the same hard guard and aborts if post-kickoff odds are detected.
 
-- `models/train_multioutput.py`
-- `models/predict_upcoming.py`
-- `models/extract_features.py`
-- `models/extract_features_v3.py`
-- `models/train_v3_hierarchy.py`
+## Testing
 
-## Next cleanup steps
-
-1. Add one data contract doc for each table (`matches`, `matches_premium`, `upcoming_fixtures`).
-2. Add one daily pipeline command (scrape -> ingest -> predict -> score).
-3. Monitor daily pipeline performance.
+```bash
+pytest -q
+```

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import TypedDict
 
-from psycopg2.extras import Json
+from psycopg2.extras import Json, execute_values
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
@@ -345,6 +345,135 @@ def update_fixture_status_if_terminal(cur, fixture_id: int, terminal_status: str
     return int(cur.rowcount or 0)
 
 
+_STATS_KEYS: list[tuple[str, str]] = [
+    ("h_xg", "Expected goals (xG)"),
+    ("a_xg", "Expected goals (xG)"),
+    ("h_xgot", "xG on target (xGOT)"),
+    ("a_xgot", "xG on target (xGOT)"),
+    ("h_xa", "Expected assists (xA)"),
+    ("a_xa", "Expected assists (xA)"),
+    ("h_big_chances", "Big chances"),
+    ("a_big_chances", "Big chances"),
+    ("h_possession", "Ball possession"),
+    ("a_possession", "Ball possession"),
+    ("h_box_touches", "Touches in opposition box"),
+    ("a_box_touches", "Touches in opposition box"),
+    ("h_crosses", "Crosses"),
+    ("a_crosses", "Crosses"),
+    ("h_blocked_shots", "Blocked shots"),
+    ("a_blocked_shots", "Blocked shots"),
+    ("h_through_passes", "Accurate through passes"),
+    ("a_through_passes", "Accurate through passes"),
+    ("h_sot", "Shots on target"),
+    ("a_sot", "Shots on target"),
+    ("h_shots_inside_box", "Shots inside the box"),
+    ("a_shots_inside_box", "Shots inside the box"),
+    ("h_corners", "Corner kicks"),
+    ("a_corners", "Corner kicks"),
+    ("h_goals_prevented", "Goals prevented"),
+    ("a_goals_prevented", "Goals prevented"),
+    ("h_tackles_pct", "Tackles"),
+    ("a_tackles_pct", "Tackles"),
+    ("h_interceptions", "Interceptions"),
+    ("a_interceptions", "Interceptions"),
+    ("h_errors_lead_to_shot", "Errors leading to shot"),
+    ("a_errors_lead_to_shot", "Errors leading to shot"),
+]
+
+
+def _build_stats_row(
+    fixture_id: int, entry: dict[str, object],
+) -> tuple[object, ...]:
+    stats_raw = entry.get("stats")
+    stats = stats_raw if isinstance(stats_raw, dict) else {}
+    h_raw = stats.get("home")
+    h = h_raw if isinstance(h_raw, dict) else {}
+    a_raw = stats.get("away")
+    a = a_raw if isinstance(a_raw, dict) else {}
+
+    vals: list[object] = [fixture_id]
+    for col_name, stat_label in _STATS_KEYS:
+        side = h if col_name.startswith("h_") else a
+        vals.append(parse_val(side.get(stat_label)))
+
+    fidelity_inputs = [vals[1], vals[2], vals[3], vals[4]]  # h_xg, a_xg, h_xgot, a_xgot
+    fidelity_score = sum(1 for x in fidelity_inputs if x is not None) / 4.0
+    vals.append(fidelity_score)
+    vals.append(Json(entry))
+    return tuple(vals)
+
+
+_STATS_INSERT_COLS = (
+    "fixture_id, "
+    + ", ".join(col for col, _ in _STATS_KEYS)
+    + ", fidelity_score, raw_json, ingested_at"
+)
+_STATS_UPDATE_SET = ", ".join(
+    [f"{col} = EXCLUDED.{col}" for col, _ in _STATS_KEYS]
+    + ["fidelity_score = EXCLUDED.fidelity_score", "raw_json = EXCLUDED.raw_json", "ingested_at = EXCLUDED.ingested_at"]
+)
+_STATS_UPSERT_SQL = f"""
+    INSERT INTO fixture_stats_premium ({_STATS_INSERT_COLS})
+    VALUES %s
+    ON CONFLICT (fixture_id) DO UPDATE SET {_STATS_UPDATE_SET}
+"""
+_STATS_TEMPLATE = "(" + ", ".join(["%s"] * (len(_STATS_KEYS) + 3)) + ", NOW())"
+
+
+def _build_odds_row(
+    fixture_id: int,
+    entry: dict[str, object],
+    snapshot_time_iso: str,
+    snapshot_type: str,
+) -> tuple[object, ...]:
+    odds_raw = entry.get("odds")
+    odds = odds_raw if isinstance(odds_raw, dict) else {}
+    ou_raw = odds.get("ou")
+    ou = ou_raw if isinstance(ou_raw, dict) else {}
+    ah_raw = odds.get("ah")
+    ah = ah_raw if isinstance(ah_raw, dict) else {}
+    return (fixture_id, snapshot_time_iso, snapshot_type, Json(ou), Json(ah))
+
+
+_ODDS_UPSERT_SQL = """
+    INSERT INTO fixture_odds_snapshots (
+        fixture_id, snapshot_time_utc, snapshot_type, ou_json, ah_json
+    ) VALUES %s
+    ON CONFLICT (fixture_id, snapshot_time_utc, snapshot_type) DO UPDATE SET
+        ou_json = EXCLUDED.ou_json,
+        ah_json = EXCLUDED.ah_json
+"""
+
+
+def _build_result_row(
+    fixture_id: int,
+    terminal_result: dict[str, object],
+    settled_at_utc_iso: str | None,
+) -> tuple[object, ...]:
+    return (
+        fixture_id,
+        terminal_result.get("home_goals"),
+        terminal_result.get("away_goals"),
+        terminal_result["result_status"],
+        settled_at_utc_iso,
+    )
+
+
+_RESULTS_UPSERT_SQL = """
+    INSERT INTO fixture_results (
+        fixture_id, home_goals, away_goals, result_status,
+        result_source, settled_at
+    ) VALUES %s
+    ON CONFLICT (fixture_id) DO UPDATE SET
+        home_goals = EXCLUDED.home_goals,
+        away_goals = EXCLUDED.away_goals,
+        result_status = EXCLUDED.result_status,
+        result_source = EXCLUDED.result_source,
+        settled_at = EXCLUDED.settled_at
+"""
+_RESULTS_TEMPLATE = "(%s, %s, %s, %s, 'flashscore', COALESCE(%s::timestamptz, NOW()))"
+
+
 def ingest_league(league_code: str, limit: int | None):
     premium_root = resolve_premium_dir()
     league_dir = premium_root / league_code
@@ -355,72 +484,135 @@ def ingest_league(league_code: str, limit: int | None):
     if limit is not None:
         files = files[:limit]
 
+    # ── Phase 1: Read all JSONs into memory ──────────────────────────
+    entries: list[tuple[Path, str, dict[str, object]]] = []
+    skipped_bad_json = 0
+    for p in files:
+        try:
+            entry = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            skipped_bad_json += 1
+            continue
+        fs_id = str(entry.get("id") or p.stem).strip()
+        if not fs_id:
+            skipped_bad_json += 1
+            continue
+        entries.append((p, fs_id, entry))
+
+    if not entries:
+        return {
+            "league_code": league_code,
+            "premium_root": str(premium_root),
+            "files": len(files),
+            "stats_upserts": 0,
+            "odds_upserts": 0,
+            "results_upserts": 0,
+            "fixture_status_updates": 0,
+            "skipped_missing_fixture": len(files) - skipped_bad_json,
+            "skipped_bad_json": skipped_bad_json,
+        }
+
     stats_upserts = 0
     odds_upserts = 0
     results_upserts = 0
     fixture_status_updates = 0
     skipped_missing_fixture = 0
-    skipped_bad_json = 0
 
     conn = connect_db()
     try:
         with conn:
             with conn.cursor() as cur:
-                for p in files:
-                    try:
-                        entry = json.loads(p.read_text(encoding="utf-8"))
-                    except Exception:
-                        skipped_bad_json += 1
-                        continue
+                # ── Phase 2: Batch-fetch fixture info ────────────────
+                all_fs_ids = [fs_id for _, fs_id, _ in entries]
+                cur.execute(
+                    """
+                    SELECT flashscore_id, fixture_id, status, match_datetime_utc
+                    FROM fixtures
+                    WHERE flashscore_id = ANY(%s)
+                    """,
+                    (all_fs_ids,),
+                )
+                fixture_map: dict[str, FixtureInfo] = {}
+                for row in cur.fetchall():
+                    fs_id_val, fid, status_raw, match_dt_raw = row
+                    fixture_map[str(fs_id_val)] = {
+                        "fixture_id": int(fid),
+                        "status": status_raw if isinstance(status_raw, str) else None,
+                        "match_datetime_utc": match_dt_raw if isinstance(match_dt_raw, datetime) else None,
+                    }
 
-                    fs_id = str(entry.get("id") or p.stem).strip()
-                    if not fs_id:
-                        skipped_bad_json += 1
-                        continue
+                # ── Phase 3: Build batch rows ────────────────────────
+                stats_rows: list[tuple[object, ...]] = []
+                odds_rows: list[tuple[object, ...]] = []
+                result_rows: list[tuple[object, ...]] = []
+                status_updates: list[tuple[str, int]] = []
 
-                    fixture = get_fixture_info(cur, fs_id)
+                for p, fs_id, entry in entries:
+                    fixture = fixture_map.get(fs_id)
                     if not fixture:
                         skipped_missing_fixture += 1
                         continue
 
                     fixture_id = fixture["fixture_id"]
-                    fixture_status = fixture.get("status")
-                    if not isinstance(fixture_status, str):
-                        fixture_status = None
-                    match_datetime_utc = fixture.get("match_datetime_utc")
-                    if not isinstance(match_datetime_utc, datetime):
-                        match_datetime_utc = None
+                    fixture_status = fixture["status"]
+                    match_datetime_utc = fixture["match_datetime_utc"]
                     snapshot_type = choose_snapshot_type(fixture_status, match_datetime_utc)
-                    snapshot_time_iso = file_mtime_utc_iso(p)
+                    if snapshot_type == "closing" and match_datetime_utc is not None:
+                        snapshot_time_iso = match_datetime_utc.isoformat()
+                    else:
+                        snapshot_time_iso = file_mtime_utc_iso(p)
 
-                    upsert_fixture_stats_premium(cur, fixture_id, entry)
-                    stats_upserts += 1
-
-                    upsert_fixture_odds_snapshot(cur, fixture_id, entry, snapshot_time_iso, snapshot_type)
-                    odds_upserts += 1
+                    stats_rows.append(_build_stats_row(fixture_id, entry))
+                    odds_rows.append(
+                        _build_odds_row(fixture_id, entry, snapshot_time_iso, snapshot_type)
+                    )
 
                     terminal_result = extract_terminal_result(entry)
                     if terminal_result:
-                        fixture_status_updates += update_fixture_status_if_terminal(
-                            cur,
-                            fixture_id,
-                            str(terminal_result["result_status"]),
-                        )
+                        terminal_status = str(terminal_result["result_status"])
+                        status_updates.append((terminal_status, fixture_id))
                         if (
-                            str(terminal_result["result_status"]) == "ft"
+                            terminal_status == "ft"
                             and terminal_result.get("home_goals") is not None
                             and terminal_result.get("away_goals") is not None
                         ):
                             settled_at_utc_iso = parse_settled_at_utc(
                                 terminal_result.get("scraped_at_utc")
                             )
-                            upsert_fixture_result(
-                                cur,
-                                fixture_id,
-                                terminal_result,
-                                settled_at_utc_iso,
+                            result_rows.append(
+                                _build_result_row(fixture_id, terminal_result, settled_at_utc_iso)
                             )
-                            results_upserts += 1
+
+                # ── Phase 4: Batch upserts ───────────────────────────
+                if stats_rows:
+                    execute_values(cur, _STATS_UPSERT_SQL, stats_rows, template=_STATS_TEMPLATE)
+                    stats_upserts = len(stats_rows)
+
+                if odds_rows:
+                    execute_values(
+                        cur,
+                        _ODDS_UPSERT_SQL,
+                        odds_rows,
+                        template="(%s, %s::timestamptz, %s, %s, %s)",
+                    )
+                    odds_upserts = len(odds_rows)
+
+                if result_rows:
+                    execute_values(
+                        cur, _RESULTS_UPSERT_SQL, result_rows, template=_RESULTS_TEMPLATE,
+                    )
+                    results_upserts = len(result_rows)
+
+                if status_updates:
+                    cur.executemany(
+                        """
+                        UPDATE fixtures
+                        SET status = %s, updated_at = NOW()
+                        WHERE fixture_id = %s AND status IS DISTINCT FROM %s
+                        """,
+                        [(s, fid, s) for s, fid in status_updates],
+                    )
+                    fixture_status_updates = cur.rowcount or 0
 
     finally:
         conn.close()

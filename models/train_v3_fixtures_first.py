@@ -81,6 +81,8 @@ def fetch_dataset() -> pd.DataFrame:
         {_latest_odds_expr('1.5', 'under')} AS odds_under_15,
         {_latest_odds_expr('2.5', 'over')} AS odds_over_25,
         {_latest_odds_expr('2.5', 'under')} AS odds_under_25,
+        od.snapshot_time_utc AS odds_snapshot_time_utc,
+        od.snapshot_type AS odds_snapshot_type,
         tph.sample_size AS home_sample_size,
         tph.rolling_xg AS home_rolling_xg,
         tph.rolling_xg_against AS home_rolling_xg_against,
@@ -129,7 +131,7 @@ def fetch_dataset() -> pd.DataFrame:
         ON tpa.fixture_id = f.fixture_id
        AND tpa.is_home = false
     LEFT JOIN LATERAL (
-        SELECT fos.ou_json
+        SELECT fos.ou_json, fos.snapshot_time_utc, fos.snapshot_type
         FROM fixture_odds_snapshots fos
         WHERE fos.fixture_id = f.fixture_id
           AND fos.snapshot_time_utc <= f.match_datetime_utc
@@ -312,6 +314,18 @@ def main() -> None:
     df = fetch_dataset()
     if df.empty:
         raise RuntimeError("No fixtures-first rows available for training")
+
+    df["match_datetime_utc"] = pd.to_datetime(df["match_datetime_utc"], utc=True, errors="coerce")
+    df["odds_snapshot_time_utc"] = pd.to_datetime(df["odds_snapshot_time_utc"], utc=True, errors="coerce")
+    post_kickoff_odds = (
+        df["odds_snapshot_time_utc"].notna()
+        & df["match_datetime_utc"].notna()
+        & (df["odds_snapshot_time_utc"] > df["match_datetime_utc"])
+    )
+    if post_kickoff_odds.any():
+        raise RuntimeError(
+            f"Found {int(post_kickoff_odds.sum())} rows with post-kickoff odds snapshots; refusing to train"
+        )
 
     df = add_targets_and_derived(df)
     features = feature_columns()

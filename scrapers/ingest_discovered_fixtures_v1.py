@@ -2,6 +2,7 @@ import argparse
 import json
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -10,6 +11,8 @@ if str(ROOT_DIR) not in sys.path:
 
 from db_utils import connect_db
 from pipeline_logging import create_pipeline_run, finalize_pipeline_run
+
+from psycopg2.extras import execute_values
 
 
 DISCOVERY_PATH_CANDIDATES = [
@@ -47,64 +50,13 @@ def upsert_league(cur, league_code: str, league_name: str):
     )
 
 
-def upsert_team(cur, league_code: str, team_name: str) -> int:
-    cur.execute(
-        """
-        INSERT INTO teams (team_name, league_code)
-        VALUES (%s, %s)
-        ON CONFLICT (league_code, team_name) DO UPDATE
-        SET updated_at = NOW()
-        RETURNING team_id
-        """,
-        (team_name, league_code),
-    )
-    return int(cur.fetchone()[0])
-
-
-def upsert_fixture(
-    cur,
-    flashscore_id: str,
-    league_code: str,
-    home_team_id: int,
-    away_team_id: int,
-    match_datetime_utc: str,
-    status: str,
-):
-    flashscore_url = f"https://www.flashscore.com/match/{flashscore_id}/"
-    cur.execute(
-        """
-        INSERT INTO fixtures (
-            flashscore_id,
-            league_code,
-            home_team_id,
-            away_team_id,
-            match_datetime_utc,
-            status,
-            flashscore_url
-        )
-        VALUES (%s, %s, %s, %s, %s::timestamptz, %s, %s)
-        ON CONFLICT (flashscore_id) DO UPDATE
-        SET league_code = EXCLUDED.league_code,
-            home_team_id = EXCLUDED.home_team_id,
-            away_team_id = EXCLUDED.away_team_id,
-            match_datetime_utc = EXCLUDED.match_datetime_utc,
-            status = EXCLUDED.status,
-            flashscore_url = EXCLUDED.flashscore_url,
-            updated_at = NOW()
-        """,
-        (
-            flashscore_id,
-            league_code,
-            home_team_id,
-            away_team_id,
-            match_datetime_utc,
-            status,
-            flashscore_url,
-        ),
-    )
-
-
 def ingest_league(league_code: str, limit: int | None):
+    """Batch-ingest a league's discovery fixtures into DB.
+
+    Uses execute_values for bulk upserts (~4 queries per league instead of
+    ~4 per fixture), keeping each league in a single short transaction that
+    won't time out on Neon's connection pooler.
+    """
     registry = load_registry()
     meta = registry.get(league_code)
     if not meta:
@@ -114,45 +66,98 @@ def ingest_league(league_code: str, limit: int | None):
     if limit is not None:
         rows = rows[:limit]
 
-    inserted = 0
-    skipped = 0
+    # --- Pre-process in memory: collect valid rows, unique teams, statuses ---
+    now = datetime.now(timezone.utc)
+    valid_rows: list[tuple[str, str, str, str, str]] = []
+    team_names: set[str] = set()
 
+    for r in rows:
+        fs_id = r.get("flashscore_id")
+        kickoff = r.get("kickoff_datetime_utc")
+        home = r.get("home_team")
+        away = r.get("away_team")
+        if not (fs_id and kickoff and home and away):
+            continue
+
+        # Minimal status heuristic: past -> ft, future -> scheduled.
+        status = "scheduled"
+        try:
+            dt = datetime.fromisoformat(kickoff.replace("Z", "+00:00"))
+            if dt < now:
+                status = "ft"
+        except Exception:
+            status = "scheduled"
+
+        team_names.add(home)
+        team_names.add(away)
+        valid_rows.append((fs_id, kickoff, home, away, status))
+
+    skipped = len(rows) - len(valid_rows)
+
+    # --- Single short transaction: 4 queries total ---
     conn = connect_db()
     try:
-        with conn:
-            with conn.cursor() as cur:
-                upsert_league(cur, league_code, meta.get("league_name", league_code))
+        with conn.cursor() as cur:
+            # 1. Upsert league
+            upsert_league(cur, league_code, meta.get("league_name", league_code))
 
-                for r in rows:
-                    fs_id = r.get("flashscore_id")
-                    kickoff = r.get("kickoff_datetime_utc")
-                    home = r.get("home_team")
-                    away = r.get("away_team")
-                    if not (fs_id and kickoff and home and away):
-                        skipped += 1
-                        continue
+            # 2. Batch upsert teams
+            if team_names:
+                team_tuples = [(name, league_code) for name in sorted(team_names)]
+                execute_values(
+                    cur,
+                    """
+                    INSERT INTO teams (team_name, league_code)
+                    VALUES %s
+                    ON CONFLICT (league_code, team_name) DO UPDATE
+                    SET updated_at = NOW()
+                    """,
+                    team_tuples,
+                )
 
-                    # Minimal status heuristic for seed: past -> ft, future -> scheduled.
-                    # This will be corrected later by settlement/enrichment.
-                    status = "scheduled"
-                    try:
-                        # ISO string in UTC with Z
-                        from datetime import datetime, timezone
+            # 3. Fetch team_id map
+            cur.execute(
+                "SELECT team_name, team_id FROM teams WHERE league_code = %s",
+                (league_code,),
+            )
+            team_id_map = {name: tid for name, tid in cur.fetchall()}
 
-                        dt = datetime.fromisoformat(kickoff.replace("Z", "+00:00"))
-                        if dt < datetime.now(timezone.utc):
-                            status = "ft"
-                    except Exception:
-                        status = "scheduled"
+            # 4. Batch upsert fixtures
+            if valid_rows:
+                fixture_tuples = []
+                for fs_id, kickoff, home, away, status in valid_rows:
+                    home_id = team_id_map[home]
+                    away_id = team_id_map[away]
+                    url = f"https://www.flashscore.com/match/{fs_id}/"
+                    fixture_tuples.append(
+                        (fs_id, league_code, home_id, away_id, kickoff, status, url)
+                    )
+                execute_values(
+                    cur,
+                    """
+                    INSERT INTO fixtures (
+                        flashscore_id, league_code, home_team_id, away_team_id,
+                        match_datetime_utc, status, flashscore_url
+                    )
+                    VALUES %s
+                    ON CONFLICT (flashscore_id) DO UPDATE
+                    SET league_code = EXCLUDED.league_code,
+                        home_team_id = EXCLUDED.home_team_id,
+                        away_team_id = EXCLUDED.away_team_id,
+                        match_datetime_utc = EXCLUDED.match_datetime_utc,
+                        status = EXCLUDED.status,
+                        flashscore_url = EXCLUDED.flashscore_url,
+                        updated_at = NOW()
+                    """,
+                    fixture_tuples,
+                    template="(%s, %s, %s, %s, %s::timestamptz, %s, %s)",
+                )
 
-                    home_id = upsert_team(cur, league_code, home)
-                    away_id = upsert_team(cur, league_code, away)
-                    upsert_fixture(cur, fs_id, league_code, home_id, away_id, kickoff, status)
-                    inserted += 1
+        conn.commit()
     finally:
         conn.close()
 
-    return {"league_code": league_code, "rows": len(rows), "inserted": inserted, "skipped": skipped}
+    return {"league_code": league_code, "rows": len(rows), "inserted": len(valid_rows), "skipped": skipped}
 
 
 def main():

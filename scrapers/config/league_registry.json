@@ -303,7 +303,7 @@
     "season_type": "calendar_year",
     "season_start_month": 1,
     "timezone": "Europe/Oslo",
-    "enabled": true,
+    "enabled": false,
     "results_lookback_days": 7,
     "fixtures_lookahead_days": 30
   },
