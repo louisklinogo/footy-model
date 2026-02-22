@@ -12,8 +12,8 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from db_utils import connect_db
-from pipeline_logging import create_data_quality_run, create_pipeline_run, finalize_pipeline_run
+from src.db.db_utils import connect_db
+from src.common.pipeline_logging import create_data_quality_run, create_pipeline_run, finalize_pipeline_run
 
 
 OUT_DIR = Path("data")

@@ -4,11 +4,6 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "auth": "node src/auth.js",
-    "scrape": "node src/scraper.js",
-    "rank": "node src/rank.js",
-    "standardize": "node src/standardize.js",
-    "load-data": "node src/load_data.js",
     "discover:fixtures": "node scrapers/discover_upcoming_ids.js",
     "discover:slug-smoke": "node scrapers/check_league_slugs.js",
     "test": "echo \"Error: no test specified\" && exit 1"

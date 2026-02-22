@@ -45,12 +45,12 @@ def test_smoke_minipipeline_snapshot_predict_export(db_case):
 
     db_case.conn.commit()
 
-    snapshots = run_script(["scrapers/build_team_premium_snapshots_v1.py", "--league", db_case.league_code])
+    snapshots = run_script(["src/features/build_team_premium_snapshots_v1.py", "--league", db_case.league_code])
     assert snapshots.returncode == 0, snapshots.stderr or snapshots.stdout
 
     predict = run_script(
         [
-            "models/predict_v3_fixtures_first.py",
+            "src/modeling/predict_v3_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",

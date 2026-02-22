@@ -179,7 +179,7 @@ node scrapers/premium_enricher_v4.js F2 --ids-root data/v1/ids --out-root data/v
 python scrapers/ingest_premium_fixtures_v1.py --league F2
 ```
 
-14) Netherlands Eredivisie (`N1`) [x] **left with ingest
+14) Netherlands Eredivisie (`N1`) [x] 
 
 Inputs:
 - `data/v1/ids/match_ids_N1.json`
@@ -234,7 +234,7 @@ node scrapers/premium_enricher_v4.js G1 --ids-root data/v1/ids --out-root data/v
 python scrapers/ingest_premium_fixtures_v1.py --league G1
 ```
 
-19) Austria Bundesliga (`AT1`)
+19) Austria Bundesliga (`AT1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_AT1.json`
@@ -245,7 +245,7 @@ node scrapers/premium_enricher_v4.js AT1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league AT1
 ```
 
-20) Brazil Serie A (`BR1`)
+20) Brazil Serie A (`BR1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_BR1.json`
@@ -256,7 +256,7 @@ node scrapers/premium_enricher_v4.js BR1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league BR1
 ```
 
-21) Denmark Superliga (`DK1`)
+21) Denmark Superliga (`DK1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_DK1.json`
@@ -267,7 +267,7 @@ node scrapers/premium_enricher_v4.js DK1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league DK1
 ```
 
-22) Ireland Premier Division (`IE1`)
+22) Ireland Premier Division (`IE1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_IE1.json`
@@ -278,7 +278,7 @@ node scrapers/premium_enricher_v4.js IE1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league IE1
 ```
 
-23) Japan J1 League (`JP1`)
+23) Japan J1 League (`JP1`) [] TBD
 
 Inputs:
 - `data/v1/ids/match_ids_JP1.json`
@@ -289,7 +289,7 @@ node scrapers/premium_enricher_v4.js JP1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league JP1
 ```
 
-24) Mexico Liga MX (`MX1`)
+24) Mexico Liga MX (`MX1`) [] TBD
 
 Inputs:
 - `data/v1/ids/match_ids_MX1.json`
@@ -300,7 +300,7 @@ node scrapers/premium_enricher_v4.js MX1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league MX1
 ```
 
-25) Poland Ekstraklasa (`PL1`)
+25) Poland Ekstraklasa (`PL1`) [X]
 
 Inputs:
 - `data/v1/ids/match_ids_PL1.json`
@@ -311,7 +311,7 @@ node scrapers/premium_enricher_v4.js PL1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league PL1
 ```
 
-26) Romania Liga 1 (`RO1`)
+26) Romania Liga 1 (`RO1`) [X]
 
 Inputs:
 - `data/v1/ids/match_ids_RO1.json`
@@ -322,7 +322,7 @@ node scrapers/premium_enricher_v4.js RO1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league RO1
 ```
 
-27) Russia Premier League (`RU1`)
+27) Russia Premier League (`RU1`) [X]
 
 Inputs:
 - `data/v1/ids/match_ids_RU1.json`
@@ -333,7 +333,7 @@ node scrapers/premium_enricher_v4.js RU1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league RU1
 ```
 
-28) Switzerland Super League (`CH1`)
+28) Switzerland Super League (`CH1`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_CH1.json`
@@ -344,7 +344,7 @@ node scrapers/premium_enricher_v4.js CH1 --ids-root data/v1/ids --out-root data/
 python scrapers/ingest_premium_fixtures_v1.py --league CH1
 ```
 
-29) Switzerland Challenge League (`CH2`)
+29) Switzerland Challenge League (`CH2`) [x]
 
 Inputs:
 - `data/v1/ids/match_ids_CH2.json`

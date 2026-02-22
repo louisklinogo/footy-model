@@ -2,7 +2,7 @@
 
 import pytest
 
-from scrapers.build_team_premium_snapshots_v1 import build_team_premium_snapshots
+from src.features.build_team_premium_snapshots_v1 import build_team_premium_snapshots
 from tests.conftest import days_from_now, insert_fixture, insert_league, insert_premium_stats, insert_team
 
 

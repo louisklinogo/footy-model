@@ -16,7 +16,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from db_utils import connect_db, get_database_url
+from src.db.db_utils import connect_db, get_database_url
 
 
 @dataclass

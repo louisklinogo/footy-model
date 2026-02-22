@@ -1,0 +1,225 @@
+import sys
+import argparse
+import json
+import numpy as np
+from pathlib import Path
+import pandas as pd
+import xgboost as xgb
+from scipy.optimize import minimize
+
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from src.db.db_utils import connect_db
+from src.features.build_features import build_point_in_time_features
+from src.pricing.poisson import PoissonPricer
+
+def get_training_fixture_ids(leagues: list[str] = None, limit: int = None) -> list[int]:
+    """Fetch fixtures that have finished, have results, and have generated snapshots."""
+    conn = connect_db()
+    
+    league_filter = ""
+    limit_sql = ""
+    params = []
+    
+    if leagues:
+        league_filter = "AND f.league_code = ANY(%s)"
+        params.append(leagues)
+        
+    if limit:
+        limit_sql = "LIMIT %s"
+        params.append(limit)
+        
+    query = f"""
+        SELECT DISTINCT f.fixture_id, f.match_datetime_utc
+        FROM fixtures f
+        JOIN fixture_results r ON f.fixture_id = r.fixture_id
+        JOIN team_premium_snapshots s ON f.fixture_id = s.fixture_id
+        WHERE r.home_goals IS NOT NULL 
+          AND r.away_goals IS NOT NULL
+          AND f.status = 'ft'
+          {league_filter}
+        ORDER BY f.match_datetime_utc DESC
+        {limit_sql}
+    """
+    
+    with conn.cursor() as cur:
+        cur.execute(query, params)
+        rows = cur.fetchall()
+        
+    conn.close()
+    return [r[0] for r in rows]
+
+def calibrate_dixon_coles(lambdas_h: np.ndarray, lambdas_a: np.ndarray, actual_draws: np.ndarray):
+    """
+    Finds the optimal rho for the Dixon-Coles adjustment.
+    rho adjusts for the higher-than-expected frequency of low-scoring draws (0-0, 1-1).
+    """
+    pricer = PoissonPricer()
+    
+    def objective(rho):
+        # rho is passed as a 1-element array by scipy minimize
+        rho_val = float(rho[0])
+        draw_probs = []
+        for lh, la in zip(lambdas_h, lambdas_a):
+            matrix = pricer.generate_matrix(lh, la, rho=rho_val)
+            draw_probs.append(np.sum(np.diag(matrix)))
+        
+        # Minimize the squared error between actual draw frequency and predicted draw probs
+        return (np.mean(draw_probs) - np.mean(actual_draws))**2
+
+    res = minimize(objective, x0=[-0.1], bounds=[(-0.3, 0.0)])
+    return float(res.x[0])
+
+def train_and_evaluate(
+    target_name: str,
+    X_train: pd.DataFrame, y_train: pd.Series,
+    X_eval: pd.DataFrame, y_eval: pd.Series,
+):
+    """
+    Train XGBoost using Poisson regression objective.
+    Early-stops on the eval (calibration) set.
+    """
+    params = {
+        'objective': 'count:poisson',
+        'eval_metric': 'poisson-nloglik',
+        'learning_rate': 0.03,
+        'max_depth': 4,
+        'min_child_weight': 15,
+        'subsample': 0.7,
+        'colsample_bytree': 0.7,
+        'random_state': 42
+    }
+    
+    dtrain = xgb.DMatrix(X_train, label=y_train)
+    deval = xgb.DMatrix(X_eval, label=y_eval)
+    
+    print(f"\n[Training {target_name}]")
+    print(f"  Train: {len(X_train)} rows | Eval: {len(X_eval)} rows")
+    model = xgb.train(
+        params,
+        dtrain,
+        num_boost_round=2000,
+        evals=[(dtrain, 'train'), (deval, 'eval')],
+        early_stopping_rounds=100,
+        verbose_eval=100
+    )
+    
+    # Artifact Save
+    artifacts_dir = ROOT_DIR / 'models' / 'artifacts'
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    model.save_model(artifacts_dir / f"xgb_{target_name}_v1.json")
+    
+    return model
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--leagues", type=str, default=None)
+    parser.add_argument("--limit", type=int, default=5000)
+    args = parser.parse_args()
+    
+    leagues_list = None
+    if args.leagues:
+        leagues_list = [l.strip() for l in args.leagues.split(",")]
+    
+    fixture_ids = get_training_fixture_ids(leagues=leagues_list, limit=args.limit)
+    if not fixture_ids:
+        print("No fixtures found. Exiting.")
+        return
+    
+    print(f"Building Dataset (T-60m) for {len(fixture_ids)} fixtures...")
+    df = build_point_in_time_features(fixture_ids, target_window_mins=60)
+    
+    if df.empty:
+        print("Feature dataframe is empty.")
+        return
+        
+    print(f"Raw built dataframe: {len(df)} rows")
+    # Drop rows without snapshot data (prevents training on noise)
+    df = df.dropna(subset=['h_xg', 'a_xg'])
+    print(f"After dropping missing team snapshots: {len(df)} rows")
+    
+    df = df.dropna(subset=['league_avg_xg'])
+    print(f"After dropping missing league intensity: {len(df)} rows")
+
+    # Enforce chronological order (defensive — SQL already returns ordered)
+    df = df.sort_values(['kickoff_time', 'fixture_id']).reset_index(drop=True)
+
+    # Feature subset including League Intensity anchors
+    # We MUST exclude 'league_code' and other string meta-data
+    feature_cols = [
+        c for c in df.columns 
+        if (c.startswith('h_') or c.startswith('a_') or c.startswith('league_')) 
+        and c not in ['league_code', 'fidelity_score', 'h_sample_size', 'a_sample_size']
+    ]
+    print(f"Features ({len(feature_cols)}): {feature_cols}")
+
+    # --- Chronological 3-way split: Train (70%) / Calibration (10%) / Test (20%) ---
+    n = len(df)
+    train_end = int(n * 0.70)
+    cal_end = int(n * 0.80)
+    
+    train_df = df.iloc[:train_end]
+    cal_df = df.iloc[train_end:cal_end]
+    test_df = df.iloc[cal_end:]
+    
+    print(f"\nSplit: Train={len(train_df)} | Calibration={len(cal_df)} | Test={len(test_df)}")
+    print(f"  Train period: {train_df['kickoff_time'].min()} → {train_df['kickoff_time'].max()}")
+    print(f"  Cal period:   {cal_df['kickoff_time'].min()} → {cal_df['kickoff_time'].max()}")
+    print(f"  Test period:  {test_df['kickoff_time'].min()} → {test_df['kickoff_time'].max()}")
+
+    # Train Lambdas (early-stopping on calibration set)
+    model_h = train_and_evaluate(
+        "lambda_home",
+        train_df[feature_cols], train_df['home_goals'],
+        cal_df[feature_cols], cal_df['home_goals'],
+    )
+    model_a = train_and_evaluate(
+        "lambda_away",
+        train_df[feature_cols], train_df['away_goals'],
+        cal_df[feature_cols], cal_df['away_goals'],
+    )
+
+    # --- Dixon-Coles Rho: calibrate on the CALIBRATION set (out-of-sample) ---
+    print("\n--- DIXON-COLES RHO CALIBRATION (on held-out calibration set) ---")
+    cal_preds_h = model_h.predict(xgb.DMatrix(cal_df[feature_cols])).flatten()
+    cal_preds_a = model_a.predict(xgb.DMatrix(cal_df[feature_cols])).flatten()
+    cal_actual_draws = (cal_df['home_goals'] == cal_df['away_goals']).astype(int).values.flatten()
+    
+    optimal_rho = calibrate_dixon_coles(cal_preds_h, cal_preds_a, cal_actual_draws)
+    print(f"Calibrated Dixon-Coles Rho: {optimal_rho:.4f}")
+    print(f"  Calibration draw rate: {cal_actual_draws.mean():.3f}")
+
+    # --- Final evaluation on held-out TEST set ---
+    print("\n--- TEST SET EVALUATION ---")
+    test_preds_h = model_h.predict(xgb.DMatrix(test_df[feature_cols])).flatten()
+    test_preds_a = model_a.predict(xgb.DMatrix(test_df[feature_cols])).flatten()
+    
+    pricer = PoissonPricer()
+    test_draw_probs = []
+    for lh, la in zip(test_preds_h, test_preds_a):
+        matrix = pricer.generate_matrix(lh, la, rho=optimal_rho)
+        test_draw_probs.append(np.sum(np.diag(matrix)))
+    
+    test_actual_draws = (test_df['home_goals'] == test_df['away_goals']).astype(int).values.flatten()
+    print(f"  Test draw rate (actual):    {test_actual_draws.mean():.3f}")
+    print(f"  Test draw rate (predicted): {np.mean(test_draw_probs):.3f}")
+    print(f"  Lambda Home — mean pred: {test_preds_h.mean():.3f}, actual: {test_df['home_goals'].mean():.3f}")
+    print(f"  Lambda Away — mean pred: {test_preds_a.mean():.3f}, actual: {test_df['away_goals'].mean():.3f}")
+    
+    # Save parameters
+    artifacts_dir = ROOT_DIR / 'models' / 'artifacts'
+    with open(artifacts_dir / 'calibration_params.json', 'w') as f:
+        json.dump({
+            "rho": optimal_rho, 
+            "features": feature_cols,
+            "split": {
+                "train_n": len(train_df),
+                "cal_n": len(cal_df),
+                "test_n": len(test_df),
+            },
+        }, f, indent=2)
+
+if __name__ == "__main__":
+    main()

@@ -1,6 +1,6 @@
 # pyright: reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportAttributeAccessIssue=false, reportUnusedParameter=false
 
-from scrapers.build_team_premium_snapshots_v1 import build_team_premium_snapshots
+from src.features.build_team_premium_snapshots_v1 import build_team_premium_snapshots
 from tests.conftest import (
     days_from_now,
     insert_fixture,
@@ -46,7 +46,7 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
 
     first = run_script(
         [
-            "models/predict_v3_fixtures_first.py",
+            "src/modeling/predict_v3_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",
@@ -72,7 +72,7 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
 
     second = run_script(
         [
-            "models/predict_v3_fixtures_first.py",
+            "src/modeling/predict_v3_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",

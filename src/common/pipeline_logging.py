@@ -7,6 +7,20 @@ from psycopg2.extras import Json
 from src.db.db_utils import connect_db
 
 
+MAX_MESSAGE_LEN = 500
+
+
+def _truncate_message(message: str | None) -> str | None:
+    if message is None:
+        return None
+    text = str(message).strip()
+    if not text:
+        return None
+    if len(text) <= MAX_MESSAGE_LEN:
+        return text
+    return text[: MAX_MESSAGE_LEN - 3] + "..."
+
+
 def create_pipeline_run(
     job_name: str,
     message: str | None = None,
@@ -23,11 +37,11 @@ def create_pipeline_run(
                     VALUES (%s, NOW(), 'running', %s, %s)
                     RETURNING run_id
                     """,
-                    (job_name, message, Json(details)),
+                    (job_name, _truncate_message(message), Json(details)),
                 )
                 row = cur.fetchone()
                 if row is None:
-                    raise RuntimeError("Failed to create pipeline run row")
+                    raise RuntimeError("Failed to create pipeline run")
                 return int(row[0])
     finally:
         conn.close()
@@ -56,7 +70,7 @@ def finalize_pipeline_run(
                         details_json = %s
                     WHERE run_id = %s
                     """,
-                    (status, message, Json(details), run_id),
+                    (status, _truncate_message(message), Json(details), run_id),
                 )
     finally:
         conn.close()
@@ -91,7 +105,7 @@ def create_data_quality_run(
                 )
                 row = cur.fetchone()
                 if row is None:
-                    raise RuntimeError("Failed to create data quality run row")
+                    raise RuntimeError("Failed to create data quality run")
                 return int(row[0])
     finally:
         conn.close()

@@ -33,6 +33,7 @@ Primary DB tables relied upon
 - `fixture_stats_premium` (post-match ground truth; do not use as pre-match features)
 - `fixture_odds_snapshots` (pre-match snapshots; multiple snapshot types)
 - `team_premium_snapshots` (pre-match rolling team snapshots)
+- `execution_logs` (immutable ledger of model probabilities vs bookmaker odds at exactly the `decision_window` for true CLV/EV tracking)
 
 Optional (Phase 2)
 - Lineups / absences (coverage is inconsistent; treat as optional alpha overlay)
@@ -59,7 +60,7 @@ Readiness gate references
 
 ### Core targets (foundation)
 
-- Predict expected goal intensities:
+- Predict expected goal intensities using **XGBoost / LightGBM Regressors** (We use tree-based ML over traditional Bayesian/Gaussian dynamic state-space models to better capture non-linear feature interactions):
   - `lambda_home`
   - `lambda_away`
 
@@ -70,9 +71,10 @@ Rationale: a single coherent latent state supports consistent probabilities acro
 - Score distribution: Poisson baseline with Dixon-Coles correction for low-score dependence.
 - From score distribution, derive:
   - O/U probabilities for configured totals
-  - Asian handicap probabilities for configured lines
   - BTTS
-  - 1X2 and DNB (Phase 2, requires robust 1X2 odds capture for calibration checks)
+- Advanced Market Modeling (Phase 2+):
+  - **Continuous-Time Markov Chains (CTMC)**: Simulate minute-by-minute transition states (0-0 -> 1-0) to accurately price SportyBet 1UP early-payout markets.
+  - **Monte Carlo Simulations**: Simulate the `lambda` outputs 10,000+ times to calculate probabilities for complex Asian Handicaps and correlated bets where standard calculus breaks down.
 
 ### Feature sets
 
@@ -136,7 +138,11 @@ Feature inclusion gate
 - Windowed backtests with as-of snapshots.
 - CLV + EV logging and reporting.
 
-4) Controlled pilot
+4) Web App & API Integration
+- Expose the finalized model probabilities, odds, and EV edges via a clean `src/api` layer (e.g., FastAPI).
+- The API must support querying the `execution_logs` and live predictions to strictly serve the downstream client-facing web application.
+
+5) Controlled pilot
 - Limited leagues and one market family.
 - Expand only after promotion gates pass.
 

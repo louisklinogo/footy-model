@@ -1,0 +1,30 @@
+{
+  "rho": -0.10622855108947431,
+  "features": [
+    "league_avg_xg",
+    "league_avg_goals",
+    "h_xg",
+    "h_xg_against",
+    "h_xgot",
+    "h_xa",
+    "h_box_touches",
+    "h_big_chances",
+    "h_sot",
+    "h_corners",
+    "h_rest_days",
+    "a_xg",
+    "a_xg_against",
+    "a_xgot",
+    "a_xa",
+    "a_box_touches",
+    "a_big_chances",
+    "a_sot",
+    "a_corners",
+    "a_rest_days"
+  ],
+  "split": {
+    "train_n": 3126,
+    "cal_n": 446,
+    "test_n": 894
+  }
+}

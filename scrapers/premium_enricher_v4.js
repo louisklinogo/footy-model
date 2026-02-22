@@ -8,8 +8,8 @@ const path = require('path');
  */
 
 const FS_SIGN = 'SW9D1eZo';
-const DELIM_KV = String.fromCharCode(0xf7); 
-const DELIM_ROW = String.fromCharCode(0xac); 
+const DELIM_KV = String.fromCharCode(0xf7);
+const DELIM_ROW = String.fromCharCode(0xac);
 
 function parseStats(text) {
     const stats = { home: {}, away: {} };
@@ -35,16 +35,16 @@ function extractOdds(text) {
     if (!text) return results;
     // Autopsy found pattern: [Line] \n [Over] \n [Under]
     const tokens = text.split(/\s+/).filter(t => t.length > 0 && t !== '-');
-    
+
     for (let i = 0; i < tokens.length - 2; i++) {
-        const t1 = tokens[i];   
-        const t2 = tokens[i+1]; 
-        const t3 = tokens[i+2]; 
-        
+        const t1 = tokens[i];
+        const t2 = tokens[i + 1];
+        const t3 = tokens[i + 2];
+
         // Match lines: 1.5, 8.5, -1.5, +0.75
         const isLine = t1.match(/^[+-]?\d(\.[0257]5?)?$/);
         const isOdds = t2.match(/^\d\.\d+$/) && t3.match(/^\d\.\d+$/);
-        
+
         if (isLine && isOdds) {
             if (!results[t1]) results[t1] = { over: t2, under: t3 };
         }
@@ -128,7 +128,7 @@ function parseArgs(argv) {
 async function main() {
     const { leagueCode, idsRoot, outRoot } = parseArgs(process.argv);
     const idPath = path.join(idsRoot, `match_ids_${leagueCode}.json`);
-    
+
     if (!fs.existsSync(idPath)) {
         console.error(`ID file not found: ${idPath}`);
         return;
@@ -148,7 +148,7 @@ async function main() {
         })
         .filter(Boolean);
     const remainingMatches = normalizedMatches.filter(m => !fs.existsSync(path.join(outputDir, `${m.id}.json`)));
-    
+
     if (remainingMatches.length === 0) {
         console.log(`ALL matches for ${leagueCode} already enriched in ${path.relative(process.cwd(), outputDir)}.`);
         return;
@@ -158,7 +158,7 @@ async function main() {
 
     const crawler = new PlaywrightCrawler({
         requestHandlerTimeoutSecs: 120,
-        maxConcurrency: 5, 
+        maxConcurrency: 5,
         async requestHandler({ page, request }) {
             const { id } = request.userData;
             const entry = { id, stats: {}, odds: { ou: {}, ah: {} } };
@@ -171,7 +171,7 @@ async function main() {
                     entry.result = result;
                 }
                 const baseUrl = page.url().split('?')[0];
-                
+
                 const statsRaw = await page.evaluate(async ({ mid, sign }) => {
                     const resp = await fetch(`https://global.flashscore.ninja/2/x/feed/df_st_1_${mid}`, { headers: { 'x-fsign': sign } });
                     return resp.text();

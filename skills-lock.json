@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "exa-search": {
+      "source": "benedictking/exa-search",
+      "sourceType": "github",
+      "computedHash": "9d85710558eaab16c6ab9235e9e32e23e01ed567069f7f709b13504933a44b6b"
+    },
+    "tavily-best-practices": {
+      "source": "tavily-ai/skills",
+      "sourceType": "github",
+      "computedHash": "647d625329cc9e1e914c8eedbcaa098f2400c0bfd57fb1b2453ac3bb834c515e"
+    }
+  }
+}
