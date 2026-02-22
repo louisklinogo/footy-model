@@ -19,9 +19,26 @@ if str(ROOT_DIR) not in sys.path:
 from src.db.db_utils import connect_db
 
 
-MODEL_NAME = "fixtures_first_gbm"
+MODEL_NAME = "premium_gbm"
 MODEL_VERSION = "v3"
-MARKETS = ("o15", "o25", "c85")
+MARKETS = (
+    # Totals
+    "o15", "o25", "o35", "o45", "u15", "u25",
+    # Corners
+    "c85",
+    # BTTS
+    "btts",
+    # 1X2
+    "1x2_h", "1x2_d", "1x2_a",
+    # Double Chance
+    "dc_1x", "dc_x2", "dc_12",
+    # Team Totals
+    "ho15", "ao15",
+    # Combo OR
+    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
+    # Combo AND
+    "home_and_o25", "away_and_o25",
+)
 EPS = 1e-6
 
 
@@ -89,7 +106,7 @@ def fetch_unscored_predictions(
       ON ps.prediction_id = p.prediction_id
     WHERE p.model_name = %s
       AND p.model_version = %s
-      AND p.market_code IN ('o15', 'o25', 'c85')
+      AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
       AND f.status = 'ft'
       AND f.status NOT IN ('postponed', 'cancelled', 'abandoned')
       AND ps.prediction_id IS NULL
@@ -131,18 +148,74 @@ def compute_actual(row: dict[str, object]) -> float | None:
     if home_goals is None or away_goals is None:
         return None
 
-    total_goals = int(home_goals) + int(away_goals)
+    h = int(home_goals)
+    a = int(away_goals)
+    total_goals = h + a
 
+    # === TOTALS MARKETS ===
     if market == "o15":
         return 1.0 if total_goals >= 2 else 0.0
     if market == "o25":
         return 1.0 if total_goals >= 3 else 0.0
+    if market == "o35":
+        return 1.0 if total_goals >= 4 else 0.0
+    if market == "o45":
+        return 1.0 if total_goals >= 5 else 0.0
+    if market == "u15":
+        return 1.0 if total_goals <= 1 else 0.0
+    if market == "u25":
+        return 1.0 if total_goals <= 2 else 0.0
+
+    # === CORNERS ===
     if market == "c85":
         h_corners = row.get("h_corners")
         a_corners = row.get("a_corners")
         if h_corners is None or a_corners is None:
             return None
         return 1.0 if (int(h_corners) + int(a_corners)) >= 9 else 0.0
+
+    # === BTTS ===
+    if market == "btts":
+        return 1.0 if (h > 0 and a > 0) else 0.0
+
+    # === 1X2 ===
+    if market == "1x2_h":
+        return 1.0 if h > a else 0.0
+    if market == "1x2_d":
+        return 1.0 if h == a else 0.0
+    if market == "1x2_a":
+        return 1.0 if h < a else 0.0
+
+    # === DOUBLE CHANCE ===
+    if market == "dc_1x":
+        return 1.0 if h >= a else 0.0
+    if market == "dc_x2":
+        return 1.0 if a >= h else 0.0
+    if market == "dc_12":
+        return 1.0 if h != a else 0.0
+
+    # === TEAM TOTALS ===
+    if market == "ho15":
+        return 1.0 if h >= 2 else 0.0
+    if market == "ao15":
+        return 1.0 if a >= 2 else 0.0
+
+    # === COMBO OR ===
+    if market == "home_or_o25":
+        return 1.0 if (h > a or total_goals >= 3) else 0.0
+    if market == "away_or_o25":
+        return 1.0 if (a > h or total_goals >= 3) else 0.0
+    if market == "home_or_o15":
+        return 1.0 if (h > a or total_goals >= 2) else 0.0
+    if market == "away_or_o15":
+        return 1.0 if (a > h or total_goals >= 2) else 0.0
+
+    # === COMBO AND ===
+    if market == "home_and_o25":
+        return 1.0 if (h > a and total_goals >= 3) else 0.0
+    if market == "away_and_o25":
+        return 1.0 if (a > h and total_goals >= 3) else 0.0
+
     return None
 
 

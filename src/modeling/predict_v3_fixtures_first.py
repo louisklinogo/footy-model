@@ -24,9 +24,26 @@ from src.db.db_utils import connect_db
 
 
 MODEL_DIR = Path("models/v3_fixtures_first")
-MODEL_NAME = "fixtures_first_gbm"
+MODEL_NAME = "premium_gbm"
 MODEL_VERSION = "v3"
-MARKETS = ("o15", "o25", "c85")
+MARKETS = (
+    # Totals
+    "o15", "o25", "o35", "o45", "u15", "u25",
+    # Corners
+    "c85",
+    # BTTS
+    "btts",
+    # 1X2
+    "1x2_h", "1x2_d", "1x2_a",
+    # Double Chance
+    "dc_1x", "dc_x2", "dc_12",
+    # Team Totals
+    "ho15", "ao15",
+    # Combo OR
+    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
+    # Combo AND
+    "home_and_o25", "away_and_o25",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -51,7 +68,12 @@ def load_artifacts() -> tuple[list[str], dict[str, dict[str, dict[str, float] | 
         features = json.load(f)
     with (MODEL_DIR / "imputation.json").open("r", encoding="utf-8") as f:
         imputation = json.load(f)
-    models = {market: joblib.load(MODEL_DIR / f"gbm_{market}.pkl") for market in MARKETS}
+    # Load only models that exist
+    models = {}
+    for market in MARKETS:
+        model_path = MODEL_DIR / f"gbm_{market}.pkl"
+        if model_path.exists():
+            models[market] = joblib.load(model_path)
     return features, imputation, models
 
 
@@ -148,6 +170,7 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     out["xa_net_diff"] = out["home_rolling_xa"] - out["away_rolling_xa_against"]
     out["corners_net_diff"] = out["home_rolling_corners"] - out["away_rolling_corners_against"]
     out["sample_size_diff"] = out["home_sample_size"] - out["away_sample_size"]
+    out["goal_diff_proxy"] = out["home_rolling_xg"] - out["away_rolling_xg"]
 
     out["implied_over15"] = np.where(out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan)
     out["implied_under15"] = np.where(out["odds_under_15"] > 1.0, 1.0 / out["odds_under_15"], np.nan)
@@ -197,8 +220,7 @@ def build_prediction_rows(
         metadata_json = json.dumps(metadata)
 
         row_df = x_mat.loc[[fixture.name]]
-        for market in MARKETS:
-            model = models[market]
+        for market, model in models.items():
             p_model = positive_class_probability(model=model, x_row=row_df)
             rows.append((fixture_id, market, MODEL_NAME, MODEL_VERSION, p_model, metadata_json))
 
@@ -280,7 +302,7 @@ def main() -> None:
     prediction_rows = build_prediction_rows(scored=scored, features=features, models=models)
     written = upsert_predictions(prediction_rows)
 
-    print(f"Processed {len(scored)} fixtures, upserted {written} market predictions ({len(scored) * len(MARKETS)} expected).")
+    print(f"Processed {len(scored)} fixtures, upserted {written} market predictions ({len(scored) * len(models)} expected).")
 
 
 if __name__ == "__main__":

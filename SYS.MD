@@ -66,7 +66,3 @@ The roadmap is now fully documented for when we're ready to build out the automa
 0:00 / 0:21
 
 
-Great catch. Flashscore is the perfect "Source of Truth" for the event itself, but for a truly Senior-level system, we have to "triangulate" data from a few other places to get those specific metrics.
-
-Here is the data-source map for those KPIs:
-

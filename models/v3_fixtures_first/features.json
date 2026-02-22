@@ -46,6 +46,7 @@
   "xa_net_diff",
   "corners_net_diff",
   "sample_size_diff",
+  "goal_diff_proxy",
   "implied_over15",
   "implied_under15",
   "implied_over25",

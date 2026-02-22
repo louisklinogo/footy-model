@@ -20,7 +20,7 @@ if str(ROOT_DIR) not in sys.path:
 from src.db.db_utils import connect_db
 
 
-MODEL_NAME = "fixtures_first_gbm"
+MODEL_NAME = "premium_gbm"
 MODEL_VERSION = "v3"
 MARKETS = ("o15", "o25", "c85")
 

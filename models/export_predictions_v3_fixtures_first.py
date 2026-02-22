@@ -21,9 +21,26 @@ from src.db.db_utils import connect_db
 
 
 DEFAULT_OUT_PATH = Path("data/v1/daily/predictions_v3_fixtures_first.csv")
-MODEL_NAME = "fixtures_first_gbm"
+MODEL_NAME = "premium_gbm"
 MODEL_VERSION = "v3"
-MARKETS = ("o15", "o25", "c85")
+MARKETS = (
+    # Totals
+    "o15", "o25", "o35", "o45", "u15", "u25",
+    # Corners
+    "c85",
+    # BTTS
+    "btts",
+    # 1X2
+    "1x2_h", "1x2_d", "1x2_a",
+    # Double Chance
+    "dc_1x", "dc_x2", "dc_12",
+    # Team Totals
+    "ho15", "ao15",
+    # Combo OR
+    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
+    # Combo AND
+    "home_and_o25", "away_and_o25",
+)
 OUT_COLUMNS = [
     "fixture_id",
     "flashscore_id",
@@ -31,9 +48,22 @@ OUT_COLUMNS = [
     "league_code",
     "home_team",
     "away_team",
-    "p_o15",
-    "p_o25",
+    # Totals
+    "p_o15", "p_o25", "p_o35", "p_o45", "p_u15", "p_u25",
+    # Corners
     "p_c85",
+    # BTTS
+    "p_btts",
+    # 1X2
+    "p_1x2_h", "p_1x2_d", "p_1x2_a",
+    # Double Chance
+    "p_dc_1x", "p_dc_x2", "p_dc_12",
+    # Team Totals
+    "p_ho15", "p_ao15",
+    # Combo OR
+    "p_home_or_o25", "p_away_or_o25", "p_home_or_o15", "p_away_or_o15",
+    # Combo AND
+    "p_home_and_o25", "p_away_and_o25",
 ]
 
 
@@ -54,9 +84,36 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
         f.league_code,
         th.team_name AS home_team,
         ta.team_name AS away_team,
+        -- Totals
         MAX(CASE WHEN p.market_code = 'o15' THEN p.p_model END) AS p_o15,
         MAX(CASE WHEN p.market_code = 'o25' THEN p.p_model END) AS p_o25,
-        MAX(CASE WHEN p.market_code = 'c85' THEN p.p_model END) AS p_c85
+        MAX(CASE WHEN p.market_code = 'o35' THEN p.p_model END) AS p_o35,
+        MAX(CASE WHEN p.market_code = 'o45' THEN p.p_model END) AS p_o45,
+        MAX(CASE WHEN p.market_code = 'u15' THEN p.p_model END) AS p_u15,
+        MAX(CASE WHEN p.market_code = 'u25' THEN p.p_model END) AS p_u25,
+        -- Corners
+        MAX(CASE WHEN p.market_code = 'c85' THEN p.p_model END) AS p_c85,
+        -- BTTS
+        MAX(CASE WHEN p.market_code = 'btts' THEN p.p_model END) AS p_btts,
+        -- 1X2
+        MAX(CASE WHEN p.market_code = '1x2_h' THEN p.p_model END) AS p_1x2_h,
+        MAX(CASE WHEN p.market_code = '1x2_d' THEN p.p_model END) AS p_1x2_d,
+        MAX(CASE WHEN p.market_code = '1x2_a' THEN p.p_model END) AS p_1x2_a,
+        -- Double Chance
+        MAX(CASE WHEN p.market_code = 'dc_1x' THEN p.p_model END) AS p_dc_1x,
+        MAX(CASE WHEN p.market_code = 'dc_x2' THEN p.p_model END) AS p_dc_x2,
+        MAX(CASE WHEN p.market_code = 'dc_12' THEN p.p_model END) AS p_dc_12,
+        -- Team Totals
+        MAX(CASE WHEN p.market_code = 'ho15' THEN p.p_model END) AS p_ho15,
+        MAX(CASE WHEN p.market_code = 'ao15' THEN p.p_model END) AS p_ao15,
+        -- Combo OR
+        MAX(CASE WHEN p.market_code = 'home_or_o25' THEN p.p_model END) AS p_home_or_o25,
+        MAX(CASE WHEN p.market_code = 'away_or_o25' THEN p.p_model END) AS p_away_or_o25,
+        MAX(CASE WHEN p.market_code = 'home_or_o15' THEN p.p_model END) AS p_home_or_o15,
+        MAX(CASE WHEN p.market_code = 'away_or_o15' THEN p.p_model END) AS p_away_or_o15,
+        -- Combo AND
+        MAX(CASE WHEN p.market_code = 'home_and_o25' THEN p.p_model END) AS p_home_and_o25,
+        MAX(CASE WHEN p.market_code = 'away_and_o25' THEN p.p_model END) AS p_away_and_o25
     FROM fixtures f
     JOIN teams th ON th.team_id = f.home_team_id
     JOIN teams ta ON ta.team_id = f.away_team_id
@@ -64,7 +121,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
         ON p.fixture_id = f.fixture_id
        AND p.model_name = %s
        AND p.model_version = %s
-       AND p.market_code IN ('o15', 'o25', 'c85')
+       AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
     WHERE f.status = 'scheduled'
       AND f.match_datetime_utc IS NOT NULL
       AND f.match_datetime_utc > NOW()
