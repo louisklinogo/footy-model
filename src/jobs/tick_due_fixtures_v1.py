@@ -238,7 +238,7 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
                 fake_root = TICK_IDS_BASE / "<run-ts>"
                 print(f"DRY RUN WRITE: {fake_root / f'match_ids_{league}.json'}")
                 run_command(["node", str(ROOT / "scrapers" / "premium_enricher_v4.js"), league, "--ids-root", str(fake_root), "--out-root", str(PREMIUM_ROOT)], True)
-                run_command([sys.executable, str(ROOT / "scrapers" / "ingest_premium_fixtures_v1.py"), "--league", league], True)
+                run_command([sys.executable, str(ROOT / "src" / "ingest" / "ingest_premium_fixtures_v1.py"), "--league", league], True)
             _finish_run(run_id, "success", "settle dry-run complete", details, options.dry_run)
             return
 
@@ -254,7 +254,7 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
             write_ids_file(ids_root, league, fs_ids)
             delete_existing_premium_json(league, fs_ids, False)
             run_command(["node", str(ROOT / "scrapers" / "premium_enricher_v4.js"), league, "--ids-root", str(ids_root), "--out-root", str(PREMIUM_ROOT)], False)
-            run_command([sys.executable, str(ROOT / "scrapers" / "ingest_premium_fixtures_v1.py"), "--league", league], False)
+            run_command([sys.executable, str(ROOT / "src" / "ingest" / "ingest_premium_fixtures_v1.py"), "--league", league], False)
 
         _finish_run(run_id, "success", f"settle complete targets={len(targets)}", details, options.dry_run)
     except Exception as exc:
