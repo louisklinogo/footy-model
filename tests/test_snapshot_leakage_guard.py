@@ -3,7 +3,7 @@
 import pytest
 
 from src.features.build_team_premium_snapshots_v1 import build_team_premium_snapshots
-from tests.conftest import days_from_now, insert_fixture, insert_league, insert_premium_stats, insert_team
+from conftest import days_from_now, insert_fixture, insert_league, insert_premium_stats, insert_team
 
 
 def test_same_kickoff_does_not_leak_future_premium_data(db_case):

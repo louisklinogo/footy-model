@@ -1,6 +1,6 @@
 # pyright: reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportAttributeAccessIssue=false, reportUnusedParameter=false
 
-from tests.conftest import run_script
+from conftest import run_script
 
 
 def test_bootstrap_schema_idempotent(db_case):
