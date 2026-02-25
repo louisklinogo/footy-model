@@ -372,5 +372,38 @@
     "enabled": true,
     "results_lookback_days": 7,
     "fixtures_lookahead_days": 30
+  },
+  {
+    "league_code": "CL",
+    "league_name": "UEFA Champions League",
+    "flashscore_slug": "europe/champions-league",
+    "season_type": "winter_split",
+    "season_start_month": 7,
+    "timezone": "Europe/Brussels",
+    "enabled": true,
+    "results_lookback_days": 14,
+    "fixtures_lookahead_days": 60
+  },
+  {
+    "league_code": "EL",
+    "league_name": "UEFA Europa League",
+    "flashscore_slug": "europe/europa-league",
+    "season_type": "winter_split",
+    "season_start_month": 7,
+    "timezone": "Europe/Brussels",
+    "enabled": true,
+    "results_lookback_days": 14,
+    "fixtures_lookahead_days": 60
+  },
+  {
+    "league_code": "ECL",
+    "league_name": "UEFA Europa Conference League",
+    "flashscore_slug": "europe/europa-conference-league",
+    "season_type": "winter_split",
+    "season_start_month": 7,
+    "timezone": "Europe/Brussels",
+    "enabled": true,
+    "results_lookback_days": 14,
+    "fixtures_lookahead_days": 60
   }
 ]

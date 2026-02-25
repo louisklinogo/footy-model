@@ -198,16 +198,39 @@ def main() -> int:
             raise RuntimeError(f"Pipeline aborted at snapshot build step for league={league}")
 
     for league in leagues:
-        predict_cmd = [
+        # Layer 1: Poisson predictions
+        lambda_cmd = [
             sys.executable,
-            str(ROOT / "src" / "modeling" / "predict_v3_fixtures_first.py"),
+            str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"),
+            "--league",
+            league,
+        ]
+        if not run_step(f"daily.predict_lambda.{league}", lambda_cmd, args.dry_run):
+            raise RuntimeError(f"Pipeline aborted at lambda prediction step for league={league}")
+
+        # Layer 2: Situational Residuals
+        situational_cmd = [
+            sys.executable,
+            str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"),
             "--league",
             league,
             "--days",
             str(args.days),
         ]
-        if not run_step(f"daily.predict.{league}", predict_cmd, args.dry_run):
-            raise RuntimeError(f"Pipeline aborted at prediction step for league={league}")
+        if not run_step(f"daily.predict_situational.{league}", situational_cmd, args.dry_run):
+            raise RuntimeError(f"Pipeline aborted at situational prediction step for league={league}")
+
+        # Market predictions (Premium GBM)
+        predict_cmd = [
+            sys.executable,
+            str(ROOT / "src" / "modeling" / "evaluation" / "predict_v3_fixtures_first.py"),
+            "--league",
+            league,
+            "--days",
+            str(args.days),
+        ]
+        if not run_step(f"daily.predict_markets.{league}", predict_cmd, args.dry_run):
+            raise RuntimeError(f"Pipeline aborted at market prediction step for league={league}")
 
     for league in leagues:
         export_cmd = [

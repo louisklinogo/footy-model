@@ -1311,14 +1311,15 @@ class Match:
                 }
         """
         data = await self.api._get(f"/event/{self.match_id}/lineups")
+        home = data.get("home", {})
         return {
-            "confirmed": data["confirmed"],
-            "formation": data["home"]["formation"],
-            "player_colour": data["home"]["playerColor"],
-            "goalkeeper_colour": data["home"]["goalkeeperColor"],
-            "missing_players": data["home"]["missingPlayers"],
-            "starters": [entry for entry in data["home"]["players"] if not entry["substitute"]],
-            "substitutes": [entry for entry in data["home"]["players"] if entry["substitute"]]
+            "confirmed": data.get("confirmed", False),
+            "formation": home.get("formation"),
+            "player_colour": home.get("playerColor"),
+            "goalkeeper_colour": home.get("goalkeeperColor"),
+            "missing_players": home.get("missingPlayers", []),
+            "starters": [entry for entry in home.get("players", []) if not entry.get("substitute")],
+            "substitutes": [entry for entry in home.get("players", []) if entry.get("substitute")]
         }
 
     async def lineups_away(self) -> Dict:
@@ -1380,14 +1381,15 @@ class Match:
                 }
         """
         data = await self.api._get(f"/event/{self.match_id}/lineups")
+        away = data.get("away", {})
         return {
-            "confirmed": data["confirmed"],
-            "formation": data["away"]["formation"],
-            "player_colour": data["away"]["playerColor"],
-            "goalkeeper_colour": data["away"]["goalkeeperColor"],
-            "missing_players": data["away"]["missingPlayers"],
-            "starters": [entry for entry in data["away"]["players"] if not entry["substitute"]],
-            "substitutes": [entry for entry in data["away"]["players"] if entry["substitute"]]
+            "confirmed": data.get("confirmed", False),
+            "formation": away.get("formation"),
+            "player_colour": away.get("playerColor"),
+            "goalkeeper_colour": away.get("goalkeeperColor"),
+            "missing_players": away.get("missingPlayers", []),
+            "starters": [entry for entry in away.get("players", []) if not entry.get("substitute")],
+            "substitutes": [entry for entry in away.get("players", []) if entry.get("substitute")]
         }
 
 
