@@ -257,7 +257,7 @@ Global note for this section: items below are paused unless they are directly re
     - artifact: `artifacts/reports/layer2_reconciliation/layer2_rule_layer_segmented_backtest_override_parity_2026_02_26.md`
     - key diagnostics: `n_test=1426`, `overlap_mode=override`, `override_home=50`, `override_away=0`
 
-- [ ] Unify tick predict path with canonical backbone graph.
+- [x] Unify tick predict path with canonical backbone graph.
   - Ensure tick runs:
     1. `predict_lambda.py`
     2. `predict_situational_residual.py --enable-rule-layer`
@@ -267,6 +267,19 @@ Global note for this section: items below are paused unless they are directly re
   - DoD:
     - one live run completes full graph with success statuses in `pipeline_runs`.
     - no divergence in model path between `daily_pipeline.py` and tick.
+  - Completed: `2026-02-26`
+  - Evidence:
+    - dry-run command order check:
+      - `python src/jobs/tick_due_fixtures_v1.py --dry-run --leagues E1 --max-settle 1 --max-predict 1 --max-score 1`
+      - confirmed order includes snapshot -> `predict_lambda` -> `predict_situational_residual --enable-rule-layer --rule-overlap-mode override` -> market predict -> export.
+    - live constrained run:
+      - `python src/jobs/tick_due_fixtures_v1.py --leagues E1 --max-settle 1 --max-predict 1 --max-score 1`
+      - completed with zero command failures.
+    - pipeline status query:
+      - `tick_due_fixtures_v1|success`
+      - `tick_due_fixtures_v1.settle|success`
+      - `tick_due_fixtures_v1.predict|success`
+      - `tick_due_fixtures_v1.score|success`
 
 - [ ] Add backbone outputs to market-model feature contract.
   - Add features:
@@ -300,7 +313,7 @@ Global note for this section: items below are paused unless they are directly re
     - calibration sample gate met.
 
 ### 0) Tick Orchestration Path Alignment (Critical)
-- [ ] in progress - Align `src/jobs/tick_due_fixtures_v1.py` subprocess paths with current repo layout.
+- [x] Align `src/jobs/tick_due_fixtures_v1.py` subprocess paths with current repo layout.
   - Canonical paths now expected:
     - `src/ingest/scrapers/premium_enricher_v4.js`
     - `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
@@ -309,6 +322,10 @@ Global note for this section: items below are paused unless they are directly re
   - DoD:
     - one live tick run completes settle + predict + export + score without missing-file errors.
     - pipeline run status for `tick_due_fixtures_v1` and phase jobs is `success`.
+  - Completed: `2026-02-26`
+  - Evidence:
+    - live run: `python src/jobs/tick_due_fixtures_v1.py --leagues E1 --max-settle 1 --max-predict 1 --max-score 1`
+    - success rows observed in `pipeline_runs` for overall + settle + predict + score.
 
 - [x] Resolve model identity contract between predict/export/score.
   - Canonical identity:
