@@ -322,7 +322,7 @@ Global note for this section: items below are paused unless they are directly re
       - `python src/modeling/evaluation/predict_market_outcomes_fixtures_first.py --league E1 --days 3 --limit 5`
       - output: `fallback_rows=0` when all artifacts are present.
 
-- [ ] Run champion-challenger comparison after unification.
+- [x] Run champion-challenger comparison after unification.
   - Champion: current market stack.
   - Challenger: unified stack + backbone-enhanced market features.
   - Artifacts:
@@ -333,6 +333,16 @@ Global note for this section: items below are paused unless they are directly re
     - non-negative global performance
     - no away degradation beyond tolerance
     - calibration sample gate met.
+  - Completed: `2026-02-26`
+  - Evidence:
+    - decision report: `artifacts/reports/market_reconciliation/market_champion_challenger_2026_02_26.md`
+    - machine-readable payload: `artifacts/reports/market_reconciliation/market_champion_challenger_2026_02_26.json`
+    - gate outcomes:
+      - global quality: `PASS` (`avg_auc_delta=+0.007738`, `avg_brier_delta=-0.002129`)
+      - away tolerance: `PASS` (`away_auc_delta=-0.001901`, `away_brier_delta=-0.002801`)
+      - sample gate: `PASS` (`min_test_n=1499`)
+    - decision: `PROMOTE` challenger.
+    - triggered diagnostics anchor (Layer 2): `artifacts/reports/layer2_reconciliation/layer2_rule_layer_segmented_backtest_override_parity_2026_02_26.json`
 
 ### 0) Tick Orchestration Path Alignment (Critical)
 - [x] Align `src/jobs/tick_due_fixtures_v1.py` subprocess paths with current repo layout.
