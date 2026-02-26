@@ -1,0 +1,675 @@
+{
+  "generated_at": "2026-02-26T17:26:09.155939+00:00",
+  "summary": {
+    "total_features": 36,
+    "implemented_well": 1,
+    "implemented_with_issues": 35,
+    "source_timing_checks": {
+      "ft_total": 7824,
+      "lambda_timing": {
+        "fixtures_with_latest_pair": 7137,
+        "late_latest_pairs": 0,
+        "late_latest_pairs_pct": 0.0
+      },
+      "odds_timing_training_join": {
+        "ft_rows": 7824,
+        "with_snapshot": 7654,
+        "with_snapshot_pct": 0.9782719836400818,
+        "late_snapshot_rows": 0
+      },
+      "availability_timing_historical_ft": {
+        "rows_total": 338663,
+        "rows_late": 0,
+        "rows_late_pct": 0.0,
+        "fixtures_with_rows": 7813,
+        "fixtures_with_late_rows": 0
+      },
+      "availability_upcoming_14d": {
+        "fixtures_total": 630,
+        "fixtures_with_availability": 0,
+        "coverage_pct": 0.0
+      }
+    },
+    "decision_counts": {
+      "conditional_candidate": 23,
+      "drop_candidate": 9,
+      "fix_lineage_before_judgment": 2,
+      "keep_candidate": 2
+    }
+  },
+  "rows": [
+    {
+      "feature": "home_rolling_xg",
+      "intent_plain_english": "Home attacking form should explain upward residual pressure for home goals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9175613496932515,
+      "predict_non_missing_pct": 0.9571428571428572,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_rolling_xg_against",
+      "intent_plain_english": "Home defensive weakness should lift away residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9175613496932515,
+      "predict_non_missing_pct": 0.9571428571428572,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "away_rolling_xg",
+      "intent_plain_english": "Away attacking form should lift away scoring residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9187116564417178,
+      "predict_non_missing_pct": 0.9571428571428572,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "away_rolling_xg_against",
+      "intent_plain_english": "Away defensive weakness should lift home residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9187116564417178,
+      "predict_non_missing_pct": 0.9571428571428572,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "xg_diff",
+      "intent_plain_english": "Net chance-quality edge should explain directional residual correction.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_rolling_corners",
+      "intent_plain_english": "Corner pressure proxies sustained home attacking territory.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9193507157464212,
+      "predict_non_missing_pct": 0.973015873015873,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "rest_delta",
+      "intent_plain_english": "Rest advantage should shift residuals toward better-prepared side.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "congestion_flag",
+      "intent_plain_english": "Fixture congestion should capture fatigue underperformance.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_upcoming_tier",
+      "intent_plain_english": "Upcoming high-tier match may depress current fixture intensity.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "away_upcoming_tier",
+      "intent_plain_english": "Upcoming high-tier match may depress away-side intensity.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "position_gap",
+      "intent_plain_english": "Standings gap may capture structural team-quality mismatch.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "points_gap",
+      "intent_plain_english": "Points gap may capture short-run quality differential.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_lame_duck",
+      "intent_plain_english": "Low-motivation home contexts may distort baseline expectations.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": true,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "near_constant_train_distribution",
+        "mixed_incremental_value",
+        "no_active_signal_in_current_window"
+      ]
+    },
+    {
+      "feature": "away_lame_duck",
+      "intent_plain_english": "Low-motivation away contexts may distort baseline expectations.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": true,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "near_constant_train_distribution",
+        "mixed_incremental_value",
+        "no_active_signal_in_current_window"
+      ]
+    },
+    {
+      "feature": "is_derby",
+      "intent_plain_english": "Derbies may increase variance and weaken baseline calibration.",
+      "source": "team_rivalries",
+      "source_risk": "critical",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "fix_lineage_before_judgment",
+      "reconciliation_action": "repair_upstream_lineage_then_retest",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:critical",
+        "reconciliation_decision:fix_lineage_before_judgment",
+        "derby_prevalence_very_low"
+      ]
+    },
+    {
+      "feature": "home_form_streak",
+      "intent_plain_english": "Short-run form momentum can shift residual outcomes.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "away_form_streak",
+      "intent_plain_english": "Short-run form momentum can shift residual outcomes.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_xg_lost",
+      "intent_plain_english": "Missing home player quality should reduce home residual scoring.",
+      "source": "player_availability+fixture_player_stats",
+      "source_risk": "high",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:high",
+        "reconciliation_decision:drop_candidate",
+        "upcoming_availability_unpopulated"
+      ]
+    },
+    {
+      "feature": "away_xg_lost",
+      "intent_plain_english": "Missing away player quality should reduce away residual scoring.",
+      "source": "player_availability+fixture_player_stats",
+      "source_risk": "high",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:high",
+        "mixed_incremental_value",
+        "upcoming_availability_unpopulated"
+      ]
+    },
+    {
+      "feature": "home_key_absent",
+      "intent_plain_english": "Key home absences should suppress home residuals.",
+      "source": "player_availability+fixture_player_stats",
+      "source_risk": "high",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:high",
+        "mixed_incremental_value",
+        "upcoming_availability_unpopulated"
+      ]
+    },
+    {
+      "feature": "away_key_absent",
+      "intent_plain_english": "Key away absences should suppress away residuals.",
+      "source": "player_availability+fixture_player_stats",
+      "source_risk": "high",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:high",
+        "mixed_incremental_value",
+        "upcoming_availability_unpopulated"
+      ]
+    },
+    {
+      "feature": "injury_impact",
+      "intent_plain_english": "Net injury burden should shift residual edge.",
+      "source": "player_availability+fixture_player_stats",
+      "source_risk": "high",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:high",
+        "reconciliation_decision:drop_candidate",
+        "upcoming_availability_unpopulated"
+      ]
+    },
+    {
+      "feature": "home_xg_over_scored",
+      "intent_plain_english": "Home finishing overperformance mean-reverts in residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "home_xg_over_conceded",
+      "intent_plain_english": "Home defensive over-concession mean-reverts in residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate"
+      ]
+    },
+    {
+      "feature": "away_xg_over_scored",
+      "intent_plain_english": "Away finishing overperformance mean-reverts in residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "keep_candidate",
+      "reconciliation_action": "retain_in_candidate_feature_set",
+      "verdict": "implemented_well",
+      "issues": []
+    },
+    {
+      "feature": "away_xg_over_conceded",
+      "intent_plain_english": "Away defensive over-concession mean-reverts in residuals.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "home_playing_top4",
+      "intent_plain_english": "Facing elite opposition may induce baseline miss.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "away_playing_top4",
+      "intent_plain_english": "Facing elite opposition may induce baseline miss.",
+      "source": "fixtures+results+standings",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "derby_position_gap",
+      "intent_plain_english": "Derby context may interact with ranking gap nonlinearly.",
+      "source": "team_rivalries",
+      "source_risk": "critical",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 1.0,
+      "predict_non_missing_pct": 1.0,
+      "near_constant_train": false,
+      "reconciliation_decision": "fix_lineage_before_judgment",
+      "reconciliation_action": "repair_upstream_lineage_then_retest",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "high_source_risk:critical",
+        "reconciliation_decision:fix_lineage_before_judgment",
+        "derby_prevalence_very_low"
+      ]
+    },
+    {
+      "feature": "away_rolling_corners",
+      "intent_plain_english": "Away corner pressure proxies away attacking territory.",
+      "source": "team_premium_snapshots",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.9205010224948875,
+      "predict_non_missing_pct": 0.973015873015873,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value"
+      ]
+    },
+    {
+      "feature": "odds_model_gap_home",
+      "intent_plain_english": "Market-vs-model discrepancy should correct home-side miss.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value",
+        "upcoming_odds_sparse"
+      ]
+    },
+    {
+      "feature": "odds_model_gap_draw",
+      "intent_plain_english": "Market draw pricing discrepancy may signal balance miss.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "keep_candidate",
+      "reconciliation_action": "retain_in_candidate_feature_set",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "upcoming_odds_sparse"
+      ]
+    },
+    {
+      "feature": "odds_model_gap_away",
+      "intent_plain_english": "Market-vs-model discrepancy should correct away-side miss.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value",
+        "upcoming_odds_sparse"
+      ]
+    },
+    {
+      "feature": "odds_opening_gap_home",
+      "intent_plain_english": "Opening market signal may capture earlier information set.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value",
+        "upcoming_odds_sparse"
+      ]
+    },
+    {
+      "feature": "odds_opening_gap_draw",
+      "intent_plain_english": "Opening draw discrepancy may capture regime miss.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "drop_candidate",
+      "reconciliation_action": "drop_in_next_controlled_experiment",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "reconciliation_decision:drop_candidate",
+        "upcoming_odds_sparse"
+      ]
+    },
+    {
+      "feature": "odds_opening_gap_away",
+      "intent_plain_english": "Opening away discrepancy may capture regime miss.",
+      "source": "fixture_odds_markets+predictions(lambda_xgb)",
+      "source_risk": "low",
+      "implemented_in_train_code": true,
+      "implemented_in_predict_code": true,
+      "train_non_missing_pct": 0.8919989775051125,
+      "predict_non_missing_pct": 0.39206349206349206,
+      "near_constant_train": false,
+      "reconciliation_decision": "conditional_candidate",
+      "reconciliation_action": "segment_and_retest_before_final_decision",
+      "verdict": "implemented_with_issues",
+      "issues": [
+        "mixed_incremental_value",
+        "upcoming_odds_sparse"
+      ]
+    }
+  ]
+}

@@ -25,6 +25,10 @@ from src.modeling.layer2_situational.deployment_policy import (
     resolve_league_policy,
 )
 from src.modeling.layer2_situational import situational_utils
+from src.modeling.layer2_situational.rule_layer import (
+    apply_rule_adjustment,
+    load_rule_layer_config,
+)
 
 MODEL_DIR = ROOT_DIR / "model_artifacts" / "situational_model"
 MODEL_NAME = "situational_xgb"
@@ -540,6 +544,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--days", type=int, default=3)
     parser.add_argument("--league", type=str, default=None)
+    parser.add_argument(
+        "--enable-rule-layer",
+        action="store_true",
+        help="Apply deterministic situational rule-layer on top of Layer 2 adjusted lambdas.",
+    )
+    parser.add_argument(
+        "--rule-layer-config",
+        type=Path,
+        default=None,
+        help="Optional JSON config path for rule-layer adjustments.",
+    )
     args = parser.parse_args()
 
     model_blob = joblib.load(MODEL_DIR / "situational_model.pkl")
@@ -547,6 +562,10 @@ def main():
     home_model = model_blob["home_model"]
     away_model = model_blob["away_model"]
     policy = load_layer2_deployment_policy(MODEL_DIR)
+    rule_config_path = args.rule_layer_config or (MODEL_DIR / "rule_layer_config.json")
+    rule_config = (
+        load_rule_layer_config(rule_config_path) if args.enable_rule_layer else None
+    )
 
     df = load_prediction_data(days=args.days, league=args.league)
     if df.empty:
@@ -560,6 +579,9 @@ def main():
     df["is_low_confidence"] = (df["home_played"] < 4) | (df["away_played"] < 4)
 
     out_rows = []
+    rule_fired_home = 0
+    rule_fired_away = 0
+    rule_fired_fixture_ids: set[int] = set()
     for _, row in df.iterrows():
         h_res_raw = float(row["pred_home_residual"])
         a_res_raw = float(row["pred_away_residual"])
@@ -650,8 +672,51 @@ def main():
 
         # Adjusted lambdas use the policy-gated residual.
         if lh is not None and la is not None:
+            lambda_home_layer2 = max(0.01, lh + h_res_applied)
+            lambda_away_layer2 = max(0.01, la + a_res_applied)
+
+            home_rule = {
+                "applied": False,
+                "rules": [],
+                "pct_raw": 0.0,
+                "pct_capped": 0.0,
+                "lambda_before": lambda_home_layer2,
+                "lambda_after": lambda_home_layer2,
+                "cap_down": 0.0,
+                "cap_up": 0.0,
+            }
+            away_rule = {
+                "applied": False,
+                "rules": [],
+                "pct_raw": 0.0,
+                "pct_capped": 0.0,
+                "lambda_before": lambda_away_layer2,
+                "lambda_after": lambda_away_layer2,
+                "cap_down": 0.0,
+                "cap_up": 0.0,
+            }
+
+            if (
+                args.enable_rule_layer
+                and rule_config is not None
+                and layer2_enabled
+                and not is_low
+            ):
+                home_rule = apply_rule_adjustment(
+                    lambda_home_layer2, row, side="home", config=rule_config
+                )
+                away_rule = apply_rule_adjustment(
+                    lambda_away_layer2, row, side="away", config=rule_config
+                )
+                if bool(home_rule["applied"]):
+                    rule_fired_home += 1
+                    rule_fired_fixture_ids.add(int(row["fixture_id"]))
+                if bool(away_rule["applied"]):
+                    rule_fired_away += 1
+                    rule_fired_fixture_ids.add(int(row["fixture_id"]))
+
             adj_meta_h = {
-                "lambda": max(0.01, lh + h_res_applied),
+                "lambda": float(home_rule["lambda_after"]),
                 "residual": h_res_raw,
                 "residual_raw": h_res_raw,
                 "residual_applied": h_res_applied,
@@ -661,9 +726,18 @@ def main():
                 "layer2_alpha_policy": effective_alpha,
                 "layer2_gate_reason": gate_reason,
                 "market_confirmed": bool(pd.notna(odds_gap_home) and float(odds_gap_home or 0) != 0),
+                "lambda_after_layer2": lambda_home_layer2,
+                "rule_layer_enabled": bool(args.enable_rule_layer),
+                "rule_layer_applied": bool(home_rule["applied"]),
+                "rule_layer_rules": list(home_rule["rules"]),
+                "rule_layer_pct_raw": float(home_rule["pct_raw"]),
+                "rule_layer_pct_capped": float(home_rule["pct_capped"]),
+                "rule_layer_cap_down": float(home_rule["cap_down"]),
+                "rule_layer_cap_up": float(home_rule["cap_up"]),
+                "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
             }
             adj_meta_a = {
-                "lambda": max(0.01, la + a_res_applied),
+                "lambda": float(away_rule["lambda_after"]),
                 "residual": a_res_raw,
                 "residual_raw": a_res_raw,
                 "residual_applied": a_res_applied,
@@ -673,6 +747,15 @@ def main():
                 "layer2_alpha_policy": effective_alpha,
                 "layer2_gate_reason": gate_reason,
                 "market_confirmed": bool(pd.notna(odds_gap_away) and float(odds_gap_away or 0) != 0),
+                "lambda_after_layer2": lambda_away_layer2,
+                "rule_layer_enabled": bool(args.enable_rule_layer),
+                "rule_layer_applied": bool(away_rule["applied"]),
+                "rule_layer_rules": list(away_rule["rules"]),
+                "rule_layer_pct_raw": float(away_rule["pct_raw"]),
+                "rule_layer_pct_capped": float(away_rule["pct_capped"]),
+                "rule_layer_cap_down": float(away_rule["cap_down"]),
+                "rule_layer_cap_up": float(away_rule["cap_up"]),
+                "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
             }
 
             if is_low:
@@ -702,6 +785,12 @@ def main():
     print(
         f"Upserted {len(out_rows)} records ({n_with_adj} fixtures with adjusted lambdas) for {len(df)} fixtures."
     )
+    if args.enable_rule_layer:
+        print(
+            "Rule-layer fired: "
+            f"home={rule_fired_home}, away={rule_fired_away}, "
+            f"fixtures={len(rule_fired_fixture_ids)}"
+        )
 
 
 if __name__ == "__main__":

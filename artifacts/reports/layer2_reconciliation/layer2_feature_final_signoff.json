@@ -1,0 +1,445 @@
+﻿{
+    "summary":  {
+                    "generated_at":  "2026-02-26T18:36:30.7483219Z",
+                    "source_audit":  "artifacts/reports/layer2_reconciliation/layer2_feature_intent_implementation_audit.json",
+                    "mapping_rule":  {
+                                         "keep_candidate":  "keep",
+                                         "conditional_candidate":  "fix",
+                                         "drop_candidate":  "drop",
+                                         "fix_lineage_before_judgment":  "defer"
+                                     },
+                    "counts":  {
+                                   "keep":  2,
+                                   "fix":  23,
+                                   "drop":  9,
+                                   "defer":  2,
+                                   "total":  36
+                               },
+                    "gating_notes":  [
+                                         "Historical availability timing leakage is repaired (FT late rows = 0).",
+                                         "Upcoming availability population remains a serving-readiness gate.",
+                                         "Calibration remains sample-limited and blocks freeze exit."
+                                     ]
+                },
+    "rows":  [
+                 {
+                     "feature":  "home_rolling_xg",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_rolling_xg_against",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "away_rolling_xg",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "away_rolling_xg_against",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "xg_diff",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_rolling_corners",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "rest_delta",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "congestion_flag",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_upcoming_tier",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "away_upcoming_tier",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "position_gap",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "points_gap",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_lame_duck",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "near_constant_train_distribution",
+                                    "mixed_incremental_value",
+                                    "no_active_signal_in_current_window"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "away_lame_duck",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "near_constant_train_distribution",
+                                    "mixed_incremental_value",
+                                    "no_active_signal_in_current_window"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "is_derby",
+                     "final_status":  "defer",
+                     "source":  "team_rivalries",
+                     "source_risk":  "critical",
+                     "reconciliation_decision":  "fix_lineage_before_judgment",
+                     "issues":  [
+                                    "high_source_risk:critical",
+                                    "reconciliation_decision:fix_lineage_before_judgment",
+                                    "derby_prevalence_very_low"
+                                ],
+                     "notes":  "Do not use for global policy until source utility risk is resolved."
+                 },
+                 {
+                     "feature":  "home_form_streak",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "away_form_streak",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_xg_lost",
+                     "final_status":  "drop",
+                     "source":  "player_availability+fixture_player_stats",
+                     "source_risk":  "high",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "high_source_risk:high",
+                                    "reconciliation_decision:drop_candidate",
+                                    "upcoming_availability_unpopulated"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "away_xg_lost",
+                     "final_status":  "fix",
+                     "source":  "player_availability+fixture_player_stats",
+                     "source_risk":  "high",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "high_source_risk:high",
+                                    "mixed_incremental_value",
+                                    "upcoming_availability_unpopulated"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_key_absent",
+                     "final_status":  "fix",
+                     "source":  "player_availability+fixture_player_stats",
+                     "source_risk":  "high",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "high_source_risk:high",
+                                    "mixed_incremental_value",
+                                    "upcoming_availability_unpopulated"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "away_key_absent",
+                     "final_status":  "fix",
+                     "source":  "player_availability+fixture_player_stats",
+                     "source_risk":  "high",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "high_source_risk:high",
+                                    "mixed_incremental_value",
+                                    "upcoming_availability_unpopulated"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "injury_impact",
+                     "final_status":  "drop",
+                     "source":  "player_availability+fixture_player_stats",
+                     "source_risk":  "high",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "high_source_risk:high",
+                                    "reconciliation_decision:drop_candidate",
+                                    "upcoming_availability_unpopulated"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "home_xg_over_scored",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "home_xg_over_conceded",
+                     "final_status":  "drop",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "away_xg_over_scored",
+                     "final_status":  "keep",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "keep_candidate",
+                     "issues":  [
+
+                                ],
+                     "notes":  "Keep in current candidate; monitor with league gates."
+                 },
+                 {
+                     "feature":  "away_xg_over_conceded",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "home_playing_top4",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "away_playing_top4",
+                     "final_status":  "fix",
+                     "source":  "fixtures+results+standings",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "derby_position_gap",
+                     "final_status":  "defer",
+                     "source":  "team_rivalries",
+                     "source_risk":  "critical",
+                     "reconciliation_decision":  "fix_lineage_before_judgment",
+                     "issues":  [
+                                    "high_source_risk:critical",
+                                    "reconciliation_decision:fix_lineage_before_judgment",
+                                    "derby_prevalence_very_low"
+                                ],
+                     "notes":  "Do not use for global policy until source utility risk is resolved."
+                 },
+                 {
+                     "feature":  "away_rolling_corners",
+                     "final_status":  "fix",
+                     "source":  "team_premium_snapshots",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "odds_model_gap_home",
+                     "final_status":  "fix",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value",
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "odds_model_gap_draw",
+                     "final_status":  "keep",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "keep_candidate",
+                     "issues":  [
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Keep in current candidate; monitor with league gates."
+                 },
+                 {
+                     "feature":  "odds_model_gap_away",
+                     "final_status":  "fix",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value",
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "odds_opening_gap_home",
+                     "final_status":  "fix",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value",
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 },
+                 {
+                     "feature":  "odds_opening_gap_draw",
+                     "final_status":  "drop",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "drop_candidate",
+                     "issues":  [
+                                    "reconciliation_decision:drop_candidate",
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Remove in next controlled retrain candidate."
+                 },
+                 {
+                     "feature":  "odds_opening_gap_away",
+                     "final_status":  "fix",
+                     "source":  "fixture_odds_markets+predictions(lambda_xgb)",
+                     "source_risk":  "low",
+                     "reconciliation_decision":  "conditional_candidate",
+                     "issues":  [
+                                    "mixed_incremental_value",
+                                    "upcoming_odds_sparse"
+                                ],
+                     "notes":  "Retain only as conditional while block-level evidence is unstable."
+                 }
+             ]
+}

@@ -1,0 +1,26 @@
+{
+  "started_at": "2026-02-26T17:16:32.694870+00:00",
+  "generated_at": "2026-02-26T17:16:34.808775+00:00",
+  "scope": {
+    "status": "ft",
+    "anchor_minutes": 60,
+    "dry_run": true
+  },
+  "before": {
+    "rows_total": 338663,
+    "rows_null_timing": 0,
+    "rows_after_kickoff": 66026,
+    "fixtures_with_rows": 7813,
+    "fixtures_with_bad_timing": 1508
+  },
+  "repair": {
+    "updated_rows": 0
+  },
+  "after": {
+    "rows_total": 338663,
+    "rows_null_timing": 0,
+    "rows_after_kickoff": 66026,
+    "fixtures_with_rows": 7813,
+    "fixtures_with_bad_timing": 1508
+  }
+}

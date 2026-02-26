@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-02-26T21:00:16.233281+00:00",
+  "global_model_decision": {
+    "chosen": "baseline_full_features",
+    "reason": "pruned_drop9 worsened home RMSE and reduced enabled-league breadth (lost E1) despite away gain",
+    "comparison_artifact": "artifacts/reports/layer2_reconciliation/layer2_pruned_drop9_vs_full_comparison.json"
+  },
+  "rule_layer_decision": {
+    "chosen": "keyabs_home_only_minus0.120",
+    "reason": "best passing key-absence-only sweep variant; improves home triggered/global metrics while preserving away global RMSE vs layer2-only",
+    "config_path": "model_artifacts/situational_model/rule_layer_config.json",
+    "sweep_artifact": "artifacts/reports/layer2_reconciliation/layer2_rule_layer_key_absent_sweep_step1_6.json",
+    "backtest_artifact": "artifacts/reports/layer2_reconciliation/layer2_rule_layer_segmented_backtest_full_keyabs_home_minus012_v1.json"
+  },
+  "three_way_global": {
+    "layer1_only": {
+      "home_rmse": 1.1962779613903123,
+      "away_rmse": 1.085426603029948
+    },
+    "layer1_plus_layer2": {
+      "home_rmse": 1.194876188674752,
+      "away_rmse": 1.0847587337044182,
+      "home_lift": 0.0011717784334428865,
+      "away_lift": 0.0006153058379676827
+    },
+    "layer1_plus_layer2_plus_rules": {
+      "home_rmse": 1.1938806952991616,
+      "away_rmse": 1.0847587337044182,
+      "home_lift": 0.0020039373527909457,
+      "away_lift": 0.0006153058379676827
+    }
+  },
+  "triggered_segment": {
+    "fixtures_triggered": 50,
+    "home_events": 50,
+    "away_events": 0,
+    "layer1_only": {
+      "home_rmse": 1.2163474870319642,
+      "away_rmse": 1.1369398814517517
+    },
+    "layer1_plus_layer2": {
+      "home_rmse": 1.2147772074587813,
+      "away_rmse": 1.1316589716420615,
+      "home_lift": 0.001290979419881543,
+      "away_lift": 0.004644845251577456
+    },
+    "layer1_plus_layer2_plus_rules": {
+      "home_rmse": 1.1865942951538127,
+      "away_rmse": 1.1316589716420615,
+      "home_lift": 0.024461095365727204,
+      "away_lift": 0.004644845251577456
+    }
+  },
+  "directional_metrics": {
+    "home_trigger_events": {
+      "n": 50,
+      "layer1_plus_layer2_hit_rate": 0.44,
+      "layer1_plus_layer2_plus_rules_hit_rate": 0.68
+    },
+    "away_trigger_events": {
+      "n": 0,
+      "layer1_plus_layer2_hit_rate": null,
+      "layer1_plus_layer2_plus_rules_hit_rate": null
+    }
+  },
+  "gates": {
+    "calibration_sample": "blocked",
+    "upcoming_availability_coverage": "blocked"
+  },
+  "recommended_policy": {
+    "use_full_global_layer2": true,
+    "use_pruned_drop9_candidate": false,
+    "enable_rule_layer": true,
+    "rule_layer_mode": "key_absent_only_home",
+    "rollback_condition": "disable rule-layer if away global RMSE deteriorates by >0.1% absolute in next validation cycle"
+  }
+}

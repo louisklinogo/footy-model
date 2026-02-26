@@ -1,0 +1,85 @@
+{
+  "generated_at": "2026-02-26T16:33:18.587421+00:00",
+  "variants": {
+    "baseline_full_features": {
+      "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model",
+      "feature_count": 36,
+      "home_test_rmse": 1.1928203715572674,
+      "away_test_rmse": 1.077576513741526,
+      "home_baseline_rmse": 1.1962779613903123,
+      "away_baseline_rmse": 1.085426603029948,
+      "home_lift_vs_baseline": 0.002890289668988375,
+      "away_lift_vs_baseline": 0.007232261736084711,
+      "enabled_leagues": [
+        "E1",
+        "E3",
+        "RO1"
+      ],
+      "enabled_league_count": 3,
+      "delta_vs_full": {
+        "home_test_rmse": 0.0,
+        "away_test_rmse": 0.0,
+        "home_lift_vs_baseline": 0.0,
+        "away_lift_vs_baseline": 0.0,
+        "enabled_league_count": 0,
+        "enabled_leagues_removed": [],
+        "enabled_leagues_added": []
+      }
+    },
+    "candidate_no_player_block": {
+      "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model_no_player_block",
+      "feature_count": 31,
+      "home_test_rmse": 1.1932847593663767,
+      "away_test_rmse": 1.075868360460222,
+      "home_baseline_rmse": 1.1962779613903123,
+      "away_baseline_rmse": 1.085426603029948,
+      "home_lift_vs_baseline": 0.0025020957674894463,
+      "away_lift_vs_baseline": 0.0088059777999216,
+      "enabled_leagues": [
+        "E3",
+        "RO1"
+      ],
+      "enabled_league_count": 2,
+      "delta_vs_full": {
+        "home_test_rmse": 0.0004643878091092901,
+        "away_test_rmse": -0.0017081532813041367,
+        "home_lift_vs_baseline": -0.0003881939014989287,
+        "away_lift_vs_baseline": 0.00157371606383689,
+        "enabled_league_count": -1,
+        "enabled_leagues_removed": [
+          "E1"
+        ],
+        "enabled_leagues_added": []
+      }
+    },
+    "candidate_keyabs_only": {
+      "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model_keyabs_only",
+      "feature_count": 33,
+      "home_test_rmse": 1.1916610615928718,
+      "away_test_rmse": 1.0758040544028329,
+      "home_baseline_rmse": 1.1962779613903123,
+      "away_baseline_rmse": 1.085426603029948,
+      "home_lift_vs_baseline": 0.003859387154532845,
+      "away_lift_vs_baseline": 0.008865222761496656,
+      "enabled_leagues": [
+        "E3",
+        "RO1"
+      ],
+      "enabled_league_count": 2,
+      "delta_vs_full": {
+        "home_test_rmse": -0.0011593099643956162,
+        "away_test_rmse": -0.0017724593386931886,
+        "home_lift_vs_baseline": 0.00096909748554447,
+        "away_lift_vs_baseline": 0.0016329610254119456,
+        "enabled_league_count": -1,
+        "enabled_leagues_removed": [
+          "E1"
+        ],
+        "enabled_leagues_added": []
+      }
+    }
+  },
+  "recommendation": {
+    "winner_by_balanced_rmse": "candidate_keyabs_only"
+  }
+}

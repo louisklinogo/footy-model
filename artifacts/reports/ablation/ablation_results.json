@@ -2,8 +2,8 @@
   {
     "stage": "baseline",
     "features": [],
-    "home_rmse": 1.0906142302588446,
-    "away_rmse": 1.0021477900506417,
+    "home_rmse": 1.1959391708741332,
+    "away_rmse": 1.08510560945412,
     "home_lift": 0.0,
     "away_lift": 0.0
   },
@@ -18,10 +18,10 @@
       "away_playing_top4",
       "derby_position_gap"
     ],
-    "home_rmse": 1.0906853299904247,
-    "away_rmse": 1.016045320070238,
-    "home_lift": -6.519237472553699e-05,
-    "away_lift": -0.013867745014828575
+    "home_rmse": 1.1961038760749905,
+    "away_rmse": 1.0859494254766475,
+    "home_lift": -0.00013772038316709037,
+    "away_lift": -0.0007776349280435224
   },
   {
     "stage": "standings_gaps+schedule",
@@ -38,10 +38,10 @@
       "home_upcoming_tier",
       "away_upcoming_tier"
     ],
-    "home_rmse": 1.0917405894860333,
-    "away_rmse": 1.0123208259097456,
-    "home_lift": -0.0010327751059339232,
-    "away_lift": -0.010151233141560708
+    "home_rmse": 1.1959219815102025,
+    "away_rmse": 1.0844737551078556,
+    "home_lift": 1.4373108891590126e-05,
+    "away_lift": 0.0005822975577301765
   },
   {
     "stage": "standings_gaps+schedule+player",
@@ -63,10 +63,10 @@
       "away_key_absent",
       "injury_impact"
     ],
-    "home_rmse": 1.089730732957108,
-    "away_rmse": 1.0094643384771056,
-    "home_lift": 0.0008100914853522117,
-    "away_lift": -0.007300867695466524
+    "home_rmse": 1.202001510059226,
+    "away_rmse": 1.0893362936624582,
+    "home_lift": -0.005069103289477375,
+    "away_lift": -0.003898868618388655
   },
   {
     "stage": "standings_gaps+schedule+player+odds",
@@ -87,7 +87,6 @@
       "home_key_absent",
       "away_key_absent",
       "injury_impact",
-      "odds_model_gap",
       "odds_model_gap_home",
       "odds_model_gap_draw",
       "odds_model_gap_away",
@@ -95,9 +94,9 @@
       "odds_opening_gap_draw",
       "odds_opening_gap_away"
     ],
-    "home_rmse": 1.086346865052274,
-    "away_rmse": 1.004980623469423,
-    "home_lift": 0.00391280902831953,
-    "away_lift": -0.0028267621272089166
+    "home_rmse": 1.1978499725055847,
+    "away_rmse": 1.0794372120969415,
+    "home_lift": -0.0015977414888542207,
+    "away_lift": 0.005223820896133861
   }
 ]

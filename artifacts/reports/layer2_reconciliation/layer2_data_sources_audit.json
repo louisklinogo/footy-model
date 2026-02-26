@@ -1,0 +1,118 @@
+{
+  "meta": {
+    "generated_at": "2026-02-26T17:17:12.481661+00:00",
+    "ft_fixture_count": 7824,
+    "fixtures_time_min_utc": "2023-09-19 16:45:00+00:00",
+    "fixtures_time_max_utc": "2026-12-03 00:00:00+00:00",
+    "critical_sources": [
+      "team_rivalries"
+    ],
+    "high_sources": [
+      "fixture_player_stats"
+    ]
+  },
+  "rows": [
+    {
+      "source_name": "fixtures+fixture_results",
+      "role_in_layer2": "ground-truth target and chronology anchor",
+      "row_count": 7824,
+      "fixture_coverage_pct": 100.0,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [],
+      "risk_level": "low",
+      "evidence": {
+        "ft_fixture_count": 7824,
+        "time_min_utc": "2023-09-19 16:45:00+00:00",
+        "time_max_utc": "2026-12-03 00:00:00+00:00"
+      }
+    },
+    {
+      "source_name": "predictions(lambda_xgb)",
+      "role_in_layer2": "Layer 1 baseline lambdas for residual target",
+      "row_count": 20594,
+      "fixture_coverage_pct": 91.21932515337423,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [],
+      "risk_level": "low",
+      "evidence": {
+        "latest_pair_fixtures": 7137,
+        "pre_kickoff_latest_pairs": 7137,
+        "post_kickoff_latest_pairs": 0,
+        "lineage_anchor": "feature_asof_utc"
+      }
+    },
+    {
+      "source_name": "team_premium_snapshots",
+      "role_in_layer2": "rolling team-form features and rest/schedule context",
+      "row_count": 22204,
+      "fixture_coverage_pct": 100.0,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [],
+      "risk_level": "low",
+      "evidence": {
+        "ft_fixtures_with_home_away_snapshot_pair": 7824,
+        "sample_size_p50": 13.0,
+        "sample_size_p10": 1.0,
+        "sample_size_p90": 27.0
+      }
+    },
+    {
+      "source_name": "fixture_odds_markets(sofascore_1x2)",
+      "role_in_layer2": "market-implied probabilities for odds-model gap features",
+      "row_count": 8947,
+      "fixture_coverage_pct": 97.82719836400818,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [],
+      "risk_level": "low",
+      "evidence": {
+        "ft_fixtures_with_pre_kickoff_1x2": 7654,
+        "ft_fixtures_with_post_kickoff_1x2_in_pre_types": 0
+      }
+    },
+    {
+      "source_name": "player_availability",
+      "role_in_layer2": "injury/absence impact features",
+      "row_count": 338699,
+      "fixture_coverage_pct": 99.85940695296523,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [],
+      "risk_level": "low",
+      "evidence": {
+        "ft_fixtures_with_availability": 7813,
+        "timing_anchor": "event_recorded_at",
+        "rows_with_timing_after_kickoff": 0,
+        "rows_with_known_timing": 338699,
+        "rows_with_unknown_timing": 0
+      }
+    },
+    {
+      "source_name": "team_rivalries",
+      "role_in_layer2": "derby context features",
+      "row_count": 35,
+      "fixture_coverage_pct": 0.4729038854805726,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [
+        "very_low_derby_prevalence"
+      ],
+      "risk_level": "critical",
+      "evidence": {
+        "ft_derby_fixture_count": 37
+      }
+    },
+    {
+      "source_name": "fixture_player_stats",
+      "role_in_layer2": "historical player impact prior strength estimation",
+      "row_count": 319999,
+      "fixture_coverage_pct": 99.82106339468302,
+      "timing_integrity_pct": 100.0,
+      "key_risks": [
+        "expected_goals_missingness_high"
+      ],
+      "risk_level": "high",
+      "evidence": {
+        "ft_fixtures_with_player_stats": 7810,
+        "expected_goals_null_pct": 71.66709895968425
+      }
+    }
+  ]
+}

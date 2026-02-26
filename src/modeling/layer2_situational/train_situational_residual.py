@@ -592,14 +592,16 @@ def add_odds_model_gap(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def train_model(df: pd.DataFrame, out_dir: Path) -> dict:
+def train_model(
+    df: pd.DataFrame, out_dir: Path, feature_override: list[str] | None = None
+) -> dict:
     from sklearn.ensemble import GradientBoostingRegressor
     from sklearn.metrics import mean_squared_error, r2_score
     import joblib
     import hashlib
     import subprocess
 
-    all_features = FEATURE_COLS + ODDS_FEATURE_COLS
+    all_features = feature_override or (FEATURE_COLS + ODDS_FEATURE_COLS)
 
     df = df.sort_values("match_datetime_utc").reset_index(drop=True)
 
@@ -954,20 +956,38 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--train", action="store_true", help="Train the GBM model")
     parser.add_argument("--out-dir", type=Path, default=OUT_DIR)
+    parser.add_argument(
+        "--drop-features",
+        type=str,
+        default="",
+        help="Comma-separated feature list to drop before coverage filtering.",
+    )
     args = parser.parse_args()
 
     df = load_feature_data()
     df = add_odds_model_gap(df)
 
+    all_features = FEATURE_COLS + ODDS_FEATURE_COLS
+    drop_features = [f.strip() for f in args.drop_features.split(",") if f.strip()]
+    unknown = sorted(set(drop_features) - set(all_features))
+    if unknown:
+        raise ValueError(f"Unknown features in --drop-features: {unknown}")
+    selected_features = [f for f in all_features if f not in set(drop_features)]
+    if not selected_features:
+        raise ValueError("No features remain after applying --drop-features.")
+    if drop_features:
+        print(f"Dropping {len(drop_features)} features: {drop_features}")
+        print(f"Candidate feature pool size: {len(selected_features)}")
+
     if args.train:
-        train_model(df, args.out_dir)
+        train_model(df, args.out_dir, feature_override=selected_features)
     else:
         out = args.out_dir / "situational_features.parquet"
         args.out_dir.mkdir(parents=True, exist_ok=True)
         df.to_parquet(out, index=False)
         print(f"Feature data saved to {out}")
         print(f"Columns: {list(df.columns)}")
-        print(df[FEATURE_COLS].describe())
+        print(df[selected_features].describe())
 
 
 if __name__ == "__main__":

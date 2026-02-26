@@ -1,0 +1,111 @@
+{
+  "generated_at": "2026-02-26T07:17:14.725871Z",
+  "split_time": "2026-01-18 14:30:00+00:00",
+  "train_n": 4237,
+  "test_n": 1392,
+  "coverage_threshold": 0.1,
+  "baseline": {
+    "home_rmse": 1.1171725822293839,
+    "away_rmse": 0.9979741538052563
+  },
+  "full_model": {
+    "home_rmse": 1.1468579380381076,
+    "away_rmse": 1.043952908743709,
+    "home_lift_vs_baseline": -0.026571862110583575,
+    "away_lift_vs_baseline": -0.04607208990647352,
+    "feature_count": 36,
+    "features": [
+      "home_rolling_xg",
+      "home_rolling_xg_against",
+      "away_rolling_xg",
+      "away_rolling_xg_against",
+      "xg_diff",
+      "home_rolling_corners",
+      "rest_delta",
+      "congestion_flag",
+      "home_upcoming_tier",
+      "away_upcoming_tier",
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "is_derby",
+      "home_form_streak",
+      "away_form_streak",
+      "home_xg_lost",
+      "away_xg_lost",
+      "home_key_absent",
+      "away_key_absent",
+      "injury_impact",
+      "home_xg_over_scored",
+      "home_xg_over_conceded",
+      "away_xg_over_scored",
+      "away_xg_over_conceded",
+      "home_playing_top4",
+      "away_playing_top4",
+      "derby_position_gap",
+      "away_rolling_corners",
+      "odds_model_gap_home",
+      "odds_model_gap_draw",
+      "odds_model_gap_away",
+      "odds_opening_gap_home",
+      "odds_opening_gap_draw",
+      "odds_opening_gap_away"
+    ]
+  },
+  "controlled_model": {
+    "home_rmse": 1.1373126897557737,
+    "away_rmse": 1.030176768635162,
+    "home_lift_vs_baseline": -0.018027749558800543,
+    "away_lift_vs_baseline": -0.03226798480413311,
+    "feature_count": 27,
+    "features": [
+      "home_rolling_xg",
+      "home_rolling_xg_against",
+      "away_rolling_xg",
+      "away_rolling_xg_against",
+      "xg_diff",
+      "home_rolling_corners",
+      "rest_delta",
+      "congestion_flag",
+      "home_upcoming_tier",
+      "away_upcoming_tier",
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "home_form_streak",
+      "away_form_streak",
+      "home_xg_over_scored",
+      "home_xg_over_conceded",
+      "away_xg_over_scored",
+      "away_xg_over_conceded",
+      "home_playing_top4",
+      "away_playing_top4",
+      "away_rolling_corners",
+      "odds_model_gap_home",
+      "odds_model_gap_away",
+      "odds_opening_gap_home",
+      "odds_opening_gap_away"
+    ]
+  },
+  "step2_rules": {
+    "excluded_blocked_features": [
+      "away_key_absent",
+      "away_xg_lost",
+      "derby_position_gap",
+      "home_key_absent",
+      "home_xg_lost",
+      "injury_impact",
+      "is_derby"
+    ],
+    "excluded_drop_features": [
+      "odds_model_gap_draw",
+      "odds_opening_gap_draw"
+    ]
+  },
+  "delta_controlled_vs_full": {
+    "home_rmse_delta": -0.00954524828233394,
+    "away_rmse_delta": -0.013776140108546997
+  }
+}

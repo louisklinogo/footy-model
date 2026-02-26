@@ -1,0 +1,107 @@
+{
+  "created_at": "2026-02-26T16:29:11.099508Z",
+  "train_range": {
+    "start": "2023-11-28 17:45:00+00:00",
+    "end": "2026-01-18 14:30:00+00:00"
+  },
+  "test_range": {
+    "start": "2026-01-18 14:45:00+00:00",
+    "end": "2026-02-25 20:00:00+00:00"
+  },
+  "train_n": 4394,
+  "test_n": 1423,
+  "features": [
+    "home_rolling_xg",
+    "home_rolling_xg_against",
+    "away_rolling_xg",
+    "away_rolling_xg_against",
+    "xg_diff",
+    "home_rolling_corners",
+    "rest_delta",
+    "congestion_flag",
+    "home_upcoming_tier",
+    "away_upcoming_tier",
+    "position_gap",
+    "points_gap",
+    "home_lame_duck",
+    "away_lame_duck",
+    "is_derby",
+    "home_form_streak",
+    "away_form_streak",
+    "home_xg_over_scored",
+    "home_xg_over_conceded",
+    "away_xg_over_scored",
+    "away_xg_over_conceded",
+    "home_playing_top4",
+    "away_playing_top4",
+    "derby_position_gap",
+    "away_rolling_corners",
+    "odds_model_gap_home",
+    "odds_model_gap_draw",
+    "odds_model_gap_away",
+    "odds_opening_gap_home",
+    "odds_opening_gap_draw",
+    "odds_opening_gap_away"
+  ],
+  "feature_hash": "ed45436edf783410061259ac42f037313f073e21330a31db9519c4e289e1428e",
+  "hyperparams": {
+    "n_estimators": 200,
+    "max_depth": 3,
+    "min_samples_leaf": 30,
+    "learning_rate": 0.05,
+    "random_state": 42
+  },
+  "git_commit": "91f79ed40e17d21fcbed252c4d2efd4c1ff35239",
+  "cv_folds": [
+    {
+      "fold": 1,
+      "train_start": "2023-11-28 17:45:00+00:00",
+      "train_end": "2025-09-27 13:00:00+00:00",
+      "test_start": "2025-09-27 13:00:00+00:00",
+      "test_end": "2025-11-01 17:30:00+00:00",
+      "train_n": 1098,
+      "test_n": 1098,
+      "home_rmse": 1.207566443349914,
+      "away_rmse": 1.0921946212251537,
+      "baseline_home_rmse": 1.1630265596695746,
+      "baseline_away_rmse": 1.0515216477545586
+    },
+    {
+      "fold": 2,
+      "train_start": "2023-11-28 17:45:00+00:00",
+      "train_end": "2025-11-01 17:30:00+00:00",
+      "test_start": "2025-11-01 17:30:00+00:00",
+      "test_end": "2025-12-08 13:00:00+00:00",
+      "train_n": 2196,
+      "test_n": 1098,
+      "home_rmse": 1.1764556382330658,
+      "away_rmse": 1.0391327060159892,
+      "baseline_home_rmse": 1.1510645995852782,
+      "baseline_away_rmse": 1.0194350966597137
+    },
+    {
+      "fold": 3,
+      "train_start": "2023-11-28 17:45:00+00:00",
+      "train_end": "2025-12-08 13:00:00+00:00",
+      "test_start": "2025-12-08 13:00:00+00:00",
+      "test_end": "2026-01-18 14:30:00+00:00",
+      "train_n": 3294,
+      "test_n": 1100,
+      "home_rmse": 1.0960950879622715,
+      "away_rmse": 1.0080427784524608,
+      "baseline_home_rmse": 1.0941543842850139,
+      "baseline_away_rmse": 0.9967518082900901
+    }
+  ],
+  "cv_summary": {
+    "home_rmse_mean": 1.1600390565150838,
+    "home_rmse_std": 0.04696519196502101,
+    "away_rmse_mean": 1.0464567018978679,
+    "away_rmse_std": 0.0347429978294748
+  },
+  "deployment_policy_file": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model_no_player_block\\layer2_deployment_policy.json",
+  "enabled_leagues": [
+    "E3",
+    "RO1"
+  ]
+}

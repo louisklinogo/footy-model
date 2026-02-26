@@ -1,0 +1,19 @@
+{
+  "config_version": "keyabs_home_only_minus0.030",
+  "enabled": true,
+  "max_down_pct": 0.15,
+  "max_up_pct": 0.1,
+  "upcoming_tier_2_pct": 0.0,
+  "upcoming_tier_3_pct": 0.0,
+  "key_absent_pct": -0.03,
+  "congestion_threshold_games_14d": 3,
+  "congestion_pct": 0.0,
+  "rest_disadvantage_threshold_days": -2.5,
+  "rest_advantage_threshold_days": 2.5,
+  "rest_disadvantage_pct": 0.0,
+  "rest_advantage_pct": 0.0,
+  "key_absent_pct_home": -0.03,
+  "key_absent_pct_away": 0.0,
+  "congestion_pct_home": 0.0,
+  "congestion_pct_away": 0.0
+}

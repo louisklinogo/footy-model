@@ -1,0 +1,34 @@
+{
+  "generated_at": "2026-02-26T17:31:22.761213+00:00",
+  "baseline_full_features": {
+    "home_test_rmse": 1.1909841018798202,
+    "away_test_rmse": 1.0782898239872445,
+    "home_lift_vs_baseline": 0.0044252754638559,
+    "away_lift_vs_baseline": 0.006575091326102847,
+    "feature_count": 36,
+    "enabled_leagues": [
+      "E1",
+      "RO1"
+    ]
+  },
+  "candidate_keyabs_only": {
+    "home_test_rmse": 1.192446216562715,
+    "away_test_rmse": 1.0762334857616411,
+    "home_lift_vs_baseline": 0.0032030556035188068,
+    "away_lift_vs_baseline": 0.008469589046964977,
+    "feature_count": 33,
+    "enabled_leagues": [
+      "RO1"
+    ]
+  },
+  "delta_candidate_minus_baseline": {
+    "home_test_rmse": 0.0014621146828948106,
+    "away_test_rmse": -0.00205633822560336,
+    "home_lift": -0.0012222198603370933,
+    "away_lift": 0.0018944977208621297,
+    "enabled_leagues_removed": [
+      "E1"
+    ],
+    "enabled_leagues_added": []
+  }
+}

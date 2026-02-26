@@ -1,0 +1,77 @@
+{
+  "generated_at": "2026-02-26T09:27:01.366773+00:00",
+  "scope": "full_frame",
+  "rows": [
+    {
+      "config_name": "regB_xi001_depth3_mcw25_lr025",
+      "xi": 0.001,
+      "max_depth": 3,
+      "min_child_weight": 25,
+      "subsample": 0.7,
+      "colsample_bytree": 0.7,
+      "learning_rate": 0.025,
+      "home_rmse": 1.1738183109905937,
+      "away_rmse": 1.074323336173309,
+      "mean_rmse": 1.1240708235819514,
+      "home_bias": 0.0034437129072692634,
+      "away_bias": 0.06027073782398035
+    },
+    {
+      "config_name": "regA_xi001_depth3_mcw20",
+      "xi": 0.001,
+      "max_depth": 3,
+      "min_child_weight": 20,
+      "subsample": 0.75,
+      "colsample_bytree": 0.75,
+      "learning_rate": 0.03,
+      "home_rmse": 1.1739864934632358,
+      "away_rmse": 1.0750552457196285,
+      "mean_rmse": 1.1245208695914322,
+      "home_bias": 0.002073693472779598,
+      "away_bias": 0.06406542029097574
+    },
+    {
+      "config_name": "baseline_xi001_depth4_mcw15",
+      "xi": 0.001,
+      "max_depth": 4,
+      "min_child_weight": 15,
+      "subsample": 0.7,
+      "colsample_bytree": 0.7,
+      "learning_rate": 0.03,
+      "home_rmse": 1.1757204188603658,
+      "away_rmse": 1.076221099865446,
+      "mean_rmse": 1.125970759362906,
+      "home_bias": 0.0011805014461714197,
+      "away_bias": 0.06476565002814705
+    },
+    {
+      "config_name": "regC_xi001_depth4_mcw25",
+      "xi": 0.001,
+      "max_depth": 4,
+      "min_child_weight": 25,
+      "subsample": 0.65,
+      "colsample_bytree": 0.65,
+      "learning_rate": 0.03,
+      "home_rmse": 1.176632963166358,
+      "away_rmse": 1.0754373832995754,
+      "mean_rmse": 1.1260351732329665,
+      "home_bias": 0.006317488870927166,
+      "away_bias": 0.061286147404552786
+    }
+  ],
+  "best_config": {
+    "config_name": "regB_xi001_depth3_mcw25_lr025",
+    "xi": 0.001,
+    "max_depth": 3,
+    "min_child_weight": 25,
+    "subsample": 0.7,
+    "colsample_bytree": 0.7,
+    "learning_rate": 0.025,
+    "home_rmse": 1.1738183109905937,
+    "away_rmse": 1.074323336173309,
+    "mean_rmse": 1.1240708235819514,
+    "home_bias": 0.0034437129072692634,
+    "away_bias": 0.06027073782398035
+  },
+  "filtered_rows": 5135
+}

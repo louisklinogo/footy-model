@@ -110,43 +110,43 @@ def calibrate_dixon_coles(lambdas_h: np.ndarray, lambdas_a: np.ndarray, actual_d
 
 def train_and_evaluate(
     target_name: str,
-    X_train: pd.DataFrame, y_train: pd.Series,
-    X_eval: pd.DataFrame, y_eval: pd.Series,
-    train_weights: np.ndarray = None,
+    X_train: pd.DataFrame,
+    y_train: pd.Series,
+    X_eval: pd.DataFrame,
+    y_eval: pd.Series,
+    train_weights: np.ndarray | None,
+    booster_params: dict[str, object],
+    num_boost_round: int,
+    early_stopping_rounds: int,
 ):
     """
     Train XGBoost using Poisson regression objective.
     Early-stops on the eval (calibration) set.
     """
-    params = {
-        'objective': 'count:poisson',
-        'eval_metric': 'poisson-nloglik',
-        'learning_rate': 0.03,
-        'max_depth': 4,
-        'min_child_weight': 15,
-        'subsample': 0.7,
-        'colsample_bytree': 0.7,
-        'random_state': 42
-    }
-    
     dtrain = xgb.DMatrix(X_train, label=y_train, weight=train_weights)
     deval = xgb.DMatrix(X_eval, label=y_eval)
     
     print(f"\n[Training {target_name}]")
     print(f"  Train: {len(X_train)} rows | Eval: {len(X_eval)} rows")
     model = xgb.train(
-        params,
+        booster_params,
         dtrain,
-        num_boost_round=2000,
+        num_boost_round=num_boost_round,
         evals=[(dtrain, 'train'), (deval, 'eval')],
-        early_stopping_rounds=100,
+        early_stopping_rounds=early_stopping_rounds,
         verbose_eval=100
     )
     
     # Artifact Save
-    artifacts_dir = ROOT_DIR / 'model_artifacts' / 'artifacts'
-    artifacts_dir.mkdir(parents=True, exist_ok=True)
-    model.save_model(artifacts_dir / f"xgb_{target_name}_v1.json")
+    # Canonical path consumed by predict_lambda.py
+    poisson_dir = ROOT_DIR / "model_artifacts" / "poisson_model"
+    poisson_dir.mkdir(parents=True, exist_ok=True)
+    model.save_model(poisson_dir / f"xgb_{target_name}_v1.json")
+
+    # Keep legacy mirror while other tooling migrates.
+    legacy_dir = ROOT_DIR / "model_artifacts" / "artifacts"
+    legacy_dir.mkdir(parents=True, exist_ok=True)
+    model.save_model(legacy_dir / f"xgb_{target_name}_v1.json")
     
     return model
 
@@ -154,7 +154,82 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--leagues", type=str, default=None)
     parser.add_argument("--limit", type=int, default=5000)
+    parser.add_argument(
+        "--xi",
+        type=float,
+        default=0.001,
+        help="Time-decay rate for training sample weights (0 disables decay).",
+    )
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=0.025,
+        help="XGBoost learning rate.",
+    )
+    parser.add_argument(
+        "--max-depth",
+        type=int,
+        default=3,
+        help="XGBoost max tree depth.",
+    )
+    parser.add_argument(
+        "--min-child-weight",
+        type=float,
+        default=25.0,
+        help="XGBoost minimum child weight.",
+    )
+    parser.add_argument(
+        "--subsample",
+        type=float,
+        default=0.7,
+        help="XGBoost row subsample fraction.",
+    )
+    parser.add_argument(
+        "--colsample-bytree",
+        type=float,
+        default=0.7,
+        help="XGBoost column subsample fraction.",
+    )
+    parser.add_argument(
+        "--num-boost-round",
+        type=int,
+        default=2000,
+        help="Maximum XGBoost boosting rounds.",
+    )
+    parser.add_argument(
+        "--early-stopping-rounds",
+        type=int,
+        default=100,
+        help="Early stopping rounds on calibration split.",
+    )
     args = parser.parse_args()
+    if args.xi < 0:
+        raise ValueError("--xi must be >= 0")
+    if args.learning_rate <= 0:
+        raise ValueError("--learning-rate must be > 0")
+    if args.max_depth <= 0:
+        raise ValueError("--max-depth must be > 0")
+    if args.min_child_weight <= 0:
+        raise ValueError("--min-child-weight must be > 0")
+    if not 0 < args.subsample <= 1:
+        raise ValueError("--subsample must be in (0, 1]")
+    if not 0 < args.colsample_bytree <= 1:
+        raise ValueError("--colsample-bytree must be in (0, 1]")
+    if args.num_boost_round <= 0:
+        raise ValueError("--num-boost-round must be > 0")
+    if args.early_stopping_rounds <= 0:
+        raise ValueError("--early-stopping-rounds must be > 0")
+
+    booster_params: dict[str, object] = {
+        "objective": "count:poisson",
+        "eval_metric": "poisson-nloglik",
+        "learning_rate": args.learning_rate,
+        "max_depth": args.max_depth,
+        "min_child_weight": args.min_child_weight,
+        "subsample": args.subsample,
+        "colsample_bytree": args.colsample_bytree,
+        "random_state": 42,
+    }
     
     leagues_list = None
     if args.leagues:
@@ -186,7 +261,7 @@ def main():
     df = df[(df['h_sample_size'] >= 6) & (df['a_sample_size'] >= 6)]
     print(f"After filtering for min 6 games played: {len(df)} rows")
 
-    # Enforce chronological order (defensive — SQL already returns ordered)
+    # Enforce chronological order (defensive - SQL already returns ordered)
     df = df.sort_values(['kickoff_time', 'fixture_id']).reset_index(drop=True)
 
     # Feature subset including League Intensity anchors
@@ -208,28 +283,50 @@ def main():
     test_df = df.iloc[cal_end:]
     
     print(f"\nSplit: Train={len(train_df)} | Calibration={len(cal_df)} | Test={len(test_df)}")
-    print(f"  Train period: {train_df['kickoff_time'].min()} → {train_df['kickoff_time'].max()}")
-    print(f"  Cal period:   {cal_df['kickoff_time'].min()} → {cal_df['kickoff_time'].max()}")
-    print(f"  Test period:  {test_df['kickoff_time'].min()} → {test_df['kickoff_time'].max()}")
+    print(f"  Train period: {train_df['kickoff_time'].min()} -> {train_df['kickoff_time'].max()}")
+    print(f"  Cal period:   {cal_df['kickoff_time'].min()} -> {cal_df['kickoff_time'].max()}")
+    print(f"  Test period:  {test_df['kickoff_time'].min()} -> {test_df['kickoff_time'].max()}")
 
     # Compute time decay weights for the training period
     # We calibrate weights as-of the end of the training period for consistency
     train_as_of = train_df['kickoff_time'].max()
-    train_weights = compute_time_decay_weights(train_df['kickoff_time'], as_of=train_as_of)
-    print(f"Applying time decay weights (xi=0.002, train_as_of={train_as_of})")
+    train_weights = compute_time_decay_weights(
+        train_df['kickoff_time'],
+        as_of=train_as_of,
+        xi=args.xi,
+    )
+    print(f"Applying time decay weights (xi={args.xi:.4f}, train_as_of={train_as_of})")
+    print(
+        "Using XGBoost params: "
+        f"lr={args.learning_rate}, max_depth={args.max_depth}, "
+        f"min_child_weight={args.min_child_weight}, subsample={args.subsample}, "
+        f"colsample_bytree={args.colsample_bytree}, "
+        f"num_boost_round={args.num_boost_round}, "
+        f"early_stopping_rounds={args.early_stopping_rounds}"
+    )
 
     # Train Lambdas (early-stopping on calibration set)
     model_h = train_and_evaluate(
         "lambda_home",
-        train_df[feature_cols], train_df['home_goals'],
-        cal_df[feature_cols], cal_df['home_goals'],
+        train_df[feature_cols],
+        train_df['home_goals'],
+        cal_df[feature_cols],
+        cal_df['home_goals'],
         train_weights=train_weights,
+        booster_params=booster_params,
+        num_boost_round=args.num_boost_round,
+        early_stopping_rounds=args.early_stopping_rounds,
     )
     model_a = train_and_evaluate(
         "lambda_away",
-        train_df[feature_cols], train_df['away_goals'],
-        cal_df[feature_cols], cal_df['away_goals'],
+        train_df[feature_cols],
+        train_df['away_goals'],
+        cal_df[feature_cols],
+        cal_df['away_goals'],
         train_weights=train_weights,
+        booster_params=booster_params,
+        num_boost_round=args.num_boost_round,
+        early_stopping_rounds=args.early_stopping_rounds,
     )
 
     # --- Dixon-Coles Rho: calibrate on the CALIBRATION set (out-of-sample) ---
@@ -256,14 +353,24 @@ def main():
     test_actual_draws = (test_df['home_goals'] == test_df['away_goals']).astype(int).values.flatten()
     print(f"  Test draw rate (actual):    {test_actual_draws.mean():.3f}")
     print(f"  Test draw rate (predicted): {np.mean(test_draw_probs):.3f}")
-    print(f"  Lambda Home — mean pred: {test_preds_h.mean():.3f}, actual: {test_df['home_goals'].mean():.3f}")
-    print(f"  Lambda Away — mean pred: {test_preds_a.mean():.3f}, actual: {test_df['away_goals'].mean():.3f}")
+    print(f"  Lambda Home - mean pred: {test_preds_h.mean():.3f}, actual: {test_df['home_goals'].mean():.3f}")
+    print(f"  Lambda Away - mean pred: {test_preds_a.mean():.3f}, actual: {test_df['away_goals'].mean():.3f}")
     
     # Save parameters
     artifacts_dir = ROOT_DIR / 'model_artifacts' / 'poisson_model'
     with open(artifacts_dir / 'calibration_params.json', 'w') as f:
         json.dump({
             "rho": optimal_rho, 
+            "xi": args.xi,
+            "booster_params": {
+                "learning_rate": args.learning_rate,
+                "max_depth": args.max_depth,
+                "min_child_weight": args.min_child_weight,
+                "subsample": args.subsample,
+                "colsample_bytree": args.colsample_bytree,
+                "num_boost_round": args.num_boost_round,
+                "early_stopping_rounds": args.early_stopping_rounds,
+            },
             "features": feature_cols,
             "split": {
                 "train_n": len(train_df),

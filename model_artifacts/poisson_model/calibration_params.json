@@ -1,5 +1,15 @@
 {
   "rho": 0.0,
+  "xi": 0.001,
+  "booster_params": {
+    "learning_rate": 0.025,
+    "max_depth": 3,
+    "min_child_weight": 25.0,
+    "subsample": 0.7,
+    "colsample_bytree": 0.7,
+    "num_boost_round": 2000,
+    "early_stopping_rounds": 100
+  },
   "features": [
     "league_avg_xg",
     "league_avg_goals",
@@ -23,8 +33,8 @@
     "a_rest_days"
   ],
   "split": {
-    "train_n": 610,
-    "cal_n": 87,
-    "test_n": 175
+    "train_n": 3108,
+    "cal_n": 444,
+    "test_n": 888
   }
 }

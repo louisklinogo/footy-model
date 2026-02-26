@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-02-26T18:59:14.255951+00:00",
+  "baseline_full_features": {
+    "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model",
+    "feature_count": 36,
+    "home_test_rmse": 1.1909841018798202,
+    "away_test_rmse": 1.0782898239872445,
+    "home_baseline_rmse": 1.1962779613903123,
+    "away_baseline_rmse": 1.085426603029948,
+    "home_lift": 0.0044252754638559,
+    "away_lift": 0.006575091326102847,
+    "enabled_leagues": [
+      "E1",
+      "RO1"
+    ],
+    "cv_home_rmse_mean": 1.162095032622256,
+    "cv_home_rmse_std": 0.049078443102733675,
+    "cv_away_rmse_mean": 1.043789211606511,
+    "cv_away_rmse_std": 0.03622158011976815
+  },
+  "candidate_pruned_drop9": {
+    "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model_pruned_drop9",
+    "feature_count": 27,
+    "home_test_rmse": 1.1960224987207004,
+    "away_test_rmse": 1.0757506613341807,
+    "home_baseline_rmse": 1.1962779613903123,
+    "away_baseline_rmse": 1.085426603029948,
+    "home_lift": 0.00021354791934388874,
+    "away_lift": 0.008914413622033063,
+    "enabled_leagues": [
+      "RO1"
+    ],
+    "cv_home_rmse_mean": 1.1575728987704295,
+    "cv_home_rmse_std": 0.04378843931798906,
+    "cv_away_rmse_mean": 1.0473634278432495,
+    "cv_away_rmse_std": 0.03503463591394785
+  },
+  "delta_candidate_minus_baseline": {
+    "home_test_rmse": 0.005038396840880255,
+    "away_test_rmse": -0.0025391626530637534,
+    "home_lift": -0.004211727544512011,
+    "away_lift": 0.0023393222959302165,
+    "enabled_leagues_removed": [
+      "E1"
+    ],
+    "enabled_leagues_added": []
+  }
+}

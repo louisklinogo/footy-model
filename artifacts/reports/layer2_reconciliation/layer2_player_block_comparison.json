@@ -1,0 +1,41 @@
+{
+  "generated_at": "2026-02-26T16:29:45.373033Z",
+  "baseline_model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model",
+  "candidate_model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model_no_player_block",
+  "baseline_full_features": {
+    "home_test_rmse": 1.1928203715572674,
+    "away_test_rmse": 1.077576513741526,
+    "home_lift_vs_baseline": 0.002890289668988375,
+    "away_lift_vs_baseline": 0.007232261736084711,
+    "enabled_leagues": [
+      "E1",
+      "E3",
+      "RO1"
+    ],
+    "enabled_league_count": 3,
+    "feature_count": 36
+  },
+  "candidate_no_player_block": {
+    "home_test_rmse": 1.1932847593663767,
+    "away_test_rmse": 1.075868360460222,
+    "home_lift_vs_baseline": 0.0025020957674894463,
+    "away_lift_vs_baseline": 0.0088059777999216,
+    "enabled_leagues": [
+      "E3",
+      "RO1"
+    ],
+    "enabled_league_count": 2,
+    "feature_count": 31
+  },
+  "delta_candidate_minus_baseline": {
+    "home_test_rmse": 0.0004643878091092901,
+    "away_test_rmse": -0.0017081532813041367,
+    "home_lift_vs_baseline": -0.0003881939014989287,
+    "away_lift_vs_baseline": 0.00157371606383689,
+    "enabled_league_count": -1,
+    "enabled_leagues_removed": [
+      "E1"
+    ],
+    "enabled_leagues_added": []
+  }
+}

@@ -35,6 +35,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--days", type=int, default=3, help="Prediction horizon in days")
     parser.add_argument(
+        "--enable-situational-rule-layer",
+        action="store_true",
+        help="Enable deterministic rule-layer in Layer 2 situational prediction.",
+    )
+    parser.add_argument(
+        "--situational-rule-layer-config",
+        default=None,
+        help="Optional path to rule-layer JSON config for Layer 2 prediction.",
+    )
+    parser.add_argument(
         "--since",
         default=None,
         help="Readiness scope lower bound (YYYY-MM-DD). Defaults to today-30d.",
@@ -219,6 +229,12 @@ def main() -> int:
             "--days",
             str(args.days),
         ]
+        if args.enable_situational_rule_layer:
+            situational_cmd.append("--enable-rule-layer")
+            if args.situational_rule_layer_config:
+                situational_cmd.extend(
+                    ["--rule-layer-config", str(args.situational_rule_layer_config)]
+                )
         if not run_step(f"daily.predict_situational.{league}", situational_cmd, args.dry_run):
             raise RuntimeError(f"Pipeline aborted at situational prediction step for league={league}")
 

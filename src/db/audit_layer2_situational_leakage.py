@@ -83,6 +83,33 @@ def _fetch_all_dicts(cur) -> list[dict[str, Any]]:
     return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
+def _resolve_availability_timing(cur) -> tuple[str, str]:
+    if _column_exists(cur, "player_availability", "event_recorded_at"):
+        return "pa.event_recorded_at", "event_recorded_at"
+    if _column_exists(cur, "player_availability", "first_recorded_at"):
+        return "pa.first_recorded_at", "first_recorded_at"
+    if _column_exists(cur, "player_availability", "recorded_at"):
+        return "pa.recorded_at", "recorded_at"
+    return "", ""
+
+
+def _resolve_prediction_timing(cur) -> tuple[str, str]:
+    parts: list[str] = []
+    anchor = "created_at"
+    if _column_exists(cur, "predictions", "feature_asof_utc"):
+        parts.append("p.feature_asof_utc")
+        anchor = "feature_asof_utc"
+    if _column_exists(cur, "predictions", "first_created_at"):
+        parts.append("p.first_created_at")
+        if anchor == "created_at":
+            anchor = "first_created_at"
+    if _column_exists(cur, "predictions", "created_at"):
+        parts.append("p.created_at")
+    if not parts:
+        return "", ""
+    return f"COALESCE({', '.join(parts)})", anchor
+
+
 def run_availability_check(
     cur, days: int, limit: int, league: str | None
 ) -> dict[str, Any]:
@@ -101,10 +128,12 @@ def run_availability_check(
         check["reason"] = "table player_availability missing"
         return check
 
-    if not _column_exists(cur, "player_availability", "recorded_at"):
+    timing_expr, timing_column = _resolve_availability_timing(cur)
+    if not timing_expr:
         check["status"] = "failed"
-        check["reason"] = "column player_availability.recorded_at missing"
+        check["reason"] = "no usable player_availability timing column found"
         return check
+    check["timing_column"] = timing_column
 
     params: list[Any] = [days]
     league_sql = ""
@@ -125,16 +154,22 @@ def run_availability_check(
             ORDER BY f.match_datetime_utc ASC
             LIMIT %s
         )
-        SELECT COUNT(*)
+        SELECT
+            COUNT(*) FILTER (WHERE {timing_expr} IS NOT NULL AND {timing_expr} > tf.match_datetime_utc) AS violation_count,
+            COUNT(*) FILTER (WHERE {timing_expr} IS NOT NULL) AS known_timing_rows,
+            COUNT(*) FILTER (WHERE {timing_expr} IS NULL) AS unknown_timing_rows
         FROM player_availability pa
         JOIN target_fixtures tf ON tf.fixture_id = pa.fixture_id
-        WHERE pa.recorded_at > tf.match_datetime_utc
         """,
         tuple(params),
     )
     count_row = cur.fetchone()
-    violation_count = int(count_row[0]) if count_row else 0
+    violation_count = int(count_row[0]) if count_row and count_row[0] is not None else 0
+    known_timing_rows = int(count_row[1]) if count_row and count_row[1] is not None else 0
+    unknown_timing_rows = int(count_row[2]) if count_row and count_row[2] is not None else 0
     check["violation_count"] = violation_count
+    check["known_timing_rows"] = known_timing_rows
+    check["unknown_timing_rows"] = unknown_timing_rows
 
     cur.execute(
         f"""
@@ -157,6 +192,10 @@ def run_availability_check(
     check["fixture_sample_count"] = (
         int(fixture_count_row[0]) if fixture_count_row else 0
     )
+    total_timing_rows = known_timing_rows + unknown_timing_rows
+    check["unknown_timing_pct"] = (
+        (unknown_timing_rows / total_timing_rows) if total_timing_rows > 0 else 0.0
+    )
 
     if violation_count > 0:
         check["status"] = "failed"
@@ -177,12 +216,13 @@ def run_availability_check(
                 pa.player_id,
                 pa.team_id,
                 pa.status,
-                pa.recorded_at,
+                {timing_expr} AS timing_at,
                 tf.match_datetime_utc
             FROM player_availability pa
             JOIN target_fixtures tf ON tf.fixture_id = pa.fixture_id
-            WHERE pa.recorded_at > tf.match_datetime_utc
-            ORDER BY pa.recorded_at DESC
+            WHERE {timing_expr} IS NOT NULL
+              AND {timing_expr} > tf.match_datetime_utc
+            ORDER BY timing_at DESC
             LIMIT %s
             """,
             tuple([*params, MAX_EXAMPLES]),
@@ -363,14 +403,21 @@ def run_lambda_timing_check(cur, sampled_fixtures: list[int]) -> dict[str, Any]:
         check["reason"] = "no sampled FT fixtures"
         return check
 
+    timing_expr, timing_column = _resolve_prediction_timing(cur)
+    if not timing_expr:
+        check["skipped"] = True
+        check["reason"] = "no usable predictions timing column found"
+        return check
+    check["timing_column"] = timing_column
+
     cur.execute(
-        """
+        f"""
         SELECT COUNT(*)
         FROM predictions p
         JOIN fixtures f ON f.fixture_id = p.fixture_id
         WHERE p.model_name = 'lambda_xgb'
           AND p.fixture_id = ANY(%s)
-          AND p.created_at > f.match_datetime_utc
+          AND {timing_expr} > f.match_datetime_utc
         """,
         (sampled_fixtures,),
     )
@@ -379,20 +426,20 @@ def run_lambda_timing_check(cur, sampled_fixtures: list[int]) -> dict[str, Any]:
 
     if check["violation_count"] > 0:
         cur.execute(
-            """
+            f"""
             SELECT
                 p.fixture_id,
                 p.prediction_id,
                 p.market_code,
                 p.model_name,
-                p.created_at,
+                {timing_expr} AS timing_at,
                 f.match_datetime_utc AS kickoff
             FROM predictions p
             JOIN fixtures f ON f.fixture_id = p.fixture_id
             WHERE p.model_name = 'lambda_xgb'
               AND p.fixture_id = ANY(%s)
-              AND p.created_at > f.match_datetime_utc
-            ORDER BY p.created_at DESC
+              AND {timing_expr} > f.match_datetime_utc
+            ORDER BY timing_at DESC
             LIMIT %s
             """,
             (sampled_fixtures, MAX_EXAMPLES),

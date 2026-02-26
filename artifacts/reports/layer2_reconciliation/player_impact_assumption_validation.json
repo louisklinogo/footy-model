@@ -1,0 +1,223 @@
+{
+  "generated_at": "2026-02-26T19:27:49.247536+00:00",
+  "scope": "Layer 2 player-impact assumptions (home_xg_lost, away_xg_lost, home_key_absent, away_key_absent, injury_impact)",
+  "gate_status": {
+    "correctness": "pass",
+    "football_logic": "warn",
+    "predictive_value": "warn",
+    "operational_readiness": "fail"
+  },
+  "overall_status": "fail",
+  "correctness": {
+    "status": "pass",
+    "timing_column_used": "event_recorded_at",
+    "rows_compared": 7824,
+    "parity_mismatch": {
+      "home_xg_lost": {
+        "mismatch_count_abs_gt_1e-9": 0,
+        "max_abs_diff": 0.0
+      },
+      "away_xg_lost": {
+        "mismatch_count_abs_gt_1e-9": 0,
+        "max_abs_diff": 0.0
+      },
+      "home_key_absent": {
+        "mismatch_count": 0,
+        "max_abs_diff": 0
+      },
+      "away_key_absent": {
+        "mismatch_count": 0,
+        "max_abs_diff": 0
+      }
+    },
+    "timing": {
+      "known_timing_rows": 338663,
+      "unknown_timing_rows": 0,
+      "late_rows": 0
+    },
+    "notes": [
+      "Train-style and predict-style formulas were recomputed directly from SQL and compared fixture-by-fixture.",
+      "Residual references use latest pair from predictions model_name='lambda_xgb'."
+    ]
+  },
+  "football_logic": {
+    "status": "warn",
+    "corr_xg_lost_vs_residual": 0.021743003539725927,
+    "mean_residual_key_absent_0": 0.0012609026656077895,
+    "mean_residual_key_absent_1": 0.009293546973659661,
+    "mean_residual_delta_key1_minus_key0": 0.008032644308051872,
+    "xg_lost_bucket_summary": [
+      {
+        "xg_lost_bucket": "0",
+        "n": 11347,
+        "mean_residual": 0.002510575397076618,
+        "mean_goals": 1.3577156957786198,
+        "mean_lambda": 1.3502278012774702
+      },
+      {
+        "xg_lost_bucket": "(0,0.1]",
+        "n": 519,
+        "mean_residual": -0.048079065255474944,
+        "mean_goals": 1.3564547206165702,
+        "mean_lambda": 1.4003997403609603
+      },
+      {
+        "xg_lost_bucket": "(0.1,0.25]",
+        "n": 854,
+        "mean_residual": -0.04918416949655737,
+        "mean_goals": 1.370023419203747,
+        "mean_lambda": 1.3960476381312437
+      },
+      {
+        "xg_lost_bucket": "(0.25,0.5]",
+        "n": 1081,
+        "mean_residual": -0.01050165643865578,
+        "mean_goals": 1.400555041628122,
+        "mean_lambda": 1.410884798201108
+      },
+      {
+        "xg_lost_bucket": "(0.5,1.0]",
+        "n": 1262,
+        "mean_residual": 0.014078265033131443,
+        "mean_goals": 1.497622820919176,
+        "mean_lambda": 1.481417230462364
+      },
+      {
+        "xg_lost_bucket": "(1.0,+)",
+        "n": 585,
+        "mean_residual": 0.1407082449971584,
+        "mean_goals": 1.65982905982906,
+        "mean_lambda": 1.5224496497396838
+      }
+    ],
+    "triggered_share": 0.2852121676891616
+  },
+  "predictive_value": {
+    "status": "warn",
+    "train_rows": 4394,
+    "test_rows": 1423,
+    "runs": {
+      "key_absent_only": {
+        "features": [
+          "home_key_absent",
+          "away_key_absent"
+        ],
+        "home_rmse": 1.1961786545879711,
+        "away_rmse": 1.0852963780940363,
+        "home_lift": 8.30131504100811e-05,
+        "away_lift": 0.00011997581001618867,
+        "triggered_home_lift": 0.000831621964659279,
+        "triggered_away_lift": 0.00047643322279765875,
+        "triggered_combined_lift": 0.0006540275937284689,
+        "global_combined_lift": 0.0001014944802131349,
+        "triggered_test_fixtures": 493,
+        "test_fixtures": 1423
+      },
+      "xg_lost_only": {
+        "features": [
+          "home_xg_lost",
+          "away_xg_lost",
+          "injury_impact"
+        ],
+        "home_rmse": 1.2052204757952936,
+        "away_rmse": 1.0909006140596333,
+        "home_lift": -0.007475281409170414,
+        "away_lift": -0.005043188562363192,
+        "triggered_home_lift": -0.020672705508386013,
+        "triggered_away_lift": -0.01425142083103649,
+        "triggered_combined_lift": -0.017462063169711252,
+        "global_combined_lift": -0.006259234985766803,
+        "triggered_test_fixtures": 493,
+        "test_fixtures": 1423
+      },
+      "player_block_all": {
+        "features": [
+          "home_xg_lost",
+          "away_xg_lost",
+          "home_key_absent",
+          "away_key_absent",
+          "injury_impact"
+        ],
+        "home_rmse": 1.2049886981742022,
+        "away_rmse": 1.0890012131770626,
+        "home_lift": -0.007281532440643051,
+        "away_lift": -0.003293276705339743,
+        "triggered_home_lift": -0.020117903548532955,
+        "triggered_away_lift": -0.009276621264529437,
+        "triggered_combined_lift": -0.014697262406531197,
+        "global_combined_lift": -0.005287404572991397,
+        "triggered_test_fixtures": 493,
+        "test_fixtures": 1423
+      },
+      "player_block_no_injury_impact": {
+        "features": [
+          "home_xg_lost",
+          "away_xg_lost",
+          "home_key_absent",
+          "away_key_absent"
+        ],
+        "home_rmse": 1.2033505836164162,
+        "away_rmse": 1.0918807330359706,
+        "home_lift": -0.005912189686988927,
+        "away_lift": -0.0059461689883092885,
+        "triggered_home_lift": -0.016139056114549872,
+        "triggered_away_lift": -0.016746865865611756,
+        "triggered_combined_lift": -0.016442960990080815,
+        "global_combined_lift": -0.005929179337649108,
+        "triggered_test_fixtures": 493,
+        "test_fixtures": 1423
+      }
+    },
+    "best_by_triggered_lift": {
+      "name": "key_absent_only",
+      "features": [
+        "home_key_absent",
+        "away_key_absent"
+      ],
+      "home_rmse": 1.1961786545879711,
+      "away_rmse": 1.0852963780940363,
+      "home_lift": 8.30131504100811e-05,
+      "away_lift": 0.00011997581001618867,
+      "triggered_home_lift": 0.000831621964659279,
+      "triggered_away_lift": 0.00047643322279765875,
+      "triggered_combined_lift": 0.0006540275937284689,
+      "global_combined_lift": 0.0001014944802131349,
+      "triggered_test_fixtures": 493,
+      "test_fixtures": 1423
+    },
+    "best_by_global_lift": {
+      "name": "key_absent_only",
+      "features": [
+        "home_key_absent",
+        "away_key_absent"
+      ],
+      "home_rmse": 1.1961786545879711,
+      "away_rmse": 1.0852963780940363,
+      "home_lift": 8.30131504100811e-05,
+      "away_lift": 0.00011997581001618867,
+      "triggered_home_lift": 0.000831621964659279,
+      "triggered_away_lift": 0.00047643322279765875,
+      "triggered_combined_lift": 0.0006540275937284689,
+      "global_combined_lift": 0.0001014944802131349,
+      "triggered_test_fixtures": 493,
+      "test_fixtures": 1423
+    }
+  },
+  "operational_readiness": {
+    "status": "fail",
+    "reasons": [
+      "upcoming_availability_coverage_below_50pct",
+      "fixture_player_stats_expected_goals_missingness_high"
+    ],
+    "fixture_player_stats_expected_goals_null_pct": 0.7166709895968425,
+    "historical_ft_coverage_pct": 0.9985940695296524,
+    "historical_ft_fixtures_with_availability": 7813,
+    "historical_ft_fixtures_total": 7824,
+    "upcoming_14d_coverage_pct": 0.0,
+    "upcoming_14d_fixtures_with_availability": 0,
+    "upcoming_14d_fixtures_total": 622
+  },
+  "recommendation": [
+    "Keep player-impact features as conditional for serving until upcoming availability coverage improves."
+  ]
+}

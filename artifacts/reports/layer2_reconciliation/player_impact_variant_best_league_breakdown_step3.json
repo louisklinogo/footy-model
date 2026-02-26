@@ -1,0 +1,401 @@
+{
+  "generated_at": "2026-02-26T20:35:10.959005+00:00",
+  "variant": "season_xg90",
+  "xg_share_threshold": 0.12,
+  "minutes_share_threshold": 0.07,
+  "overall_triggered_rate": 0.25933026584867075,
+  "overall_home_key_absent_rate": 0.027351738241308793,
+  "overall_away_key_absent_rate": 0.029013292433537834,
+  "leagues": [
+    {
+      "league_code": "D1",
+      "fixtures": 206,
+      "triggered_fixtures": 193,
+      "home_key_absent_rate": 0.08737864077669903,
+      "away_key_absent_rate": 0.0970873786407767,
+      "home_xg_lost_mean": 0.2159091768986785,
+      "away_xg_lost_mean": 0.2221654665471102,
+      "triggered_rate": 0.9368932038834952
+    },
+    {
+      "league_code": "E0",
+      "fixtures": 271,
+      "triggered_fixtures": 250,
+      "home_key_absent_rate": 0.08487084870848709,
+      "away_key_absent_rate": 0.08118081180811808,
+      "home_xg_lost_mean": 0.226029150969425,
+      "away_xg_lost_mean": 0.22092605706264157,
+      "triggered_rate": 0.922509225092251
+    },
+    {
+      "league_code": "I1",
+      "fixtures": 260,
+      "triggered_fixtures": 234,
+      "home_key_absent_rate": 0.1423076923076923,
+      "away_key_absent_rate": 0.17692307692307693,
+      "home_xg_lost_mean": 0.22326667124707658,
+      "away_xg_lost_mean": 0.24130938439499883,
+      "triggered_rate": 0.9
+    },
+    {
+      "league_code": "F1",
+      "fixtures": 207,
+      "triggered_fixtures": 183,
+      "home_key_absent_rate": 0.10144927536231885,
+      "away_key_absent_rate": 0.11594202898550725,
+      "home_xg_lost_mean": 0.20668131912216353,
+      "away_xg_lost_mean": 0.23364205872476743,
+      "triggered_rate": 0.8840579710144928
+    },
+    {
+      "league_code": "SP1",
+      "fixtures": 118,
+      "triggered_fixtures": 101,
+      "home_key_absent_rate": 0.1016949152542373,
+      "away_key_absent_rate": 0.06779661016949153,
+      "home_xg_lost_mean": 0.16361358079877217,
+      "away_xg_lost_mean": 0.15875682019757578,
+      "triggered_rate": 0.8559322033898306
+    },
+    {
+      "league_code": "CL",
+      "fixtures": 442,
+      "triggered_fixtures": 294,
+      "home_key_absent_rate": 0.0746606334841629,
+      "away_key_absent_rate": 0.07918552036199095,
+      "home_xg_lost_mean": 0.14067843234728636,
+      "away_xg_lost_mean": 0.14314754342319028,
+      "triggered_rate": 0.665158371040724
+    },
+    {
+      "league_code": "EL",
+      "fixtures": 450,
+      "triggered_fixtures": 244,
+      "home_key_absent_rate": 0.035555555555555556,
+      "away_key_absent_rate": 0.035555555555555556,
+      "home_xg_lost_mean": 0.08554556243229053,
+      "away_xg_lost_mean": 0.09009267665207801,
+      "triggered_rate": 0.5422222222222223
+    },
+    {
+      "league_code": "E1",
+      "fixtures": 406,
+      "triggered_fixtures": 182,
+      "home_key_absent_rate": 0.034482758620689655,
+      "away_key_absent_rate": 0.046798029556650245,
+      "home_xg_lost_mean": 0.1024603016125594,
+      "away_xg_lost_mean": 0.11162743034262898,
+      "triggered_rate": 0.4482758620689655
+    },
+    {
+      "league_code": "BR1",
+      "fixtures": 35,
+      "triggered_fixtures": 14,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.014239971606033717,
+      "away_xg_lost_mean": 0.027894121265897662,
+      "triggered_rate": 0.4
+    },
+    {
+      "league_code": "N1",
+      "fixtures": 216,
+      "triggered_fixtures": 86,
+      "home_key_absent_rate": 0.06481481481481481,
+      "away_key_absent_rate": 0.06944444444444445,
+      "home_xg_lost_mean": 0.08321320149782085,
+      "away_xg_lost_mean": 0.0878160379164567,
+      "triggered_rate": 0.39814814814814814
+    },
+    {
+      "league_code": "T1",
+      "fixtures": 207,
+      "triggered_fixtures": 79,
+      "home_key_absent_rate": 0.07246376811594203,
+      "away_key_absent_rate": 0.06280193236714976,
+      "home_xg_lost_mean": 0.06150558464614551,
+      "away_xg_lost_mean": 0.054108668075497836,
+      "triggered_rate": 0.38164251207729466
+    },
+    {
+      "league_code": "B1",
+      "fixtures": 200,
+      "triggered_fixtures": 66,
+      "home_key_absent_rate": 0.015,
+      "away_key_absent_rate": 0.01,
+      "home_xg_lost_mean": 0.03681295222508409,
+      "away_xg_lost_mean": 0.041616680019529416,
+      "triggered_rate": 0.33
+    },
+    {
+      "league_code": "ECL",
+      "fixtures": 378,
+      "triggered_fixtures": 80,
+      "home_key_absent_rate": 0.013227513227513227,
+      "away_key_absent_rate": 0.010582010582010581,
+      "home_xg_lost_mean": 0.04129736165634251,
+      "away_xg_lost_mean": 0.03244300760946329,
+      "triggered_rate": 0.21164021164021163
+    },
+    {
+      "league_code": "G1",
+      "fixtures": 152,
+      "triggered_fixtures": 7,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.006578947368421052,
+      "home_xg_lost_mean": 0.017601563178130178,
+      "away_xg_lost_mean": 0.014597545532804443,
+      "triggered_rate": 0.046052631578947366
+    },
+    {
+      "league_code": "CH1",
+      "fixtures": 155,
+      "triggered_fixtures": 4,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.003985953769971086,
+      "away_xg_lost_mean": 0.00743245964106373,
+      "triggered_rate": 0.025806451612903226
+    },
+    {
+      "league_code": "P1",
+      "fixtures": 207,
+      "triggered_fixtures": 5,
+      "home_key_absent_rate": 0.004830917874396135,
+      "away_key_absent_rate": 0.004830917874396135,
+      "home_xg_lost_mean": 0.009874506454316648,
+      "away_xg_lost_mean": 0.00984658412147538,
+      "triggered_rate": 0.024154589371980676
+    },
+    {
+      "league_code": "DK1",
+      "fixtures": 126,
+      "triggered_fixtures": 2,
+      "home_key_absent_rate": 0.007936507936507936,
+      "away_key_absent_rate": 0.007936507936507936,
+      "home_xg_lost_mean": 0.008444421351824546,
+      "away_xg_lost_mean": 0.004471930056486039,
+      "triggered_rate": 0.015873015873015872
+    },
+    {
+      "league_code": "SC0",
+      "fixtures": 165,
+      "triggered_fixtures": 2,
+      "home_key_absent_rate": 0.006060606060606061,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.007123100213478522,
+      "away_xg_lost_mean": 0.005593246098054643,
+      "triggered_rate": 0.012121212121212121
+    },
+    {
+      "league_code": "AT1",
+      "fixtures": 120,
+      "triggered_fixtures": 1,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 8.928571428571429e-05,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.008333333333333333
+    },
+    {
+      "league_code": "RO1",
+      "fixtures": 224,
+      "triggered_fixtures": 1,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0003455812817258474,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.004464285714285714
+    },
+    {
+      "league_code": "MX1",
+      "fixtures": 232,
+      "triggered_fixtures": 1,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.00046581015431510766,
+      "away_xg_lost_mean": 0.0002753219034904351,
+      "triggered_rate": 0.004310344827586207
+    },
+    {
+      "league_code": "EC",
+      "fixtures": 398,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "E3",
+      "fixtures": 394,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "E2",
+      "fixtures": 391,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "SP2",
+      "fixtures": 297,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "I2",
+      "fixtures": 260,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "F2",
+      "fixtures": 216,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "D2",
+      "fixtures": 207,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "PL1",
+      "fixtures": 196,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "RU1",
+      "fixtures": 144,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "SC1",
+      "fixtures": 127,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "SC2",
+      "fixtures": 126,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "SC3",
+      "fixtures": 124,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "CH2",
+      "fixtures": 115,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "JP1",
+      "fixtures": 30,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "IE1",
+      "fixtures": 13,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "TST_b593f7",
+      "fixtures": 3,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "TST_f6c25e",
+      "fixtures": 3,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    },
+    {
+      "league_code": "TST_f83272",
+      "fixtures": 3,
+      "triggered_fixtures": 0,
+      "home_key_absent_rate": 0.0,
+      "away_key_absent_rate": 0.0,
+      "home_xg_lost_mean": 0.0,
+      "away_xg_lost_mean": 0.0,
+      "triggered_rate": 0.0
+    }
+  ]
+}

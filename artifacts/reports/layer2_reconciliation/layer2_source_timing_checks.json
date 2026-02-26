@@ -1,0 +1,26 @@
+{
+  "ft_total": 7824,
+  "lambda_timing": {
+    "fixtures_with_latest_pair": 7137,
+    "late_latest_pairs": 0,
+    "late_latest_pairs_pct": 0.0
+  },
+  "odds_timing_training_join": {
+    "ft_rows": 7824,
+    "with_snapshot": 7654,
+    "with_snapshot_pct": 0.9782719836400818,
+    "late_snapshot_rows": 0
+  },
+  "availability_timing_historical_ft": {
+    "rows_total": 338663,
+    "rows_late": 0,
+    "rows_late_pct": 0.0,
+    "fixtures_with_rows": 7813,
+    "fixtures_with_late_rows": 0
+  },
+  "availability_upcoming_14d": {
+    "fixtures_total": 630,
+    "fixtures_with_availability": 0,
+    "coverage_pct": 0.0
+  }
+}

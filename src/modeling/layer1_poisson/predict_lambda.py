@@ -25,6 +25,7 @@ from src.features.build_features import build_point_in_time_features
 # pyright: reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportAny=false
 
 MODEL_NAME = "lambda_xgb"
+TARGET_WINDOW_MINS = 60
 
 
 def get_fixtures_with_snapshots(limit: int | None = None, leagues: list[str] | None = None) -> list[int]:
@@ -62,21 +63,59 @@ def get_fixtures_with_snapshots(limit: int | None = None, leagues: list[str] | N
     return [r[0] for r in rows]
 
 
+def _has_prediction_lineage_columns(conn) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_schema = 'public'
+              AND table_name = 'predictions'
+              AND column_name IN ('first_created_at', 'last_refreshed_at', 'feature_asof_utc')
+            """
+        )
+        row = cur.fetchone()
+    return bool(row and int(row[0]) == 3)
+
+
 def save_predictions_to_db(predictions: list[dict]) -> int:
     """Upsert predictions to DB. Stores lambda in metadata_json since p_model has 0-1 constraint."""
     if not predictions:
         return 0
     
     conn = connect_db()
-    upsert_sql = """
-        INSERT INTO predictions 
-            (fixture_id, model_name, model_version, market_code, p_model, metadata_json, created_at)
-        VALUES (%s, %s, %s, %s, %s, %s, NOW())
-        ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
-            p_model = EXCLUDED.p_model,
-            metadata_json = EXCLUDED.metadata_json,
-            created_at = NOW()
-    """
+    has_lineage_cols = _has_prediction_lineage_columns(conn)
+    if has_lineage_cols:
+        upsert_sql = """
+            INSERT INTO predictions
+                (
+                    fixture_id,
+                    model_name,
+                    model_version,
+                    market_code,
+                    p_model,
+                    metadata_json,
+                    created_at,
+                    first_created_at,
+                    last_refreshed_at,
+                    feature_asof_utc
+                )
+            VALUES (%s, %s, %s, %s, %s, %s, NOW(), NOW(), NOW(), %s)
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
+                p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json,
+                last_refreshed_at = NOW(),
+                feature_asof_utc = COALESCE(EXCLUDED.feature_asof_utc, predictions.feature_asof_utc)
+        """
+    else:
+        upsert_sql = """
+            INSERT INTO predictions 
+                (fixture_id, model_name, model_version, market_code, p_model, metadata_json, created_at)
+            VALUES (%s, %s, %s, %s, %s, %s, NOW())
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
+                p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json
+        """
     
     with conn.cursor() as cur:
         for pred in predictions:
@@ -84,15 +123,31 @@ def save_predictions_to_db(predictions: list[dict]) -> int:
             if pred.get("is_low_confidence"):
                 meta["is_low_confidence"] = True
                 meta["low_confidence_reason"] = pred["low_confidence_reason"]
-                
-            cur.execute(upsert_sql, (
-                pred["fixture_id"],
-                pred["model_name"],
-                pred["model_version"],
-                pred["market_code"],
-                pred["p_model"],
-                json.dumps(meta),
-            ))
+            if has_lineage_cols:
+                cur.execute(
+                    upsert_sql,
+                    (
+                        pred["fixture_id"],
+                        pred["model_name"],
+                        pred["model_version"],
+                        pred["market_code"],
+                        pred["p_model"],
+                        json.dumps(meta),
+                        pred.get("feature_asof_utc"),
+                    ),
+                )
+            else:
+                cur.execute(
+                    upsert_sql,
+                    (
+                        pred["fixture_id"],
+                        pred["model_name"],
+                        pred["model_version"],
+                        pred["market_code"],
+                        pred["p_model"],
+                        json.dumps(meta),
+                    ),
+                )
         conn.commit()
     
     conn.close()
@@ -142,7 +197,7 @@ def main() -> None:
         batch_ids = fixture_ids[i:i + args.batch_size]
         print(f"  Batch {i//args.batch_size + 1}: {len(batch_ids)} fixtures")
         
-        df = build_point_in_time_features(batch_ids, target_window_mins=60)
+        df = build_point_in_time_features(batch_ids, target_window_mins=TARGET_WINDOW_MINS)
         
         if df.empty:
             print("    No features built, skipping...")
@@ -165,6 +220,10 @@ def main() -> None:
         for _, row in df.iterrows():
             is_low = bool(row["is_low_confidence"])
             reason = "early_season_min_6_games_not_met" if is_low else None
+            kickoff = pd.to_datetime(row.get("kickoff_time"), utc=True, errors="coerce")
+            feature_asof_utc = None
+            if pd.notna(kickoff):
+                feature_asof_utc = (kickoff - pd.Timedelta(minutes=TARGET_WINDOW_MINS)).to_pydatetime()
 
             predictions.append({
                 "fixture_id": int(row["fixture_id"]),
@@ -174,7 +233,8 @@ def main() -> None:
                 "p_model": 0.5,
                 "lambda_value": float(row["lambda_home"]),
                 "is_low_confidence": is_low,
-                "low_confidence_reason": reason
+                "low_confidence_reason": reason,
+                "feature_asof_utc": feature_asof_utc,
             })
             predictions.append({
                 "fixture_id": int(row["fixture_id"]),
@@ -184,7 +244,8 @@ def main() -> None:
                 "p_model": 0.5,
                 "lambda_value": float(row["lambda_away"]),
                 "is_low_confidence": is_low,
-                "low_confidence_reason": reason
+                "low_confidence_reason": reason,
+                "feature_asof_utc": feature_asof_utc,
             })
         
         saved = save_predictions_to_db(predictions)
