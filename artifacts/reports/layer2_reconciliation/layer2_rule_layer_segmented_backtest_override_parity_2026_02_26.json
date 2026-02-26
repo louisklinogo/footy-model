@@ -1,0 +1,70 @@
+{
+  "summary": {
+    "generated_at": "2026-02-26T22:26:58.892332+00:00",
+    "model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model",
+    "rule_layer_config_path": "model_artifacts\\situational_model\\rule_layer_config.json",
+    "n_test_fixtures": 1426,
+    "n_triggered_fixtures": 50,
+    "n_triggered_home_events": 50,
+    "n_triggered_away_events": 0,
+    "rule_overlap_mode": "override",
+    "n_overlap_overrides_home": 50,
+    "n_overlap_overrides_away": 0,
+    "rule_counts_home": {
+      "congestion": 7,
+      "key_absent": 50
+    },
+    "rule_counts_away": {}
+  },
+  "global_metrics": {
+    "layer1_only": {
+      "home_rmse": 1.1988479693095337,
+      "away_rmse": 1.0865612032971497
+    },
+    "layer1_plus_layer2": {
+      "home_rmse": 1.197452149548761,
+      "away_rmse": 1.0858954358143784,
+      "home_lift": 0.0011643008926117333,
+      "away_lift": 0.0006127289293516023
+    },
+    "layer1_plus_layer2_plus_rules": {
+      "home_rmse": 1.1964184458963796,
+      "away_rmse": 1.0858954358143784,
+      "home_lift": 0.0020265483825721705,
+      "away_lift": 0.0006127289293516023
+    }
+  },
+  "triggered_metrics": {
+    "fixtures_triggered": 50,
+    "home_events": 50,
+    "away_events": 0,
+    "layer1_only": {
+      "home_rmse": 1.2163474870319642,
+      "away_rmse": 1.1369398814517517
+    },
+    "layer1_plus_layer2": {
+      "home_rmse": 1.2147772074587813,
+      "away_rmse": 1.1316589716420615,
+      "home_lift": 0.001290979419881543,
+      "away_lift": 0.004644845251577456
+    },
+    "layer1_plus_layer2_plus_rules": {
+      "home_rmse": 1.1853731136386367,
+      "away_rmse": 1.1316589716420615,
+      "home_lift": 0.025465069582137803,
+      "away_lift": 0.004644845251577456
+    }
+  },
+  "directional_metrics": {
+    "home_trigger_events": {
+      "n": 50,
+      "layer1_plus_layer2_hit_rate": 0.44,
+      "layer1_plus_layer2_plus_rules_hit_rate": 0.7
+    },
+    "away_trigger_events": {
+      "n": 0,
+      "layer1_plus_layer2_hit_rate": null,
+      "layer1_plus_layer2_plus_rules_hit_rate": null
+    }
+  }
+}

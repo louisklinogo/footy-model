@@ -29,6 +29,13 @@ from src.modeling.layer2_situational.train_situational_residual import (
     load_feature_data,
 )
 
+DEFAULT_RULE_OVERLAP_MODE = "override"
+KEY_ABSENT_FAMILY = "key_absent"
+KEY_ABSENT_OVERLAP_FEATURES = {
+    "home": ("home_key_absent", "home_xg_lost", "injury_impact"),
+    "away": ("away_key_absent", "away_xg_lost", "injury_impact"),
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -57,6 +64,12 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default="layer2_rule_layer_segmented_backtest",
         help="Output file stem.",
+    )
+    parser.add_argument(
+        "--rule-overlap-mode",
+        choices=("additive", "override"),
+        default=DEFAULT_RULE_OVERLAP_MODE,
+        help="How overlap between global residual and deterministic rules is handled.",
     )
     return parser.parse_args()
 
@@ -98,6 +111,55 @@ def _market_scaled_alpha(base_alpha: float, odds_gap: float | None, residual_raw
     return effective if agrees else effective * 0.4
 
 
+def _predict_non_overlap_residuals(
+    frame: pd.DataFrame,
+    features: list[str],
+    home_model: Any,
+    away_model: Any,
+) -> tuple[np.ndarray, np.ndarray]:
+    x_base = frame[features].copy()
+    x_home = x_base.copy()
+    x_away = x_base.copy()
+
+    for col in KEY_ABSENT_OVERLAP_FEATURES["home"]:
+        if col in x_home.columns:
+            x_home[col] = 0.0
+    for col in KEY_ABSENT_OVERLAP_FEATURES["away"]:
+        if col in x_away.columns:
+            x_away[col] = 0.0
+
+    home_pred = home_model.predict(x_home.fillna(0).to_numpy())
+    away_pred = away_model.predict(x_away.fillna(0).to_numpy())
+    return home_pred, away_pred
+
+
+def _to_float(value: object, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _should_apply_key_absent_override(
+    row: Any,
+    side: str,
+    rule_payload: dict[str, object],
+    rule_config: dict[str, object],
+) -> bool:
+    if side not in ("home", "away"):
+        return False
+    if not bool(rule_payload.get("applied", False)):
+        return False
+    rules = rule_payload.get("rules", [])
+    if KEY_ABSENT_FAMILY not in rules:
+        return False
+    key_absent = _to_float(getattr(row, f"{side}_key_absent", 0), 0.0)
+    if key_absent < 0.5:
+        return False
+    pct = rule_config.get(f"key_absent_pct_{side}", rule_config.get("key_absent_pct", 0.0))
+    return abs(_to_float(pct, 0.0)) > 1e-12
+
+
 def _prepare_holdout_frame() -> pd.DataFrame:
     df = load_feature_data()
     df = add_odds_model_gap(df)
@@ -128,8 +190,18 @@ def main() -> None:
         raise RuntimeError("No holdout rows available after filters.")
 
     x_test = test_df[features].fillna(0).to_numpy()
-    pred_home_raw = home_model.predict(x_test)
-    pred_away_raw = away_model.predict(x_test)
+    pred_home_raw_full = home_model.predict(x_test)
+    pred_away_raw_full = away_model.predict(x_test)
+    if args.rule_overlap_mode == "override":
+        pred_home_raw_non_overlap, pred_away_raw_non_overlap = _predict_non_overlap_residuals(
+            frame=test_df,
+            features=features,
+            home_model=home_model,
+            away_model=away_model,
+        )
+    else:
+        pred_home_raw_non_overlap = pred_home_raw_full.copy()
+        pred_away_raw_non_overlap = pred_away_raw_full.copy()
 
     y_home_true = test_df["home_residual"].to_numpy(dtype=float)
     y_away_true = test_df["away_residual"].to_numpy(dtype=float)
@@ -142,6 +214,8 @@ def main() -> None:
     away_rule_applied = np.zeros(len(test_df), dtype=bool)
     rule_counter_home: Counter[str] = Counter()
     rule_counter_away: Counter[str] = Counter()
+    overlap_override_home = 0
+    overlap_override_away = 0
 
     for i, row in enumerate(test_df.itertuples(index=False)):
         fixture_id = int(getattr(row, "fixture_id"))
@@ -150,8 +224,10 @@ def main() -> None:
         layer2_enabled = bool(league_policy.get("enabled", False))
         alpha_base = float(league_policy.get("alpha", 0.0)) if layer2_enabled else 0.0
 
-        h_raw = float(pred_home_raw[i])
-        a_raw = float(pred_away_raw[i])
+        h_raw_full = float(pred_home_raw_full[i])
+        a_raw_full = float(pred_away_raw_full[i])
+        h_raw = h_raw_full
+        a_raw = a_raw_full
         lh = float(getattr(row, "lambda_home"))
         la = float(getattr(row, "lambda_away"))
 
@@ -184,6 +260,46 @@ def main() -> None:
             away_rule = apply_rule_adjustment(
                 lambda_away_layer2, row=row, side="away", config=rule_cfg
             )
+
+            if args.rule_overlap_mode == "override":
+                if _should_apply_key_absent_override(
+                    row=row,
+                    side="home",
+                    rule_payload=home_rule,
+                    rule_config=rule_cfg,
+                ):
+                    h_raw = float(pred_home_raw_non_overlap[i])
+                    alpha_home = _market_scaled_alpha(
+                        alpha_base,
+                        getattr(row, "odds_model_gap_home", np.nan),
+                        h_raw,
+                    )
+                    h_applied = alpha_home * h_raw
+                    lambda_home_layer2 = max(0.01, lh + h_applied)
+                    home_rule = apply_rule_adjustment(
+                        lambda_home_layer2, row=row, side="home", config=rule_cfg
+                    )
+                    overlap_override_home += 1
+
+                if _should_apply_key_absent_override(
+                    row=row,
+                    side="away",
+                    rule_payload=away_rule,
+                    rule_config=rule_cfg,
+                ):
+                    a_raw = float(pred_away_raw_non_overlap[i])
+                    alpha_away = _market_scaled_alpha(
+                        alpha_base,
+                        getattr(row, "odds_model_gap_away", np.nan),
+                        a_raw,
+                    )
+                    a_applied = alpha_away * a_raw
+                    lambda_away_layer2 = max(0.01, la + a_applied)
+                    away_rule = apply_rule_adjustment(
+                        lambda_away_layer2, row=row, side="away", config=rule_cfg
+                    )
+                    overlap_override_away += 1
+
             lambda_home_final = float(home_rule["lambda_after"])
             lambda_away_final = float(away_rule["lambda_after"])
             if bool(home_rule["applied"]):
@@ -208,6 +324,9 @@ def main() -> None:
         "n_triggered_fixtures": int(fixture_trigger_mask.sum()),
         "n_triggered_home_events": int(home_rule_applied.sum()),
         "n_triggered_away_events": int(away_rule_applied.sum()),
+        "rule_overlap_mode": args.rule_overlap_mode,
+        "n_overlap_overrides_home": int(overlap_override_home),
+        "n_overlap_overrides_away": int(overlap_override_away),
         "rule_counts_home": dict(sorted(rule_counter_home.items())),
         "rule_counts_away": dict(sorted(rule_counter_away.items())),
     }

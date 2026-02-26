@@ -33,6 +33,74 @@ from src.modeling.layer2_situational.rule_layer import (
 MODEL_DIR = ROOT_DIR / "model_artifacts" / "situational_model"
 MODEL_NAME = "situational_xgb"
 MODEL_VERSION = "v2"
+DEFAULT_RULE_OVERLAP_MODE = "override"
+KEY_ABSENT_FAMILY = "key_absent"
+KEY_ABSENT_OVERLAP_FEATURES = {
+    "home": ("home_key_absent", "home_xg_lost", "injury_impact"),
+    "away": ("away_key_absent", "away_xg_lost", "injury_impact"),
+}
+
+
+def _to_float(value: object, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _market_scaled_alpha(base_alpha: float, odds_gap: object, residual_raw: float) -> float:
+    effective = float(base_alpha)
+    if effective <= 0.0:
+        return 0.0
+    gap = _to_float(odds_gap, float("nan"))
+    if math.isnan(gap) or gap == 0.0:
+        return effective
+    agrees = (residual_raw >= 0.0) == (gap >= 0.0)
+    return effective if agrees else effective * 0.4
+
+
+def _predict_non_overlap_residuals(
+    frame: pd.DataFrame,
+    features: list[str],
+    home_model: object,
+    away_model: object,
+) -> tuple[np.ndarray, np.ndarray]:
+    x_base = frame[features].copy()
+    x_home = x_base.copy()
+    x_away = x_base.copy()
+
+    for col in KEY_ABSENT_OVERLAP_FEATURES["home"]:
+        if col in x_home.columns:
+            x_home[col] = 0.0
+    for col in KEY_ABSENT_OVERLAP_FEATURES["away"]:
+        if col in x_away.columns:
+            x_away[col] = 0.0
+
+    home_pred = home_model.predict(x_home.fillna(0).values)
+    away_pred = away_model.predict(x_away.fillna(0).values)
+    return home_pred, away_pred
+
+
+def _should_apply_key_absent_override(
+    row: pd.Series,
+    side: str,
+    rule_payload: dict[str, object],
+    rule_config: dict[str, object] | None,
+) -> bool:
+    if side not in ("home", "away"):
+        return False
+    if rule_config is None:
+        return False
+    if not bool(rule_payload.get("applied", False)):
+        return False
+    rules = rule_payload.get("rules", [])
+    if KEY_ABSENT_FAMILY not in rules:
+        return False
+    key_absent = _to_float(row.get(f"{side}_key_absent", 0), 0.0)
+    if key_absent < 0.5:
+        return False
+    pct = rule_config.get(f"key_absent_pct_{side}", rule_config.get("key_absent_pct", 0.0))
+    return abs(_to_float(pct, 0.0)) > 1e-12
 
 
 def is_lame_duck(played, pts_to_top, pts_to_relegation, total_teams):
@@ -555,6 +623,15 @@ def main():
         default=None,
         help="Optional JSON config path for rule-layer adjustments.",
     )
+    parser.add_argument(
+        "--rule-overlap-mode",
+        choices=("additive", "override"),
+        default=DEFAULT_RULE_OVERLAP_MODE,
+        help=(
+            "How to handle overlap between global Layer 2 residuals and deterministic "
+            "rule families. 'override' is the production default."
+        ),
+    )
     args = parser.parse_args()
 
     model_blob = joblib.load(MODEL_DIR / "situational_model.pkl")
@@ -572,8 +649,21 @@ def main():
         return
 
     X = df[features].fillna(0).values
-    df["pred_home_residual"] = home_model.predict(X)
-    df["pred_away_residual"] = away_model.predict(X)
+    df["pred_home_residual_full"] = home_model.predict(X)
+    df["pred_away_residual_full"] = away_model.predict(X)
+
+    if args.enable_rule_layer and args.rule_overlap_mode == "override":
+        home_non_overlap, away_non_overlap = _predict_non_overlap_residuals(
+            frame=df,
+            features=features,
+            home_model=home_model,
+            away_model=away_model,
+        )
+        df["pred_home_residual_non_overlap"] = home_non_overlap
+        df["pred_away_residual_non_overlap"] = away_non_overlap
+    else:
+        df["pred_home_residual_non_overlap"] = df["pred_home_residual_full"]
+        df["pred_away_residual_non_overlap"] = df["pred_away_residual_full"]
 
     # Vectorised confidence guard aligned with Layer 2 train filter (min 4 games).
     df["is_low_confidence"] = (df["home_played"] < 4) | (df["away_played"] < 4)
@@ -581,10 +671,22 @@ def main():
     out_rows = []
     rule_fired_home = 0
     rule_fired_away = 0
+    overlap_override_home = 0
+    overlap_override_away = 0
     rule_fired_fixture_ids: set[int] = set()
     for _, row in df.iterrows():
-        h_res_raw = float(row["pred_home_residual"])
-        a_res_raw = float(row["pred_away_residual"])
+        h_res_raw_full = float(row["pred_home_residual_full"])
+        a_res_raw_full = float(row["pred_away_residual_full"])
+        h_res_raw = h_res_raw_full
+        a_res_raw = a_res_raw_full
+        h_res_source = "full"
+        a_res_source = "full"
+        h_overlap_family: str | None = None
+        a_overlap_family: str | None = None
+        h_override_applied = False
+        a_override_applied = False
+        h_res_non_overlap = float(row["pred_home_residual_non_overlap"])
+        a_res_non_overlap = float(row["pred_away_residual_non_overlap"])
         lh = None if pd.isna(row.get("lambda_home")) else float(row["lambda_home"])
         la = None if pd.isna(row.get("lambda_away")) else float(row["lambda_away"])
 
@@ -594,81 +696,16 @@ def main():
         gate_reason = str(league_policy.get("reason", "default_policy"))
         effective_alpha = alpha if layer2_enabled else 0.0
 
-        # -----------------------------------------------------------
-        # Market-informed alpha scaling
-        # When the market's implied direction agrees with our residual
-        # direction → trust the model more (full alpha).
-        # When they disagree → the market knows something we don't;
-        # shrink to 40% of alpha as a conservative fallback.
-        # Falls back to base alpha when odds are unavailable.
-        # -----------------------------------------------------------
         odds_gap_home = row.get("odds_model_gap_home")
         odds_gap_away = row.get("odds_model_gap_away")
-
-        if effective_alpha > 0 and pd.notna(odds_gap_home) and float(odds_gap_home) != 0:
-            home_agree = (h_res_raw >= 0) == (float(odds_gap_home) >= 0)
-            alpha_home = effective_alpha if home_agree else effective_alpha * 0.4
-        else:
-            alpha_home = effective_alpha
-
-        if effective_alpha > 0 and pd.notna(odds_gap_away) and float(odds_gap_away) != 0:
-            away_agree = (a_res_raw >= 0) == (float(odds_gap_away) >= 0)
-            alpha_away = effective_alpha if away_agree else effective_alpha * 0.4
-        else:
-            alpha_away = effective_alpha
+        alpha_home = _market_scaled_alpha(effective_alpha, odds_gap_home, h_res_raw)
+        alpha_away = _market_scaled_alpha(effective_alpha, odds_gap_away, a_res_raw)
 
         h_res_applied = alpha_home * h_res_raw
         a_res_applied = alpha_away * a_res_raw
 
         is_low = bool(row["is_low_confidence"])
         reason = "early_season_min_4_games_not_met" if is_low else None
-
-        # Raw residuals live in metadata_json["residual"] for backward compatibility.
-        res_meta_h = {
-            "residual": h_res_raw,
-            "residual_raw": h_res_raw,
-            "residual_applied": h_res_applied,
-            "base_lambda": lh,
-            "layer2_enabled": layer2_enabled,
-            "layer2_alpha": alpha_home,
-            "layer2_alpha_policy": effective_alpha,
-            "layer2_gate_reason": gate_reason,
-            "market_confirmed": bool(pd.notna(odds_gap_home) and float(odds_gap_home or 0) != 0),
-        }
-        res_meta_a = {
-            "residual": a_res_raw,
-            "residual_raw": a_res_raw,
-            "residual_applied": a_res_applied,
-            "base_lambda": la,
-            "layer2_enabled": layer2_enabled,
-            "layer2_alpha": alpha_away,
-            "layer2_alpha_policy": effective_alpha,
-            "layer2_gate_reason": gate_reason,
-            "market_confirmed": bool(pd.notna(odds_gap_away) and float(odds_gap_away or 0) != 0),
-        }
-
-        if is_low:
-            res_meta_h.update(
-                {"is_low_confidence": True, "low_confidence_reason": reason}
-            )
-            res_meta_a.update(
-                {"is_low_confidence": True, "low_confidence_reason": reason}
-            )
-
-        out_rows.append(
-            {
-                "fixture_id": int(row["fixture_id"]),
-                "market_code": "home_residual",
-                "meta": res_meta_h,
-            }
-        )
-        out_rows.append(
-            {
-                "fixture_id": int(row["fixture_id"]),
-                "market_code": "away_residual",
-                "meta": res_meta_a,
-            }
-        )
 
         # Adjusted lambdas use the policy-gated residual.
         if lh is not None and la is not None:
@@ -708,6 +745,48 @@ def main():
                 away_rule = apply_rule_adjustment(
                     lambda_away_layer2, row, side="away", config=rule_config
                 )
+
+                if args.rule_overlap_mode == "override":
+                    if _should_apply_key_absent_override(
+                        row=row,
+                        side="home",
+                        rule_payload=home_rule,
+                        rule_config=rule_config,
+                    ):
+                        h_res_raw = h_res_non_overlap
+                        h_res_source = "non_overlap_override_key_absent"
+                        h_overlap_family = KEY_ABSENT_FAMILY
+                        h_override_applied = True
+                        overlap_override_home += 1
+                        alpha_home = _market_scaled_alpha(
+                            effective_alpha, odds_gap_home, h_res_raw
+                        )
+                        h_res_applied = alpha_home * h_res_raw
+                        lambda_home_layer2 = max(0.01, lh + h_res_applied)
+                        home_rule = apply_rule_adjustment(
+                            lambda_home_layer2, row, side="home", config=rule_config
+                        )
+
+                    if _should_apply_key_absent_override(
+                        row=row,
+                        side="away",
+                        rule_payload=away_rule,
+                        rule_config=rule_config,
+                    ):
+                        a_res_raw = a_res_non_overlap
+                        a_res_source = "non_overlap_override_key_absent"
+                        a_overlap_family = KEY_ABSENT_FAMILY
+                        a_override_applied = True
+                        overlap_override_away += 1
+                        alpha_away = _market_scaled_alpha(
+                            effective_alpha, odds_gap_away, a_res_raw
+                        )
+                        a_res_applied = alpha_away * a_res_raw
+                        lambda_away_layer2 = max(0.01, la + a_res_applied)
+                        away_rule = apply_rule_adjustment(
+                            lambda_away_layer2, row, side="away", config=rule_config
+                        )
+
                 if bool(home_rule["applied"]):
                     rule_fired_home += 1
                     rule_fired_fixture_ids.add(int(row["fixture_id"]))
@@ -715,19 +794,65 @@ def main():
                     rule_fired_away += 1
                     rule_fired_fixture_ids.add(int(row["fixture_id"]))
 
-            adj_meta_h = {
-                "lambda": float(home_rule["lambda_after"]),
+            res_meta_h = {
                 "residual": h_res_raw,
                 "residual_raw": h_res_raw,
+                "residual_raw_full": h_res_raw_full,
+                "residual_raw_non_overlap": h_res_non_overlap,
+                "residual_source": h_res_source,
                 "residual_applied": h_res_applied,
                 "base_lambda": lh,
                 "layer2_enabled": layer2_enabled,
                 "layer2_alpha": alpha_home,
                 "layer2_alpha_policy": effective_alpha,
                 "layer2_gate_reason": gate_reason,
-                "market_confirmed": bool(pd.notna(odds_gap_home) and float(odds_gap_home or 0) != 0),
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_home) and _to_float(odds_gap_home, 0.0) != 0.0
+                ),
+                "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
+                "overlap_override_applied": h_override_applied,
+                "overlap_family": h_overlap_family,
+            }
+            res_meta_a = {
+                "residual": a_res_raw,
+                "residual_raw": a_res_raw,
+                "residual_raw_full": a_res_raw_full,
+                "residual_raw_non_overlap": a_res_non_overlap,
+                "residual_source": a_res_source,
+                "residual_applied": a_res_applied,
+                "base_lambda": la,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_away,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_away) and _to_float(odds_gap_away, 0.0) != 0.0
+                ),
+                "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
+                "overlap_override_applied": a_override_applied,
+                "overlap_family": a_overlap_family,
+            }
+
+            adj_meta_h = {
+                "lambda": float(home_rule["lambda_after"]),
+                "lambda_before_layer2": lh,
                 "lambda_after_layer2": lambda_home_layer2,
+                "residual": h_res_raw,
+                "residual_raw": h_res_raw,
+                "residual_raw_full": h_res_raw_full,
+                "residual_raw_non_overlap": h_res_non_overlap,
+                "residual_source": h_res_source,
+                "residual_applied": h_res_applied,
+                "base_lambda": lh,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_home,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_home) and _to_float(odds_gap_home, 0.0) != 0.0
+                ),
                 "rule_layer_enabled": bool(args.enable_rule_layer),
+                "rule_layer_overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else None,
                 "rule_layer_applied": bool(home_rule["applied"]),
                 "rule_layer_rules": list(home_rule["rules"]),
                 "rule_layer_pct_raw": float(home_rule["pct_raw"]),
@@ -735,20 +860,29 @@ def main():
                 "rule_layer_cap_down": float(home_rule["cap_down"]),
                 "rule_layer_cap_up": float(home_rule["cap_up"]),
                 "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
+                "overlap_override_applied": h_override_applied,
+                "overlap_family": h_overlap_family,
             }
             adj_meta_a = {
                 "lambda": float(away_rule["lambda_after"]),
+                "lambda_before_layer2": la,
+                "lambda_after_layer2": lambda_away_layer2,
                 "residual": a_res_raw,
                 "residual_raw": a_res_raw,
+                "residual_raw_full": a_res_raw_full,
+                "residual_raw_non_overlap": a_res_non_overlap,
+                "residual_source": a_res_source,
                 "residual_applied": a_res_applied,
                 "base_lambda": la,
                 "layer2_enabled": layer2_enabled,
                 "layer2_alpha": alpha_away,
                 "layer2_alpha_policy": effective_alpha,
                 "layer2_gate_reason": gate_reason,
-                "market_confirmed": bool(pd.notna(odds_gap_away) and float(odds_gap_away or 0) != 0),
-                "lambda_after_layer2": lambda_away_layer2,
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_away) and _to_float(odds_gap_away, 0.0) != 0.0
+                ),
                 "rule_layer_enabled": bool(args.enable_rule_layer),
+                "rule_layer_overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else None,
                 "rule_layer_applied": bool(away_rule["applied"]),
                 "rule_layer_rules": list(away_rule["rules"]),
                 "rule_layer_pct_raw": float(away_rule["pct_raw"]),
@@ -756,16 +890,35 @@ def main():
                 "rule_layer_cap_down": float(away_rule["cap_down"]),
                 "rule_layer_cap_up": float(away_rule["cap_up"]),
                 "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
+                "overlap_override_applied": a_override_applied,
+                "overlap_family": a_overlap_family,
             }
 
             if is_low:
+                low_meta = {"is_low_confidence": True, "low_confidence_reason": reason}
+                res_meta_h.update(low_meta)
+                res_meta_a.update(low_meta)
                 adj_meta_h.update(
-                    {"is_low_confidence": True, "low_confidence_reason": reason}
+                    low_meta
                 )
                 adj_meta_a.update(
-                    {"is_low_confidence": True, "low_confidence_reason": reason}
+                    low_meta
                 )
 
+            out_rows.append(
+                {
+                    "fixture_id": int(row["fixture_id"]),
+                    "market_code": "home_residual",
+                    "meta": res_meta_h,
+                }
+            )
+            out_rows.append(
+                {
+                    "fixture_id": int(row["fixture_id"]),
+                    "market_code": "away_residual",
+                    "meta": res_meta_a,
+                }
+            )
             out_rows.append(
                 {
                     "fixture_id": int(row["fixture_id"]),
@@ -780,6 +933,63 @@ def main():
                     "meta": adj_meta_a,
                 }
             )
+        else:
+            res_meta_h = {
+                "residual": h_res_raw,
+                "residual_raw": h_res_raw,
+                "residual_raw_full": h_res_raw_full,
+                "residual_raw_non_overlap": h_res_non_overlap,
+                "residual_source": h_res_source,
+                "residual_applied": h_res_applied,
+                "base_lambda": lh,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_home,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_home) and _to_float(odds_gap_home, 0.0) != 0.0
+                ),
+                "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
+                "overlap_override_applied": h_override_applied,
+                "overlap_family": h_overlap_family,
+            }
+            res_meta_a = {
+                "residual": a_res_raw,
+                "residual_raw": a_res_raw,
+                "residual_raw_full": a_res_raw_full,
+                "residual_raw_non_overlap": a_res_non_overlap,
+                "residual_source": a_res_source,
+                "residual_applied": a_res_applied,
+                "base_lambda": la,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_away,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(
+                    pd.notna(odds_gap_away) and _to_float(odds_gap_away, 0.0) != 0.0
+                ),
+                "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
+                "overlap_override_applied": a_override_applied,
+                "overlap_family": a_overlap_family,
+            }
+            if is_low:
+                low_meta = {"is_low_confidence": True, "low_confidence_reason": reason}
+                res_meta_h.update(low_meta)
+                res_meta_a.update(low_meta)
+            out_rows.append(
+                {
+                    "fixture_id": int(row["fixture_id"]),
+                    "market_code": "home_residual",
+                    "meta": res_meta_h,
+                }
+            )
+            out_rows.append(
+                {
+                    "fixture_id": int(row["fixture_id"]),
+                    "market_code": "away_residual",
+                    "meta": res_meta_a,
+                }
+            )
     save_residuals(out_rows)
     n_with_adj = sum(1 for r in out_rows if r["market_code"] == "adj_lambda_home")
     print(
@@ -791,6 +1001,11 @@ def main():
             f"home={rule_fired_home}, away={rule_fired_away}, "
             f"fixtures={len(rule_fired_fixture_ids)}"
         )
+        if args.rule_overlap_mode == "override":
+            print(
+                "Overlap overrides applied: "
+                f"home={overlap_override_home}, away={overlap_override_away}"
+            )
 
 
 if __name__ == "__main__":

@@ -235,13 +235,27 @@ Global note for this section: items below are paused unless they are directly re
   - final policy is approved and written to deployment docs.
 
 ### 0b) Unified Backbone + Market Orchestration (Override Track)
-- [ ] Implement overlap-family override semantics in Layer 2 serving path.
+- [x] Implement overlap-family override semantics in Layer 2 serving path.
   - First overlap family: `key_absent`.
   - Rule: when overlap rule fires for a side, do not double-count equivalent global contribution for that side.
   - File: `src/modeling/layer2_situational/predict_situational_residual.py`
   - DoD:
     - metadata includes explicit `overlap_mode='override'`.
-    - side-level attribution is logged (`lambda_l1`, `lambda_after_global`, `lambda_final`, `rule_family`).
+    - side-level attribution is logged (`lambda_before_layer2`, `lambda_after_layer2`, `lambda`, `overlap_family`).
+  - Completed: `2026-02-26`
+  - Evidence:
+    - constrained serving run: `python src/modeling/layer2_situational/predict_situational_residual.py --days 2 --league E1 --enable-rule-layer --rule-overlap-mode override`
+    - output: `Upserted 44 records (11 fixtures with adjusted lambdas) for 11 fixtures.`
+    - output: `Overlap overrides applied: home=0, away=0`
+
+- [x] Mirror overlap override semantics in backtest evaluation path (train/eval/serve parity).
+  - File: `src/modeling/layer2_situational/backtest_rule_layer_overrides.py`
+  - Completed: `2026-02-26`
+  - Evidence:
+    - command: `python src/modeling/layer2_situational/backtest_rule_layer_overrides.py --rule-overlap-mode override --output-stem layer2_rule_layer_segmented_backtest_override_parity_2026_02_26`
+    - artifact: `artifacts/reports/layer2_reconciliation/layer2_rule_layer_segmented_backtest_override_parity_2026_02_26.json`
+    - artifact: `artifacts/reports/layer2_reconciliation/layer2_rule_layer_segmented_backtest_override_parity_2026_02_26.md`
+    - key diagnostics: `n_test=1426`, `overlap_mode=override`, `override_home=50`, `override_away=0`
 
 - [ ] Unify tick predict path with canonical backbone graph.
   - Ensure tick runs:
