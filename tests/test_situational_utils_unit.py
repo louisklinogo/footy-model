@@ -5,6 +5,7 @@ import pandas as pd
 from src.modeling.layer2_situational.situational_utils import (
     add_season_key,
     compute_point_in_time_state,
+    latest_lambda_pairs_sql,
 )
 
 
@@ -151,3 +152,47 @@ def test_compute_point_in_time_state_same_kickoff_rows_do_not_leak_ft_updates() 
     assert int(fixture_4["home_played"]) == 1
     assert int(fixture_4["home_form_streak"]) == 3
     assert int(fixture_4["home_position"]) == 1
+
+
+def test_compute_point_in_time_state_adds_lame_duck_support_columns() -> None:
+    fixtures = pd.DataFrame(
+        [
+            {
+                "fixture_id": 1,
+                "league_code": "E0",
+                "match_datetime_utc": "2025-01-01T12:00:00Z",
+                "home_team_id": 10,
+                "away_team_id": 20,
+                "home_goals": 1,
+                "away_goals": 0,
+                "status": "ft",
+            },
+            {
+                "fixture_id": 2,
+                "league_code": "E0",
+                "match_datetime_utc": "2025-01-08T12:00:00Z",
+                "home_team_id": 30,
+                "away_team_id": 10,
+                "home_goals": pd.NA,
+                "away_goals": pd.NA,
+                "status": "scheduled",
+            },
+        ]
+    )
+
+    out = compute_point_in_time_state(fixtures)
+    row = out.loc[out["fixture_id"] == 2].iloc[0]
+
+    assert "home_points_to_top" in out.columns
+    assert "away_points_to_top" in out.columns
+    assert "home_points_to_relegation" in out.columns
+    assert "away_points_to_relegation" in out.columns
+    assert "league_team_count" in out.columns
+    assert int(row["league_team_count"]) >= 4
+
+
+def test_latest_lambda_pairs_sql_uses_metadata_and_version_pairing() -> None:
+    sql = latest_lambda_pairs_sql()
+    assert "metadata_json->>'lambda'" in sql
+    assert "COUNT(DISTINCT market_code) = 2" in sql
+    assert "model_version" in sql

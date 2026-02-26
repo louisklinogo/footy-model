@@ -39,6 +39,44 @@ def parse_args():
     return parser.parse_args()
 
 
+def _unix_to_datetime(raw: float) -> datetime.datetime | None:
+    try:
+        ts = float(raw)
+    except (TypeError, ValueError):
+        return None
+    # Treat large values as milliseconds.
+    if ts > 1e11:
+        ts = ts / 1000.0
+    try:
+        return datetime.datetime.fromtimestamp(ts, tz=datetime.timezone.utc)
+    except (OverflowError, OSError, ValueError):
+        return None
+
+
+def parse_expected_return(raw: object) -> datetime.datetime | None:
+    if raw is None:
+        return None
+
+    if isinstance(raw, (int, float)):
+        return _unix_to_datetime(raw)
+
+    if isinstance(raw, str):
+        value = raw.strip()
+        if not value:
+            return None
+        if value.isdigit():
+            return _unix_to_datetime(int(value))
+        try:
+            dt = datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=datetime.timezone.utc)
+        return dt
+
+    return None
+
+
 def fetch_target_fixtures(league_code: str | None, status: str, limit: int) -> List[Dict[str, Any]]:
     """Fetch fixtures that are missing availability data."""
     query = """
@@ -61,7 +99,9 @@ def fetch_target_fixtures(league_code: str | None, status: str, limit: int) -> L
         query += " AND f.league_code = %s"
         params.append(league_code)
 
-    query += " ORDER BY f.match_datetime_utc ASC LIMIT %s"
+    # Newest first: Sofascore retains recent lineup/injury data more reliably than
+    # old fixtures. Processing newest first maximises useful injury signal for training.
+    query += " ORDER BY f.match_datetime_utc DESC LIMIT %s"
     params.append(limit)
 
     conn = connect_db()
@@ -141,7 +181,7 @@ def _upsert_availability_rows(cur, fixture_id: int, team_id: int, data: dict):
 
         description = m_entry.get("description") or m_entry.get("type") or "unknown"
         reason_code = m_entry.get("reason")
-        expected_return = m_entry.get("expectedEndDate")
+        expected_return = parse_expected_return(m_entry.get("expectedEndDate"))
 
         db_p_id = _get_or_create_player(cur, p_info)
 
@@ -166,7 +206,9 @@ def _get_or_create_player(cur, p_info: dict) -> int:
 
     dob = None
     if p_info.get("dateOfBirthTimestamp"):
-        dob = datetime.date.fromtimestamp(p_info["dateOfBirthTimestamp"])
+        dt = _unix_to_datetime(p_info["dateOfBirthTimestamp"])
+        if dt:
+            dob = dt.date()
 
     mv = (p_info.get("proposedMarketValueRaw") or {}).get("value")
 

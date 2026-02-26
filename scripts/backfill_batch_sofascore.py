@@ -7,7 +7,8 @@ def run_batch(ingest_type, league, limit, total_goal, status):
     script_map = {
         "stats": "src/ingest/ingest_sofascore_stats.py",
         "players": "src/ingest/ingest_sofascore_players.py",
-        "availability": "src/ingest/ingest_sofascore_availability.py"
+        "availability": "src/ingest/ingest_sofascore_availability.py",
+        "odds": "src/ingest/backfill_sofascore_odds_markets_v1.py",
     }
     script_path = script_map[ingest_type]
     
@@ -59,7 +60,7 @@ if __name__ == "__main__":
             "  One league:     python scripts/backfill_batch_sofascore.py --league CL --total 200\n"
         )
     )
-    parser.add_argument("--type", type=str, choices=["stats", "players", "availability"], default="stats", help="Type of data to ingest (default: stats)")
+    parser.add_argument("--type", type=str, choices=["stats", "players", "availability", "odds"], default="stats", help="Type of data to ingest (default: stats)")
     parser.add_argument("--league", type=str, default=None, help="Optional league code filter. Omit to process all leagues.")
     parser.add_argument("--status", type=str, default="ft", help="Status filter (primarily for availability, e.g. scheduled, ft)")
     parser.add_argument("--limit", type=int, default=50, help="Batch size per API call (default: 50)")

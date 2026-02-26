@@ -1,0 +1,16 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260226T025856Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-26T02:58:56.295429+00:00 dry_run=True league=None limit=1
+Fixture 21236 (Sofa=13984875, kickoff=2025-09-14 07:00:00+00:00)
+  DRY RUN: would settle fixture=21236 result=2-2
+  Settled to FT: 2-2
+
+Summary:
+  processed: 1
+  settled: 1
+  cancelled_or_postponed: 0
+  unfinished: 0
+  missing_scores: 0
+  fetch_errors: 0

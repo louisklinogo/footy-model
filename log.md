@@ -1,0 +1,261 @@
+
+louis@script MINGW64 /c/Developer/soccer/footy-model (master)
+$ python src/jobs/tick_due_fixtures_v1.py --dry-run --max-settle 25 --max-predict 50 --max-score 200 
+DRY RUN: skipping fixture_job_state DDL and DB mutations
+DRY RUN: settle DB selection and updates skipped
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scripts\reconcile_stale_ft_matches.py --fixture-ids <fixture-ids> --dry-run
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_E0.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js E0 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league E0
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_E1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js E1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league E1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_E2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js E2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league E2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_E3.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js E3 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league E3
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_EC.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js EC --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league EC
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SC0.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SC0 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SC0
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SC1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SC1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SC1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SC2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SC2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SC2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SC3.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SC3 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SC3
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_D1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js D1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league D1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_D2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js D2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league D2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_I1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js I1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league I1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_I2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js I2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league I2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SP1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SP1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SP1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_SP2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js SP2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league SP2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_F1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js F1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league F1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_F2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js F2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league F2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_N1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js N1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league N1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_B1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js B1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league B1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_P1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js P1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league P1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_T1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js T1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league T1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_G1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js G1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league G1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_AT1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js AT1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league AT1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_BR1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js BR1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league BR1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_DK1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js DK1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league DK1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_IE1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js IE1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league IE1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_JP1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js JP1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league JP1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_MX1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js MX1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league MX1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_PL1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js PL1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league PL1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_RO1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js RO1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league RO1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_RU1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js RU1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league RU1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_CH1.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js CH1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league CH1
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_CH2.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js CH2 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league CH2
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_CL.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js CL --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league CL
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_EL.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js EL --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league EL
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_ECL.json
+COMMAND: node C:\Developer\soccer\footy-model\scrapers\premium_enricher_v4.js ECL --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league ECL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league E0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league E0 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league E0 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league E1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league E1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league E1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league E2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league E2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league E2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league E3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league E3 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league E3 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league EC
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league EC --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league EC --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SC0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SC0 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SC0 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SC1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SC1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SC1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SC2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SC2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SC2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SC3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SC3 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SC3 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league D1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league D1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league D1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league D2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league D2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league D2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league I1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league I1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league I1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league I2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league I2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league I2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SP1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SP1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SP1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league SP2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league SP2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league SP2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league F1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league F1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league F1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league F2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league F2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league F2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league N1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league N1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league N1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league B1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league B1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league B1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league P1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league P1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league P1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league T1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league T1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league T1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league G1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league G1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league G1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league AT1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league AT1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league AT1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league BR1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league BR1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league BR1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league DK1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league DK1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league DK1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league IE1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league IE1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league IE1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league JP1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league JP1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league JP1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league MX1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league MX1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league MX1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league PL1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league PL1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league PL1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league RO1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league RO1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league RO1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league RU1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league RU1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league RU1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league CH1
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league CH1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league CH1 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league CH2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league CH2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league CH2 --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league CL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league CL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league CL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league EL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league EL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league EL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scrapers\build_team_premium_snapshots_v1.py --league ECL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\predict_v3_fixtures_first.py --league ECL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\export_predictions_v3_fixtures_first.py --league ECL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league E0 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league E1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league E2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league E3 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league EC --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SC0 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SC1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SC2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SC3 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league D1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league D2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league I1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league I2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SP1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league SP2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league F1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league F2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league N1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league B1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league P1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league T1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league G1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league AT1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league BR1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league DK1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league IE1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league JP1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league MX1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league PL1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league RO1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league RU1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league CH1 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league CH2 --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league CL --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league EL --since-days 30 --limit 200
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\models\score_predictions_v3_fixtures_first.py --league ECL --since-days 30 --limit 200
+
+louis@script MINGW64 /c/Developer/soccer/footy-model (master)
+$

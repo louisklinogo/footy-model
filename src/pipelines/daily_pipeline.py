@@ -11,10 +11,12 @@ import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from src.common.pipeline_logging import create_pipeline_run, finalize_pipeline_run
 
-
-ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scrapers" / "config" / "league_registry.json"
 
 
@@ -134,7 +136,7 @@ def main() -> int:
 
     since = args.since or (datetime.now(UTC).date() - timedelta(days=30)).isoformat()
 
-    discover_cmd = ["node", str(ROOT / "scrapers" / "run_seed_all.js"), "--mode", args.mode]
+    discover_cmd = ["node", str(ROOT / "src" / "ingest" / "scrapers" / "run_seed_all.js"), "--mode", args.mode]
     ingest_discovery_cmd = [
         sys.executable,
         str(ROOT / "src" / "ingest" / "ingest_discovered_fixtures_all_v1.py"),
@@ -153,7 +155,7 @@ def main() -> int:
     for league in leagues:
         enrich_cmd = [
             "node",
-            str(ROOT / "scrapers" / "premium_enricher_v4.js"),
+            str(ROOT / "src" / "ingest" / "scrapers" / "premium_enricher_v4.js"),
             league,
             "--ids-root",
             "data/v1/ids",
@@ -175,7 +177,7 @@ def main() -> int:
     for league in leagues:
         readiness_cmd = [
             sys.executable,
-            str(ROOT / "scrapers" / "check_premium_readiness.py"),
+            str(ROOT / "src" / "ingest" / "scrapers" / "check_premium_readiness.py"),
             "--league",
             league,
             "--since",
@@ -223,7 +225,7 @@ def main() -> int:
         # Market predictions (Premium GBM)
         predict_cmd = [
             sys.executable,
-            str(ROOT / "src" / "modeling" / "evaluation" / "predict_v3_fixtures_first.py"),
+            str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"),
             "--league",
             league,
             "--days",
@@ -235,7 +237,7 @@ def main() -> int:
     for league in leagues:
         export_cmd = [
             sys.executable,
-            str(ROOT / "models" / "export_predictions_v3_fixtures_first.py"),
+            str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"),
             "--league",
             league,
             "--days",
@@ -247,12 +249,27 @@ def main() -> int:
     for league in leagues:
         score_cmd = [
             sys.executable,
-            str(ROOT / "src" / "modeling" / "score_predictions_v3_fixtures_first.py"),
+            str(ROOT / "src" / "modeling" / "evaluation" / "score_market_outcomes_fixtures_first.py"),
             "--league",
             league,
         ]
         if not run_step(f"daily.score_predictions.{league}", score_cmd, args.dry_run):
             raise RuntimeError(f"Pipeline aborted at scoring step for league={league}")
+
+    monitor_cmd = [
+        sys.executable,
+        str(
+            ROOT
+            / "src"
+            / "modeling"
+            / "layer2_situational"
+            / "monitor_layer2_signals.py"
+        ),
+        "--days",
+        "14",
+    ]
+    if not run_step("daily.monitor_layer2_signals", monitor_cmd, args.dry_run):
+        print("WARNING: Layer 2 monitoring step failed; continuing pipeline.")
 
     print(f"\n{'=' * 60}")
     print("DAILY FIXTURES-FIRST PIPELINE COMPLETE")

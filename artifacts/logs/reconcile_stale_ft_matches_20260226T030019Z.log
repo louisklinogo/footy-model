@@ -1,0 +1,33 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260226T030019Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-26T03:00:19.561372+00:00 dry_run=True league=None limit=10
+Fixture 21236 (Sofa=13984875, kickoff=2025-09-14 07:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21237 (Sofa=13984877, kickoff=2025-09-14 07:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21238 (Sofa=13984879, kickoff=2025-09-14 09:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21239 (Sofa=13984867, kickoff=2025-09-14 09:15:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 20001 (Sofa=14151961, kickoff=2025-09-14 12:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 20002 (Sofa=14151970, kickoff=2025-09-14 12:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 20003 (Sofa=14151976, kickoff=2025-09-14 14:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21240 (Sofa=13984881, kickoff=2025-09-15 05:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21241 (Sofa=13984883, kickoff=2025-09-15 07:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 21242 (Sofa=13984769, kickoff=2025-09-18 07:07:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+
+Summary:
+  processed: 10
+  settled: 0
+  cancelled_or_postponed: 0
+  unfinished: 0
+  missing_scores: 0
+  fetch_errors: 10

@@ -1,0 +1,673 @@
+Log file: artifacts\logs\tick_scheduler.log
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league EL
+Fetching fixtures for league: EL
+Fetching premium stats for 459 fixtures...
+Building snapshots for 459 fixtures...
+Batch upserting 918 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 459,
+  "rows_upserted": 918,
+  "premium_rows_seen": 450
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league EL --days 3
+Processed 8 fixtures, upserted 176 market predictions (176 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league EL --days 3
+Saved 8 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league ECL
+Fetching fixtures for league: ECL
+Fetching premium stats for 387 fixtures...
+Building snapshots for 387 fixtures...
+  Progress: 200/387 fixtures...
+  Progress: 250/387 fixtures...
+Batch upserting 774 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 387,
+  "rows_upserted": 774,
+  "premium_rows_seen": 378
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league ECL --days 3
+Processed 8 fixtures, upserted 176 market predictions (176 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league ECL --days 3
+Saved 8 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league BR1
+Fetching fixtures for league: BR1
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 374
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league BR1 --days 3
+Processed 2 fixtures, upserted 44 market predictions (44 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league BR1 --days 3
+Saved 2 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league JP1
+Fetching fixtures for league: JP1
+Fetching premium stats for 180 fixtures...
+Building snapshots for 180 fixtures...
+  Progress: 50/180 fixtures...
+  Progress: 100/180 fixtures...
+  Progress: 150/180 fixtures...
+Batch upserting 360 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 180,
+  "rows_upserted": 360,
+  "premium_rows_seen": 30
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league JP1 --days 3
+Processed 10 fixtures, upserted 220 market predictions (220 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league JP1 --days 3
+Saved 10 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league CL
+Fetching fixtures for league: CL
+Fetching premium stats for 444 fixtures...
+Building snapshots for 444 fixtures...
+  Progress: 50/444 fixtures...
+  Progress: 100/444 fixtures...
+  Progress: 300/444 fixtures...
+Batch upserting 888 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 444,
+  "rows_upserted": 888,
+  "premium_rows_seen": 442
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league CL --days 3
+Processed 2 fixtures, upserted 44 market predictions (44 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league CL --days 3
+Saved 2 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league RO1
+Fetching fixtures for league: RO1
+Fetching premium stats for 240 fixtures...
+Building snapshots for 240 fixtures...
+  Progress: 50/240 fixtures...
+  Progress: 100/240 fixtures...
+  Progress: 150/240 fixtures...
+  Progress: 200/240 fixtures...
+Batch upserting 480 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 240,
+  "rows_upserted": 480,
+  "premium_rows_seen": 240
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league RO1 --days 3
+Processed 4 fixtures, upserted 88 market predictions (88 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league RO1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league RU1
+Fetching fixtures for league: RU1
+Fetching premium stats for 240 fixtures...
+Building snapshots for 240 fixtures...
+  Progress: 50/240 fixtures...
+  Progress: 100/240 fixtures...
+  Progress: 150/240 fixtures...
+  Progress: 200/240 fixtures...
+Batch upserting 480 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 240,
+  "rows_upserted": 480,
+  "premium_rows_seen": 240
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league RU1 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league RU1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league T1
+Fetching fixtures for league: T1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league T1 --days 3
+Processed 6 fixtures, upserted 132 market predictions (132 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league T1 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league PL1
+Fetching fixtures for league: PL1
+Fetching premium stats for 305 fixtures...
+Building snapshots for 305 fixtures...
+  Progress: 50/305 fixtures...
+  Progress: 100/305 fixtures...
+  Progress: 150/305 fixtures...
+  Progress: 200/305 fixtures...
+Batch upserting 610 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 305,
+  "rows_upserted": 610,
+  "premium_rows_seen": 305
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league PL1 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league PL1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league D2
+Fetching fixtures for league: D2
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 150/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league D2 --days 3
+Processed 6 fixtures, upserted 132 market predictions (132 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league D2 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league I2
+Fetching fixtures for league: I2
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league I2 --days 3
+Processed 7 fixtures, upserted 154 market predictions (154 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league I2 --days 3
+Saved 7 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league CH2
+Fetching fixtures for league: CH2
+Fetching premium stats for 180 fixtures...
+Building snapshots for 180 fixtures...
+  Progress: 50/180 fixtures...
+  Progress: 100/180 fixtures...
+  Progress: 150/180 fixtures...
+Batch upserting 360 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 180,
+  "rows_upserted": 360,
+  "premium_rows_seen": 178
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league CH2 --days 3
+Processed 3 fixtures, upserted 66 market predictions (66 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league CH2 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league F2
+Fetching fixtures for league: F2
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league F2 --days 3
+Processed 8 fixtures, upserted 176 market predictions (176 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league F2 --days 3
+Saved 8 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league N1
+Fetching fixtures for league: N1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 150/306 fixtures...
+  Progress: 200/306 fixtures...
+  Progress: 250/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league N1 --days 3
+Processed 4 fixtures, upserted 88 market predictions (88 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league N1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league D1
+Fetching fixtures for league: D1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 150/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league D1 --days 3
+Processed 6 fixtures, upserted 132 market predictions (132 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league D1 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league SP2
+Fetching fixtures for league: SP2
+Fetching premium stats for 462 fixtures...
+Building snapshots for 462 fixtures...
+  Progress: 50/462 fixtures...
+  Progress: 100/462 fixtures...
+  Progress: 200/462 fixtures...
+  Progress: 250/462 fixtures...
+Batch upserting 924 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 462,
+  "rows_upserted": 924,
+  "premium_rows_seen": 462
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league SP2 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league SP2 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league I1
+Fetching fixtures for league: I1
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league I1 --days 3
+Processed 4 fixtures, upserted 88 market predictions (88 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league I1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league F1
+Fetching fixtures for league: F1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league F1 --days 3
+Processed 4 fixtures, upserted 88 market predictions (88 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league F1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league B1
+Fetching fixtures for league: B1
+Fetching premium stats for 232 fixtures...
+Building snapshots for 232 fixtures...
+  Progress: 50/232 fixtures...
+  Progress: 100/232 fixtures...
+  Progress: 150/232 fixtures...
+  Progress: 200/232 fixtures...
+Batch upserting 464 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 232,
+  "rows_upserted": 464,
+  "premium_rows_seen": 232
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league B1 --days 3
+Processed 4 fixtures, upserted 88 market predictions (88 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league B1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league P1
+Fetching fixtures for league: P1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 150/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league P1 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league P1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league SP1
+Fetching fixtures for league: SP1
+Fetching premium stats for 219 fixtures...
+Building snapshots for 219 fixtures...
+  Progress: 50/219 fixtures...
+  Progress: 100/219 fixtures...
+Batch upserting 438 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 219,
+  "rows_upserted": 438,
+  "premium_rows_seen": 219
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league SP1 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league SP1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league E3
+Fetching fixtures for league: E3
+Fetching premium stats for 551 fixtures...
+Building snapshots for 551 fixtures...
+  Progress: 450/551 fixtures...
+Batch upserting 1102 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 551,
+  "rows_upserted": 1102,
+  "premium_rows_seen": 550
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league E3 --days 3
+Processed 12 fixtures, upserted 264 market predictions (264 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league E3 --days 3
+Saved 12 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league IE1
+Fetching fixtures for league: IE1
+Fetching premium stats for 180 fixtures...
+Building snapshots for 180 fixtures...
+  Progress: 50/180 fixtures...
+  Progress: 150/180 fixtures...
+Batch upserting 360 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 180,
+  "rows_upserted": 360,
+  "premium_rows_seen": 180
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league IE1 --days 3
+Processed 5 fixtures, upserted 110 market predictions (110 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league IE1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league E0
+Fetching fixtures for league: E0
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league E0 --days 3
+Processed 6 fixtures, upserted 132 market predictions (132 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league E0 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league E1
+Fetching fixtures for league: E1
+Fetching premium stats for 551 fixtures...
+Building snapshots for 551 fixtures...
+  Progress: 250/551 fixtures...
+  Progress: 300/551 fixtures...
+Batch upserting 1102 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 551,
+  "rows_upserted": 1102,
+  "premium_rows_seen": 551
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league E1 --days 3
+Processed 11 fixtures, upserted 242 market predictions (242 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league E1 --days 3
+Saved 11 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league MX1
+Fetching fixtures for league: MX1
+Fetching premium stats for 323 fixtures...
+Building snapshots for 323 fixtures...
+  Progress: 50/323 fixtures...
+  Progress: 100/323 fixtures...
+  Progress: 200/323 fixtures...
+  Progress: 250/323 fixtures...
+  Progress: 300/323 fixtures...
+Batch upserting 646 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 323,
+  "rows_upserted": 646,
+  "premium_rows_seen": 232
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league MX1 --days 3
+Processed 6 fixtures, upserted 132 market predictions (132 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league MX1 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league E2
+Fetching fixtures for league: E2
+Fetching premium stats for 551 fixtures...
+Building snapshots for 551 fixtures...
+  Progress: 150/551 fixtures...
+  Progress: 450/551 fixtures...
+Batch upserting 1102 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 551,
+  "rows_upserted": 1102,
+  "premium_rows_seen": 551
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league E2 --days 3
+Processed 12 fixtures, upserted 264 market predictions (264 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league E2 --days 3
+Saved 12 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league G1
+Fetching fixtures for league: G1
+Fetching premium stats for 182 fixtures...
+Building snapshots for 182 fixtures...
+  Progress: 50/182 fixtures...
+  Progress: 100/182 fixtures...
+  Progress: 150/182 fixtures...
+Batch upserting 364 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 182,
+  "rows_upserted": 364,
+  "premium_rows_seen": 182
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league G1 --days 3
+Processed 3 fixtures, upserted 66 market predictions (66 expected).
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:160: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league G1 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:149: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E0 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E3 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league EC --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC0 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC3 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league D1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league D2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league I1 --since-days 30 --limit 300
+Scanned 22 predictions, scored 22, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league I2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SP1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SP2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league F1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league F2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league N1 --since-days 30 --limit 300
+Scanned 22 predictions, scored 22, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league B1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league P1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league T1 --since-days 30 --limit 300
+Scanned 44 predictions, scored 44, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league G1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league AT1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league BR1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league DK1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league IE1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league JP1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league MX1 --since-days 30 --limit 300
+Scanned 88 predictions, scored 88, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league PL1 --since-days 30 --limit 300
+Scanned 22 predictions, scored 22, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league RO1 --since-days 30 --limit 300
+Scanned 22 predictions, scored 22, skipped 0 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league RU1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CH1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CH2 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CL --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league EL --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 300
+No eligible unscored predictions found.

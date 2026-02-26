@@ -10,16 +10,20 @@ import argparse
 import json
 import sys
 from pathlib import Path
+import math
 import joblib
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.db.db_utils import connect_db
+from src.modeling.layer2_situational.deployment_policy import (
+    load_layer2_deployment_policy,
+    resolve_league_policy,
+)
 from src.modeling.layer2_situational import situational_utils
 
 MODEL_DIR = ROOT_DIR / "model_artifacts" / "situational_model"
@@ -27,7 +31,7 @@ MODEL_NAME = "situational_xgb"
 MODEL_VERSION = "v2"
 
 
-def is_lame_duck(played, position, pts_gap_to_top, pts_gap_to_relegation, total_teams):
+def is_lame_duck(played, pts_to_top, pts_to_relegation, total_teams):
     if pd.isna(played) or played < 20:
         return 0
     games_left = max(0, ((total_teams - 1) * 2) - played)
@@ -36,9 +40,9 @@ def is_lame_duck(played, position, pts_gap_to_top, pts_gap_to_relegation, total_
 
     max_possible_pts = games_left * 3
 
-    is_safe = pts_gap_to_relegation > max_possible_pts
-    is_eliminated = pts_gap_to_top > max_possible_pts
-    is_relegated = pts_gap_to_relegation < -max_possible_pts
+    is_safe = pts_to_relegation > max_possible_pts
+    is_eliminated = pts_to_top > max_possible_pts
+    is_relegated = pts_to_relegation < -max_possible_pts
 
     if (is_safe and is_eliminated) or is_relegated:
         return 1
@@ -136,18 +140,45 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
 
     print("Loading Poisson predictions...")
     preds = pd.read_sql(
-        """
-        SELECT 
-            p_h.fixture_id, 
-            (p_h.metadata_json->>'lambda')::double precision AS lambda_home, 
-            (p_a.metadata_json->>'lambda')::double precision AS lambda_away
-        FROM predictions p_h
-        JOIN predictions p_a ON p_a.fixture_id = p_h.fixture_id
-            AND p_a.market_code = 'lambda_away' AND p_a.model_name = p_h.model_name
-        WHERE p_h.market_code = 'lambda_home' AND p_h.model_name = 'lambda_xgb'
-    """,
+        situational_utils.latest_lambda_pairs_sql(),
         conn,
+        params=("lambda_xgb",),
     )
+
+    print("Loading Sofascore 1X2 odds snapshots...")
+    odds_df = pd.DataFrame(
+        columns=[
+            "fixture_id",
+            "odds_snapshot_time_utc",
+            "odds_snapshot_type",
+            "odds_json",
+        ]
+    )
+    if not targets.empty:
+        odds_df = pd.read_sql(
+            """
+            SELECT
+                f.fixture_id,
+                od.snapshot_time_utc AS odds_snapshot_time_utc,
+                od.snapshot_type AS odds_snapshot_type,
+                od.odds_json AS odds_json
+            FROM fixtures f
+            LEFT JOIN LATERAL (
+                SELECT snapshot_time_utc, snapshot_type, odds_json
+                FROM fixture_odds_markets
+                WHERE fixture_id = f.fixture_id
+                  AND provider = 'sofascore'
+                  AND market_code = '1x2'
+                  AND snapshot_type IN ('latest_pre_match', 'closing')
+                  AND snapshot_time_utc <= f.match_datetime_utc
+                ORDER BY (snapshot_type = 'latest_pre_match') DESC, snapshot_time_utc DESC
+                LIMIT 1
+            ) od ON true
+            WHERE f.fixture_id = ANY(%s)
+            """,
+            conn,
+            params=(targets["fixture_id"].tolist(),),
+        )
 
     print("Loading rivalries...")
     rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
@@ -222,6 +253,7 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
     df = df.merge(home_snap, on="fixture_id", how="left")
     df = df.merge(away_snap, on="fixture_id", how="left")
     df = df.merge(preds, on="fixture_id", how="left")
+    df = df.merge(odds_df, on="fixture_id", how="left")
     df = df.merge(
         impact_df[
             [
@@ -357,13 +389,19 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
     df["away_key_absent"] = df["away_key_absent"].fillna(0).astype(int)
     df["home_lame_duck"] = df.apply(
         lambda r: is_lame_duck(
-            r["home_played"], r["home_position"], r["points_gap"], 15, 20
+            r["home_played"],
+            r["home_points_to_top"],
+            r["home_points_to_relegation"],
+            r["league_team_count"],
         ),
         axis=1,
     )
     df["away_lame_duck"] = df.apply(
         lambda r: is_lame_duck(
-            r["away_played"], r["away_position"], -r["points_gap"], 15, 20
+            r["away_played"],
+            r["away_points_to_top"],
+            r["away_points_to_relegation"],
+            r["league_team_count"],
         ),
         axis=1,
     )
@@ -371,7 +409,93 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
     df["home_playing_top4"] = (df["away_position"] <= 4).astype(int)
     df["away_playing_top4"] = (df["home_position"] <= 4).astype(int)
     df["derby_position_gap"] = df["position_gap"] * df["is_derby"]
-    df["odds_model_gap"] = 0.0
+    df["odds_snapshot_time_utc"] = pd.to_datetime(
+        df["odds_snapshot_time_utc"], utc=True, errors="coerce"
+    )
+    bad_odds = (
+        df["odds_snapshot_time_utc"].notna()
+        & (df["odds_snapshot_time_utc"] > df["match_datetime_utc"])
+    )
+    if bad_odds.any():
+        raise RuntimeError(
+            f"Found {int(bad_odds.sum())} post-kickoff odds snapshots; refusing to predict."
+        )
+
+    def implied_from_prices(prices: dict[str, float] | None) -> dict[str, float] | None:
+        if not prices:
+            return None
+        try:
+            inv_sum = sum(1.0 / float(v) for v in prices.values())
+        except (TypeError, ValueError, ZeroDivisionError):
+            return None
+        if inv_sum <= 0:
+            return None
+        return {k: (1.0 / float(v)) / inv_sum for k, v in prices.items()}
+
+    def outcome_probs(lh: float, la: float, max_goals: int = 8) -> tuple[float, float, float]:
+        p_home = 0.0
+        p_draw = 0.0
+        p_away = 0.0
+        for h in range(max_goals + 1):
+            for a in range(max_goals + 1):
+                prob = np.exp(-lh) * (lh**h) / math.factorial(h)
+                prob *= np.exp(-la) * (la**a) / math.factorial(a)
+                if h > a:
+                    p_home += prob
+                elif h == a:
+                    p_draw += prob
+                else:
+                    p_away += prob
+        return p_home, p_draw, p_away
+
+    df["poisson_home_prob"] = np.nan
+    df["poisson_draw_prob"] = np.nan
+    df["poisson_away_prob"] = np.nan
+    mask = df["lambda_home"].notna() & df["lambda_away"].notna()
+    if mask.any():
+        probs = [
+            outcome_probs(lh, la)
+            for lh, la in zip(
+                df.loc[mask, "lambda_home"], df.loc[mask, "lambda_away"]
+            )
+        ]
+        probs_df = pd.DataFrame(
+            probs,
+            index=df.loc[mask].index,
+            columns=["poisson_home_prob", "poisson_draw_prob", "poisson_away_prob"],
+        )
+        df.loc[mask, ["poisson_home_prob", "poisson_draw_prob", "poisson_away_prob"]] = (
+            probs_df
+        )
+
+    df["odds_model_gap"] = np.nan
+    df["odds_model_gap_home"] = np.nan
+    df["odds_model_gap_draw"] = np.nan
+    df["odds_model_gap_away"] = np.nan
+    df["odds_opening_gap_home"] = np.nan
+    df["odds_opening_gap_draw"] = np.nan
+    df["odds_opening_gap_away"] = np.nan
+
+    for idx, row in df.loc[mask].iterrows():
+        payload = row.get("odds_json")
+        if isinstance(payload, str):
+            try:
+                payload = json.loads(payload)
+            except json.JSONDecodeError:
+                continue
+        if not isinstance(payload, dict):
+            continue
+        latest = implied_from_prices(payload.get("prices_latest"))
+        opening = implied_from_prices(payload.get("prices_opening"))
+        if latest:
+            df.at[idx, "odds_model_gap_home"] = latest.get("home") - row["poisson_home_prob"]
+            df.at[idx, "odds_model_gap_draw"] = latest.get("draw") - row["poisson_draw_prob"]
+            df.at[idx, "odds_model_gap_away"] = latest.get("away") - row["poisson_away_prob"]
+            df.at[idx, "odds_model_gap"] = df.at[idx, "odds_model_gap_home"]
+        if opening:
+            df.at[idx, "odds_opening_gap_home"] = opening.get("home") - row["poisson_home_prob"]
+            df.at[idx, "odds_opening_gap_draw"] = opening.get("draw") - row["poisson_draw_prob"]
+            df.at[idx, "odds_opening_gap_away"] = opening.get("away") - row["poisson_away_prob"]
 
     conn.close()
     return df
@@ -422,6 +546,7 @@ def main():
     features = model_blob["features"]
     home_model = model_blob["home_model"]
     away_model = model_blob["away_model"]
+    policy = load_layer2_deployment_policy(MODEL_DIR)
 
     df = load_prediction_data(days=args.days, league=args.league)
     if df.empty:
@@ -431,22 +556,74 @@ def main():
     df["pred_home_residual"] = home_model.predict(X)
     df["pred_away_residual"] = away_model.predict(X)
 
-    # Vectorised confidence guard: flag early-season fixtures (< 6 games played by either team)
-    df["is_low_confidence"] = (df["home_played"] < 6) | (df["away_played"] < 6)
+    # Vectorised confidence guard aligned with Layer 2 train filter (min 4 games).
+    df["is_low_confidence"] = (df["home_played"] < 4) | (df["away_played"] < 4)
 
     out_rows = []
     for _, row in df.iterrows():
-        h_res = float(row["pred_home_residual"])
-        a_res = float(row["pred_away_residual"])
+        h_res_raw = float(row["pred_home_residual"])
+        a_res_raw = float(row["pred_away_residual"])
         lh = None if pd.isna(row.get("lambda_home")) else float(row["lambda_home"])
         la = None if pd.isna(row.get("lambda_away")) else float(row["lambda_away"])
 
-        is_low = bool(row["is_low_confidence"])
-        reason = "early_season_min_6_games_not_met" if is_low else None
+        league_policy = resolve_league_policy(policy, row.get("league_code"))
+        layer2_enabled = bool(league_policy.get("enabled", False))
+        alpha = float(league_policy.get("alpha", 0.0))
+        gate_reason = str(league_policy.get("reason", "default_policy"))
+        effective_alpha = alpha if layer2_enabled else 0.0
 
-        # Raw residuals — real value lives in metadata_json["residual"]
-        res_meta_h = {"residual": h_res, "base_lambda": lh}
-        res_meta_a = {"residual": a_res, "base_lambda": la}
+        # -----------------------------------------------------------
+        # Market-informed alpha scaling
+        # When the market's implied direction agrees with our residual
+        # direction → trust the model more (full alpha).
+        # When they disagree → the market knows something we don't;
+        # shrink to 40% of alpha as a conservative fallback.
+        # Falls back to base alpha when odds are unavailable.
+        # -----------------------------------------------------------
+        odds_gap_home = row.get("odds_model_gap_home")
+        odds_gap_away = row.get("odds_model_gap_away")
+
+        if effective_alpha > 0 and pd.notna(odds_gap_home) and float(odds_gap_home) != 0:
+            home_agree = (h_res_raw >= 0) == (float(odds_gap_home) >= 0)
+            alpha_home = effective_alpha if home_agree else effective_alpha * 0.4
+        else:
+            alpha_home = effective_alpha
+
+        if effective_alpha > 0 and pd.notna(odds_gap_away) and float(odds_gap_away) != 0:
+            away_agree = (a_res_raw >= 0) == (float(odds_gap_away) >= 0)
+            alpha_away = effective_alpha if away_agree else effective_alpha * 0.4
+        else:
+            alpha_away = effective_alpha
+
+        h_res_applied = alpha_home * h_res_raw
+        a_res_applied = alpha_away * a_res_raw
+
+        is_low = bool(row["is_low_confidence"])
+        reason = "early_season_min_4_games_not_met" if is_low else None
+
+        # Raw residuals live in metadata_json["residual"] for backward compatibility.
+        res_meta_h = {
+            "residual": h_res_raw,
+            "residual_raw": h_res_raw,
+            "residual_applied": h_res_applied,
+            "base_lambda": lh,
+            "layer2_enabled": layer2_enabled,
+            "layer2_alpha": alpha_home,
+            "layer2_alpha_policy": effective_alpha,
+            "layer2_gate_reason": gate_reason,
+            "market_confirmed": bool(pd.notna(odds_gap_home) and float(odds_gap_home or 0) != 0),
+        }
+        res_meta_a = {
+            "residual": a_res_raw,
+            "residual_raw": a_res_raw,
+            "residual_applied": a_res_applied,
+            "base_lambda": la,
+            "layer2_enabled": layer2_enabled,
+            "layer2_alpha": alpha_away,
+            "layer2_alpha_policy": effective_alpha,
+            "layer2_gate_reason": gate_reason,
+            "market_confirmed": bool(pd.notna(odds_gap_away) and float(odds_gap_away or 0) != 0),
+        }
 
         if is_low:
             res_meta_h.update(
@@ -471,10 +648,32 @@ def main():
             }
         )
 
-        # Adjusted lambdas — value lives in metadata_json["lambda"]
+        # Adjusted lambdas use the policy-gated residual.
         if lh is not None and la is not None:
-            adj_meta_h = {"lambda": max(0.01, lh + h_res), "residual": h_res}
-            adj_meta_a = {"lambda": max(0.01, la + a_res), "residual": a_res}
+            adj_meta_h = {
+                "lambda": max(0.01, lh + h_res_applied),
+                "residual": h_res_raw,
+                "residual_raw": h_res_raw,
+                "residual_applied": h_res_applied,
+                "base_lambda": lh,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_home,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(pd.notna(odds_gap_home) and float(odds_gap_home or 0) != 0),
+            }
+            adj_meta_a = {
+                "lambda": max(0.01, la + a_res_applied),
+                "residual": a_res_raw,
+                "residual_raw": a_res_raw,
+                "residual_applied": a_res_applied,
+                "base_lambda": la,
+                "layer2_enabled": layer2_enabled,
+                "layer2_alpha": alpha_away,
+                "layer2_alpha_policy": effective_alpha,
+                "layer2_gate_reason": gate_reason,
+                "market_confirmed": bool(pd.notna(odds_gap_away) and float(odds_gap_away or 0) != 0),
+            }
 
             if is_low:
                 adj_meta_h.update(
@@ -498,7 +697,6 @@ def main():
                     "meta": adj_meta_a,
                 }
             )
-
     save_residuals(out_rows)
     n_with_adj = sum(1 for r in out_rows if r["market_code"] == "adj_lambda_home")
     print(

@@ -16,7 +16,7 @@ from conftest import (
 
 
 def test_smoke_minipipeline_snapshot_predict_export(db_case):
-    if not Path("src/modeling/predict_v3_fixtures_first.py").exists() or not Path("models/export_predictions_v3_fixtures_first.py").exists():
+    if not Path("src/modeling/evaluation/predict_market_outcomes_fixtures_first.py").exists() or not Path("src/modeling/export/export_market_outcomes_fixtures_first.py").exists():
         pytest.skip("fixtures-first scripts removed/moved in this workspace")
 
     with db_case.conn.cursor() as cur:
@@ -54,7 +54,7 @@ def test_smoke_minipipeline_snapshot_predict_export(db_case):
 
     predict = run_script(
         [
-            "src/modeling/predict_v3_fixtures_first.py",
+            "src/modeling/evaluation/predict_market_outcomes_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",
@@ -65,12 +65,12 @@ def test_smoke_minipipeline_snapshot_predict_export(db_case):
     )
     assert predict.returncode == 0, predict.stderr or predict.stdout
 
-    out_path = Path("data/v1/daily") / f"predictions_v3_fixtures_first_{db_case.suffix}.csv"
+    out_path = Path("data/v1/daily") / f"predictions_market_outcomes_fixtures_first_{db_case.suffix}.csv"
     db_case.created_files.append(Path(__file__).resolve().parents[1] / out_path)
 
     export = run_script(
         [
-            "models/export_predictions_v3_fixtures_first.py",
+            "src/modeling/export/export_market_outcomes_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",

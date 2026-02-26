@@ -2,7 +2,7 @@ import asyncio
 import argparse
 import sys
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 import psycopg2
 from psycopg2.extras import execute_values
 from sofascore_wrapper.api import SofascoreAPI
@@ -24,6 +24,13 @@ LEAGUES_TO_INGEST = {
 }
 
 SEASONS_TO_KEEP = ["25/26", "24/25", "23/24"]
+
+def _safe_fromtimestamp(ts):
+    try:
+        return datetime.fromtimestamp(ts, tz=timezone.utc).replace(tzinfo=None)
+    except (OverflowError, OSError, ValueError):
+        # Fallback for negative timestamps on Windows or malformed data
+        return datetime(1970, 1, 1) if ts < 0 else datetime(2099, 12, 31)
 
 async def ingest_league_fixtures(api, league_code, unique_tournament_id, conn, dry_run=False):
     logger.info(f"Starting ingestion for {league_code} (ID: {unique_tournament_id}) {'[DRY RUN]' if dry_run else ''}")
@@ -86,7 +93,7 @@ def upsert_fixtures(conn, events, league_code, season_label, dry_run=False):
         with conn.cursor() as cur:
             for event in events:
                 sofascore_id = str(event['id'])
-                match_datetime = datetime.fromtimestamp(event['startTimestamp'])
+                match_datetime = _safe_fromtimestamp(event['startTimestamp'])
                 status_code = event.get('status', {}).get('type')
                 
                 db_status = 'scheduled'
@@ -190,10 +197,7 @@ def lookup_team_id(cur, sofa_id, team_name, league_code, dry_run=False):
     return cur.fetchone()[0]
 
 async def main():
-    parser = argparse.ArgumentParser(description="Ingest European cup fixtures from Sofascore.")
-    parser.add_argument("--dry-run", action="store_true", help="Perform a dry run without committing changes.")
-    args = parser.parse_args()
-
+    args = parse_args()
     api = SofascoreAPI()
     conn = psycopg2.connect(DB_URL)
     
@@ -203,6 +207,11 @@ async def main():
     finally:
         await api.close()
         conn.close()
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Ingest European cup fixtures from Sofascore.")
+    parser.add_argument("--dry-run", action="store_true", help="Perform a dry run without committing changes.")
+    return parser.parse_args()
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -23,9 +23,9 @@ if str(ROOT_DIR) not in sys.path:
 from src.db.db_utils import connect_db
 
 
-MODEL_DIR = Path("models/market_models")
-MODEL_NAME = "premium_gbm"
-MODEL_VERSION = "v3"
+MODEL_DIR = Path("model_artifacts/market_models")
+MODEL_NAME = "market_outcome_gbm"
+MODEL_VERSION = "fixtures_first_prematch_v1"
 MARKETS = (
     # Totals
     "o15", "o25", "o35", "o45", "u15", "u25",

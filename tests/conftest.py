@@ -45,6 +45,7 @@ def _cleanup_test_rows(conn: object, league_code: str) -> None:
             cur.execute("DELETE FROM predictions WHERE fixture_id = ANY(%s)", (fixture_ids,))
             cur.execute("DELETE FROM team_premium_snapshots WHERE fixture_id = ANY(%s)", (fixture_ids,))
             cur.execute("DELETE FROM fixture_stats_premium WHERE fixture_id = ANY(%s)", (fixture_ids,))
+            cur.execute("DELETE FROM fixture_odds_markets WHERE fixture_id = ANY(%s)", (fixture_ids,))
             cur.execute("DELETE FROM fixture_odds_snapshots WHERE fixture_id = ANY(%s)", (fixture_ids,))
             cur.execute("DELETE FROM fixture_results WHERE fixture_id = ANY(%s)", (fixture_ids,))
             cur.execute("DELETE FROM fixtures WHERE fixture_id = ANY(%s)", (fixture_ids,))

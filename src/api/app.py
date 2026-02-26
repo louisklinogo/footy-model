@@ -20,8 +20,8 @@ if str(ROOT_DIR) not in sys.path:
 from src.db.db_utils import connect_db
 
 
-MODEL_NAME = "premium_gbm"
-MODEL_VERSION = "v3"
+MODEL_NAME = "market_outcome_gbm"
+MODEL_VERSION = "fixtures_first_prematch_v1"
 MARKETS = ("o15", "o25", "c85")
 
 WEBAPP_DIR = Path(__file__).resolve().parent

@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-02-25T19:21:54.819462+00:00",
+  "odds_gap_drift": {
+    "window_days": 14,
+    "recent_count": 0,
+    "prev_count": 0,
+    "recent_mean": null,
+    "prev_mean": null,
+    "recent_std": null,
+    "prev_std": null,
+    "mean_shift": null,
+    "drift_flag": false,
+    "note": "insufficient_rows_for_drift_check"
+  },
+  "availability_coverage": {
+    "window_days": 14,
+    "fixtures_total": 640,
+    "fixtures_with_availability": 0,
+    "coverage_pct": 0.0,
+    "coverage_flag": true
+  },
+  "same_kickoff_groups": {
+    "window_days": 14,
+    "same_kickoff_groups": 110
+  }
+}

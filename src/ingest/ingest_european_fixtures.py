@@ -27,6 +27,13 @@ CUPS = {
     "ECL": {"id": 17015, "seasons": [76960, 61648, 52327]}
 }
 
+def _safe_fromtimestamp(ts):
+    try:
+        return datetime.fromtimestamp(ts, tz=timezone.utc)
+    except (OverflowError, OSError, ValueError):
+        # Fallback for negative timestamps on Windows or malformed data
+        return datetime(1970, 1, 1, tzinfo=timezone.utc) if ts < 0 else datetime(2099, 12, 31, tzinfo=timezone.utc)
+
 async def fetch_fixtures(api, league_id, season_id):
     """Fetch fixtures for a specific league and season."""
     print(f"  Fetching fixtures for league {league_id}, season {season_id}...")
@@ -105,7 +112,7 @@ def upsert_fixtures(conn, league_code, events):
         sid = str(ev['id'])
         home_id = team_map[ev['homeTeam']['name']]
         away_id = team_map[ev['awayTeam']['name']]
-        kickoff = datetime.fromtimestamp(ev['startTimestamp'], tz=timezone.utc)
+        kickoff = _safe_fromtimestamp(ev['startTimestamp'])
         
         # Determine status
         sofa_status = ev.get('status', {}).get('type', 'notstarted')

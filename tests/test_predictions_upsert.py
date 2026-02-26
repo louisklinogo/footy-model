@@ -15,7 +15,7 @@ from conftest import (
 
 
 def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
-    if not Path("src/modeling/predict_v3_fixtures_first.py").exists():
+    if not Path("src/modeling/evaluation/predict_market_outcomes_fixtures_first.py").exists():
         pytest.skip("fixtures-first scripts removed/moved in this workspace")
 
     with db_case.conn.cursor() as cur:
@@ -51,7 +51,7 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
 
     first = run_script(
         [
-            "src/modeling/predict_v3_fixtures_first.py",
+            "src/modeling/evaluation/predict_market_outcomes_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",
@@ -68,8 +68,8 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
             SELECT COUNT(*)
             FROM predictions
             WHERE fixture_id = %s
-              AND model_name = 'fixtures_first_gbm'
-              AND model_version = 'v3'
+              AND model_name = 'market_outcome_gbm'
+              AND model_version = 'fixtures_first_prematch_v1'
             """,
             (future_fixture,),
         )
@@ -77,7 +77,7 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
 
     second = run_script(
         [
-            "src/modeling/predict_v3_fixtures_first.py",
+            "src/modeling/evaluation/predict_market_outcomes_fixtures_first.py",
             "--league",
             db_case.league_code,
             "--days",
@@ -94,8 +94,8 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
             SELECT COUNT(*)
             FROM predictions
             WHERE fixture_id = %s
-              AND model_name = 'fixtures_first_gbm'
-              AND model_version = 'v3'
+              AND model_name = 'market_outcome_gbm'
+              AND model_version = 'fixtures_first_prematch_v1'
             """,
             (future_fixture,),
         )

@@ -163,9 +163,45 @@ def test_situational_prediction_features_from_db_seeded_state(db_case) -> None:
                     target_fixture,
                     "lambda_home",
                     "lambda_xgb",
-                    "v_test",
+                    "v_old",
                     0.5,
                     json.dumps({"lambda": 1.2}),
+                ),
+            )
+
+            cur.execute(
+                """
+            INSERT INTO fixture_odds_markets (
+                fixture_id,
+                provider,
+                provider_id,
+                market_code,
+                line_num,
+                line_text,
+                odds_json,
+                snapshot_time_utc,
+                snapshot_type
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s::jsonb, %s, %s)
+            ON CONFLICT ON CONSTRAINT uq_fixture_odds_markets DO UPDATE SET
+                odds_json = EXCLUDED.odds_json,
+                created_at = NOW()
+            """,
+                (
+                    target_fixture,
+                    "sofascore",
+                    1,
+                    "1x2",
+                    None,
+                    None,
+                    json.dumps(
+                        {
+                            "prices_opening": {"home": 2.2, "draw": 3.3, "away": 3.6},
+                            "prices_latest": {"home": 2.0, "draw": 3.5, "away": 3.9},
+                        }
+                    ),
+                    days_from_now(0),
+                    "latest_pre_match",
                 ),
             )
             cur.execute(
@@ -180,9 +216,62 @@ def test_situational_prediction_features_from_db_seeded_state(db_case) -> None:
                     target_fixture,
                     "lambda_away",
                     "lambda_xgb",
-                    "v_test",
+                    "v_old",
                     0.5,
                     json.dumps({"lambda": 0.9}),
+                ),
+            )
+            # Incomplete newer version should be ignored by latest-complete-pair logic.
+            cur.execute(
+                """
+            INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json)
+            VALUES (%s, %s, %s, %s, %s, %s::jsonb)
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE
+            SET p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json
+            """,
+                (
+                    target_fixture,
+                    "lambda_home",
+                    "lambda_xgb",
+                    "v_partial",
+                    0.5,
+                    json.dumps({"lambda": 9.9}),
+                ),
+            )
+            # Latest complete pair should win.
+            cur.execute(
+                """
+            INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json)
+            VALUES (%s, %s, %s, %s, %s, %s::jsonb)
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE
+            SET p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json
+            """,
+                (
+                    target_fixture,
+                    "lambda_home",
+                    "lambda_xgb",
+                    "v_new",
+                    0.5,
+                    json.dumps({"lambda": 1.4}),
+                ),
+            )
+            cur.execute(
+                """
+            INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json)
+            VALUES (%s, %s, %s, %s, %s, %s::jsonb)
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE
+            SET p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json
+            """,
+                (
+                    target_fixture,
+                    "lambda_away",
+                    "lambda_xgb",
+                    "v_new",
+                    0.5,
+                    json.dumps({"lambda": 1.1}),
                 ),
             )
 
@@ -213,6 +302,11 @@ def test_situational_prediction_features_from_db_seeded_state(db_case) -> None:
         assert home_form > 0 or away_form > 0
 
         assert sample["points_gap"] == sample["home_points"] - sample["away_points"]
+        assert float(sample["lambda_home"]) == pytest.approx(1.4)
+        assert float(sample["lambda_away"]) == pytest.approx(1.1)
+        assert sample["odds_model_gap"] == pytest.approx(sample["odds_model_gap_home"])
+        assert sample["odds_model_gap_home"] != 0
+        assert sample["odds_opening_gap_home"] != 0
     finally:
         with db_case.conn.cursor() as cur:
             if cl_fixture is not None:

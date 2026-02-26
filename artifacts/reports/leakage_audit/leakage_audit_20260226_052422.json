@@ -1,0 +1,196 @@
+{
+  "args": {
+    "days": 14,
+    "league": null,
+    "limit": 500
+  },
+  "availability_check": {
+    "examples": [],
+    "fixture_sample_count": 500,
+    "reason": null,
+    "skipped": false,
+    "status": "pass",
+    "violation_count": 0
+  },
+  "finished_at": "2026-02-26T05:25:51.905244+00:00",
+  "lambda_timing_check": {
+    "examples": [
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25625,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24004
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 26199,
+        "kickoff": "2026-02-21 02:01:57.653900+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24009
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25623,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23999
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25625,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24003
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25627,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24007
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 26198,
+        "kickoff": "2026-02-17 02:01:57.545457+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23988
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25621,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23995
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25622,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23998
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25624,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24001
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25624,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24002
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25626,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24005
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25626,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24006
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25627,
+        "kickoff": "2026-02-19 20:00:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24008
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 26198,
+        "kickoff": "2026-02-17 02:01:57.545457+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23987
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25620,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23993
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25620,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23994
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25621,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23996
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25622,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_home",
+        "model_name": "lambda_xgb",
+        "prediction_id": 23997
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 25623,
+        "kickoff": "2026-02-19 17:45:00+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24000
+      },
+      {
+        "created_at": "2026-02-25 19:52:50.756331+00:00",
+        "fixture_id": 26199,
+        "kickoff": "2026-02-21 02:01:57.653900+00:00",
+        "market_code": "lambda_away",
+        "model_name": "lambda_xgb",
+        "prediction_id": 24010
+      }
+    ],
+    "reason": null,
+    "skipped": false,
+    "status": "info",
+    "violation_count": 898
+  },
+  "overall_status": "pass",
+  "snapshot_sample_size_check": {
+    "examples": [],
+    "fixture_sample_count": 500,
+    "missing_snapshot_rows": 0,
+    "reason": null,
+    "skipped": false,
+    "status": "pass",
+    "team_rows_with_snapshot": 1000,
+    "violation_count": 0
+  },
+  "started_at": "2026-02-26T05:25:48.635899+00:00"
+}

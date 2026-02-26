@@ -1,0 +1,53 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\tick_due_fixtures_v1_20260226T042528Z.log
+Sofa reconcile targets: 2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scripts\reconcile_stale_ft_matches.py --fixture-ids 20332,20333
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260226T042533Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-26T04:25:33.871337+00:00 dry_run=False league=None limit=200
+Fixture 20332 (Sofa=15237924, kickoff=2026-02-26 01:00:00+00:00)
+  Settled to FT: 1-1
+Fixture 20333 (Sofa=15237918, kickoff=2026-02-26 01:00:00+00:00)
+  Settled to FT: 1-1
+
+Summary:
+  processed: 2
+  settled: 2
+  cancelled_or_postponed: 0
+  unfinished: 0
+  missing_scores: 0
+  fetch_errors: 0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league BR1
+Fetching fixtures for league: BR1
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 374
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league BR1 --days 3
+Traceback (most recent call last):
+  File "C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py", line 309, in <module>
+    main()
+    ~~~~^^
+  File "C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py", line 279, in main
+    features, imputation, models = load_artifacts()
+                                   ~~~~~~~~~~~~~~^^
+  File "C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py", line 67, in load_artifacts
+    with (MODEL_DIR / "features.json").open("r", encoding="utf-8") as f:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\pathlib\_local.py", line 537, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'models\\market_models\\features.json'
+Tick failed: Command '['C:\\Python313\\python.exe', 'C:\\Developer\\soccer\\footy-model\\src\\modeling\\evaluation\\predict_market_outcomes_fixtures_first.py', '--league', 'BR1', '--days', '3']' returned non-zero exit status 1.

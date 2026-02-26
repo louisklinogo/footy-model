@@ -30,8 +30,8 @@ from src.db.db_utils import connect_db
 
 # --- Configuration ---
 
-MODEL_NAME = "premium_gbm"
-MODEL_VERSION = "v3"
+MODEL_NAME = "market_outcome_gbm"
+MODEL_VERSION = "fixtures_first_prematch_v1"
 
 # Verdict multipliers for confidence_modifier
 VERDICT_MULTIPLIERS = {

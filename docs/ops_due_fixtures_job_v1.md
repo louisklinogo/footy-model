@@ -1,6 +1,6 @@
 # Ops Runbook: due fixtures tick job v1
 
-`jobs/tick_due_fixtures_v1.py` runs the v1 fixtures-first operational tick in three phases:
+`src/jobs/tick_due_fixtures_v1.py` runs the v1 fixtures-first operational tick in three phases:
 
 1. settle: refresh due fixtures, enrich premium payloads, and ingest v1 fixture rows
 2. predict: build team snapshots, generate fixtures-first predictions, and export outputs
@@ -10,15 +10,15 @@
 
 This job is intentionally tied to v1-only scripts and v1-only data paths.
 
-- Tick entrypoint: `jobs/tick_due_fixtures_v1.py`
+- Tick entrypoint: `src/jobs/tick_due_fixtures_v1.py`
 - Premium JSON output root: `data/v1/premium`
 - Tick ID batches root: `data/v1/ids/tick`
 - v1 ingestion/prediction scripts invoked by the job:
-  - `scrapers/ingest_premium_fixtures_v1.py`
-  - `scrapers/build_team_premium_snapshots_v1.py`
-  - `models/predict_v3_fixtures_first.py`
-  - `models/export_predictions_v3_fixtures_first.py`
-  - `models/score_predictions_v3_fixtures_first.py`
+  - `src/ingest/ingest_premium_fixtures_v1.py`
+  - `src/features/build_team_premium_snapshots_v1.py`
+  - `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
+  - `src/modeling/export/export_market_outcomes_fixtures_first.py`
+  - `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
 
 ## Environment variables
 
@@ -38,7 +38,7 @@ bun install
 
 ## CLI flags
 
-From `jobs/tick_due_fixtures_v1.py`:
+From `src/jobs/tick_due_fixtures_v1.py`:
 
 - `--leagues` (comma-separated league codes, optional; defaults to enabled leagues in registry)
 - `--predict-days` (default `3`)
@@ -54,19 +54,19 @@ From `jobs/tick_due_fixtures_v1.py`:
 Required dry-run smoke test:
 
 ```bash
-python jobs/tick_due_fixtures_v1.py --leagues E0 --dry-run
+python src/jobs/tick_due_fixtures_v1.py --leagues E0 --dry-run
 ```
 
 Required live single-league run:
 
 ```bash
-python jobs/tick_due_fixtures_v1.py --leagues E0
+python src/jobs/tick_due_fixtures_v1.py --leagues E0
 ```
 
 Optional tuned run:
 
 ```bash
-python jobs/tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30
+python src/jobs/tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30
 ```
 
 ## Windows Task Scheduler example
@@ -77,7 +77,7 @@ Run every 15 minutes.
 - Add arguments:
 
 ```text
-jobs\tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30
+src\jobs\tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30
 ```
 
 - Start in: `C:\Developer\soccer\footy-model`
@@ -86,7 +86,7 @@ jobs\tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay
 PowerShell registration example:
 
 ```powershell
-$action = New-ScheduledTaskAction -Execute "C:\Path\To\Python\python.exe" -Argument "jobs\tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30"
+$action = New-ScheduledTaskAction -Execute "C:\Path\To\Python\python.exe" -Argument "src\jobs\tick_due_fixtures_v1.py --leagues E0,E1 --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30"
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date) -RepetitionInterval (New-TimeSpan -Minutes 15)
 Register-ScheduledTask -TaskName "FootyTickDueFixturesV1" -Action $action -Trigger $trigger -Description "Run v1 due-fixtures settle/predict/score"
 ```
@@ -96,13 +96,13 @@ Register-ScheduledTask -TaskName "FootyTickDueFixturesV1" -Action $action -Trigg
 Run every 15 minutes:
 
 ```cron
-*/15 * * * * cd /opt/footy-model && DATABASE_URL='postgres://user:pass@host:5432/db' /usr/bin/python3 jobs/tick_due_fixtures_v1.py --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30 >> /var/log/footy/tick_due_fixtures_v1.log 2>&1
+*/15 * * * * cd /opt/footy-model && DATABASE_URL='postgres://user:pass@host:5432/db' /usr/bin/python3 src/jobs/tick_due_fixtures_v1.py --predict-days 3 --settlement-delay-minutes 180 --max-settle 25 --max-predict 50 --max-score 500 --score-since-days 30 >> /var/log/footy/tick_due_fixtures_v1.log 2>&1
 ```
 
 Single-league dry run:
 
 ```cron
-*/10 * * * * cd /opt/footy-model && DATABASE_URL='postgres://user:pass@host:5432/db' /usr/bin/python3 jobs/tick_due_fixtures_v1.py --leagues E0 --dry-run >> /var/log/footy/tick_due_fixtures_v1_dry.log 2>&1
+*/10 * * * * cd /opt/footy-model && DATABASE_URL='postgres://user:pass@host:5432/db' /usr/bin/python3 src/jobs/tick_due_fixtures_v1.py --leagues E0 --dry-run >> /var/log/footy/tick_due_fixtures_v1_dry.log 2>&1
 ```
 
 ## GitHub Actions note

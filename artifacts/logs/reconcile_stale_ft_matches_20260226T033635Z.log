@@ -1,0 +1,119 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260226T033635Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-26T03:36:35.544735+00:00 dry_run=False league=None limit=500
+Fixture 22022 (Sofa=14065035, kickoff=2026-02-23 16:00:00+00:00)
+  Settled to FT: 4-1
+Fixture 4509 (Sofa=13981677, kickoff=2026-02-23 16:30:00+00:00)
+  Settled to FT: 1-0
+Fixture 20804 (Sofa=13984675, kickoff=2026-02-23 17:00:00+00:00)
+  Settled to FT: 0-0
+Fixture 21689 (Sofa=13981936, kickoff=2026-02-23 17:00:00+00:00)
+  Settled to FT: 0-2
+Fixture 5525 (Sofa=14083800, kickoff=2026-02-23 18:30:00+00:00)
+  Settled to FT: 0-2
+Fixture 4510 (Sofa=13981675, kickoff=2026-02-23 18:45:00+00:00)
+  Settled to FT: 1-0
+Fixture 12128 (Sofa=15285229, kickoff=2026-02-23 18:45:00+00:00)
+  Settled to FT: 1-1
+Fixture 5128 (Sofa=14083537, kickoff=2026-02-23 19:00:00+00:00)
+  Settled to FT: 2-2
+Fixture 596 (Sofa=15238290, kickoff=2026-02-23 20:00:00+00:00)
+  Settled to FT: 0-1
+Fixture 2199 (Sofa=14060752, kickoff=2026-02-23 20:00:00+00:00)
+  Settled to FT: 0-2
+Fixture 20823 (Sofa=15498516, kickoff=2026-02-23 20:00:00+00:00)
+  Settled to FT: 1-1
+Fixture 19579 (Sofa=14289002, kickoff=2026-02-23 20:15:00+00:00)
+  Settled to FT: 2-0
+Fixture 1100 (Sofa=14059860, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-2
+Fixture 1101 (Sofa=14059859, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-2
+Fixture 1102 (Sofa=14059854, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 4-2
+Fixture 1103 (Sofa=14059866, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-1
+Fixture 1104 (Sofa=14059858, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-1
+Fixture 1105 (Sofa=14059862, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-1
+Fixture 1106 (Sofa=14059856, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-1
+Fixture 1645 (Sofa=15244358, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-1
+Fixture 1646 (Sofa=15399015, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 3-0
+Fixture 1647 (Sofa=15441333, kickoff=2026-02-24 19:45:00+00:00)
+  Updated fixture status to postponed
+Fixture 1648 (Sofa=15437896, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-0
+Fixture 2200 (Sofa=15416554, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-2
+Fixture 2201 (Sofa=15422387, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-1
+Fixture 2747 (Sofa=14391478, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-2
+Fixture 2748 (Sofa=14391480, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-3
+Fixture 2749 (Sofa=14391479, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-3
+Fixture 2750 (Sofa=14391481, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-2
+Fixture 2751 (Sofa=14391482, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 5-1
+Fixture 2752 (Sofa=14391483, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-1
+Fixture 3070 (Sofa=15538758, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-0
+Fixture 3228 (Sofa=15573447, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 1-1
+Fixture 3229 (Sofa=15578545, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-2
+Fixture 3584 (Sofa=15395623, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 2-0
+Fixture 3585 (Sofa=15416481, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 3-0
+Fixture 3586 (Sofa=15399013, kickoff=2026-02-24 19:45:00+00:00)
+  Settled to FT: 0-0
+Fixture 1107 (Sofa=14059857, kickoff=2026-02-24 20:00:00+00:00)
+  Settled to FT: 5-0
+Fixture 5526 (Sofa=15535698, kickoff=2026-02-25 17:00:00+00:00)
+  Settled to FT: 3-2
+Fixture 24297 (Sofa=15452774, kickoff=2026-02-25 17:45:00+00:00)
+  Settled to FT: 4-1
+Fixture 1108 (Sofa=14059864, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 3-0
+Fixture 1109 (Sofa=14059863, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 1-2
+Fixture 1110 (Sofa=14059861, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 2-0
+Fixture 2753 (Sofa=14391484, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 1-2
+Fixture 2754 (Sofa=14391487, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 3-1
+Fixture 2755 (Sofa=14391486, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 4-4
+Fixture 2756 (Sofa=14391485, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 2-1
+Fixture 2757 (Sofa=14391489, kickoff=2026-02-25 19:45:00+00:00)
+  Settled to FT: 3-2
+Fixture 2758 (Sofa=14391488, kickoff=2026-02-25 19:45:00+00:00)
+  Updated fixture status to postponed
+Fixture 1111 (Sofa=14059855, kickoff=2026-02-25 20:00:00+00:00)
+  Settled to FT: 2-1
+Fixture 24298 (Sofa=15452770, kickoff=2026-02-25 20:00:00+00:00)
+  Settled to FT: 3-2
+Fixture 24299 (Sofa=15452749, kickoff=2026-02-25 20:00:00+00:00)
+  Settled to FT: 2-2
+Fixture 24300 (Sofa=15452752, kickoff=2026-02-25 20:00:00+00:00)
+  Settled to FT: 2-1
+
+Summary:
+  processed: 53
+  settled: 51
+  cancelled_or_postponed: 2
+  unfinished: 0
+  missing_scores: 0
+  fetch_errors: 0

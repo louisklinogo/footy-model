@@ -1,0 +1,103 @@
+[
+  {
+    "stage": "baseline",
+    "features": [],
+    "home_rmse": 1.0906142302588446,
+    "away_rmse": 1.0021477900506417,
+    "home_lift": 0.0,
+    "away_lift": 0.0
+  },
+  {
+    "stage": "standings_gaps",
+    "features": [
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "home_playing_top4",
+      "away_playing_top4",
+      "derby_position_gap"
+    ],
+    "home_rmse": 1.0906853299904247,
+    "away_rmse": 1.016045320070238,
+    "home_lift": -6.519237472553699e-05,
+    "away_lift": -0.013867745014828575
+  },
+  {
+    "stage": "standings_gaps+schedule",
+    "features": [
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "home_playing_top4",
+      "away_playing_top4",
+      "derby_position_gap",
+      "rest_delta",
+      "congestion_flag",
+      "home_upcoming_tier",
+      "away_upcoming_tier"
+    ],
+    "home_rmse": 1.0917405894860333,
+    "away_rmse": 1.0123208259097456,
+    "home_lift": -0.0010327751059339232,
+    "away_lift": -0.010151233141560708
+  },
+  {
+    "stage": "standings_gaps+schedule+player",
+    "features": [
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "home_playing_top4",
+      "away_playing_top4",
+      "derby_position_gap",
+      "rest_delta",
+      "congestion_flag",
+      "home_upcoming_tier",
+      "away_upcoming_tier",
+      "home_xg_lost",
+      "away_xg_lost",
+      "home_key_absent",
+      "away_key_absent",
+      "injury_impact"
+    ],
+    "home_rmse": 1.089730732957108,
+    "away_rmse": 1.0094643384771056,
+    "home_lift": 0.0008100914853522117,
+    "away_lift": -0.007300867695466524
+  },
+  {
+    "stage": "standings_gaps+schedule+player+odds",
+    "features": [
+      "position_gap",
+      "points_gap",
+      "home_lame_duck",
+      "away_lame_duck",
+      "home_playing_top4",
+      "away_playing_top4",
+      "derby_position_gap",
+      "rest_delta",
+      "congestion_flag",
+      "home_upcoming_tier",
+      "away_upcoming_tier",
+      "home_xg_lost",
+      "away_xg_lost",
+      "home_key_absent",
+      "away_key_absent",
+      "injury_impact",
+      "odds_model_gap",
+      "odds_model_gap_home",
+      "odds_model_gap_draw",
+      "odds_model_gap_away",
+      "odds_opening_gap_home",
+      "odds_opening_gap_draw",
+      "odds_opening_gap_away"
+    ],
+    "home_rmse": 1.086346865052274,
+    "away_rmse": 1.004980623469423,
+    "home_lift": 0.00391280902831953,
+    "away_lift": -0.0028267621272089166
+  }
+]

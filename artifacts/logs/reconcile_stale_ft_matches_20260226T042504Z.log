@@ -1,0 +1,17 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260226T042504Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-26T04:25:04.522938+00:00 dry_run=False league=None limit=200
+Fixture 20332 (Sofa=15237924, kickoff=2026-02-26 01:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+Fixture 20333 (Sofa=15237918, kickoff=2026-02-26 01:00:00+00:00)
+  Fetch error: [WinError 5] Access is denied
+
+Summary:
+  processed: 2
+  settled: 0
+  cancelled_or_postponed: 0
+  unfinished: 0
+  missing_scores: 0
+  fetch_errors: 2

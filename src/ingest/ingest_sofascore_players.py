@@ -31,6 +31,19 @@ def parse_args():
     parser.add_argument("--dry-run", action="store_true", help="Don't commit to DB")
     return parser.parse_args()
 
+def _unix_to_datetime(raw: float) -> datetime.datetime | None:
+    try:
+        ts = float(raw)
+    except (TypeError, ValueError):
+        return None
+    # Treat large values as milliseconds.
+    if ts > 1e11:
+        ts = ts / 1000.0
+    try:
+        return datetime.datetime.fromtimestamp(ts, tz=datetime.timezone.utc)
+    except (OverflowError, OSError, ValueError):
+        return None
+
 def fetch_target_fixtures(league_code: str | None, limit: int) -> List[Dict[str, Any]]:
     query = """
     SELECT f.fixture_id, f.sofascore_id, f.home_team_id, f.away_team_id, f.league_code
@@ -104,7 +117,9 @@ async def _upsert_lineup(cur, fixture_id, team_id, lineup_data, is_home, dry_run
         # 1. Upsert Player Metadata
         dob = None
         if p_info.get("dateOfBirthTimestamp"):
-            dob = datetime.date.fromtimestamp(p_info["dateOfBirthTimestamp"])
+            dt = _unix_to_datetime(p_info["dateOfBirthTimestamp"])
+            if dt:
+                dob = dt.date()
             
         mv = p_info.get("proposedMarketValueRaw", {}).get("value")
         

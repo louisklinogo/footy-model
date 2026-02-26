@@ -133,7 +133,7 @@ everything else can be added after stable daily operations.
 
 ### odds snapshot as-of and leakage guard
 - pre-match odds features must satisfy `snapshot_time_utc <= kickoff`
-- `models/train_v3_fixtures_first.py` and `models/predict_v3_fixtures_first.py` hard-fail on any post-kickoff odds snapshot
+- `src/modeling/layer2_markets/market_outcome_calibrator.py` and `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py` hard-fail on any post-kickoff odds snapshot
 - for backfills, ingest `snapshot_type='closing'` snapshots anchored to kickoff when possible
 - for upcoming fixtures, the tick job must refresh premium json pre-kickoff to capture true `latest_pre_match`
 

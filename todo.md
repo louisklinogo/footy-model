@@ -1,111 +1,206 @@
-# Project Todo List - Soccer Predictive Model
+# Project Todo - Soccer Predictive Model
 
-## 🛠️ Model Diagnostics & Calibration
-- [ ] **Poisson Model Calibration Check**
-    - **Goal:** Verify if predicted probabilities (1X2, U/O) align with actual hit rates.
-    - **Deliverable:** `src/modeling/calibration_check.py`
-    - **Logic:** 
-        1. Extract history from `data/v1/daily_slip_YYYYMMDD.csv`.
-        2. Cross-reference with `fixture_results` from DB/JSON.
-        3. Bin probabilities and calculate **Expected Calibration Error (ECE)**.
-        4. Generate a reliability diagram (calibration curve).
+Updated: 2026-02-26
 
-## 📊 Data Ingestion & Engineering
-- [x] **Key Player Absence Flag (`is_key_absent`)**
-    - **Goal:** Add a boolean flag catching when a core starter is out.
-    - **Logic:** Calculate via SQL if a missing player started >70% of available matches in the last 10 games.
-- [x] **European Cups (CL/EL/ECL) Pipeline**
-    - **Goal:** Ensure European matches are seamlessly integrated.
-    - **Logic:** Confirm fixture seeders pull these leagues and map `team_id` perfectly so domestic and European rolling stats flow into a single unified timeline.
-- [ ] **Historical Odds Convergence (`odds_model_gap`)**
-    - **Goal:** Let the Layer 2 Situational Model know what the betting market thinks.
-    - **Logic:** Backfill historical closing 1X2, AH, and O/U odds into `fixture_odds_snapshots`.
-    - **Implementation Details:**
-        - Source: Sofascore `/event/{match_id}/odds/1/all` (Provider 1: bet365).
-        - Format: Convert fractional odds (`fractionalValue` and `initialFractionalValue`) to Implied Probabilities.
-        - Calculate divergence between Poisson projection and Market implied probability.
+Legend:
+- [x] done
+- [ ] pending
+- [ ] in progress (marked inline)
 
-## 🧬 Model Improvements (Future)
-- [ ] **H1 vs H2 Dynamics (Senior Grade)**
-    - **Goal:** Leverage granular period stats to detect fatigue and tactical switches.
-    - **Features:** Fatigue Index (H2/H1 xG ratio), Manager "Half-Time Talk" effect, Game-State Normalization.
-    - **Ref:** `docs/halftime_logic_proposal.md`
-- [ ] **Matchup Signature & Tactical Classification (Senior Grade)**
-    - **Concept:** Moving beyond simple averages to model "Style-on-Style" interactions based on advanced stats.
-    - **Resource:** `docs/style-engineering-playbook.md`
-    - **Implementation:**
-        - Cluster teams into **Tactical Archetypes** (e.g., *High-Pressing*, *Low-Block/Counter*, *Possession-Dominant*, etc).
-        - Feature engineering for **Matchup Identity**:
-            - `style_delta`: How a "High-Press" team performs specifically against a "Weak-Build-up" team.
-        - **H2H Ghosting:** A historical delta offset for specific fixture pairs that consistently deviate from the Poisson baseline (the "Deja Vu" signatures).
+## Quick File Reference Map
+- Layer 2 training: `src/modeling/layer2_situational/train_situational_residual.py`
+- Layer 2 inference: `src/modeling/layer2_situational/predict_situational_residual.py`
+- Feature health audit: `src/modeling/layer2_situational/audit_feature_health.py`
+- Ablation table: `src/modeling/layer2_situational/run_ablation_table.py`
+- Monitoring: `src/modeling/layer2_situational/monitor_layer2_signals.py`
+- Leakage audit: `src/db/audit_layer2_situational_leakage.py`
+- Calibration check: `src/modeling/evaluation/calibration_check.py`
+- Market predictor: `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
+- Market exporter: `src/modeling/export/export_market_outcomes_fixtures_first.py`
+- Market scorer: `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
+- Historical odds backfill: `src/ingest/backfill_sofascore_odds_markets_v1.py`
+- Prematch odds polling: `src/jobs/sofascore_odds_polling.py`
+- Validation loop scheduler wrapper: `scripts/run_validation_loop_scheduler.cmd`
+- Validation loop task registration helper: `scripts/register_validation_loop_scheduler.cmd`
+- Tick job (Sofa-first settlement, orchestration wiring pending cleanup): `src/jobs/tick_due_fixtures_v1.py`
+- Sofa stale/FT reconciliation: `scripts/reconcile_stale_ft_matches.py`
+- Shared script logger: `src/common/script_logger.py`
+- DB functions to migrate: `migrations/002_db_functions.sql`
+- Sofa settlement helper migration: `migrations/011_sofa_settlement_helpers.sql`
+- Poisson / Dixon-Coles engine: `src/pricing/poisson.py`
 
+## Current Snapshot (Reality Check)
+- Core Layer 2 guardrails are implemented (chronology fail-fast, rolling temporal CV, odds leakage guard, reproducibility sidecar).
+- Biggest blockers are still data coverage, not missing modeling code.
+- `odds_model_gap_home` is still sparse in the latest health report (non-missing ~16.2%).
+- Upcoming `player_availability` coverage was 0% in latest monitor snapshot.
+- Settlement migration has materially progressed: stale FT reconciliation is now Sofa-native and successful in live runs.
+- Validation loop automation is now in place (manual runner + scheduled task every 6 hours).
+- Operational gap remains in orchestration path alignment (tick still references moved/renamed scripts in some phases).
 
+## NOW (Execution Blockers)
 
-## 📈 Layer 2 Situational: Next DS Steps
+### 0) Tick Orchestration Path Alignment (Critical)
+- [ ] in progress - Align `src/jobs/tick_due_fixtures_v1.py` subprocess paths with current repo layout.
+  - Canonical paths now expected:
+    - `src/ingest/scrapers/premium_enricher_v4.js`
+    - `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
+    - `src/modeling/export/export_market_outcomes_fixtures_first.py`
+    - `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
+  - DoD:
+    - one live tick run completes settle + predict + export + score without missing-file errors.
+    - pipeline run status for `tick_due_fixtures_v1` and phase jobs is `success`.
 
-### Feature Health Checks
-- [ ] Run feature coverage report on training set — identify columns that are constant (0 variance) or >90% missing
-- [ ] Check prevalence of rare flags: `is_derby`, `home_lame_duck`, `away_lame_duck` should each be <5% of rows (XGBoost won't split on them until sample size grows)
-- [ ] Verify `odds_model_gap` column is NOT constant before retraining
+- [x] Resolve model identity contract between predict/export/score.
+  - Canonical identity:
+    - `model_name='market_outcome_gbm'`
+    - `model_version='fixtures_first_prematch_v1'`
 
-### Odds Model Gap (High ROI)
-- [ ] **Backfill historical odds** into `fixture_odds_snapshots` (or a new table) with `snapshot_time_utc`
-- [ ] Convert odds to implied probabilities (1X2 at minimum; handle vig removal if possible)
-- [ ] **Leakage guard**: join uses latest snapshot where `snapshot_time_utc <= match_datetime_utc`
-- [ ] Compute `odds_model_gap = market_implied_home_prob - poisson_home_prob` (add draw/away variants too)
-- [ ] **Retrain** and check feature importance — odds gap is likely the biggest incremental lift
+### 1) Historical + Prematch Odds Coverage (Highest ROI)
+- [ ] in progress - Backfill historical Sofascore odds into `fixture_odds_markets` (closing snapshots)
+  - Goal: provide point-in-time market signal for `odds_model_gap_*` features.
+  - Script: `src/ingest/backfill_sofascore_odds_markets_v1.py`
+  - Source logic: Sofascore `/event/{sofascore_id}/odds/1/all`, provider id default `1` (Bet365).
+  - Feature logic: parse fractional/decimal -> implied probabilities -> compute `odds_model_gap_home/draw/away` vs Poisson outcome probs.
+  - Leakage rule: training/inference joins only rows with `snapshot_time_utc <= match_datetime_utc`.
+  - DoD:
+    - `odds_model_gap_home` coverage materially above current baseline.
+    - no post-kickoff odds rows consumed in train/predict.
 
-### Player Availability Coverage
-- [ ] Verify `player_availability` coverage for historical seasons — confirm backfill has run for 2024/2025
-- [ ] If coverage is sparse, flag as "expected low importance" and track % populated per league/season
-- [ ] Add a DB check (extend `audit_layer2_situational_leakage.py`) to flag rows where `recorded_at > match_datetime_utc`
+- [ ] in progress - Run recurring prematch odds polling for upcoming fixtures
+  - Script: `src/jobs/sofascore_odds_polling.py`
+  - Cadence logic in code:
+    - every 2 hours until T-3h
+    - every 30 minutes in last 3 hours
+  - Writes `latest_pre_match` snapshots into `fixture_odds_markets`.
+  - DoD:
+    - active upcoming fixtures get fresh pre-kickoff snapshots.
+    - polling job is repeatable and idempotent via unique constraint.
 
-### Evaluation & Ablation
-- [ ] **Temporal CV**: split training by date (e.g., train on first 80% of matches chronologically, test on last 20%) — report RMSE and hit rates per segment
-- [ ] **Ablation table**:
-  1. Baseline (Layer 1 Poisson only)
-  2. + Standings/points gap
-  3. + Schedule (congestion, upcoming tier)
-  4. + Player impact
-  5. + Odds model gap
-- [ ] Report RMSE lift and feature importance at each stage
+- [ ] Verify odds signal health before every retrain
+  - Scripts: `src/modeling/layer2_situational/audit_feature_health.py`, `src/modeling/layer2_situational/monitor_layer2_signals.py`
+  - Checks:
+    - `odds_model_gap_*` not constant
+    - drift check available (not blocked by insufficient rows)
+    - expected distribution range (no obvious parsing artifacts)
 
-### Monitoring (Production)
-- [ ] Track `odds_model_gap` distribution drift over time — retrain when mean shifts >0.05
-- [ ] Add alert if `player_availability` coverage drops below 50% for upcoming matches
-- [ ] Log same-kickoff fixture groups and verify they share identical pre-kickoff state
+### 2) Player Availability Coverage (2nd Highest ROI)
+- [ ] Raise historical `player_availability` coverage to target >70% before production-weighting injury features.
+  - Ingestion script: `src/ingest/ingest_sofascore_availability.py`
+  - Coverage report: `src/ingest/report_player_availability_coverage.py`
+  - Leakage audit: `src/db/audit_layer2_situational_leakage.py` (`recorded_at <= kickoff`)
+  - DoD:
+    - per-league coverage report produced for target seasons.
+    - timing violations remain zero (or explicitly investigated).
 
----
+### 3) Validation Loop After Each Backfill Batch
+- [x] Add automation wrapper for validation loop with lock/stale-lock/logging.
+  - Script: `scripts/run_validation_loop_scheduler.cmd`
+  - Outputs:
+    - `artifacts/reports/layer2_feature_health/<run_ts>/...`
+    - `artifacts/reports/leakage_audit/leakage_audit_<run_ts>.json`
+    - `artifacts/reports/monitoring/<run_ts>/...`
+- [x] Register and verify recurring Task Scheduler run for validation loop.
+  - Suggested task name: `FootyLayer2ValidationLoop`
+  - Registration helper: `scripts/register_validation_loop_scheduler.cmd`
+  - Cadence: every 6 hours
+- [ ] Run feature health audit and archive outputs.
+- [ ] Run leakage audit and archive outputs.
+- [ ] Run monitor report for drift/coverage/same-kickoff groups.
+- [ ] Retrain only when coverage gates improve enough to make re-train informative.
 
-### Why some features show 0.0000 importance (Feb 2026 training run)
+Suggested batch loop command set:
+1. `python src/modeling/layer2_situational/audit_feature_health.py`
+2. `python src/db/audit_layer2_situational_leakage.py --days 14 --limit 500`
+3. `python src/modeling/layer2_situational/monitor_layer2_signals.py --days 14`
 
-From `.sisyphus/evidence/task-6-train.txt` (Home model):
-```
-home_upcoming_tier: 0.0000
-home_lame_duck: 0.0000
-away_lame_duck: 0.0000
-is_derby: 0.0000
-home_xg_lost: 0.0000
-away_xg_lost: 0.0000
-home_key_absent: 0.0000
-away_key_absent: 0.0000
-injury_impact: 0.0000
-home_playing_top4: 0.0000
-away_playing_top4: 0.0000
-derby_position_gap: 0.0000
-odds_model_gap: 0.0000
-```
+### 4) Sofa-Native Settlement Migration (Operational)
+- [x] Refactor DB functions to prioritize/return Sofa identifiers where appropriate.
+  - Current functions: `get_stale_fixtures()`, `get_ft_without_results()` in `migrations/002_db_functions.sql`
+- [ ] in progress - Refactor tick settlement path away from Flashscore-only JSON enrichment path.
+  - Current file: `src/jobs/tick_due_fixtures_v1.py`
+- [x] Add Sofa-native stale FT reconciliation script.
+  - Target script: `scripts/reconcile_stale_ft_matches.py`
+- [x] Keep controlled fallback behavior during migration (no blind cutover).
 
-**What this means:**
-- `odds_model_gap` is hardcoded to `0.0` in training — not empty, just a constant. It will light up once we backfill market odds.
-- Player impact features (`xg_lost`, `key_absent`, `injury_impact`) exist but appear mostly zero/unpopulated in the current historical window — likely backfill still in progress.
-- Derby / lame duck flags are rare (<2% of matches). XGBoost needs far more samples to learn these edge cases.
+### 5) Runtime Logging + Observability (Operational)
+- [x] Add file logging + DB run metadata to tick orchestration.
+  - `src/jobs/tick_due_fixtures_v1.py`
+  - `pipeline_runs.details_json.log_file`
+- [x] Add file logging + DB run metadata to stale reconcile script.
+  - `scripts/reconcile_stale_ft_matches.py`
+- [x] Add file logging + DB run metadata to prematch odds polling.
+  - `src/jobs/sofascore_odds_polling.py`
+- [ ] pending - Standardize this logger pattern across remaining operational jobs.
 
-**Verdict:** The core foundation works and finds real alpha (~4.4% RMSE lift on home residuals). Once odds backfill finishes and we retrain, expect the bottom half of this list to light up.
+## NEXT (After Coverage Improves)
 
-### Hephaestus DS Guardrails (Added)
-- [ ] **Make split chronology explicit**: enforce `max(train_match_datetime_utc) < min(test_match_datetime_utc)` and fail fast if violated
-- [ ] **Add rolling temporal CV** (minimum 3 folds) and report mean/std RMSE lift vs baseline
-- [ ] **Odds leakage audit**: assert every odds row used for training/inference satisfies `snapshot_time_utc <= match_datetime_utc`
-- [ ] **Cold-start / promoted teams check**: evaluate fixtures where either team has `<6 prior games` and report separate metrics
-- [ ] **Artifact reproducibility sidecar**: write JSON next to model artifact with train date range, row counts, feature list/hash, hyperparams, and git commit hash (if available)
+### 6) Retrain + Evaluate
+- [ ] Retrain Layer 2 situational residual model and refresh deployment artifacts.
+  - Script: `src/modeling/layer2_situational/train_situational_residual.py --train`
+  - Expected outputs:
+    - `model_artifacts/situational_model/situational_model.pkl`
+    - `model_artifacts/situational_model/layer2_deployment_policy.json`
+    - `model_artifacts/situational_model/situational_model.meta.json`
+
+- [ ] Run ablation table and compare stage lifts.
+  - Script: `src/modeling/layer2_situational/run_ablation_table.py`
+  - Stages to keep:
+    1. baseline (Layer 1 only)
+    2. + standings/points
+    3. + schedule
+    4. + player impact
+    5. + odds gap
+
+- [ ] Re-run calibration diagnostics on prediction outputs.
+  - Script: `src/modeling/evaluation/calibration_check.py`
+  - Outputs: ECE + reliability diagrams.
+
+### 7) Risk Segmentation + Deployment Governance
+- [ ] Add explicit cold-start segment (`either team <6 prior games`) to evaluation output.
+- [ ] Validate per-league deployment policy gates after each retrain.
+- [ ] Track enabled leagues over time and compare out-of-sample stability.
+
+## LATER (R&D / Expansion)
+
+### 8) Modeling Enhancements
+- [ ] Investigate strict Dixon-Coles normalization in `src/pricing/poisson.py` (marginal mean preservation).
+- [ ] Add H1 vs H2 dynamics features (fatigue, xG momentum, halftime response).
+- [ ] Explore tactical archetype / style-on-style features (`style_delta`) under strict point-in-time controls.
+
+### 9) Data Scope Expansion
+- [ ] Expand `team_rivalries` coverage where useful (current seed: `src/ingest/seed_rivalries.py`).
+- [ ] Include domestic cups where they improve congestion/fatigue signals.
+- [ ] Add `shots_inside_box` into engineered training features only if lift is proven.
+- [ ] Tactical formation tracking:
+  - [ ] create normalized `fixture_formations` table
+  - [ ] preserve formation keys in Sofascore ingestion path
+
+## Evidence Notes (Feb 2026)
+
+### Why some features were near-zero importance
+- Odds signal was sparse in training windows, so expected impact was muted.
+- Rare flags (`is_derby`, lame duck) have low prevalence and are hard to split on with current sample sizes.
+- Injury impact features need stronger historical population before expecting stable lift.
+
+### Keep these guardrails permanently
+- [x] strict chronology separation (`max(train_dt) < min(test_dt)`)
+- [x] rolling temporal CV (3 folds)
+- [x] odds snapshot timing guard (`snapshot_time_utc <= kickoff`)
+- [x] leakage audit for availability timing
+- [x] reproducibility sidecar (feature hash, params, git hash)
+
+## Implemented (Do Not Re-Plan)
+- [x] Calibration tooling (ECE + reliability diagram): `src/modeling/evaluation/calibration_check.py`
+- [x] Time-respecting split + chronology fail-fast: `src/modeling/layer2_situational/train_situational_residual.py`
+- [x] Rolling temporal CV in Layer 2 training.
+- [x] Odds leakage guard in train/predict joins.
+- [x] Reproducibility sidecar output (`situational_model.meta.json`).
+- [x] Leakage audit checks for availability timing.
+- [x] Layer 2 monitor for odds drift, availability coverage, same-kickoff grouping.
+- [x] Layer 2 ablation runner scaffold.
+- [x] Key player absence feature path.
+- [x] European competitions integrated into fixtures-first flow.
+- [x] Sofa settlement helper migration and v2 stale/FT helper functions.
+- [x] Sofa-native stale FT reconciliation script (`scripts/reconcile_stale_ft_matches.py`).
+- [x] Operational log file plumbing + `pipeline_runs.details_json.log_file` for tick/reconcile/odds polling.

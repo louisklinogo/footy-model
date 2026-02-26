@@ -65,6 +65,84 @@ def _load_season_start_months() -> dict[str, int]:
     return mapping
 
 
+def _load_relegation_spots_map() -> dict[str, int]:
+    with _LEAGUE_REGISTRY_PATH.open("r", encoding="utf-8") as handle:
+        registry = json.load(handle)
+
+    mapping: dict[str, int] = {}
+    for row in registry:
+        league_code = row.get("league_code")
+        if isinstance(league_code, str):
+            relegation_spots = row.get("relegation_spots")
+            if relegation_spots is None:
+                continue
+            mapping[league_code] = int(relegation_spots)
+    return mapping
+
+
+def infer_relegation_spots(team_count: int) -> int:
+    if team_count <= 12:
+        return 2
+    return 3
+
+
+def latest_lambda_pairs_sql() -> str:
+    """
+    Returns SQL that picks one deterministic lambda_home/lambda_away pair per fixture:
+    the latest model_version that has both markets present for the requested model_name.
+    """
+    return """
+        WITH lambda_rows AS (
+            SELECT
+                fixture_id,
+                market_code,
+                model_name,
+                model_version,
+                created_at,
+                prediction_id,
+                (metadata_json->>'lambda')::double precision AS lambda_value
+            FROM predictions
+            WHERE model_name = %s
+              AND market_code IN ('lambda_home', 'lambda_away')
+        ),
+        pair_versions AS (
+            SELECT
+                fixture_id,
+                model_version,
+                MAX(created_at) AS latest_created_at,
+                MAX(prediction_id) AS latest_prediction_id
+            FROM lambda_rows
+            GROUP BY fixture_id, model_version
+            HAVING COUNT(DISTINCT market_code) = 2
+        ),
+        chosen_version AS (
+            SELECT
+                fixture_id,
+                model_version,
+                ROW_NUMBER() OVER (
+                    PARTITION BY fixture_id
+                    ORDER BY latest_created_at DESC, latest_prediction_id DESC, model_version DESC
+                ) AS rn
+            FROM pair_versions
+        )
+        SELECT
+            ph.fixture_id,
+            ph.lambda_value AS lambda_home,
+            pa.lambda_value AS lambda_away,
+            cv.model_version AS lambda_model_version
+        FROM chosen_version cv
+        JOIN lambda_rows ph
+          ON ph.fixture_id = cv.fixture_id
+         AND ph.model_version = cv.model_version
+         AND ph.market_code = 'lambda_home'
+        JOIN lambda_rows pa
+          ON pa.fixture_id = cv.fixture_id
+         AND pa.model_version = cv.model_version
+         AND pa.market_code = 'lambda_away'
+        WHERE cv.rn = 1
+    """
+
+
 def _row_datetime(value: object) -> pd.Timestamp:
     return _as_datetime_utc(pd.Series([value])).iloc[0]
 
@@ -112,6 +190,14 @@ def compute_point_in_time_state(df: pd.DataFrame) -> pd.DataFrame:
     away_position: list[int] = []
     home_form_streak: list[int] = []
     away_form_streak: list[int] = []
+    home_points_to_top: list[int] = []
+    away_points_to_top: list[int] = []
+    home_points_to_relegation: list[int] = []
+    away_points_to_relegation: list[int] = []
+    league_team_count: list[int] = []
+    league_relegation_spots: list[int] = []
+
+    relegation_spots_by_league = _load_relegation_spots_map()
 
     home_goals_col = "home_goals" if "home_goals" in out.columns else None
     away_goals_col = "away_goals" if "away_goals" in out.columns else None
@@ -172,6 +258,19 @@ def compute_point_in_time_state(df: pd.DataFrame) -> pd.DataFrame:
             ranked = sorted(
                 league_points.items(), key=lambda pair: pair[1], reverse=True
             )
+            observed_team_count = len(ranked)
+            inferred_team_count = max(
+                4,
+                observed_team_count,
+                h_played_before + 1,
+                a_played_before + 1,
+            )
+            relegation_spots = relegation_spots_by_league.get(
+                league_code, infer_relegation_spots(inferred_team_count)
+            )
+            relegation_line = max(1, inferred_team_count - relegation_spots + 1)
+            top_points = max(league_points.values()) if league_points else 0
+
             h_rank_before = next(
                 (
                     idx + 1
@@ -188,6 +287,13 @@ def compute_point_in_time_state(df: pd.DataFrame) -> pd.DataFrame:
                 ),
                 1,
             )
+            relegation_points_pool = sorted(league_points.values(), reverse=True)
+            points_at_relegation_line = 0
+            if relegation_points_pool:
+                rel_idx = min(
+                    max(0, relegation_line - 1), len(relegation_points_pool) - 1
+                )
+                points_at_relegation_line = int(relegation_points_pool[rel_idx])
 
             home_points.append(h_points_before)
             away_points.append(a_points_before)
@@ -197,6 +303,16 @@ def compute_point_in_time_state(df: pd.DataFrame) -> pd.DataFrame:
             away_position.append(a_rank_before)
             home_form_streak.append(sum(h_state["recent_points"]))
             away_form_streak.append(sum(a_state["recent_points"]))
+            home_points_to_top.append(int(top_points - h_points_before))
+            away_points_to_top.append(int(top_points - a_points_before))
+            home_points_to_relegation.append(
+                int(h_points_before - points_at_relegation_line)
+            )
+            away_points_to_relegation.append(
+                int(a_points_before - points_at_relegation_line)
+            )
+            league_team_count.append(inferred_team_count)
+            league_relegation_spots.append(relegation_spots)
 
         for row in group_rows:
             status = str(getattr(row, "status", "")).lower()
@@ -246,6 +362,12 @@ def compute_point_in_time_state(df: pd.DataFrame) -> pd.DataFrame:
     out["away_position"] = away_position
     out["home_form_streak"] = home_form_streak
     out["away_form_streak"] = away_form_streak
+    out["home_points_to_top"] = home_points_to_top
+    out["away_points_to_top"] = away_points_to_top
+    out["home_points_to_relegation"] = home_points_to_relegation
+    out["away_points_to_relegation"] = away_points_to_relegation
+    out["league_team_count"] = league_team_count
+    out["league_relegation_spots"] = league_relegation_spots
     out["home_points_gap"] = out["home_points"] - out["away_points"]
     out["away_points_gap"] = -out["home_points_gap"]
     out["position_gap"] = out["away_position"] - out["home_position"]

@@ -50,7 +50,15 @@ def get_db_metrics():
             """)
             availability_done = cur.fetchone()[0]
 
-            # 5. Global Distribution Metrics
+            # 5. Odds Data (Backfill)
+            cur.execute(f"""
+                SELECT COUNT(DISTINCT m.fixture_id) 
+                FROM ({target_sql}) t
+                JOIN fixture_odds_markets m ON t.fixture_id = m.fixture_id
+            """)
+            odds_done = cur.fetchone()[0]
+
+            # 6. Global Distribution Metrics
             cur.execute("""
                 SELECT 
                     status,
@@ -70,6 +78,7 @@ def get_db_metrics():
                 "stats_yielded": stats_yielded,
                 "players_done": players_done,
                 "availability_done": availability_done,
+                "odds_done": odds_done,
                 "distribution": distribution
             }
     finally:
@@ -112,6 +121,7 @@ We have **{total_db}** total fixtures in the database.
 {row('H1/H2 Data (Yielded)', m['stats_yielded'], m['total_target'])}
 {row('Player Stats', m['players_done'], m['total_target'])}
 {row('Availability (Injuries)', m['availability_done'], m['total_target'])}
+{row('Match Odds (Backfill)', m['odds_done'], m['total_target'])}
 
 ## 🛠️ Active Backfill Scripts
 
@@ -125,6 +135,9 @@ To continue the backfill, use these commands in the project root:
 
 - **Availability / Injuries**:
   `python scripts/backfill_batch_sofascore.py --type availability --total 1000 --limit 100 --status ft`
+
+- **Match Odds**:
+  `python src/ingest/backfill_sofascore_odds_markets_v1.py --limit 100`
 """
     return report
 

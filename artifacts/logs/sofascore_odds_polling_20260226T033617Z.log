@@ -1,0 +1,3 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\sofascore_odds_polling_20260226T033617Z.log
+Polling fixtures: 193
+Odds polling failed: can't adapt type 'dict'

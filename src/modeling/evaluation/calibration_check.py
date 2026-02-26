@@ -5,7 +5,7 @@ Computes Expected Calibration Error (ECE) and generates reliability diagrams
 to assess whether predicted probabilities match actual hit rates.
 
 Usage:
-    python src/modeling/calibration_check.py --model premium_gbm --version v3
+    python src/modeling/evaluation/calibration_check.py --model market_outcome_gbm --version fixtures_first_prematch_v1
 """
 
 from __future__ import annotations
@@ -15,7 +15,6 @@ import json
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
 import numpy as np
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -46,7 +45,6 @@ def fetch_scored_predictions(
         ps.brier
     FROM predictions p
     JOIN prediction_scores ps ON ps.prediction_id = p.prediction_id
-    WHERE p.model_name = %s
     WHERE p.model_name = %s
       AND p.model_version = %s
     """
@@ -127,10 +125,14 @@ def plot_reliability_diagram(
     title: str,
     output_path: Path | None = None,
 ) -> None:
+    try:
+        import matplotlib.pyplot as plt
+    except ModuleNotFoundError:
+        print("matplotlib not installed; skipping reliability diagram.")
+        return
     bin_centers = [(i + 0.5) / N_BINS for i in range(N_BINS)]
     accuracies = [bin_stats.get(i, {}).get("accuracy", 0) for i in range(N_BINS)]
     confidences = [bin_stats.get(i, {}).get("confidence", 0) for i in range(N_BINS)]
-    counts = [bin_stats.get(i, {}).get("count", 0) for i in range(N_BINS)]
     counts = [bin_stats.get(i, {}).get("count", 0) for i in range(N_BINS)]
 
     fig, ax = plt.subplots(1, 1, figsize=(8, 6))
@@ -177,14 +179,14 @@ def plot_reliability_diagram(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Calibration check for model predictions")
-    parser.add_argument("--model", type=str, default="premium_gbm", help="Model name")
-    parser.add_argument("--version", type=str, default="v3", help="Model version")
+    parser.add_argument("--model", type=str, default="market_outcome_gbm", help="Model name")
+    parser.add_argument("--version", type=str, default="fixtures_first_prematch_v1", help="Model version")
     parser.add_argument("--market", type=str, default=None, help="Filter by market")
     parser.add_argument("--limit", type=int, default=None, help="Limit number of predictions")
     parser.add_argument("--output-dir", type=Path, default=Path("data/v1/calibration"), help="Output directory")
     args = parser.parse_args()
 
-    print(f"Fetching scored predictions for {args.model} v{args.version}...")
+    print(f"Fetching scored predictions for {args.model} ({args.version})...")
     predictions = fetch_scored_predictions(
         model_name=args.model,
         model_version=args.version,
