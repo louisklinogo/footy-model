@@ -281,7 +281,7 @@ Global note for this section: items below are paused unless they are directly re
       - `tick_due_fixtures_v1.predict|success`
       - `tick_due_fixtures_v1.score|success`
 
-- [ ] Add backbone outputs to market-model feature contract.
+- [x] Add backbone outputs to market-model feature contract.
   - Add features:
     - `lambda_home_l1`, `lambda_away_l1`
     - `adj_lambda_home_final`, `adj_lambda_away_final`
@@ -292,13 +292,35 @@ Global note for this section: items below are paused unless they are directly re
   - DoD:
     - train/predict feature parity check passes.
     - leakage guards remain pass.
+  - Completed: `2026-02-26`
+  - Evidence:
+    - training query + feature contract updated in `src/modeling/layer2_markets/market_outcome_calibrator.py`.
+    - inference query + metadata updated in `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`.
+    - retrain command:
+      - `python src/modeling/layer2_markets/market_outcome_calibrator.py`
+    - features artifact includes all six new fields:
+      - `model_artifacts/market_models/features.json` (`feature_count=60`)
+    - targeted tests:
+      - `pytest -q tests/test_snapshot_leakage_guard.py tests/test_predictions_upsert.py` -> `2 passed`.
 
-- [ ] Implement explicit market fallback path.
+- [x] Implement explicit market fallback path.
   - If market artifact for a market is missing/invalid, fallback to backbone/Poisson-derived probability.
   - File: `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
   - DoD:
     - prediction metadata carries `fallback_used`.
     - scorer/export remain stable with mixed artifact availability.
+  - Completed: `2026-02-26`
+  - Evidence:
+    - fallback implementation adds:
+      - per-market fallback reason tracking (`missing_artifact`, load/predict errors)
+      - Poisson/backbone probability fallback (`adj_lambda` -> `lambda_l1` -> rolling-xG proxy)
+      - metadata fields: `fallback_used`, `fallback_reason`, fallback lambda/corners trace.
+    - fallback unit tests:
+      - `tests/test_market_prediction_fallback.py`
+      - `pytest -q tests/test_market_prediction_fallback.py tests/test_snapshot_leakage_guard.py tests/test_predictions_upsert.py` -> `4 passed`.
+    - live inference check:
+      - `python src/modeling/evaluation/predict_market_outcomes_fixtures_first.py --league E1 --days 3 --limit 5`
+      - output: `fallback_rows=0` when all artifacts are present.
 
 - [ ] Run champion-challenger comparison after unification.
   - Champion: current market stack.

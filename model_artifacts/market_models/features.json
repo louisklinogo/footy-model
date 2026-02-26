@@ -52,5 +52,11 @@
   "implied_over25",
   "implied_under25",
   "odds_gap_15",
-  "odds_gap_25"
+  "odds_gap_25",
+  "lambda_home_l1",
+  "lambda_away_l1",
+  "adj_lambda_home_final",
+  "adj_lambda_away_final",
+  "rule_fired_home",
+  "rule_fired_away"
 ]

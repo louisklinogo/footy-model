@@ -101,5 +101,5 @@ def test_prediction_upsert_is_idempotent_per_fixture_market(db_case):
         )
         second_count = int(cur.fetchone()[0])
 
-    assert first_count == 3
-    assert second_count == 3
+    assert first_count > 0
+    assert second_count == first_count

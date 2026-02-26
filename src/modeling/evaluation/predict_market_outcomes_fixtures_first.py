@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -63,18 +64,37 @@ def _latest_odds_expr(line: str, side: str) -> str:
     )
 
 
-def load_artifacts() -> tuple[list[str], dict[str, dict[str, dict[str, float] | float]], dict[str, object]]:
+def _json_number_expr(json_col: str, key: str) -> str:
+    return (
+        "CASE "
+        f"WHEN ({json_col} ->> '{key}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
+        f"THEN ({json_col} ->> '{key}')::double precision "
+        "ELSE NULL END"
+    )
+
+
+def load_artifacts() -> tuple[
+    list[str],
+    dict[str, dict[str, dict[str, float] | float]],
+    dict[str, object],
+    dict[str, str],
+]:
     with (MODEL_DIR / "features.json").open("r", encoding="utf-8") as f:
         features = json.load(f)
     with (MODEL_DIR / "imputation.json").open("r", encoding="utf-8") as f:
         imputation = json.load(f)
-    # Load only models that exist
-    models = {}
+    models: dict[str, object] = {}
+    model_failures: dict[str, str] = {}
     for market in MARKETS:
         model_path = MODEL_DIR / f"gbm_{market}.pkl"
-        if model_path.exists():
+        if not model_path.exists():
+            model_failures[market] = "missing_artifact"
+            continue
+        try:
             models[market] = joblib.load(model_path)
-    return features, imputation, models
+        except Exception as exc:
+            model_failures[market] = f"load_error:{exc.__class__.__name__}"
+    return features, imputation, models, model_failures
 
 
 def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -> pd.DataFrame:
@@ -125,7 +145,19 @@ def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -
         tpa.rolling_corners AS away_rolling_corners,
         tpa.rolling_corners_against AS away_rolling_corners_against,
         tpa.rolling_goals_prevented AS away_rolling_goals_prevented,
-        tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against
+        tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against,
+        {_json_number_expr('l1h.metadata_json', 'lambda')} AS lambda_home_l1,
+        {_json_number_expr('l1a.metadata_json', 'lambda')} AS lambda_away_l1,
+        {_json_number_expr('l2h.metadata_json', 'lambda')} AS adj_lambda_home_final,
+        {_json_number_expr('l2a.metadata_json', 'lambda')} AS adj_lambda_away_final,
+        CASE
+            WHEN lower(COALESCE(l2h.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
+            THEN 1 ELSE 0
+        END AS rule_fired_home,
+        CASE
+            WHEN lower(COALESCE(l2a.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
+            THEN 1 ELSE 0
+        END AS rule_fired_away
     FROM fixtures f
     LEFT JOIN team_premium_snapshots tph
         ON tph.fixture_id = f.fixture_id
@@ -141,6 +173,42 @@ def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -
         ORDER BY fos.snapshot_time_utc DESC
         LIMIT 1
     ) od ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'lambda_xgb'
+          AND p.market_code = 'lambda_home'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l1h ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'lambda_xgb'
+          AND p.market_code = 'lambda_away'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l1a ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'situational_xgb'
+          AND p.market_code = 'adj_lambda_home'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l2h ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'situational_xgb'
+          AND p.market_code = 'adj_lambda_away'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l2a ON true
     WHERE f.status = 'scheduled'
       AND f.match_datetime_utc IS NOT NULL
       AND f.match_datetime_utc > NOW()
@@ -199,32 +267,195 @@ def apply_imputation(df: pd.DataFrame, features: list[str], imputation: dict[str
     return out
 
 
+def _safe_float(value: object, default: float) -> float:
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return default
+    if np.isnan(out):
+        return default
+    return out
+
+
+def _resolve_backbone_lambdas(fixture: pd.Series) -> tuple[float, float, str]:
+    adj_home = _safe_float(fixture.get("adj_lambda_home_final"), float("nan"))
+    adj_away = _safe_float(fixture.get("adj_lambda_away_final"), float("nan"))
+    if np.isfinite(adj_home) and np.isfinite(adj_away) and adj_home > 0.0 and adj_away > 0.0:
+        return max(0.01, adj_home), max(0.01, adj_away), "adj_lambda_final"
+
+    l1_home = _safe_float(fixture.get("lambda_home_l1"), float("nan"))
+    l1_away = _safe_float(fixture.get("lambda_away_l1"), float("nan"))
+    if np.isfinite(l1_home) and np.isfinite(l1_away) and l1_home > 0.0 and l1_away > 0.0:
+        return max(0.01, l1_home), max(0.01, l1_away), "lambda_l1"
+
+    home_proxy = max(0.01, _safe_float(fixture.get("home_rolling_xg"), 1.35))
+    away_proxy = max(0.01, _safe_float(fixture.get("away_rolling_xg"), 1.10))
+    return home_proxy, away_proxy, "rolling_xg_proxy"
+
+
+def _score_matrix(lambda_home: float, lambda_away: float, max_goals: int = 10) -> np.ndarray:
+    goals = np.arange(max_goals + 1, dtype=float)
+    factorials = np.array([math.factorial(int(g)) for g in goals], dtype=float)
+    home_pmf = np.exp(-lambda_home) * np.power(lambda_home, goals) / factorials
+    away_pmf = np.exp(-lambda_away) * np.power(lambda_away, goals) / factorials
+    mat = np.outer(home_pmf, away_pmf)
+    mass = float(mat.sum())
+    if mass <= 0.0:
+        return np.full((max_goals + 1, max_goals + 1), 1.0 / ((max_goals + 1) ** 2), dtype=float)
+    return mat / mass
+
+
+def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float], dict[str, object]]:
+    lambda_home, lambda_away, lambda_source = _resolve_backbone_lambdas(fixture)
+    score = _score_matrix(lambda_home, lambda_away, max_goals=10)
+    home_idx, away_idx = np.indices(score.shape)
+
+    p_home = float(score[home_idx > away_idx].sum())
+    p_draw = float(score[home_idx == away_idx].sum())
+    p_away = float(score[home_idx < away_idx].sum())
+
+    p_total_ge2 = float(score[(home_idx + away_idx) >= 2].sum())
+    p_total_ge3 = float(score[(home_idx + away_idx) >= 3].sum())
+    p_total_ge4 = float(score[(home_idx + away_idx) >= 4].sum())
+    p_total_ge5 = float(score[(home_idx + away_idx) >= 5].sum())
+    p_total_le1 = float(score[(home_idx + away_idx) <= 1].sum())
+    p_total_le2 = float(score[(home_idx + away_idx) <= 2].sum())
+
+    p_home_ge2 = float(score[home_idx >= 2].sum())
+    p_away_ge2 = float(score[away_idx >= 2].sum())
+    p_btts = float(score[(home_idx >= 1) & (away_idx >= 1)].sum())
+
+    p_home_and_o25 = float(score[(home_idx > away_idx) & ((home_idx + away_idx) >= 3)].sum())
+    p_away_and_o25 = float(score[(home_idx < away_idx) & ((home_idx + away_idx) >= 3)].sum())
+    p_home_or_o25 = p_home + p_total_ge3 - p_home_and_o25
+    p_away_or_o25 = p_away + p_total_ge3 - p_away_and_o25
+
+    p_home_and_o15 = float(score[(home_idx > away_idx) & ((home_idx + away_idx) >= 2)].sum())
+    p_away_and_o15 = float(score[(home_idx < away_idx) & ((home_idx + away_idx) >= 2)].sum())
+    p_home_or_o15 = p_home + p_total_ge2 - p_home_and_o15
+    p_away_or_o15 = p_away + p_total_ge2 - p_away_and_o15
+
+    home_corners = _safe_float(fixture.get("home_rolling_corners"), float("nan"))
+    away_corners = _safe_float(fixture.get("away_rolling_corners"), float("nan"))
+    corners_mu = home_corners + away_corners
+    if not np.isfinite(corners_mu) or corners_mu <= 0.0:
+        corners_mu = 9.5
+        corners_source = "default_mu_9_5"
+    else:
+        corners_source = "rolling_corners_sum"
+
+    corners_cdf_8 = sum(
+        math.exp(-corners_mu) * (corners_mu**k) / math.factorial(k) for k in range(9)
+    )
+    p_c85 = 1.0 - float(corners_cdf_8)
+
+    raw_probs = {
+        "o15": p_total_ge2,
+        "o25": p_total_ge3,
+        "o35": p_total_ge4,
+        "o45": p_total_ge5,
+        "u15": p_total_le1,
+        "u25": p_total_le2,
+        "c85": p_c85,
+        "btts": p_btts,
+        "1x2_h": p_home,
+        "1x2_d": p_draw,
+        "1x2_a": p_away,
+        "dc_1x": p_home + p_draw,
+        "dc_x2": p_away + p_draw,
+        "dc_12": p_home + p_away,
+        "ho15": p_home_ge2,
+        "ao15": p_away_ge2,
+        "home_or_o25": p_home_or_o25,
+        "away_or_o25": p_away_or_o25,
+        "home_or_o15": p_home_or_o15,
+        "away_or_o15": p_away_or_o15,
+        "home_and_o25": p_home_and_o25,
+        "away_and_o25": p_away_and_o25,
+    }
+    clipped = {market: float(np.clip(prob, 0.001, 0.999)) for market, prob in raw_probs.items()}
+    trace = {
+        "lambda_source": lambda_source,
+        "lambda_home": float(lambda_home),
+        "lambda_away": float(lambda_away),
+        "corners_source": corners_source,
+        "corners_mu": float(corners_mu),
+    }
+    return clipped, trace
+
+
 def build_prediction_rows(
     scored: pd.DataFrame,
     features: list[str],
     models: dict[str, object],
-) -> list[tuple[int, str, str, str, float, str]]:
+    model_failures: dict[str, str] | None = None,
+) -> tuple[list[tuple[int, str, str, str, float, str]], int]:
     x_mat = scored[features]
     rows: list[tuple[int, str, str, str, float, str]] = []
+    fallback_rows = 0
+    failures = model_failures or {}
 
     for _, fixture in scored.iterrows():
         fixture_id = int(fixture["fixture_id"])
-        metadata = {
+        fallback_probs, fallback_trace = _fallback_market_probabilities(fixture)
+        base_metadata = {
             "features_missing_count": int(fixture["features_missing_count"]),
             "home_sample_size": None if pd.isna(fixture["home_sample_size"]) else float(fixture["home_sample_size"]),
             "away_sample_size": None if pd.isna(fixture["away_sample_size"]) else float(fixture["away_sample_size"]),
+            "lambda_home_l1": None if pd.isna(fixture.get("lambda_home_l1")) else float(fixture["lambda_home_l1"]),
+            "lambda_away_l1": None if pd.isna(fixture.get("lambda_away_l1")) else float(fixture["lambda_away_l1"]),
+            "adj_lambda_home_final": None if pd.isna(fixture.get("adj_lambda_home_final")) else float(fixture["adj_lambda_home_final"]),
+            "adj_lambda_away_final": None if pd.isna(fixture.get("adj_lambda_away_final")) else float(fixture["adj_lambda_away_final"]),
+            "rule_fired_home": int(fixture["rule_fired_home"]) if not pd.isna(fixture.get("rule_fired_home")) else 0,
+            "rule_fired_away": int(fixture["rule_fired_away"]) if not pd.isna(fixture.get("rule_fired_away")) else 0,
             "odds_snapshot_time_utc": None
             if pd.isna(fixture["odds_snapshot_time_utc"])
             else fixture["odds_snapshot_time_utc"].isoformat(),
         }
-        metadata_json = json.dumps(metadata)
-
         row_df = x_mat.loc[[fixture.name]]
-        for market, model in models.items():
-            p_model = positive_class_probability(model=model, x_row=row_df)
-            rows.append((fixture_id, market, MODEL_NAME, MODEL_VERSION, p_model, metadata_json))
+        for market in MARKETS:
+            fallback_used = False
+            fallback_reason: str | None = None
+            model = models.get(market)
+            if model is None:
+                fallback_used = True
+                fallback_reason = failures.get(market, "missing_artifact")
+                p_model = fallback_probs[market]
+            else:
+                try:
+                    p_model = positive_class_probability(model=model, x_row=row_df)
+                except Exception as exc:
+                    fallback_used = True
+                    fallback_reason = f"predict_error:{exc.__class__.__name__}"
+                    p_model = fallback_probs[market]
 
-    return rows
+            if fallback_used:
+                fallback_rows += 1
+
+            metadata = dict(base_metadata)
+            metadata.update(
+                {
+                    "fallback_used": fallback_used,
+                    "fallback_reason": fallback_reason,
+                    "fallback_lambda_source": fallback_trace["lambda_source"],
+                    "fallback_lambda_home": fallback_trace["lambda_home"],
+                    "fallback_lambda_away": fallback_trace["lambda_away"],
+                    "fallback_corners_source": fallback_trace["corners_source"],
+                    "fallback_corners_mu": fallback_trace["corners_mu"],
+                }
+            )
+            rows.append(
+                (
+                    fixture_id,
+                    market,
+                    MODEL_NAME,
+                    MODEL_VERSION,
+                    float(np.clip(p_model, 0.001, 0.999)),
+                    json.dumps(metadata),
+                )
+            )
+
+    return rows, fallback_rows
 
 
 def positive_class_probability(model: object, x_row: pd.DataFrame) -> float:
@@ -276,7 +507,7 @@ def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int
 
 def main() -> None:
     args = parse_args()
-    features, imputation, models = load_artifacts()
+    features, imputation, models, model_failures = load_artifacts()
 
     fixtures = fetch_candidate_fixtures(days=args.days, league=args.league, limit=args.limit)
     fixtures["match_datetime_utc"] = pd.to_datetime(fixtures["match_datetime_utc"], utc=True, errors="coerce")
@@ -296,13 +527,22 @@ def main() -> None:
         return
 
     featured = add_derived_features(fixtures)
-    featured["features_missing_count"] = featured[features].isna().sum(axis=1)
+    featured["features_missing_count"] = featured.reindex(columns=features).isna().sum(axis=1)
     scored = apply_imputation(featured, features, imputation)
 
-    prediction_rows = build_prediction_rows(scored=scored, features=features, models=models)
+    prediction_rows, fallback_rows = build_prediction_rows(
+        scored=scored,
+        features=features,
+        models=models,
+        model_failures=model_failures,
+    )
     written = upsert_predictions(prediction_rows)
 
-    print(f"Processed {len(scored)} fixtures, upserted {written} market predictions ({len(scored) * len(models)} expected).")
+    expected = len(scored) * len(MARKETS)
+    print(
+        f"Processed {len(scored)} fixtures, upserted {written} market predictions ({expected} expected). "
+        f"fallback_rows={fallback_rows}."
+    )
 
 
 if __name__ == "__main__":

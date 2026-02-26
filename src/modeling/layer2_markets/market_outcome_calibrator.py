@@ -74,6 +74,15 @@ def _latest_odds_expr(line: str, side: str) -> str:
     )
 
 
+def _json_number_expr(json_col: str, key: str) -> str:
+    return (
+        "CASE "
+        f"WHEN ({json_col} ->> '{key}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
+        f"THEN ({json_col} ->> '{key}')::double precision "
+        "ELSE NULL END"
+    )
+
+
 def fetch_dataset() -> pd.DataFrame:
     query = f"""
     SELECT
@@ -131,7 +140,19 @@ def fetch_dataset() -> pd.DataFrame:
         tpa.rolling_corners AS away_rolling_corners,
         tpa.rolling_corners_against AS away_rolling_corners_against,
         tpa.rolling_goals_prevented AS away_rolling_goals_prevented,
-        tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against
+        tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against,
+        {_json_number_expr('l1h.metadata_json', 'lambda')} AS lambda_home_l1,
+        {_json_number_expr('l1a.metadata_json', 'lambda')} AS lambda_away_l1,
+        {_json_number_expr('l2h.metadata_json', 'lambda')} AS adj_lambda_home_final,
+        {_json_number_expr('l2a.metadata_json', 'lambda')} AS adj_lambda_away_final,
+        CASE
+            WHEN lower(COALESCE(l2h.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
+            THEN 1 ELSE 0
+        END AS rule_fired_home,
+        CASE
+            WHEN lower(COALESCE(l2a.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
+            THEN 1 ELSE 0
+        END AS rule_fired_away
     FROM fixtures f
     JOIN fixture_results fr ON fr.fixture_id = f.fixture_id
     LEFT JOIN fixture_stats_premium sp ON sp.fixture_id = f.fixture_id
@@ -149,6 +170,42 @@ def fetch_dataset() -> pd.DataFrame:
         ORDER BY fos.snapshot_time_utc DESC
         LIMIT 1
     ) od ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'lambda_xgb'
+          AND p.market_code = 'lambda_home'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l1h ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'lambda_xgb'
+          AND p.market_code = 'lambda_away'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l1a ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'situational_xgb'
+          AND p.market_code = 'adj_lambda_home'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l2h ON true
+    LEFT JOIN LATERAL (
+        SELECT p.metadata_json
+        FROM predictions p
+        WHERE p.fixture_id = f.fixture_id
+          AND p.model_name = 'situational_xgb'
+          AND p.market_code = 'adj_lambda_away'
+        ORDER BY p.created_at DESC
+        LIMIT 1
+    ) l2a ON true
     WHERE f.status = 'ft'
       AND f.match_datetime_utc IS NOT NULL
       AND fr.home_goals IS NOT NULL
@@ -247,6 +304,12 @@ def feature_columns() -> list[str]:
             "implied_under25",
             "odds_gap_15",
             "odds_gap_25",
+            "lambda_home_l1",
+            "lambda_away_l1",
+            "adj_lambda_home_final",
+            "adj_lambda_away_final",
+            "rule_fired_home",
+            "rule_fired_away",
         ]
     )
     return cols
@@ -380,6 +443,10 @@ def main() -> None:
 
     df = add_targets_and_derived(df)
     features = feature_columns()
+    missing_features = [feat for feat in features if feat not in df.columns]
+    if missing_features:
+        missing_csv = ", ".join(sorted(missing_features))
+        raise RuntimeError(f"Feature contract mismatch in training dataset: {missing_csv}")
 
     train_df, test_df = split_time_respecting(df)
     train_imp, test_imp, imputation = impute_for_split(train_df, test_df, features)
