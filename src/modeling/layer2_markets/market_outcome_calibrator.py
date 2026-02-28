@@ -1,5 +1,5 @@
 """
-Fixtures-first training pipeline for 23 betting markets.
+Fixtures-first training pipeline for 27 betting markets.
 
 Reads only v1 fixtures-first tables and trains leakage-safe pre-match models
 for the following markets:
@@ -12,6 +12,7 @@ DOUBLE CHANCE (3): dc_1x, dc_x2, dc_12
 TEAM TOTALS (2): ho15, ao15
 COMBO OR (4): home_or_o25, away_or_o25, home_or_o15, away_or_o15
 COMBO AND (2): home_and_o25, away_and_o25
+ANYTIME LEAD (4): h_1up, a_1up, h_2up, a_2up
 """
 
 # pyright: reportUnknownParameterType=false, reportMissingParameterType=false, reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnknownArgumentType=false, reportAny=false, reportUnusedCallResult=false, reportUnreachable=false, reportGeneralTypeIssues=false, reportAttributeAccessIssue=false, reportArgumentType=false, reportReturnType=false, reportImplicitStringConcatenation=false, reportMissingTypeStubs=false
@@ -62,14 +63,29 @@ TEAM_SNAPSHOT_FEATURES = [
     "rolling_corners_against",
     "rolling_goals_prevented",
     "rolling_goals_prevented_against",
+    # New Phase 2 features
+    "rolling_xg_p1",
+    "rolling_xg_p1_against",
+    "rolling_sot_p1",
+    "rolling_sot_p1_against",
+    "rolling_xg_h2_delta",
+    "rolling_xg_h2_delta_against",
+    "rolling_sot_h2_delta",
+    "rolling_sot_h2_delta_against",
+    "rolling_possession",
+    "rolling_possession_against",
+    "rolling_errors_lead_to_shot",
+    "rolling_errors_lead_to_shot_against",
+    "rolling_tackles_pct",
+    "rolling_tackles_pct_against",
 ]
 
 
-def _latest_odds_expr(line: str, side: str) -> str:
+def _latest_odds_expr(row_alias: str, side: str) -> str:
     return (
         "CASE "
-        f"WHEN (od.ou_json -> '{line}' ->> '{side}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
-        f"THEN (od.ou_json -> '{line}' ->> '{side}')::double precision "
+        f"WHEN ({row_alias}.odds_json -> 'prices_latest' ->> '{side}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
+        f"THEN ({row_alias}.odds_json -> 'prices_latest' ->> '{side}')::double precision "
         "ELSE NULL END"
     )
 
@@ -97,12 +113,16 @@ def fetch_dataset() -> pd.DataFrame:
             THEN (sp.h_corners + sp.a_corners)
             ELSE NULL
         END AS total_corners,
-        {_latest_odds_expr('1.5', 'over')} AS odds_over_15,
-        {_latest_odds_expr('1.5', 'under')} AS odds_under_15,
-        {_latest_odds_expr('2.5', 'over')} AS odds_over_25,
-        {_latest_odds_expr('2.5', 'under')} AS odds_under_25,
-        od.snapshot_time_utc AS odds_snapshot_time_utc,
-        od.snapshot_type AS odds_snapshot_type,
+        {_latest_odds_expr('od15', 'over')} AS odds_over_15,
+        {_latest_odds_expr('od15', 'under')} AS odds_under_15,
+        {_latest_odds_expr('od25', 'over')} AS odds_over_25,
+        {_latest_odds_expr('od25', 'under')} AS odds_under_25,
+        GREATEST(od15.snapshot_time_utc, od25.snapshot_time_utc) AS odds_snapshot_time_utc,
+        CASE
+            WHEN od15.snapshot_type = 'latest_pre_match' OR od25.snapshot_type = 'latest_pre_match'
+            THEN 'latest_pre_match'
+            ELSE COALESCE(od25.snapshot_type, od15.snapshot_type)
+        END AS odds_snapshot_type,
         tph.sample_size AS home_sample_size,
         tph.rolling_xg AS home_rolling_xg,
         tph.rolling_xg_against AS home_rolling_xg_against,
@@ -122,6 +142,22 @@ def fetch_dataset() -> pd.DataFrame:
         tph.rolling_corners_against AS home_rolling_corners_against,
         tph.rolling_goals_prevented AS home_rolling_goals_prevented,
         tph.rolling_goals_prevented_against AS home_rolling_goals_prevented_against,
+        -- New Home Phase 2
+        tph.rolling_xg_p1 AS home_rolling_xg_p1,
+        tph.rolling_xg_p1_against AS home_rolling_xg_p1_against,
+        tph.rolling_sot_p1 AS home_rolling_sot_p1,
+        tph.rolling_sot_p1_against AS home_rolling_sot_p1_against,
+        tph.rolling_xg_h2_delta AS home_rolling_xg_h2_delta,
+        tph.rolling_xg_h2_delta_against AS home_rolling_xg_h2_delta_against,
+        tph.rolling_sot_h2_delta AS home_rolling_sot_h2_delta,
+        tph.rolling_sot_h2_delta_against AS home_rolling_sot_h2_delta_against,
+        tph.rolling_possession AS home_rolling_possession,
+        tph.rolling_possession_against AS home_rolling_possession_against,
+        tph.rolling_errors_lead_to_shot AS home_rolling_errors_lead_to_shot,
+        tph.rolling_errors_lead_to_shot_against AS home_rolling_errors_lead_to_shot_against,
+        tph.rolling_tackles_pct AS home_rolling_tackles_pct,
+        tph.rolling_tackles_pct_against AS home_rolling_tackles_pct_against,
+
         tpa.sample_size AS away_sample_size,
         tpa.rolling_xg AS away_rolling_xg,
         tpa.rolling_xg_against AS away_rolling_xg_against,
@@ -141,10 +177,32 @@ def fetch_dataset() -> pd.DataFrame:
         tpa.rolling_corners_against AS away_rolling_corners_against,
         tpa.rolling_goals_prevented AS away_rolling_goals_prevented,
         tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against,
+        -- New Away Phase 2
+        tpa.rolling_xg_p1 AS away_rolling_xg_p1,
+        tpa.rolling_xg_p1_against AS away_rolling_xg_p1_against,
+        tpa.rolling_sot_p1 AS away_rolling_sot_p1,
+        tpa.rolling_sot_p1_against AS away_rolling_sot_p1_against,
+        tpa.rolling_xg_h2_delta AS away_rolling_xg_h2_delta,
+        tpa.rolling_xg_h2_delta_against AS away_rolling_xg_h2_delta_against,
+        tpa.rolling_sot_h2_delta AS away_rolling_sot_h2_delta,
+        tpa.rolling_sot_h2_delta_against AS away_rolling_sot_h2_delta_against,
+        tpa.rolling_possession AS away_rolling_possession,
+        tpa.rolling_possession_against AS away_rolling_possession_against,
+        tpa.rolling_errors_lead_to_shot AS away_rolling_errors_lead_to_shot,
+        tpa.rolling_errors_lead_to_shot_against AS away_rolling_errors_lead_to_shot_against,
+        tpa.rolling_tackles_pct AS away_rolling_tackles_pct,
+        tpa.rolling_tackles_pct_against AS away_rolling_tackles_pct_against,
+
+        ff.home_formation,
+        ff.away_formation,
         {_json_number_expr('l1h.metadata_json', 'lambda')} AS lambda_home_l1,
         {_json_number_expr('l1a.metadata_json', 'lambda')} AS lambda_away_l1,
         {_json_number_expr('l2h.metadata_json', 'lambda')} AS adj_lambda_home_final,
         {_json_number_expr('l2a.metadata_json', 'lambda')} AS adj_lambda_away_final,
+        ils.home_led_by_1_any AS home_led_by_1_any,
+        ils.away_led_by_1_any AS away_led_by_1_any,
+        ils.home_led_by_2_any AS home_led_by_2_any,
+        ils.away_led_by_2_any AS away_led_by_2_any,
         CASE
             WHEN lower(COALESCE(l2h.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
             THEN 1 ELSE 0
@@ -156,6 +214,8 @@ def fetch_dataset() -> pd.DataFrame:
     FROM fixtures f
     JOIN fixture_results fr ON fr.fixture_id = f.fixture_id
     LEFT JOIN fixture_stats_premium sp ON sp.fixture_id = f.fixture_id
+    LEFT JOIN fixture_formations ff ON ff.fixture_id = f.fixture_id
+    LEFT JOIN fixture_incident_lead_states ils ON ils.fixture_id = f.fixture_id
     LEFT JOIN team_premium_snapshots tph
         ON tph.fixture_id = f.fixture_id
        AND tph.is_home = true
@@ -163,13 +223,29 @@ def fetch_dataset() -> pd.DataFrame:
         ON tpa.fixture_id = f.fixture_id
        AND tpa.is_home = false
     LEFT JOIN LATERAL (
-        SELECT fos.ou_json, fos.snapshot_time_utc, fos.snapshot_type
-        FROM fixture_odds_snapshots fos
-        WHERE fos.fixture_id = f.fixture_id
-          AND fos.snapshot_time_utc <= f.match_datetime_utc
-        ORDER BY fos.snapshot_time_utc DESC
+        SELECT fom.odds_json, fom.snapshot_time_utc, fom.snapshot_type
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 1.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
-    ) od ON true
+    ) od15 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.odds_json, fom.snapshot_time_utc, fom.snapshot_type
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 2.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) od25 ON true
     LEFT JOIN LATERAL (
         SELECT p.metadata_json
         FROM predictions p
@@ -262,6 +338,12 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out["target_home_and_o25"] = ((out["home_goals"] > out["away_goals"]) & (out["total_goals"] >= 3)).astype(int)
     out["target_away_and_o25"] = ((out["away_goals"] > out["home_goals"]) & (out["total_goals"] >= 3)).astype(int)
 
+    # === ANYTIME LEAD MARKETS (incident timeline derived) ===
+    out["target_h_1up"] = out["home_led_by_1_any"].astype(float)
+    out["target_a_1up"] = out["away_led_by_1_any"].astype(float)
+    out["target_h_2up"] = out["home_led_by_2_any"].astype(float)
+    out["target_a_2up"] = out["away_led_by_2_any"].astype(float)
+
     # === DERIVED FEATURES ===
     out["xg_net_diff"] = out["home_rolling_xg"] - out["away_rolling_xg_against"]
     out["xgot_net_diff"] = out["home_rolling_xgot"] - out["away_rolling_xgot_against"]
@@ -279,6 +361,35 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
 
     out["odds_gap_15"] = out["odds_over_15"] - out["odds_under_15"]
     out["odds_gap_25"] = out["odds_over_25"] - out["odds_under_25"]
+
+    # === FORMATION PARSING ===
+    def _parse_form(form_str: object) -> tuple[int, int, int]:
+        if not isinstance(form_str, str) or "-" not in form_str:
+            return (4, 4, 2)  # Default
+        parts = [int(p) for p in form_str.split("-") if p.isdigit()]
+        if len(parts) == 3:
+            return (parts[0], parts[1], parts[2])
+        if len(parts) == 4: # e.g. 4-2-3-1
+            return (parts[0], parts[1] + parts[2], parts[3])
+        if len(parts) == 5: # e.g. 5-4-1-0 or something exotic
+            return (parts[0], parts[1] + parts[2] + parts[3], parts[4])
+        return (4, 4, 2)
+
+    for prefix in ("home", "away"):
+        defenders, midfielders, forwards = zip(*out[f"{prefix}_formation"].apply(_parse_form))
+        out[f"{prefix}_defenders"] = defenders
+        out[f"{prefix}_midfielders"] = midfielders
+        out[f"{prefix}_forwards"] = forwards
+        
+        # Calculate style score (higher = more offensive baseline)
+        out[f"{prefix}_style_score"] = (
+            out[f"{prefix}_defenders"] * 1 +
+            out[f"{prefix}_midfielders"] * 2 +
+            out[f"{prefix}_forwards"] * 3
+        )
+
+    out["style_delta"] = out["home_style_score"] - out["away_style_score"]
+    
     return out
 
 
@@ -310,6 +421,10 @@ def feature_columns() -> list[str]:
             "adj_lambda_away_final",
             "rule_fired_home",
             "rule_fired_away",
+            # Formation/Style features
+            "home_defenders", "home_midfielders", "home_forwards",
+            "away_defenders", "away_midfielders", "away_forwards",
+            "style_delta",
         ]
     )
     return cols
@@ -420,6 +535,7 @@ def fit_market_model(
         "test_end_utc": str(test["match_datetime_utc"].max()),
     }
 
+    # Save the FITTED model to disk
     joblib.dump(model, OUT_DIR / f"gbm_{market_code}.pkl")
     return metrics
 
@@ -483,6 +599,11 @@ def main() -> None:
         # Combo AND
         ("home_and_o25", "target_home_and_o25"),
         ("away_and_o25", "target_away_and_o25"),
+        # Anytime Lead
+        ("h_1up", "target_h_1up"),
+        ("a_1up", "target_a_1up"),
+        ("h_2up", "target_h_2up"),
+        ("a_2up", "target_a_2up"),
     ]
     
     metrics = []

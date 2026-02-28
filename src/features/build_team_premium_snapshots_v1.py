@@ -34,6 +34,13 @@ METRICS = (
     "sot",
     "corners",
     "goals_prevented",
+    # H1 split stats (already in fixture_stats_premium)
+    "xg_p1",
+    "sot_p1",
+    # Additional premium stats
+    "possession",
+    "errors_lead_to_shot",
+    "tackles_pct",
 )
 
 
@@ -144,7 +151,14 @@ def _fetch_premium_stats(
             p.h_sot, p.a_sot,
             p.h_corners, p.a_corners,
             p.h_goals_prevented, p.a_goals_prevented,
-            p.fidelity_score
+            p.fidelity_score,
+            -- H1 split
+            p.h_xg_p1, p.a_xg_p1,
+            p.h_sot_p1, p.a_sot_p1,
+            -- Additional premium
+            p.h_possession, p.a_possession,
+            p.h_errors_lead_to_shot, p.a_errors_lead_to_shot,
+            p.h_tackles_pct, p.a_tackles_pct
         FROM fixture_stats_premium p
         WHERE p.fixture_id = ANY(%s)
         """,
@@ -153,9 +167,25 @@ def _fetch_premium_stats(
 
     output: dict[int, dict[str, float | None]] = {}
     for row in cast(list[tuple[object, ...]], cur.fetchall()):
+        h_xg  = cast(float | None, row[1])
+        a_xg  = cast(float | None, row[2])
+        h_xg_p1 = cast(float | None, row[20])
+        a_xg_p1 = cast(float | None, row[21])
+        h_sot   = cast(float | None, row[13])
+        a_sot   = cast(float | None, row[14])
+        h_sot_p1 = cast(float | None, row[22])
+        a_sot_p1 = cast(float | None, row[23])
+
+        # H2 delta = (full - H1) - H1  =>  H2 - H1  (positive means more in H2)
+        def _h2_delta(full: float | None, p1: float | None) -> float | None:
+            if full is None or p1 is None:
+                return None
+            h2 = full - p1
+            return round(h2 - p1, 4)
+
         output[int(cast(int, row[0]))] = {
-            "h_xg": cast(float | None, row[1]),
-            "a_xg": cast(float | None, row[2]),
+            "h_xg": h_xg,
+            "a_xg": a_xg,
             "h_xgot": cast(float | None, row[3]),
             "a_xgot": cast(float | None, row[4]),
             "h_xa": cast(float | None, row[5]),
@@ -166,21 +196,45 @@ def _fetch_premium_stats(
             "a_big_chances": cast(float | None, row[10]),
             "h_crosses": cast(float | None, row[11]),
             "a_crosses": cast(float | None, row[12]),
-            "h_sot": cast(float | None, row[13]),
-            "a_sot": cast(float | None, row[14]),
+            "h_sot": h_sot,
+            "a_sot": a_sot,
             "h_corners": cast(float | None, row[15]),
             "a_corners": cast(float | None, row[16]),
             "h_goals_prevented": cast(float | None, row[17]),
             "a_goals_prevented": cast(float | None, row[18]),
             "fidelity_score": cast(float | None, row[19]),
+            # H1 split
+            "h_xg_p1": h_xg_p1,
+            "a_xg_p1": a_xg_p1,
+            "h_sot_p1": h_sot_p1,
+            "a_sot_p1": a_sot_p1,
+            # H2 deltas derived
+            "h_xg_h2_delta": _h2_delta(h_xg, h_xg_p1),
+            "a_xg_h2_delta": _h2_delta(a_xg, a_xg_p1),
+            "h_sot_h2_delta": _h2_delta(h_sot, h_sot_p1),
+            "a_sot_h2_delta": _h2_delta(a_sot, a_sot_p1),
+            # Additional premium stats
+            "h_possession": cast(float | None, row[24]),
+            "a_possession": cast(float | None, row[25]),
+            "h_errors_lead_to_shot": cast(float | None, row[26]),
+            "a_errors_lead_to_shot": cast(float | None, row[27]),
+            "h_tackles_pct": cast(float | None, row[28]),
+            "a_tackles_pct": cast(float | None, row[29]),
         }
     return output
+
+
+# These derived stats need separate history slots (not in METRICS because they
+# are computed per-fixture, not raw columns named h_<metric> / a_<metric>)
+DERIVED_METRICS = ("xg_h2_delta", "sot_h2_delta")
 
 
 def _empty_team_history() -> dict[str, list[float | None] | datetime | None]:
     out: dict[str, list[float | None] | datetime | None] = {
         **{f"{metric}_for": [] for metric in METRICS},
         **{f"{metric}_against": [] for metric in METRICS},
+        **{f"{metric}_for": [] for metric in DERIVED_METRICS},
+        **{f"{metric}_against": [] for metric in DERIVED_METRICS},
         "rest_days": [],
         "fidelity": [],
         "last_kickoff": None,
@@ -276,6 +330,15 @@ def build_team_premium_snapshots(league: str | None = None, limit: int | None = 
                             # We keep simple sample size for gating
                             sample_size = len([v for v in history["xg_for"] if v is not None])
 
+                            # Compute EWMA for derived metrics too
+                            for dm in DERIVED_METRICS:
+                                rolling[f"rolling_{dm}"] = _ewma(
+                                    history[f"{dm}_for"][-WINDOW_SIZE:], EWMA_ALPHA
+                                )
+                                rolling[f"rolling_{dm}_against"] = _ewma(
+                                    history[f"{dm}_against"][-WINDOW_SIZE:], EWMA_ALPHA
+                                )
+
                             upsert_rows.append(
                                 (
                                     fixture.fixture_id,
@@ -303,6 +366,21 @@ def build_team_premium_snapshots(league: str | None = None, limit: int | None = 
                                     fidelity_score,
                                     rolling_rest,
                                     opp_rolling_rest,
+                                    # New features
+                                    rolling["rolling_xg_p1"],
+                                    rolling["rolling_xg_p1_against"],
+                                    rolling["rolling_sot_p1"],
+                                    rolling["rolling_sot_p1_against"],
+                                    rolling["rolling_xg_h2_delta"],
+                                    rolling["rolling_xg_h2_delta_against"],
+                                    rolling["rolling_sot_h2_delta"],
+                                    rolling["rolling_sot_h2_delta_against"],
+                                    rolling["rolling_possession"],
+                                    rolling["rolling_possession_against"],
+                                    rolling["rolling_errors_lead_to_shot"],
+                                    rolling["rolling_errors_lead_to_shot_against"],
+                                    rolling["rolling_tackles_pct"],
+                                    rolling["rolling_tackles_pct_against"],
                                 )
                             )
                             
@@ -338,6 +416,19 @@ def build_team_premium_snapshots(league: str | None = None, limit: int | None = 
                                 )
                                 history[f"{metric}_for"].append(value_for)
                                 history[f"{metric}_against"].append(value_against)
+
+                            # Settle derived metrics (H2 delta) into history
+                            if is_home:
+                                history["xg_h2_delta_for"].append(premium.get("h_xg_h2_delta"))
+                                history["xg_h2_delta_against"].append(premium.get("a_xg_h2_delta"))
+                                history["sot_h2_delta_for"].append(premium.get("h_sot_h2_delta"))
+                                history["sot_h2_delta_against"].append(premium.get("a_sot_h2_delta"))
+                            else:
+                                history["xg_h2_delta_for"].append(premium.get("a_xg_h2_delta"))
+                                history["xg_h2_delta_against"].append(premium.get("h_xg_h2_delta"))
+                                history["sot_h2_delta_for"].append(premium.get("a_sot_h2_delta"))
+                                history["sot_h2_delta_against"].append(premium.get("h_sot_h2_delta"))
+
                             history["fidelity"].append(premium.get("fidelity_score"))
 
                 print(f"Batch upserting {len(upsert_rows)} snapshot rows...")
@@ -354,14 +445,28 @@ def build_team_premium_snapshots(league: str | None = None, limit: int | None = 
                         rolling_sot, rolling_sot_against,
                         rolling_corners, rolling_corners_against,
                         rolling_goals_prevented, rolling_goals_prevented_against,
-                        fidelity_score, rolling_rest_days, rolling_rest_days_against, built_at
+                        fidelity_score, rolling_rest_days, rolling_rest_days_against,
+                        rolling_xg_p1, rolling_xg_p1_against,
+                        rolling_sot_p1, rolling_sot_p1_against,
+                        rolling_xg_h2_delta, rolling_xg_h2_delta_against,
+                        rolling_sot_h2_delta, rolling_sot_h2_delta_against,
+                        rolling_possession, rolling_possession_against,
+                        rolling_errors_lead_to_shot, rolling_errors_lead_to_shot_against,
+                        rolling_tackles_pct, rolling_tackles_pct_against,
+                        built_at
                     )
                     VALUES (
                         %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
                         %s, %s, %s, %s, %s, %s,
-                        %s, %s, %s, NOW()
+                        %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s, %s, %s,
+                        %s, %s,
+                        %s, %s,
+                        %s, %s,
+                        NOW()
                     )
                     ON CONFLICT (fixture_id, team_id, is_home) DO UPDATE
                     SET
@@ -387,6 +492,20 @@ def build_team_premium_snapshots(league: str | None = None, limit: int | None = 
                         fidelity_score = EXCLUDED.fidelity_score,
                         rolling_rest_days = EXCLUDED.rolling_rest_days,
                         rolling_rest_days_against = EXCLUDED.rolling_rest_days_against,
+                        rolling_xg_p1 = EXCLUDED.rolling_xg_p1,
+                        rolling_xg_p1_against = EXCLUDED.rolling_xg_p1_against,
+                        rolling_sot_p1 = EXCLUDED.rolling_sot_p1,
+                        rolling_sot_p1_against = EXCLUDED.rolling_sot_p1_against,
+                        rolling_xg_h2_delta = EXCLUDED.rolling_xg_h2_delta,
+                        rolling_xg_h2_delta_against = EXCLUDED.rolling_xg_h2_delta_against,
+                        rolling_sot_h2_delta = EXCLUDED.rolling_sot_h2_delta,
+                        rolling_sot_h2_delta_against = EXCLUDED.rolling_sot_h2_delta_against,
+                        rolling_possession = EXCLUDED.rolling_possession,
+                        rolling_possession_against = EXCLUDED.rolling_possession_against,
+                        rolling_errors_lead_to_shot = EXCLUDED.rolling_errors_lead_to_shot,
+                        rolling_errors_lead_to_shot_against = EXCLUDED.rolling_errors_lead_to_shot_against,
+                        rolling_tackles_pct = EXCLUDED.rolling_tackles_pct,
+                        rolling_tackles_pct_against = EXCLUDED.rolling_tackles_pct_against,
                         built_at = NOW()
                     """,
                     upsert_rows,

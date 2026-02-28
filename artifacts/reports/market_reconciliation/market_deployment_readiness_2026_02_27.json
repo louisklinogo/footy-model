@@ -1,0 +1,35 @@
+{
+  "date": "2026-02-27",
+  "decision": "GO_WITH_MONITORING",
+  "gates": {
+    "sample_size_per_market_ge_3000": {
+      "status": "pass",
+      "market_n": {
+        "a_1up": 7030,
+        "a_2up": 7030,
+        "h_1up": 7030,
+        "h_2up": 7030
+      }
+    },
+    "quality_vs_markov_non_negative_brier_delta": {
+      "status": "pass"
+    },
+    "fallback_rate_1up2up_le_1pct": {
+      "status": "pass",
+      "fallback_rows": 20,
+      "anytime_total": 28968,
+      "fallback_rate": 0.0006904170118751726
+    },
+    "scoring_skip_volume_reasonable": {
+      "status": "pass",
+      "skipped_total": 272
+    }
+  },
+  "open_issues": {
+    "skipped_c85_missing_corners": 272,
+    "skipped_anytime_missing_lead_state": 0
+  },
+  "inputs": {
+    "champion_challenger_report": "artifacts\\reports\\market_reconciliation\\market_1up2up_champion_challenger_2026_02_27.json"
+  }
+}

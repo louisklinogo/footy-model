@@ -7,6 +7,7 @@ Generate fixtures-first pre-match predictions and upsert into predictions.
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import json
 import math
 import sys
@@ -22,6 +23,7 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.db.db_utils import connect_db
+from src.pricing.markov import MarkovPricer
 
 
 MODEL_DIR = Path("model_artifacts/market_models")
@@ -40,26 +42,36 @@ MARKETS = (
     "dc_1x", "dc_x2", "dc_12",
     # Team Totals
     "ho15", "ao15",
+    # Anytime Lead Markets
+    "h_1up", "a_1up", "h_2up", "a_2up",
     # Combo OR
     "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
     # Combo AND
     "home_and_o25", "away_and_o25",
 )
 
+_MARKOV_PRICER = MarkovPricer(max_goals=8)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Predict fixtures-first markets and write to DB")
     parser.add_argument("--league", type=str, default=None, help="Optional league_code filter")
     parser.add_argument("--days", type=int, default=3, help="Prediction horizon in days")
+    parser.add_argument(
+        "--backfill-days",
+        type=int,
+        default=None,
+        help="If set, backfill FT fixtures within the last N days instead of scheduled fixtures.",
+    )
     parser.add_argument("--limit", type=int, default=None, help="Optional max fixtures")
     return parser.parse_args()
 
 
-def _latest_odds_expr(line: str, side: str) -> str:
+def _latest_odds_expr(row_alias: str, side: str) -> str:
     return (
         "CASE "
-        f"WHEN (od.ou_json -> '{line}' ->> '{side}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
-        f"THEN (od.ou_json -> '{line}' ->> '{side}')::double precision "
+        f"WHEN ({row_alias}.odds_json -> 'prices_latest' ->> '{side}') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
+        f"THEN ({row_alias}.odds_json -> 'prices_latest' ->> '{side}')::double precision "
         "ELSE NULL END"
     )
 
@@ -97,17 +109,22 @@ def load_artifacts() -> tuple[
     return features, imputation, models, model_failures
 
 
-def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -> pd.DataFrame:
+def fetch_candidate_fixtures(
+    days: int,
+    league: str | None,
+    limit: int | None,
+    backfill_days: int | None,
+) -> pd.DataFrame:
     base_query = f"""
     SELECT
         f.fixture_id,
         f.league_code,
         f.match_datetime_utc,
-        {_latest_odds_expr('1.5', 'over')} AS odds_over_15,
-        {_latest_odds_expr('1.5', 'under')} AS odds_under_15,
-        {_latest_odds_expr('2.5', 'over')} AS odds_over_25,
-        {_latest_odds_expr('2.5', 'under')} AS odds_under_25,
-        od.snapshot_time_utc AS odds_snapshot_time_utc,
+        {_latest_odds_expr('od15', 'over')} AS odds_over_15,
+        {_latest_odds_expr('od15', 'under')} AS odds_under_15,
+        {_latest_odds_expr('od25', 'over')} AS odds_over_25,
+        {_latest_odds_expr('od25', 'under')} AS odds_under_25,
+        GREATEST(od15.snapshot_time_utc, od25.snapshot_time_utc) AS odds_snapshot_time_utc,
         tph.sample_size AS home_sample_size,
         tph.rolling_xg AS home_rolling_xg,
         tph.rolling_xg_against AS home_rolling_xg_against,
@@ -166,13 +183,29 @@ def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -
         ON tpa.fixture_id = f.fixture_id
        AND tpa.is_home = false
     LEFT JOIN LATERAL (
-        SELECT fos.snapshot_time_utc, fos.ou_json
-        FROM fixture_odds_snapshots fos
-        WHERE fos.fixture_id = f.fixture_id
-          AND fos.snapshot_time_utc <= f.match_datetime_utc
-        ORDER BY fos.snapshot_time_utc DESC
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 1.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
-    ) od ON true
+    ) od15 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 2.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) od25 ON true
     LEFT JOIN LATERAL (
         SELECT p.metadata_json
         FROM predictions p
@@ -209,12 +242,23 @@ def fetch_candidate_fixtures(days: int, league: str | None, limit: int | None) -
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l2a ON true
-    WHERE f.status = 'scheduled'
-      AND f.match_datetime_utc IS NOT NULL
-      AND f.match_datetime_utc > NOW()
-      AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
+    WHERE f.match_datetime_utc IS NOT NULL
     """
-    params: list[object] = [days]
+    params: list[object] = []
+    if backfill_days is None:
+        base_query += """
+          AND f.status = 'scheduled'
+          AND f.match_datetime_utc > NOW()
+          AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
+        """
+        params.append(days)
+    else:
+        base_query += """
+          AND f.status = 'ft'
+          AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval
+          AND f.match_datetime_utc <= NOW()
+        """
+        params.append(backfill_days)
     if league:
         base_query += " AND f.league_code = %s"
         params.append(league)
@@ -305,6 +349,11 @@ def _score_matrix(lambda_home: float, lambda_away: float, max_goals: int = 10) -
     return mat / mass
 
 
+@lru_cache(maxsize=4096)
+def _markov_anytime_probs(lambda_home: float, lambda_away: float) -> dict[str, float]:
+    return _MARKOV_PRICER.calculate_lead_probs(lambda_home, lambda_away)
+
+
 def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float], dict[str, object]]:
     lambda_home, lambda_away, lambda_source = _resolve_backbone_lambdas(fixture)
     score = _score_matrix(lambda_home, lambda_away, max_goals=10)
@@ -323,7 +372,15 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
 
     p_home_ge2 = float(score[home_idx >= 2].sum())
     p_away_ge2 = float(score[away_idx >= 2].sum())
+    p_home_by2_final = float(score[(home_idx - away_idx) >= 2].sum())
+    p_away_by2_final = float(score[(away_idx - home_idx) >= 2].sum())
     p_btts = float(score[(home_idx >= 1) & (away_idx >= 1)].sum())
+
+    markov = _markov_anytime_probs(round(float(lambda_home), 4), round(float(lambda_away), 4))
+    p_h_1up = float(markov.get("h_1up", p_home))
+    p_a_1up = float(markov.get("a_1up", p_away))
+    p_h_2up = float(markov.get("h_2up", p_home_by2_final))
+    p_a_2up = float(markov.get("a_2up", p_away_by2_final))
 
     p_home_and_o25 = float(score[(home_idx > away_idx) & ((home_idx + away_idx) >= 3)].sum())
     p_away_and_o25 = float(score[(home_idx < away_idx) & ((home_idx + away_idx) >= 3)].sum())
@@ -366,6 +423,10 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "dc_12": p_home + p_away,
         "ho15": p_home_ge2,
         "ao15": p_away_ge2,
+        "h_1up": p_h_1up,
+        "a_1up": p_a_1up,
+        "h_2up": p_h_2up,
+        "a_2up": p_a_2up,
         "home_or_o25": p_home_or_o25,
         "away_or_o25": p_away_or_o25,
         "home_or_o15": p_home_or_o15,
@@ -378,6 +439,8 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "lambda_source": lambda_source,
         "lambda_home": float(lambda_home),
         "lambda_away": float(lambda_away),
+        "anytime_source": "markov_ctmc",
+        "anytime_markov_max_goals": 8,
         "corners_source": corners_source,
         "corners_mu": float(corners_mu),
     }
@@ -402,6 +465,8 @@ def build_prediction_rows(
             "features_missing_count": int(fixture["features_missing_count"]),
             "home_sample_size": None if pd.isna(fixture["home_sample_size"]) else float(fixture["home_sample_size"]),
             "away_sample_size": None if pd.isna(fixture["away_sample_size"]) else float(fixture["away_sample_size"]),
+            "home_played": None if pd.isna(fixture["home_sample_size"]) else float(fixture["home_sample_size"]),
+            "away_played": None if pd.isna(fixture["away_sample_size"]) else float(fixture["away_sample_size"]),
             "lambda_home_l1": None if pd.isna(fixture.get("lambda_home_l1")) else float(fixture["lambda_home_l1"]),
             "lambda_away_l1": None if pd.isna(fixture.get("lambda_away_l1")) else float(fixture["lambda_away_l1"]),
             "adj_lambda_home_final": None if pd.isna(fixture.get("adj_lambda_home_final")) else float(fixture["adj_lambda_home_final"]),
@@ -440,6 +505,8 @@ def build_prediction_rows(
                     "fallback_lambda_source": fallback_trace["lambda_source"],
                     "fallback_lambda_home": fallback_trace["lambda_home"],
                     "fallback_lambda_away": fallback_trace["lambda_away"],
+                    "fallback_anytime_source": fallback_trace["anytime_source"],
+                    "fallback_anytime_markov_max_goals": fallback_trace["anytime_markov_max_goals"],
                     "fallback_corners_source": fallback_trace["corners_source"],
                     "fallback_corners_mu": fallback_trace["corners_mu"],
                 }
@@ -509,7 +576,12 @@ def main() -> None:
     args = parse_args()
     features, imputation, models, model_failures = load_artifacts()
 
-    fixtures = fetch_candidate_fixtures(days=args.days, league=args.league, limit=args.limit)
+    fixtures = fetch_candidate_fixtures(
+        days=args.days,
+        league=args.league,
+        limit=args.limit,
+        backfill_days=args.backfill_days,
+    )
     fixtures["match_datetime_utc"] = pd.to_datetime(fixtures["match_datetime_utc"], utc=True, errors="coerce")
     fixtures["odds_snapshot_time_utc"] = pd.to_datetime(fixtures["odds_snapshot_time_utc"], utc=True, errors="coerce")
     post_kickoff_mask = (

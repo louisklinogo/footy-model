@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-02-27T12:18:52.400011+00:00",
+  "scope": {
+    "league": null,
+    "status": "ft",
+    "limit": 100
+  },
+  "summary": {
+    "fixtures": 2,
+    "fixtures_with_goals": 0,
+    "fixtures_home_led_by_1_any": 0,
+    "fixtures_away_led_by_1_any": 0,
+    "fixtures_home_led_by_2_any": 0,
+    "fixtures_away_led_by_2_any": 0,
+    "avg_total_goal_events": 0.0,
+    "scoreline_check": {
+      "fixtures_with_ft_result": 2,
+      "scoreline_match_count": 0,
+      "scoreline_mismatch_count": 2,
+      "scoreline_match_rate": 0.0
+    },
+    "league_fixture_counts": [
+      {
+        "league_code": "BR1",
+        "fixtures": 1
+      },
+      {
+        "league_code": "SC2",
+        "fixtures": 1
+      }
+    ]
+  },
+  "quality": {
+    "goal_quality": {
+      "goal_rows": 0,
+      "goal_minute_null": 0,
+      "goal_is_home_null": 0,
+      "goal_score_null": 0,
+      "goal_player_name_null": 0
+    },
+    "goal_quality_regulation_90": {
+      "goal_rows": 0,
+      "goal_minute_null": 0,
+      "goal_is_home_null": 0,
+      "goal_score_null": 0,
+      "goal_player_name_null": 0
+    },
+    "progression_quality": {
+      "goal_rows": 0,
+      "valid_progress_rows": 0,
+      "suspicious_progress_rows": 0
+    },
+    "progression_quality_regulation_90": {
+      "goal_rows": 0,
+      "valid_progress_rows": 0,
+      "suspicious_progress_rows": 0
+    },
+    "minute_outlier_incidents": []
+  }
+}

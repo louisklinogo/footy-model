@@ -1,0 +1,87 @@
+{
+  "date": "2026-02-27",
+  "scope": "1UP/2UP only; challenger=trained GBM predictions; champion baseline=fallback Markov from stored backbone lambdas on same scored fixtures",
+  "markets": [
+    {
+      "market": "h_1up",
+      "champion": {
+        "n": 7028,
+        "base_rate": 0.5980364257256687,
+        "brier": 0.20211643789307515,
+        "hit_rate": 0.7010529311326124,
+        "auc": 0.7636894422231066
+      },
+      "fallback_markov": {
+        "n": 7028,
+        "base_rate": 0.5980364257256687,
+        "brier": 0.22411117405138878,
+        "hit_rate": 0.6344621513944223,
+        "auc": 0.6565329863414039
+      },
+      "delta_auc": 0.10715645588170275,
+      "delta_brier": -0.021994736158313627,
+      "delta_hit_rate": 0.06659077973819005
+    },
+    {
+      "market": "a_1up",
+      "champion": {
+        "n": 7028,
+        "base_rate": 0.48619806488332384,
+        "brier": 0.21173547826381606,
+        "hit_rate": 0.6831246442800227,
+        "auc": 0.7533908722145863
+      },
+      "fallback_markov": {
+        "n": 7028,
+        "base_rate": 0.48619806488332384,
+        "brier": 0.23356108758409475,
+        "hit_rate": 0.6057199772339215,
+        "auc": 0.6468098120179884
+      },
+      "delta_auc": 0.10658106019659797,
+      "delta_brier": -0.02182560932027869,
+      "delta_hit_rate": 0.07740466704610127
+    },
+    {
+      "market": "h_2up",
+      "champion": {
+        "n": 7028,
+        "base_rate": 0.27248150256118386,
+        "brier": 0.1640121161484598,
+        "hit_rate": 0.7613830392714855,
+        "auc": 0.784530906985164
+      },
+      "fallback_markov": {
+        "n": 7028,
+        "base_rate": 0.27248150256118386,
+        "brier": 0.18496396743149587,
+        "hit_rate": 0.7356289129197495,
+        "auc": 0.6617137292489987
+      },
+      "delta_auc": 0.1228171777361653,
+      "delta_brier": -0.02095185128303606,
+      "delta_hit_rate": 0.025754126351736017
+    },
+    {
+      "market": "a_2up",
+      "champion": {
+        "n": 7028,
+        "base_rate": 0.19578827546955038,
+        "brier": 0.13401255591417063,
+        "hit_rate": 0.8147410358565738,
+        "auc": 0.7870467235306703
+      },
+      "fallback_markov": {
+        "n": 7028,
+        "base_rate": 0.19578827546955038,
+        "brier": 0.14895240899354434,
+        "hit_rate": 0.8037848605577689,
+        "auc": 0.661002060908672
+      },
+      "delta_auc": 0.12604466262199832,
+      "delta_brier": -0.014939853079373705,
+      "delta_hit_rate": 0.010956175298804882
+    }
+  ],
+  "decision": "PROMOTE"
+}

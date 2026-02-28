@@ -34,6 +34,8 @@ MARKETS = (
     "dc_1x", "dc_x2", "dc_12",
     # Team Totals
     "ho15", "ao15",
+    # Anytime Lead Markets
+    "h_1up", "a_1up", "h_2up", "a_2up",
     # Combo OR
     "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
     # Combo AND
@@ -55,11 +57,11 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _latest_over_odds_expr(line: str) -> str:
+def _latest_over_odds_expr(row_alias: str) -> str:
     return (
         "CASE "
-        f"WHEN (od.ou_json -> '{line}' ->> 'over') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
-        f"THEN (od.ou_json -> '{line}' ->> 'over')::double precision "
+        f"WHEN ({row_alias}.odds_json -> 'prices_latest' ->> 'over') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
+        f"THEN ({row_alias}.odds_json -> 'prices_latest' ->> 'over')::double precision "
         "ELSE NULL END"
     )
 
@@ -82,9 +84,13 @@ def fetch_unscored_predictions(
         fr.away_goals,
         fs.h_corners,
         fs.a_corners,
+        ils.home_led_by_1_any,
+        ils.away_led_by_1_any,
+        ils.home_led_by_2_any,
+        ils.away_led_by_2_any,
         CASE
-            WHEN p.market_code = 'o15' THEN {_latest_over_odds_expr('1.5')}
-            WHEN p.market_code = 'o25' THEN {_latest_over_odds_expr('2.5')}
+            WHEN p.market_code = 'o15' THEN {_latest_over_odds_expr('od15')}
+            WHEN p.market_code = 'o25' THEN {_latest_over_odds_expr('od25')}
             ELSE NULL
         END AS odds_used
     FROM predictions p
@@ -94,19 +100,37 @@ def fetch_unscored_predictions(
       ON fr.fixture_id = f.fixture_id
     LEFT JOIN fixture_stats_premium fs
       ON fs.fixture_id = f.fixture_id
+    LEFT JOIN fixture_incident_lead_states ils
+      ON ils.fixture_id = f.fixture_id
     LEFT JOIN LATERAL (
-        SELECT fos.ou_json
-        FROM fixture_odds_snapshots fos
-        WHERE fos.fixture_id = f.fixture_id
-          AND fos.snapshot_time_utc <= f.match_datetime_utc
-        ORDER BY fos.snapshot_time_utc DESC
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 1.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
-    ) od ON true
+    ) od15 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 2.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) od25 ON true
     LEFT JOIN prediction_scores ps
       ON ps.prediction_id = p.prediction_id
     WHERE p.model_name = %s
       AND p.model_version = %s
-      AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
+      AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'h_1up', 'a_1up', 'h_2up', 'a_2up', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
       AND f.status = 'ft'
       AND f.status NOT IN ('postponed', 'cancelled', 'abandoned')
       AND ps.prediction_id IS NULL
@@ -199,6 +223,20 @@ def compute_actual(row: dict[str, object]) -> float | None:
         return 1.0 if h >= 2 else 0.0
     if market == "ao15":
         return 1.0 if a >= 2 else 0.0
+
+    # === ANYTIME LEAD MARKETS (incident timeline derived) ===
+    if market == "h_1up":
+        val = row.get("home_led_by_1_any")
+        return float(int(bool(val))) if val is not None else None
+    if market == "a_1up":
+        val = row.get("away_led_by_1_any")
+        return float(int(bool(val))) if val is not None else None
+    if market == "h_2up":
+        val = row.get("home_led_by_2_any")
+        return float(int(bool(val))) if val is not None else None
+    if market == "a_2up":
+        val = row.get("away_led_by_2_any")
+        return float(int(bool(val))) if val is not None else None
 
     # === COMBO OR ===
     if market == "home_or_o25":

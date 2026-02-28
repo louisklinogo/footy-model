@@ -35,6 +35,8 @@ MODEL_NAME = "situational_xgb"
 MODEL_VERSION = "v2"
 DEFAULT_RULE_OVERLAP_MODE = "override"
 KEY_ABSENT_FAMILY = "key_absent"
+RULE_SCOPE_GLOBAL = "enabled_league"
+RULE_SCOPE_DISABLED_SAFETY = "disabled_league_safety"
 KEY_ABSENT_OVERLAP_FEATURES = {
     "home": ("home_key_absent", "home_xg_lost", "injury_impact"),
     "away": ("away_key_absent", "away_xg_lost", "injury_impact"),
@@ -101,6 +103,88 @@ def _should_apply_key_absent_override(
         return False
     pct = rule_config.get(f"key_absent_pct_{side}", rule_config.get("key_absent_pct", 0.0))
     return abs(_to_float(pct, 0.0)) > 1e-12
+
+
+def _resolve_rule_scope(
+    *,
+    layer2_enabled: bool,
+    is_low_confidence: bool,
+    rule_config: dict[str, object] | None,
+) -> str | None:
+    if rule_config is None or is_low_confidence:
+        return None
+    if layer2_enabled:
+        return RULE_SCOPE_GLOBAL
+    if bool(rule_config.get("safety_enabled_for_disabled_leagues", False)):
+        return RULE_SCOPE_DISABLED_SAFETY
+    return None
+
+
+def _empty_rule_payload(base_lambda: float) -> dict[str, object]:
+    return {
+        "mode": "none",
+        "scope": "none",
+        "applied": False,
+        "rules": [],
+        "components": [],
+        "pct_raw": 0.0,
+        "pct_capped": 0.0,
+        "pct_capped_pre_gate": 0.0,
+        "lambda_before": base_lambda,
+        "lambda_after": base_lambda,
+        "cap_down": 0.0,
+        "cap_up": 0.0,
+        "odds_gap": None,
+        "odds_has_gap": False,
+        "odds_missing": False,
+        "odds_confirmed": False,
+        "odds_conflict": False,
+        "odds_gate_blocked": False,
+    }
+
+
+def _json_safe_value(value: object) -> object:
+    if value is None:
+        return None
+    if isinstance(value, np.generic):
+        value = value.item()
+    if isinstance(value, (bool, int, str)):
+        return value
+    if isinstance(value, float):
+        if math.isnan(value) or math.isinf(value):
+            return None
+        return value
+    try:
+        if pd.isna(value):  # type: ignore[arg-type]
+            return None
+    except Exception:
+        pass
+    return value
+
+
+def _build_feature_snapshot(row: pd.Series, features: list[str]) -> dict[str, object]:
+    return {feature: _json_safe_value(row.get(feature)) for feature in features}
+
+
+def _build_tracking_signals(row: pd.Series) -> dict[str, object]:
+    return {
+        "home_key_absent": int(_to_float(row.get("home_key_absent", 0), 0.0)),
+        "away_key_absent": int(_to_float(row.get("away_key_absent", 0), 0.0)),
+        "home_upcoming_tier": int(_to_float(row.get("home_upcoming_tier", 0), 0.0)),
+        "away_upcoming_tier": int(_to_float(row.get("away_upcoming_tier", 0), 0.0)),
+        "points_gap": _json_safe_value(row.get("points_gap")),
+        "position_gap": _json_safe_value(row.get("position_gap")),
+        "rest_delta": _json_safe_value(row.get("rest_delta")),
+        "home_congestion_games_14d": _json_safe_value(row.get("home_congestion_games_14d")),
+        "away_congestion_games_14d": _json_safe_value(row.get("away_congestion_games_14d")),
+        "home_playing_top4": int(_to_float(row.get("home_playing_top4", 0), 0.0)),
+        "away_playing_top4": int(_to_float(row.get("away_playing_top4", 0), 0.0)),
+        "injury_impact": _json_safe_value(row.get("injury_impact")),
+        "home_xg_lost": _json_safe_value(row.get("home_xg_lost")),
+        "away_xg_lost": _json_safe_value(row.get("away_xg_lost")),
+        "odds_model_gap_home": _json_safe_value(row.get("odds_model_gap_home")),
+        "odds_model_gap_away": _json_safe_value(row.get("odds_model_gap_away")),
+    }
 
 
 def is_lame_duck(played, pts_to_top, pts_to_relegation, total_teams):
@@ -674,6 +758,10 @@ def main():
     overlap_override_home = 0
     overlap_override_away = 0
     rule_fired_fixture_ids: set[int] = set()
+    rule_fired_scope_counts = {
+        RULE_SCOPE_GLOBAL: 0,
+        RULE_SCOPE_DISABLED_SAFETY: 0,
+    }
     for _, row in df.iterrows():
         h_res_raw_full = float(row["pred_home_residual_full"])
         a_res_raw_full = float(row["pred_away_residual_full"])
@@ -706,47 +794,47 @@ def main():
 
         is_low = bool(row["is_low_confidence"])
         reason = "early_season_min_4_games_not_met" if is_low else None
+        feature_snapshot = _build_feature_snapshot(row, features)
+        tracking_signals = _build_tracking_signals(row)
+        rule_scope = (
+            _resolve_rule_scope(
+                layer2_enabled=layer2_enabled,
+                is_low_confidence=is_low,
+                rule_config=rule_config,
+            )
+            if args.enable_rule_layer
+            else None
+        )
 
         # Adjusted lambdas use the policy-gated residual.
         if lh is not None and la is not None:
             lambda_home_layer2 = max(0.01, lh + h_res_applied)
             lambda_away_layer2 = max(0.01, la + a_res_applied)
 
-            home_rule = {
-                "applied": False,
-                "rules": [],
-                "pct_raw": 0.0,
-                "pct_capped": 0.0,
-                "lambda_before": lambda_home_layer2,
-                "lambda_after": lambda_home_layer2,
-                "cap_down": 0.0,
-                "cap_up": 0.0,
-            }
-            away_rule = {
-                "applied": False,
-                "rules": [],
-                "pct_raw": 0.0,
-                "pct_capped": 0.0,
-                "lambda_before": lambda_away_layer2,
-                "lambda_after": lambda_away_layer2,
-                "cap_down": 0.0,
-                "cap_up": 0.0,
-            }
+            home_rule = _empty_rule_payload(lambda_home_layer2)
+            away_rule = _empty_rule_payload(lambda_away_layer2)
 
             if (
                 args.enable_rule_layer
                 and rule_config is not None
-                and layer2_enabled
-                and not is_low
+                and rule_scope is not None
             ):
                 home_rule = apply_rule_adjustment(
-                    lambda_home_layer2, row, side="home", config=rule_config
+                    lambda_home_layer2,
+                    row,
+                    side="home",
+                    config=rule_config,
+                    scope=rule_scope,
                 )
                 away_rule = apply_rule_adjustment(
-                    lambda_away_layer2, row, side="away", config=rule_config
+                    lambda_away_layer2,
+                    row,
+                    side="away",
+                    config=rule_config,
+                    scope=rule_scope,
                 )
 
-                if args.rule_overlap_mode == "override":
+                if args.rule_overlap_mode == "override" and rule_scope == RULE_SCOPE_GLOBAL:
                     if _should_apply_key_absent_override(
                         row=row,
                         side="home",
@@ -764,7 +852,11 @@ def main():
                         h_res_applied = alpha_home * h_res_raw
                         lambda_home_layer2 = max(0.01, lh + h_res_applied)
                         home_rule = apply_rule_adjustment(
-                            lambda_home_layer2, row, side="home", config=rule_config
+                            lambda_home_layer2,
+                            row,
+                            side="home",
+                            config=rule_config,
+                            scope=rule_scope,
                         )
 
                     if _should_apply_key_absent_override(
@@ -784,15 +876,25 @@ def main():
                         a_res_applied = alpha_away * a_res_raw
                         lambda_away_layer2 = max(0.01, la + a_res_applied)
                         away_rule = apply_rule_adjustment(
-                            lambda_away_layer2, row, side="away", config=rule_config
+                            lambda_away_layer2,
+                            row,
+                            side="away",
+                            config=rule_config,
+                            scope=rule_scope,
                         )
 
                 if bool(home_rule["applied"]):
                     rule_fired_home += 1
                     rule_fired_fixture_ids.add(int(row["fixture_id"]))
+                    scoped = str(home_rule.get("scope", ""))
+                    if scoped in rule_fired_scope_counts:
+                        rule_fired_scope_counts[scoped] += 1
                 if bool(away_rule["applied"]):
                     rule_fired_away += 1
                     rule_fired_fixture_ids.add(int(row["fixture_id"]))
+                    scoped = str(away_rule.get("scope", ""))
+                    if scoped in rule_fired_scope_counts:
+                        rule_fired_scope_counts[scoped] += 1
 
             res_meta_h = {
                 "residual": h_res_raw,
@@ -812,6 +914,7 @@ def main():
                 "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
                 "overlap_override_applied": h_override_applied,
                 "overlap_family": h_overlap_family,
+                "rule_layer_scope": str(rule_scope) if rule_scope is not None else "none",
             }
             res_meta_a = {
                 "residual": a_res_raw,
@@ -831,6 +934,7 @@ def main():
                 "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
                 "overlap_override_applied": a_override_applied,
                 "overlap_family": a_overlap_family,
+                "rule_layer_scope": str(rule_scope) if rule_scope is not None else "none",
             }
 
             adj_meta_h = {
@@ -853,15 +957,29 @@ def main():
                 ),
                 "rule_layer_enabled": bool(args.enable_rule_layer),
                 "rule_layer_overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else None,
+                "rule_layer_mode": str(home_rule.get("mode", "none")),
+                "rule_layer_scope": str(home_rule.get("scope", "none")),
                 "rule_layer_applied": bool(home_rule["applied"]),
                 "rule_layer_rules": list(home_rule["rules"]),
+                "rule_layer_components": list(home_rule.get("components", [])),
                 "rule_layer_pct_raw": float(home_rule["pct_raw"]),
                 "rule_layer_pct_capped": float(home_rule["pct_capped"]),
+                "rule_layer_pct_capped_pre_gate": float(
+                    home_rule.get("pct_capped_pre_gate", home_rule["pct_capped"])
+                ),
                 "rule_layer_cap_down": float(home_rule["cap_down"]),
                 "rule_layer_cap_up": float(home_rule["cap_up"]),
+                "rule_layer_odds_gap": home_rule.get("odds_gap"),
+                "rule_layer_odds_has_gap": bool(home_rule.get("odds_has_gap", False)),
+                "rule_layer_odds_missing": bool(home_rule.get("odds_missing", False)),
+                "rule_layer_odds_confirmed": bool(home_rule.get("odds_confirmed", False)),
+                "rule_layer_odds_conflict": bool(home_rule.get("odds_conflict", False)),
+                "rule_layer_odds_gate_blocked": bool(home_rule.get("odds_gate_blocked", False)),
                 "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
                 "overlap_override_applied": h_override_applied,
                 "overlap_family": h_overlap_family,
+                "feature_snapshot": feature_snapshot,
+                "tracking_signals": tracking_signals,
             }
             adj_meta_a = {
                 "lambda": float(away_rule["lambda_after"]),
@@ -883,15 +1001,29 @@ def main():
                 ),
                 "rule_layer_enabled": bool(args.enable_rule_layer),
                 "rule_layer_overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else None,
+                "rule_layer_mode": str(away_rule.get("mode", "none")),
+                "rule_layer_scope": str(away_rule.get("scope", "none")),
                 "rule_layer_applied": bool(away_rule["applied"]),
                 "rule_layer_rules": list(away_rule["rules"]),
+                "rule_layer_components": list(away_rule.get("components", [])),
                 "rule_layer_pct_raw": float(away_rule["pct_raw"]),
                 "rule_layer_pct_capped": float(away_rule["pct_capped"]),
+                "rule_layer_pct_capped_pre_gate": float(
+                    away_rule.get("pct_capped_pre_gate", away_rule["pct_capped"])
+                ),
                 "rule_layer_cap_down": float(away_rule["cap_down"]),
                 "rule_layer_cap_up": float(away_rule["cap_up"]),
+                "rule_layer_odds_gap": away_rule.get("odds_gap"),
+                "rule_layer_odds_has_gap": bool(away_rule.get("odds_has_gap", False)),
+                "rule_layer_odds_missing": bool(away_rule.get("odds_missing", False)),
+                "rule_layer_odds_confirmed": bool(away_rule.get("odds_confirmed", False)),
+                "rule_layer_odds_conflict": bool(away_rule.get("odds_conflict", False)),
+                "rule_layer_odds_gate_blocked": bool(away_rule.get("odds_gate_blocked", False)),
                 "rule_layer_config_path": str(rule_config_path) if args.enable_rule_layer else None,
                 "overlap_override_applied": a_override_applied,
                 "overlap_family": a_overlap_family,
+                "feature_snapshot": feature_snapshot,
+                "tracking_signals": tracking_signals,
             }
 
             if is_low:
@@ -952,6 +1084,7 @@ def main():
                 "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
                 "overlap_override_applied": h_override_applied,
                 "overlap_family": h_overlap_family,
+                "rule_layer_scope": str(rule_scope) if rule_scope is not None else "none",
             }
             res_meta_a = {
                 "residual": a_res_raw,
@@ -971,6 +1104,7 @@ def main():
                 "overlap_mode": args.rule_overlap_mode if args.enable_rule_layer else "none",
                 "overlap_override_applied": a_override_applied,
                 "overlap_family": a_overlap_family,
+                "rule_layer_scope": str(rule_scope) if rule_scope is not None else "none",
             }
             if is_low:
                 low_meta = {"is_low_confidence": True, "low_confidence_reason": reason}
@@ -1000,6 +1134,11 @@ def main():
             "Rule-layer fired: "
             f"home={rule_fired_home}, away={rule_fired_away}, "
             f"fixtures={len(rule_fired_fixture_ids)}"
+        )
+        print(
+            "Rule-layer scope events: "
+            f"enabled_league={rule_fired_scope_counts[RULE_SCOPE_GLOBAL]}, "
+            f"disabled_league_safety={rule_fired_scope_counts[RULE_SCOPE_DISABLED_SAFETY]}"
         )
         if args.rule_overlap_mode == "override":
             print(

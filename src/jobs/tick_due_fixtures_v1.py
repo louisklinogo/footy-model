@@ -485,6 +485,7 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
             _finish_run(run_id, "success", "predict dry-run complete", details, options.dry_run)
             return
@@ -501,6 +502,7 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
+            run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
 
         _finish_run(run_id, "success", f"predict complete targets={len(targets)}", details, options.dry_run)

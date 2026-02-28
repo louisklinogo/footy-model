@@ -3,9 +3,12 @@ import argparse
 import sys
 import logging
 import json
-import psycopg2
 from datetime import datetime
+from pathlib import Path
+
 from sofascore_wrapper.api import SofascoreAPI
+
+from src.db.db_utils import connect_db
 
 # Configure logging
 logging.basicConfig(
@@ -14,7 +17,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DB_URL = "postgresql://neondb_owner:npg_csxeyQ6fNXF7@ep-young-tree-ab8emfpl-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
 
 # Map SofaScore names to our column suffixes
 NAME_MAP = {
@@ -166,35 +168,66 @@ async def main():
     parser = argparse.ArgumentParser(description="Ingest backfill statistics from Sofascore.")
     parser.add_argument("--limit", type=int, default=100, help="Max fixtures to process.")
     parser.add_argument("--league", type=str, help="Filter by league code (e.g., CL, EL, ECL).")
+    parser.add_argument(
+        "--fixture-ids-file",
+        type=str,
+        default=None,
+        help="Optional CSV/TXT file with fixture_id values (first column).",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
     api = SofascoreAPI()
-    conn = psycopg2.connect(DB_URL)
+    conn = connect_db()
     
     try:
         with conn.cursor() as cur:
-            # Find fixtures needing stats (either totally missing OR missing the new advanced period stats)
-            # We explicitly skip rows that have a SofaScore error message in the JSON to avoid retrying 404s.
-            query = """
-                SELECT f.fixture_id, f.sofascore_id 
-                FROM fixtures f
-                LEFT JOIN fixture_stats_premium s ON f.fixture_id = s.fixture_id
-                WHERE f.sofascore_id IS NOT NULL 
-                  AND f.status = 'ft'
-                  AND (
-                    s.fixture_id IS NULL 
-                    OR (s.fidelity_score = 0.0 AND s.raw_json->>'error' IS NULL)
-                  )
-            """
             params = []
-            if args.league:
-                query += " AND f.league_code = %s"
-                params.append(args.league)
-            
-            query += " LIMIT %s;"
-            params.append(args.limit)
-            
+            if args.fixture_ids_file:
+                fixture_ids: list[int] = []
+                for raw_line in Path(args.fixture_ids_file).read_text(encoding="utf-8").splitlines():
+                    token = raw_line.split(",")[0].strip()
+                    if not token or token.lower() == "fixture_id":
+                        continue
+                    try:
+                        fixture_ids.append(int(token))
+                    except ValueError:
+                        continue
+                query = """
+                    SELECT f.fixture_id, f.sofascore_id
+                    FROM fixtures f
+                    WHERE f.sofascore_id IS NOT NULL
+                      AND f.status = 'ft'
+                      AND f.fixture_id = ANY(%s)
+                """
+                params.append(fixture_ids)
+                if args.league:
+                    query += " AND f.league_code = %s"
+                    params.append(args.league)
+                query += " ORDER BY f.match_datetime_utc DESC, f.fixture_id DESC LIMIT %s;"
+                params.append(args.limit)
+            else:
+                # Find fixtures needing stats and include rows with missing corners settlement fields.
+                # We explicitly skip rows that have a SofaScore error message in the JSON to avoid retrying 404s.
+                query = """
+                    SELECT f.fixture_id, f.sofascore_id 
+                    FROM fixtures f
+                    LEFT JOIN fixture_stats_premium s ON f.fixture_id = s.fixture_id
+                    WHERE f.sofascore_id IS NOT NULL 
+                      AND f.status = 'ft'
+                      AND (
+                        s.fixture_id IS NULL 
+                        OR (s.fidelity_score = 0.0 AND s.raw_json->>'error' IS NULL)
+                        OR s.h_corners IS NULL
+                        OR s.a_corners IS NULL
+                      )
+                """
+                if args.league:
+                    query += " AND f.league_code = %s"
+                    params.append(args.league)
+                query += " LIMIT %s;"
+                params.append(args.limit)
+
             cur.execute(query, tuple(params))
             fixtures = cur.fetchall()
             
@@ -204,7 +237,7 @@ async def main():
             logger.info(f"Processing fixture {fid} (SofaID: {sofa_id})...")
             try:
                 # Open a fresh connection per fixture to avoid idle timeouts
-                conn_local = psycopg2.connect(DB_URL)
+                conn_local = connect_db()
                 try:
                     await ingest_match_stats(api, conn_local, fid, sofa_id, dry_run=args.dry_run)
                 finally:

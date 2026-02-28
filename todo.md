@@ -1,6 +1,6 @@
 # Project Todo - Soccer Predictive Model
 
-Updated: 2026-02-26
+Updated: 2026-02-27
 
 Legend:
 - [x] done
@@ -150,9 +150,11 @@ Legend:
 - Market predictor: `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
 - Market exporter: `src/modeling/export/export_market_outcomes_fixtures_first.py`
 - Market scorer: `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
+- Incidents lead-state builder: `src/modeling/evaluation/build_incident_lead_state_features.py`
 - Historical odds backfill: `src/ingest/backfill_sofascore_odds_markets_v1.py`
 - Prematch odds polling: `src/jobs/sofascore_odds_polling.py`
 - Availability polling ingester: `src/ingest/ingest_sofascore_availability.py`
+- Incidents timeline ingester: `src/ingest/ingest_sofascore_incidents.py`
 - Validation loop scheduler wrapper: `scripts/run_validation_loop_scheduler.cmd`
 - Validation loop task registration helper: `scripts/register_validation_loop_scheduler.cmd`
 - Availability scheduler wrapper: `scripts/run_availability_scheduler.cmd`
@@ -173,9 +175,11 @@ Legend:
 - Layer 1 stabilization is now explicitly active (`xi` sweep complete, `shots_inside_box` tested and deferred).
 - `odds_model_gap_home` coverage materially improved in latest health report (non-missing ~89.2%, n=6979/7824).
 - Upcoming `player_availability` coverage was 0% in latest monitor snapshot.
+- SofaScore incidents timeline backfill path is now live (`fixture_incidents_sofascore`), with goal-event fields validated.
 - Settlement migration has materially progressed: stale FT reconciliation is now Sofa-native and successful in live runs.
 - Validation loop automation is now in place (manual runner + scheduled task every 6 hours).
 - Operational gap remains in orchestration path alignment (tick still references moved/renamed scripts in some phases).
+- DB storage hotfix applied (`2026-02-27`): dropped redundant `fixture_player_stats` indexes (`idx_fps_player`, `idx_fixture_player_stats_team`) to recover write headroom for scoring.
 - Program state update: Layer 2 reconciliation is now the active blocker and source-of-truth workflow.
 - Latest Layer 2 retrain (post-repair, 2026-02-26) is positive but modest:
   - test RMSE vs Layer 1 baseline: home `1.1910` vs `1.1963` (+0.44% lift), away `1.0783` vs `1.0854` (+0.66% lift)
@@ -196,6 +200,7 @@ Global note for this section: items below are paused unless they are directly re
     - holdout RMSE (home/away)
     - per-league enablement (`layer2_deployment_policy.json`)
     - temporal CV stability
+- [x] Switch all active ingestion/monitoring scripts to `connect_db()` so they now read/write the local `footy_model` Postgres (see `scripts/db_progress_report.py`, `src/ingest/ingest_sofascore_stats.py`, `src/ingest/offline_stats_backfill.py`, `src/ingest/ingest_sofascore_fixtures.py`).
 - [x] Design and implement v1 situational rule-layer override (deterministic, capped adjustments, full logging).
   - Code:
     - `src/modeling/layer2_situational/rule_layer.py`
@@ -235,6 +240,33 @@ Global note for this section: items below are paused unless they are directly re
   - final policy is approved and written to deployment docs.
 
 ### 0b) Unified Backbone + Market Orchestration (Override Track)
+- [x] Implement disabled-league safety scope for deterministic Layer 2 rule-layer (cross-league, conservative caps).
+  - Files:
+    - `src/modeling/layer2_situational/rule_layer.py`
+    - `src/modeling/layer2_situational/predict_situational_residual.py`
+    - `model_artifacts/situational_model/rule_layer_config.json`
+  - Scope contract:
+    - if `layer2_enabled=true`: existing global rule-layer path remains active.
+    - if `layer2_enabled=false` and config enables safety scope: run safety rules on top of Layer 1 lambda.
+  - Safety v1 trigger set:
+    - upcoming tier
+    - congestion + rest disadvantage
+    - key absent (binary)
+    - top-4 opponent pressure
+    - table adjacency / volatility (position + points gap)
+    - odds-confirmation gate (conflict blocks application)
+  - Conservative bounds:
+    - `safety_max_down_pct=0.06`
+    - `safety_max_up_pct=0.02`
+  - Metadata additions:
+    - `rule_layer_mode`, `rule_layer_scope`, `rule_layer_components`
+    - `rule_layer_odds_*`, `rule_layer_pct_capped_pre_gate`
+  - Tests:
+    - `tests/test_rule_layer_safety.py`
+    - `tests/test_layer2_predict_policy.py::test_predict_main_applies_disabled_league_safety_rule`
+  - Verification:
+    - `pytest -q tests/test_rule_layer_safety.py tests/test_layer2_predict_policy.py` -> `5 passed`
+
 - [x] Implement overlap-family override semantics in Layer 2 serving path.
   - First overlap family: `key_absent`.
   - Rule: when overlap rule fires for a side, do not double-count equivalent global contribution for that side.
@@ -436,6 +468,101 @@ Global note for this section: items below are paused unless they are directly re
   - Confirmatory run (no promotion applied):
     - `artifacts/reports/layer2_reconciliation/player_impact_assumption_validation_step6_confirmatory.md`
     - status unchanged: `correctness=pass`, `football_logic=warn`, `predictive_value=warn`, `operational_readiness=fail`, `overall=fail`
+
+### 2c) Incidents Timeline + True 1UP/2UP Markets (Active)
+- [x] Add dedicated incidents ingestion path and table.
+  - Script: `src/ingest/ingest_sofascore_incidents.py`
+  - Table: `fixture_incidents_sofascore`
+  - Batch wrapper support: `scripts/backfill_batch_sofascore.py --type incidents`
+- [x] Validate DB shape and core quality gates on ingested sample.
+  - Checks completed:
+    - schema/columns present
+    - goal timeline fields populated (`minute`, `is_home`, `home_score`, `away_score`, `player_name`)
+    - no duplicate `(fixture_id, incident_uid)` pairs
+    - goal scoreline progression consistent within fixture
+    - incidents-derived final scoreline matches `fixture_results` on checked sample
+  - Edge encoding note:
+    - retain non-standard minute markers (e.g., `-5`, `999`) as metadata only.
+    - exclude them from lead-state/1UP/2UP transition logic.
+- [x] completed - Complete FT incidents backfill coverage.
+  - Command:
+    - `python scripts/backfill_batch_sofascore.py --type incidents --total 1000 --limit 100 --status ft`
+  - DoD:
+    - target competitions have decision-grade fixture coverage for `incident_type='goal'`.
+- [x] Build canonical lead-state feature builder from incidents.
+  - Script:
+    - `src/modeling/evaluation/build_incident_lead_state_features.py`
+  - Stores fixture-level outputs in:
+    - `fixture_incident_lead_states`
+  - Rule lock:
+    - 1UP/2UP lead flags are computed on regulation timeline only (`minute <= 90`).
+  - New artifact target:
+    - `artifacts/reports/market_reconciliation/incident_timeline_quality_<run_ts>.md|json`
+  - Latest artifacts:
+    - `artifacts/reports/market_reconciliation/incident_timeline_quality_20260227T001624Z.json`
+    - `artifacts/reports/market_reconciliation/incident_timeline_quality_20260227T001624Z.md`
+    - `artifacts/reports/market_reconciliation/incident_timeline_quality_20260227T000506Z.json`
+    - `artifacts/reports/market_reconciliation/incident_timeline_quality_20260227T000506Z.md`
+  - Required outputs per fixture:
+    - first lead minute (home/away)
+    - max lead reached (home/away)
+    - flags: `home_led_by_1_any`, `home_led_by_2_any`, `away_led_by_1_any`, `away_led_by_2_any`
+- [x] Add true 1UP/2UP markets to pricing + prediction stack (do not alias to team-over goals).
+  - Markets:
+    - `h_1up`, `a_1up`, `h_2up`, `a_2up`
+  - Integration points:
+    - `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
+    - `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
+    - `src/modeling/export/export_market_outcomes_fixtures_first.py`
+  - Guardrails:
+    - use incidents-derived settlement logic for these markets
+    - keep fallback behavior explicit in metadata
+- [x] completed - Train dedicated GBMs for true 1UP/2UP markets (replace fallback-only serving).
+  - Training source-of-truth targets:
+    - `fixture_incident_lead_states.home_led_by_1_any`
+    - `fixture_incident_lead_states.away_led_by_1_any`
+    - `fixture_incident_lead_states.home_led_by_2_any`
+    - `fixture_incident_lead_states.away_led_by_2_any`
+  - Training integration:
+    - extend `src/modeling/layer2_markets/market_outcome_calibrator.py` with targets
+    - emit artifacts: `gbm_h_1up.pkl`, `gbm_a_1up.pkl`, `gbm_h_2up.pkl`, `gbm_a_2up.pkl`
+    - include these markets in `metrics_walkforward.json`
+  - Serving expectation:
+    - `predict_market_outcomes_fixtures_first.py` should use trained artifacts first, fallback only on artifact/predict failure.
+  - DoD:
+    - fallback rate for `h_1up/a_1up/h_2up/a_2up` materially reduced from current baseline
+    - walk-forward quality for new markets is non-negative vs fallback baseline
+    - no leakage/timing violations in audit checks
+  - Latest production-scale evidence (`2026-02-27`):
+    - 365-day FT prediction backfill executed by league batches (about `7039` fixtures).
+    - scoring run: `python src/modeling/evaluation/score_market_outcomes_fixtures_first.py --since-days 365 --limit 500000`
+    - scored rows: `174913` (`280` skipped for missing settlement inputs).
+    - 1UP/2UP fallback rows over last 365 days: `20` (materially near-zero).
+- [x] Isotonic calibration test for 1UP/2UP markets (decision: reject).
+  - Result: calibration worsened Brier on all four markets (keep raw probabilities).
+  - Artifact: `artifacts/reports/market_reconciliation/market_1up2up_isotonic_comparison.json`
+- [x] Run champion-challenger on new markets and promote only on gate pass.
+  - Gates:
+    - non-negative global quality vs incumbent on new market subset
+    - calibration/sample-size gate satisfied
+    - no leakage/timing violations
+  - Result (`2026-02-27`): `PROMOTE` for 1UP/2UP GBMs vs fallback Markov baseline on same 365-day scored fixtures.
+  - Artifact:
+    - `artifacts/reports/market_reconciliation/market_1up2up_champion_challenger_2026_02_27.json`
+    - `artifacts/reports/market_reconciliation/market_1up2up_champion_challenger_2026_02_27.md`
+  - Readiness snapshot:
+    - `artifacts/reports/market_reconciliation/market_deployment_readiness_2026_02_27.json`
+    - `artifacts/reports/market_reconciliation/market_deployment_readiness_2026_02_27.md`
+  - Targeted cleanup update (`2026-02-27`):
+    - lead-state gap resolved (`skipped_anytime_missing_lead_state: 8 -> 0`) via targeted lead-state rebuild.
+    - remaining settlement gap is corners-only (`c85`: `272` rows missing `h_corners/a_corners`).
+    - fixture target lists:
+      - `artifacts/reports/market_reconciliation/fixtures_missing_corners_for_c85_2026_02_27.csv`
+      - `artifacts/reports/market_reconciliation/fixtures_missing_incident_lead_state_2026_02_27.csv`
+  - Tooling hardening completed for deterministic recovery:
+    - `src/ingest/ingest_sofascore_stats.py` now supports `--fixture-ids-file` and includes missing corners rows in default selection.
+    - `src/ingest/ingest_sofascore_incidents.py` now supports `--fixture-ids-file`.
+    - `src/modeling/evaluation/build_incident_lead_state_features.py` now supports `--fixture-ids-file` and can produce zero-goal rows when incidents are absent.
 
 ### 3) Validation Loop After Each Backfill Batch
 - [x] Add automation wrapper for validation loop with lock/stale-lock/logging.

@@ -1,0 +1,14 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\tick_due_fixtures_v1_20260227T020738Z.log
+DRY RUN: skipping fixture_job_state DDL and DB mutations
+DRY RUN: settle DB selection and updates skipped
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scripts\reconcile_stale_ft_matches.py --fixture-ids <fixture-ids> --dry-run
+DRY RUN WRITE: C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts>\match_ids_ECL.json
+COMMAND: node C:\Developer\soccer\footy-model\src\ingest\scrapers\premium_enricher_v4.js ECL --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\<run-ts> --out-root C:\Developer\soccer\footy-model\data\v1\premium
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league ECL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league ECL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league ECL
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league ECL --days 3 --enable-rule-layer --rule-overlap-mode override
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league ECL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league ECL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league ECL --days 3
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 1

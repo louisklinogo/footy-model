@@ -1,0 +1,23 @@
+{
+  "min_edge_watch": 0.02,
+  "min_edge_bet_small": 0.035,
+  "min_edge_bet": 0.06,
+  "kelly_scale": 0.25,
+  "max_stake_fraction": 0.03,
+  "max_small_stake_fraction": 0.01,
+  "calibration_min_samples": 80,
+  "calibration_poor_brier": 0.22,
+  "calibration_very_poor_brier": 0.24,
+  "penalties": {
+    "missing_odds": 35.0,
+    "fallback_used": 18.0,
+    "feature_missing_unit": 2.5,
+    "stale_odds_6h": 6.0,
+    "stale_odds_24h": 12.0,
+    "low_sample_lt8": 10.0,
+    "low_sample_lt5": 18.0,
+    "calibration_low_sample": 8.0,
+    "calibration_poor": 10.0,
+    "calibration_very_poor": 16.0
+  }
+}

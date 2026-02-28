@@ -65,6 +65,17 @@ def test_smoke_minipipeline_snapshot_predict_export(db_case):
     )
     assert predict.returncode == 0, predict.stderr or predict.stdout
 
+    risk = run_script(
+        [
+            "src/modeling/evaluation/assess_prediction_risk.py",
+            "--league",
+            db_case.league_code,
+            "--days",
+            "7",
+        ]
+    )
+    assert risk.returncode == 0, risk.stderr or risk.stdout
+
     out_path = Path("data/v1/daily") / f"predictions_market_outcomes_fixtures_first_{db_case.suffix}.csv"
     db_case.created_files.append(Path(__file__).resolve().parents[1] / out_path)
 
@@ -86,5 +97,13 @@ def test_smoke_minipipeline_snapshot_predict_export(db_case):
 
     with absolute_out.open("r", encoding="utf-8", newline="") as f:
         rows = list(csv.DictReader(f))
+
+    assert rows
+    first = rows[0]
+    assert "risk_market_code" in first
+    assert "risk_action" in first
+    assert "risk_score" in first
+    assert "risk_edge_adjusted" in first
+    assert "risk_stake_fraction" in first
 
     assert any(row.get("flashscore_id") == upcoming_flashscore_id for row in rows)

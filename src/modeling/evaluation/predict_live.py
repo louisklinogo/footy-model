@@ -33,14 +33,26 @@ def get_upcoming_fixture_ids(days_ahead: int = 1) -> list[int]:
     return [r[0] for r in rows]
 
 def get_latest_bookie_odds(fixture_ids: list[int]) -> pd.DataFrame:
-    """Fetch the most recent odds snapshots for the given fixtures."""
+    """Fetch the most recent pre-match 1X2 odds for the given fixtures."""
     conn = connect_db()
     query = """
-        SELECT DISTINCT ON (fixture_id)
-            fixture_id, one_x_two_json, snapshot_time_utc
-        FROM fixture_odds_snapshots
-        WHERE fixture_id = ANY(%s)
-        ORDER BY fixture_id, snapshot_time_utc DESC
+        SELECT DISTINCT ON (fom.fixture_id)
+            fom.fixture_id,
+            (fom.odds_json -> 'prices_latest') AS one_x_two_json,
+            fom.snapshot_time_utc
+        FROM fixture_odds_markets fom
+        JOIN fixtures f
+          ON f.fixture_id = fom.fixture_id
+        WHERE fom.fixture_id = ANY(%s)
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = '1x2'
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND f.match_datetime_utc IS NOT NULL
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY
+            fom.fixture_id,
+            (fom.snapshot_type = 'latest_pre_match') DESC,
+            fom.snapshot_time_utc DESC
     """
     df = pd.read_sql_query(query, conn, params=(fixture_ids,))
     conn.close()
@@ -116,9 +128,8 @@ def predict_live():
         if not odds_snapshot:
             continue
             
-        # odds_snapshot is usually a dict like {"1": 2.1, "X": 3.4, "2": 3.1}
-        # Mapping: 1 -> home, X -> draw, 2 -> away
-        mapping = {"1": "home", "X": "draw", "2": "away"}
+        # prices_latest map: {"home": 2.1, "draw": 3.4, "away": 3.1}
+        mapping = {"home": "home", "draw": "draw", "away": "away"}
         
         for bookie_key, model_key in mapping.items():
             if bookie_key in odds_snapshot:

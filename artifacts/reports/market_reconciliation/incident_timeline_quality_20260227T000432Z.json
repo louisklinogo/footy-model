@@ -1,0 +1,173 @@
+{
+  "generated_at": "2026-02-27T00:04:32.209128+00:00",
+  "scope": {
+    "league": null,
+    "status": "ft",
+    "limit": 500
+  },
+  "summary": {
+    "fixtures": 114,
+    "fixtures_with_goals": 109,
+    "fixtures_home_led_by_1_any": 72,
+    "fixtures_away_led_by_1_any": 52,
+    "fixtures_home_led_by_2_any": 39,
+    "fixtures_away_led_by_2_any": 22,
+    "avg_total_goal_events": 2.991228070175439,
+    "scoreline_check": {
+      "fixtures_with_ft_result": 114,
+      "scoreline_match_count": 114,
+      "scoreline_mismatch_count": 0,
+      "scoreline_match_rate": 1.0
+    },
+    "league_fixture_counts": [
+      {
+        "league_code": "E1",
+        "fixtures": 12
+      },
+      {
+        "league_code": "EC",
+        "fixtures": 11
+      },
+      {
+        "league_code": "CL",
+        "fixtures": 8
+      },
+      {
+        "league_code": "BR1",
+        "fixtures": 5
+      },
+      {
+        "league_code": "E0",
+        "fixtures": 5
+      },
+      {
+        "league_code": "F1",
+        "fixtures": 5
+      },
+      {
+        "league_code": "SP2",
+        "fixtures": 5
+      },
+      {
+        "league_code": "ECL",
+        "fixtures": 4
+      },
+      {
+        "league_code": "EL",
+        "fixtures": 4
+      },
+      {
+        "league_code": "I1",
+        "fixtures": 4
+      },
+      {
+        "league_code": "SP1",
+        "fixtures": 4
+      },
+      {
+        "league_code": "B1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "D1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "DK1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "E2",
+        "fixtures": 3
+      },
+      {
+        "league_code": "E3",
+        "fixtures": 3
+      },
+      {
+        "league_code": "G1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "P1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "RO1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "SC0",
+        "fixtures": 3
+      },
+      {
+        "league_code": "SC3",
+        "fixtures": 3
+      },
+      {
+        "league_code": "T1",
+        "fixtures": 3
+      },
+      {
+        "league_code": "CH1",
+        "fixtures": 2
+      },
+      {
+        "league_code": "I2",
+        "fixtures": 2
+      },
+      {
+        "league_code": "N1",
+        "fixtures": 2
+      },
+      {
+        "league_code": "PL1",
+        "fixtures": 2
+      },
+      {
+        "league_code": "SC1",
+        "fixtures": 2
+      },
+      {
+        "league_code": "AT1",
+        "fixtures": 1
+      },
+      {
+        "league_code": "F2",
+        "fixtures": 1
+      },
+      {
+        "league_code": "IE1",
+        "fixtures": 1
+      },
+      {
+        "league_code": "MX1",
+        "fixtures": 1
+      }
+    ]
+  },
+  "quality": {
+    "goal_quality": {
+      "goal_rows": 341,
+      "goal_minute_null": 0,
+      "goal_is_home_null": 0,
+      "goal_score_null": 0,
+      "goal_player_name_null": 0
+    },
+    "progression_quality": {
+      "goal_rows": 341,
+      "valid_progress_rows": 341,
+      "suspicious_progress_rows": 0
+    },
+    "minute_outlier_incidents": [
+      {
+        "incident_type": "card",
+        "count": 23
+      },
+      {
+        "incident_type": "period",
+        "count": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260227T161604Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-02-27T16:16:04.131304+00:00 dry_run=False league=None limit=200
+Fixture 22023 (Sofa=14065041, kickoff=2026-02-27 13:00:00+00:00)
+  Not terminal yet (status.type=inprogress).
+
+Summary:
+  processed: 1
+  settled: 0
+  cancelled_or_postponed: 0
+  unfinished: 1
+  missing_scores: 0
+  fetch_errors: 0

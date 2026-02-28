@@ -250,6 +250,18 @@ def main() -> int:
         if not run_step(f"daily.predict_markets.{league}", predict_cmd, args.dry_run):
             raise RuntimeError(f"Pipeline aborted at market prediction step for league={league}")
 
+        # Risk assessment layer (go/no-go and stake sizing)
+        risk_cmd = [
+            sys.executable,
+            str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"),
+            "--league",
+            league,
+            "--days",
+            str(args.days),
+        ]
+        if not run_step(f"daily.assess_prediction_risk.{league}", risk_cmd, args.dry_run):
+            raise RuntimeError(f"Pipeline aborted at risk assessment step for league={league}")
+
     for league in leagues:
         export_cmd = [
             sys.executable,

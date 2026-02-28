@@ -99,7 +99,9 @@ No split-brain between daily and tick for prediction path.
 
 ### 6.1 League Governance
 Layer 2 global remains policy-gated by league.  
-Rules run only where Layer 2 is enabled and confidence gates pass.
+Rules run under two scopes:
+1. `enabled_league` scope when Layer 2 is enabled and confidence gates pass.
+2. `disabled_league_safety` scope (conservative, odds-confirmed) when Layer 2 is disabled but safety mode is enabled in rule config.
 
 ### 6.2 Promotion Gates
 Any promotion must pass:

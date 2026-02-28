@@ -3,10 +3,11 @@ import argparse
 import sys
 import logging
 from datetime import datetime, timezone
-import psycopg2
 from psycopg2.extras import execute_values
 from sofascore_wrapper.api import SofascoreAPI
 from sofascore_wrapper.league import League
+
+from src.db.db_utils import connect_db
 
 # Configure logging
 logging.basicConfig(
@@ -15,7 +16,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DB_URL = "postgresql://neondb_owner:npg_csxeyQ6fNXF7@ep-young-tree-ab8emfpl-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
 
 LEAGUES_TO_INGEST = {
     "CL": 7,
@@ -199,7 +199,7 @@ def lookup_team_id(cur, sofa_id, team_name, league_code, dry_run=False):
 async def main():
     args = parse_args()
     api = SofascoreAPI()
-    conn = psycopg2.connect(DB_URL)
+    conn = connect_db()
     
     try:
         for league_code, unique_id in LEAGUES_TO_INGEST.items():

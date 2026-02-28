@@ -1,7 +1,6 @@
-import psycopg2
 import json
 
-DB_URL = "postgresql://neondb_owner:npg_csxeyQ6fNXF7@ep-young-tree-ab8emfpl-pooler.eu-west-2.aws.neon.tech/neondb?sslmode=require"
+from src.db.db_utils import connect_db
 
 NAME_MAP = {
     "Expected goals": "xg",
@@ -49,7 +48,7 @@ def parse_sofa_total(val):
     return 0
 
 def process_batch():
-    conn = psycopg2.connect(DB_URL)
+    conn = connect_db()
     
     # Grab all fixtures with valid JSON but missing the new p1 columns
     with conn.cursor() as cur:
