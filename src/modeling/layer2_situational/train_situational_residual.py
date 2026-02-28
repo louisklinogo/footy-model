@@ -99,6 +99,20 @@ ODDS_FEATURE_COLS = [
 ]
 
 
+def _parse_formation(form_str: object) -> tuple[int, int, int]:
+    """Parse '4-3-3' style strings into (defenders, midfielders, forwards)."""
+    if not isinstance(form_str, str) or "-" not in form_str:
+        return (4, 4, 2)
+    parts = [int(p) for p in form_str.split("-") if p.isdigit()]
+    if len(parts) == 3:
+        return (parts[0], parts[1], parts[2])
+    if len(parts) == 4:  # e.g. 4-2-3-1
+        return (parts[0], parts[1] + parts[2], parts[3])
+    if len(parts) >= 5:
+        return (parts[0], sum(parts[1:-1]), parts[-1])
+    return (4, 4, 2)
+
+
 def load_feature_data() -> pd.DataFrame:
     conn = connect_db()
     print("Loading base fixtures...")
@@ -115,39 +129,66 @@ def load_feature_data() -> pd.DataFrame:
     )
     print(f"  {len(base)} base fixtures")
 
-    print("Loading premium snapshots...")
+    print("Loading premium snapshots (core + tactical)...")
     snap = pd.read_sql(
         """
         SELECT fixture_id, is_home,
-               rolling_xg, rolling_xg_against, rolling_corners, rolling_rest_days
+               rolling_xg, rolling_xg_against, rolling_corners, rolling_rest_days,
+               rolling_possession, rolling_possession_against,
+               rolling_xg_p1, rolling_xg_p1_against,
+               rolling_xg_h2_delta, rolling_xg_h2_delta_against,
+               rolling_sot_p1, rolling_sot_p1_against,
+               rolling_sot_h2_delta, rolling_sot_h2_delta_against,
+               rolling_tackles_pct, rolling_tackles_pct_against,
+               rolling_errors_lead_to_shot, rolling_errors_lead_to_shot_against
         FROM team_premium_snapshots
     """,
         conn,
     )
-    home_snap = (
-        snap[snap.is_home]
-        .rename(
-            columns={
-                "rolling_xg": "home_rolling_xg",
-                "rolling_xg_against": "home_rolling_xg_against",
-                "rolling_corners": "home_rolling_corners",
-                "rolling_rest_days": "home_rest_days",
-            }
-        )
-        .drop(columns=["is_home"])
-    )
-    away_snap = (
-        snap[~snap.is_home]
-        .rename(
-            columns={
-                "rolling_xg": "away_rolling_xg",
-                "rolling_xg_against": "away_rolling_xg_against",
-                "rolling_corners": "away_rolling_corners",
-                "rolling_rest_days": "away_rest_days",
-            }
-        )
-        .drop(columns=["is_home"])
-    )
+
+    _HOME_RENAME = {
+        "rolling_xg": "home_rolling_xg",
+        "rolling_xg_against": "home_rolling_xg_against",
+        "rolling_corners": "home_rolling_corners",
+        "rolling_rest_days": "home_rest_days",
+        "rolling_possession": "home_rolling_possession",
+        "rolling_possession_against": "home_rolling_possession_against",
+        "rolling_xg_p1": "home_rolling_xg_p1",
+        "rolling_xg_p1_against": "home_rolling_xg_p1_against",
+        "rolling_xg_h2_delta": "home_rolling_xg_h2_delta",
+        "rolling_xg_h2_delta_against": "home_rolling_xg_h2_delta_against",
+        "rolling_sot_p1": "home_rolling_sot_p1",
+        "rolling_sot_p1_against": "home_rolling_sot_p1_against",
+        "rolling_sot_h2_delta": "home_rolling_sot_h2_delta",
+        "rolling_sot_h2_delta_against": "home_rolling_sot_h2_delta_against",
+        "rolling_tackles_pct": "home_rolling_tackles_pct",
+        "rolling_tackles_pct_against": "home_rolling_tackles_pct_against",
+        "rolling_errors_lead_to_shot": "home_rolling_errors_lead_to_shot",
+        "rolling_errors_lead_to_shot_against": "home_rolling_errors_lead_to_shot_against",
+    }
+    _AWAY_RENAME = {
+        "rolling_xg": "away_rolling_xg",
+        "rolling_xg_against": "away_rolling_xg_against",
+        "rolling_corners": "away_rolling_corners",
+        "rolling_rest_days": "away_rest_days",
+        "rolling_possession": "away_rolling_possession",
+        "rolling_possession_against": "away_rolling_possession_against",
+        "rolling_xg_p1": "away_rolling_xg_p1",
+        "rolling_xg_p1_against": "away_rolling_xg_p1_against",
+        "rolling_xg_h2_delta": "away_rolling_xg_h2_delta",
+        "rolling_xg_h2_delta_against": "away_rolling_xg_h2_delta_against",
+        "rolling_sot_p1": "away_rolling_sot_p1",
+        "rolling_sot_p1_against": "away_rolling_sot_p1_against",
+        "rolling_sot_h2_delta": "away_rolling_sot_h2_delta",
+        "rolling_sot_h2_delta_against": "away_rolling_sot_h2_delta_against",
+        "rolling_tackles_pct": "away_rolling_tackles_pct",
+        "rolling_tackles_pct_against": "away_rolling_tackles_pct_against",
+        "rolling_errors_lead_to_shot": "away_rolling_errors_lead_to_shot",
+        "rolling_errors_lead_to_shot_against": "away_rolling_errors_lead_to_shot_against",
+    }
+
+    home_snap = snap[snap.is_home].rename(columns=_HOME_RENAME).drop(columns=["is_home"])
+    away_snap = snap[~snap.is_home].rename(columns=_AWAY_RENAME).drop(columns=["is_home"])
 
     print("Computing point-in-time standings...")
     base = situational_utils.add_season_key(base)
@@ -156,6 +197,16 @@ def load_feature_data() -> pd.DataFrame:
 
     print("Loading rivalries...")
     rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+
+    print("Loading fixture formations...")
+    formations_df = pd.read_sql(
+        """
+        SELECT fixture_id, home_formation, away_formation
+        FROM fixture_formations
+        """,
+        conn,
+    )
+    print(f"  {len(formations_df)} formation records")
 
     print("Loading Poisson predictions...")
     preds = pd.read_sql(
@@ -270,6 +321,38 @@ def load_feature_data() -> pd.DataFrame:
         how="left",
     )
     df["injury_impact"] = df["home_xg_lost"] - df["away_xg_lost"]
+
+    # --- Merge formations ---
+    df = df.merge(formations_df, on="fixture_id", how="left")
+
+    # Parse formation strings into numeric components
+    for prefix in ("home", "away"):
+        defenders, midfielders, forwards = zip(
+            *df[f"{prefix}_formation"].apply(_parse_formation)
+        )
+        df[f"{prefix}_defenders"] = defenders
+        df[f"{prefix}_midfielders"] = midfielders
+        df[f"{prefix}_forwards"] = forwards
+        df[f"{prefix}_style_score"] = (
+            df[f"{prefix}_defenders"] * 1
+            + df[f"{prefix}_midfielders"] * 2
+            + df[f"{prefix}_forwards"] * 3
+        )
+    df["style_delta"] = df["home_style_score"] - df["away_style_score"]
+
+    # --- Derived delta features (home minus away for head-to-head comparison) ---
+    df["possession_delta"] = (
+        df["home_rolling_possession"].fillna(0.5)
+        - df["away_rolling_possession"].fillna(0.5)
+    )
+    df["xg_p1_delta"] = (
+        df["home_rolling_xg_p1"].fillna(0)
+        - df["away_rolling_xg_p1"].fillna(0)
+    )
+    df["h2_surge_delta"] = (
+        df["home_rolling_xg_h2_delta"].fillna(0)
+        - df["away_rolling_xg_h2_delta"].fillna(0)
+    )
 
     print("Computing last 5 games actual goals...")
     conn_l5 = connect_db()
