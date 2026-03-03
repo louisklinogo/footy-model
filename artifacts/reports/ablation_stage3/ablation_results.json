@@ -1,0 +1,170 @@
+{
+  "results": [
+    {
+      "pass": "additive",
+      "stage": "baseline",
+      "n_features": 0,
+      "home_rmse": 1.2031494665083315,
+      "away_rmse": 1.0803325532289318,
+      "home_lift": 0.0,
+      "away_lift": 0.0
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full",
+      "n_features": 22,
+      "home_rmse": 1.203363166931189,
+      "away_rmse": 1.0789220114052784,
+      "home_lift": -0.00017761751869257907,
+      "away_lift": 0.0013056552072207202
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical",
+      "n_features": 25,
+      "home_rmse": 1.1999725940300705,
+      "away_rmse": 1.0840076546711144,
+      "home_lift": 0.0026404636885894676,
+      "away_lift": -0.003401824217180412
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2",
+      "n_features": 35,
+      "home_rmse": 1.1993347785931832,
+      "away_rmse": 1.0855433601362154,
+      "home_lift": 0.003170585219323595,
+      "away_lift": -0.004823336010480635
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2+formations",
+      "n_features": 42,
+      "home_rmse": 1.1985621523342989,
+      "away_rmse": 1.0877106163256032,
+      "home_lift": 0.003812755024814633,
+      "away_lift": -0.00682943698643491
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2+formations+defensive",
+      "n_features": 46,
+      "home_rmse": 1.1964638487230244,
+      "away_rmse": 1.0861362622473831,
+      "home_lift": 0.00555676411901637,
+      "away_lift": -0.005372150455991517
+    },
+    {
+      "pass": "additive",
+      "stage": "all_candidates (with style)",
+      "n_features": 81,
+      "home_rmse": 1.197638029624201,
+      "away_rmse": 1.0865999936654664,
+      "home_lift": 0.004580841397972981,
+      "away_lift": -0.005801399224527925
+    },
+    {
+      "pass": "drop_one",
+      "stage": "all_candidates",
+      "n_features": 81,
+      "home_rmse": 1.197638029624201,
+      "away_rmse": 1.0865999936654664,
+      "home_lift": 0.004580841397972981,
+      "away_lift": -0.005801399224527925,
+      "verdict": "anchor"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_tactical",
+      "n_features": 78,
+      "home_rmse": 1.2009756063169879,
+      "away_rmse": 1.0804793749192974,
+      "home_lift": 0.0018068080914771672,
+      "away_lift": -0.00013590416203481133,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_h1h2",
+      "n_features": 71,
+      "home_rmse": 1.1977498630715724,
+      "away_rmse": 1.0829908691639176,
+      "home_lift": 0.004487890812460223,
+      "away_lift": -0.0024606459622460875,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_formations",
+      "n_features": 74,
+      "home_rmse": 1.1978245273531014,
+      "away_rmse": 1.0852853633696637,
+      "home_lift": 0.004425833450837724,
+      "away_lift": -0.004584523650545183,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_defensive",
+      "n_features": 77,
+      "home_rmse": 1.1948584010625034,
+      "away_rmse": 1.0873958894064075,
+      "home_lift": 0.006891135039015308,
+      "away_lift": -0.0065381128767846115,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_style_clusters",
+      "n_features": 46,
+      "home_rmse": 1.1964638487230244,
+      "away_rmse": 1.0861362622473831,
+      "home_lift": 0.00555676411901637,
+      "away_lift": -0.005372150455991517,
+      "verdict": "REDUNDANT"
+    },
+    {
+      "pass": "h1h2_coverage",
+      "stage": "base_premium_only",
+      "n": 1425,
+      "home_rmse": 1.203363166931189,
+      "away_rmse": 1.0789220114052784
+    },
+    {
+      "pass": "h1h2_coverage",
+      "stage": "base+h1h2_premium_only",
+      "n": 1425,
+      "home_rmse": 1.2006509016589868,
+      "away_rmse": 1.080827388278999,
+      "verdict": "SIGNAL"
+    }
+  ],
+  "promotions": {
+    "tactical": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "overall": "REJECT"
+    },
+    "h1h2": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "coverage_sub_test": "SIGNAL",
+      "overall": "REJECT"
+    },
+    "formations": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "overall": "REJECT"
+    },
+    "defensive": {
+      "additive": "PASS",
+      "drop_one": "VALUABLE",
+      "overall": "PROMOTE"
+    },
+    "style_clusters": {
+      "additive": "FAIL",
+      "drop_one": "REDUNDANT",
+      "overall": "REJECT"
+    }
+  }
+}

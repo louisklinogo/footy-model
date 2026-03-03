@@ -688,16 +688,16 @@ Post-repair controlled comparison (current reference):
 
 ### 8) Modeling Enhancements
 - [ ] Investigate strict Dixon-Coles normalization in `src/pricing/poisson.py` (marginal mean preservation).
-- [ ] Add H1 vs H2 dynamics features (fatigue, xG momentum, halftime response).
-- [ ] Explore tactical archetype / style-on-style features (`style_delta`) under strict point-in-time controls.
+- [x] Add H1 vs H2 dynamics features (fatigue, xG momentum, halftime response).
+- [x] Explore tactical archetype / style-on-style features (`style_delta`) under strict point-in-time controls.
 
 ### 9) Data Scope Expansion
 - [ ] Expand `team_rivalries` coverage where useful (current seed: `src/ingest/seed_rivalries.py`).
 - [ ] Include domestic cups where they improve congestion/fatigue signals.
 - [ ] Add `shots_inside_box` into engineered training features only if lift is proven.
-- [ ] Tactical formation tracking:
-  - [ ] create normalized `fixture_formations` table
-  - [ ] preserve formation keys in Sofascore ingestion path
+- [x] Tactical formation tracking:
+  - [x] create normalized `fixture_formations` table
+  - [x] preserve formation keys in Sofascore ingestion path
 
 ## Evidence Notes (Feb 2026)
 

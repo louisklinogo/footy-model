@@ -1,0 +1,39 @@
+{
+  "generated_at_utc": "2026-03-03T18:46:38.679513+00:00",
+  "model_name": "market_outcome_gbm",
+  "model_version": "fixtures_first_prematch_v1",
+  "since_days": 365,
+  "slip_size": 3,
+  "policy_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\market_models\\accumulator_policy.json",
+  "gating_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\market_models\\market_gating.json",
+  "raw_rows": 71530,
+  "candidate_legs": 0,
+  "reject_reasons": {
+    "above_max_leg_risk_score": 458,
+    "below_min_leg_edge_adjusted": 987,
+    "below_min_leg_p_conservative": 5507,
+    "missing_odds": 64578,
+    "missing_p_conservative_fallback": 6725,
+    "missing_risk_score_fallback": 6725
+  },
+  "metrics": {
+    "slip_count": 0,
+    "ticket_hit_rate": 0.0,
+    "roi": 0.0,
+    "max_drawdown": 0.0,
+    "total_stake": 0,
+    "total_pnl": 0,
+    "ending_bankroll": 100.0,
+    "starting_bankroll": 100.0
+  },
+  "slip_count": 0,
+  "ticket_hit_rate": 0.0,
+  "roi": 0.0,
+  "max_drawdown": 0.0,
+  "outputs": {
+    "csv": "artifacts\\reports\\backtests\\accumulator_backtest_20260303_184638.csv",
+    "json": "artifacts\\reports\\backtests\\accumulator_backtest_20260303_184638.json",
+    "md": "artifacts\\reports\\backtests\\accumulator_backtest_20260303_184638.md",
+    "slips_json": "artifacts\\reports\\backtests\\accumulator_backtest_20260303_184638_slips.json"
+  }
+}

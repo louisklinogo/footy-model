@@ -1,102 +1,155 @@
-[
-  {
-    "stage": "baseline",
-    "features": [],
-    "home_rmse": 1.1959391708741332,
-    "away_rmse": 1.08510560945412,
-    "home_lift": 0.0,
-    "away_lift": 0.0
-  },
-  {
-    "stage": "standings_gaps",
-    "features": [
-      "position_gap",
-      "points_gap",
-      "home_lame_duck",
-      "away_lame_duck",
-      "home_playing_top4",
-      "away_playing_top4",
-      "derby_position_gap"
-    ],
-    "home_rmse": 1.1961038760749905,
-    "away_rmse": 1.0859494254766475,
-    "home_lift": -0.00013772038316709037,
-    "away_lift": -0.0007776349280435224
-  },
-  {
-    "stage": "standings_gaps+schedule",
-    "features": [
-      "position_gap",
-      "points_gap",
-      "home_lame_duck",
-      "away_lame_duck",
-      "home_playing_top4",
-      "away_playing_top4",
-      "derby_position_gap",
-      "rest_delta",
-      "congestion_flag",
-      "home_upcoming_tier",
-      "away_upcoming_tier"
-    ],
-    "home_rmse": 1.1959219815102025,
-    "away_rmse": 1.0844737551078556,
-    "home_lift": 1.4373108891590126e-05,
-    "away_lift": 0.0005822975577301765
-  },
-  {
-    "stage": "standings_gaps+schedule+player",
-    "features": [
-      "position_gap",
-      "points_gap",
-      "home_lame_duck",
-      "away_lame_duck",
-      "home_playing_top4",
-      "away_playing_top4",
-      "derby_position_gap",
-      "rest_delta",
-      "congestion_flag",
-      "home_upcoming_tier",
-      "away_upcoming_tier",
-      "home_xg_lost",
-      "away_xg_lost",
-      "home_key_absent",
-      "away_key_absent",
-      "injury_impact"
-    ],
-    "home_rmse": 1.202001510059226,
-    "away_rmse": 1.0893362936624582,
-    "home_lift": -0.005069103289477375,
-    "away_lift": -0.003898868618388655
-  },
-  {
-    "stage": "standings_gaps+schedule+player+odds",
-    "features": [
-      "position_gap",
-      "points_gap",
-      "home_lame_duck",
-      "away_lame_duck",
-      "home_playing_top4",
-      "away_playing_top4",
-      "derby_position_gap",
-      "rest_delta",
-      "congestion_flag",
-      "home_upcoming_tier",
-      "away_upcoming_tier",
-      "home_xg_lost",
-      "away_xg_lost",
-      "home_key_absent",
-      "away_key_absent",
-      "injury_impact",
-      "odds_model_gap_home",
-      "odds_model_gap_draw",
-      "odds_model_gap_away",
-      "odds_opening_gap_home",
-      "odds_opening_gap_draw",
-      "odds_opening_gap_away"
-    ],
-    "home_rmse": 1.1978499725055847,
-    "away_rmse": 1.0794372120969415,
-    "home_lift": -0.0015977414888542207,
-    "away_lift": 0.005223820896133861
+{
+  "results": [
+    {
+      "pass": "additive",
+      "stage": "baseline",
+      "n_features": 0,
+      "home_rmse": 1.2031494665083315,
+      "away_rmse": 1.0803325532289318,
+      "home_lift": 0.0,
+      "away_lift": 0.0
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full",
+      "n_features": 22,
+      "home_rmse": 1.203363166931189,
+      "away_rmse": 1.0789220114052784,
+      "home_lift": -0.00017761751869257907,
+      "away_lift": 0.0013056552072207202
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical",
+      "n_features": 25,
+      "home_rmse": 1.1999725940300705,
+      "away_rmse": 1.0840076546711144,
+      "home_lift": 0.0026404636885894676,
+      "away_lift": -0.003401824217180412
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2",
+      "n_features": 35,
+      "home_rmse": 1.1993347785931832,
+      "away_rmse": 1.0855433601362157,
+      "home_lift": 0.003170585219323595,
+      "away_lift": -0.00482333601048084
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2+formations",
+      "n_features": 42,
+      "home_rmse": 1.1985621523342989,
+      "away_rmse": 1.0877106163256032,
+      "home_lift": 0.003812755024814633,
+      "away_lift": -0.00682943698643491
+    },
+    {
+      "pass": "additive",
+      "stage": "existing_full+tactical+h1h2+formations+defensive",
+      "n_features": 46,
+      "home_rmse": 1.1964638487230241,
+      "away_rmse": 1.0861362622473831,
+      "home_lift": 0.005556764119016555,
+      "away_lift": -0.005372150455991517
+    },
+    {
+      "pass": "additive",
+      "stage": "all_candidates",
+      "n_features": 46,
+      "home_rmse": 1.1964638487230241,
+      "away_rmse": 1.0861362622473831,
+      "home_lift": 0.005556764119016555,
+      "away_lift": -0.005372150455991517
+    },
+    {
+      "pass": "drop_one",
+      "stage": "all_candidates",
+      "n_features": 46,
+      "home_rmse": 1.1964638487230241,
+      "away_rmse": 1.0861362622473831,
+      "home_lift": 0.005556764119016555,
+      "away_lift": -0.005372150455991517,
+      "verdict": "anchor"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_tactical",
+      "n_features": 43,
+      "home_rmse": 1.1996981211553532,
+      "away_rmse": 1.0822343284638916,
+      "home_lift": 0.0028685923478771773,
+      "away_lift": -0.0017603609455955273,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_h1h2",
+      "n_features": 36,
+      "home_rmse": 1.1993885188285027,
+      "away_rmse": 1.0832396356911154,
+      "home_lift": 0.0031259189190712034,
+      "away_lift": -0.0026909144350919906,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_formations",
+      "n_features": 39,
+      "home_rmse": 1.1998552986264481,
+      "away_rmse": 1.0861004842498043,
+      "home_lift": 0.002737953989576575,
+      "away_lift": -0.005339032878008814,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "drop_one",
+      "stage": "drop_defensive",
+      "n_features": 42,
+      "home_rmse": 1.1985621523342989,
+      "away_rmse": 1.0877106163256032,
+      "home_lift": 0.003812755024814633,
+      "away_lift": -0.00682943698643491,
+      "verdict": "VALUABLE"
+    },
+    {
+      "pass": "h1h2_coverage",
+      "stage": "base_premium_only",
+      "n": 1425,
+      "home_rmse": 1.203363166931189,
+      "away_rmse": 1.0789220114052784
+    },
+    {
+      "pass": "h1h2_coverage",
+      "stage": "base+h1h2_premium_only",
+      "n": 1425,
+      "home_rmse": 1.2006509016589868,
+      "away_rmse": 1.0808273882789987,
+      "verdict": "SIGNAL"
+    }
+  ],
+  "promotions": {
+    "tactical": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "overall": "REJECT"
+    },
+    "h1h2": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "coverage_sub_test": "SIGNAL",
+      "overall": "REJECT"
+    },
+    "formations": {
+      "additive": "FAIL",
+      "drop_one": "VALUABLE",
+      "overall": "REJECT"
+    },
+    "defensive": {
+      "additive": "PASS",
+      "drop_one": "VALUABLE",
+      "overall": "PROMOTE"
+    }
   }
-]
+}

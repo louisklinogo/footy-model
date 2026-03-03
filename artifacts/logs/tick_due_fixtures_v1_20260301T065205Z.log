@@ -1,0 +1,1494 @@
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\tick_due_fixtures_v1_20260301T065205Z.log
+Sofa reconcile targets: 2
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\scripts\reconcile_stale_ft_matches.py --fixture-ids 21029,21030
+Log file: C:\Developer\soccer\footy-model\artifacts\logs\reconcile_stale_ft_matches_20260301T065206Z.log
+============================================================
+Sofa Reconcile: Stale/FT Missing Results
+============================================================
+started_at=2026-03-01T06:52:06.649952+00:00 dry_run=False league=None limit=200
+Fixture 21029 (Sofa=15342032, kickoff=2026-02-28 20:00:00+00:00)
+  Not terminal yet (status.type=inprogress).
+Fixture 21030 (Sofa=15345892, kickoff=2026-02-28 22:00:00+00:00)
+  Not terminal yet (status.type=notstarted).
+
+Summary:
+  processed: 2
+  settled: 0
+  cancelled_or_postponed: 0
+  unfinished: 2
+  missing_scores: 0
+  fetch_errors: 0
+COMMAND: node C:\Developer\soccer\footy-model\src\ingest\scrapers\premium_enricher_v4.js JP1 --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\20260301T065218Z --out-root C:\Developer\soccer\footy-model\data\v1\premium
+Starting Playwright Enrichment (v4) for 2 matches in JP1...
+[32mINFO[39m [33m PlaywrightCrawler:[39m Starting the crawler.
+Success: 8UJ5TGig | Stats: 34 | OU: 22 | AH: 9
+[32mINFO[39m [33m PlaywrightCrawler:Statistics:[39m PlaywrightCrawler request statistics:[90m {"requestAvgFailedDurationMillis":null,"requestAvgFinishedDurationMillis":38335,"requestsFinishedPerMinute":1,"requestsFailedPerMinute":0,"requestTotalDurationMillis":38335,"requestsTotal":1,"crawlerRuntimeMillis":60293,"retryHistogram":[1]}[39m
+[32mINFO[39m [33m PlaywrightCrawler:AutoscaledPool:[39m state[90m {"currentConcurrency":1,"desiredConcurrency":4,"systemStatus":{"isSystemIdle":true,"memInfo":{"isOverloaded":false,"limitRatio":0.2,"actualRatio":0},"eventLoopInfo":{"isOverloaded":false,"limitRatio":0.6,"actualRatio":0},"cpuInfo":{"isOverloaded":false,"limitRatio":0.4,"actualRatio":0},"clientInfo":{"isOverloaded":false,"limitRatio":0.3,"actualRatio":0}}}[39m
+[32mINFO[39m [33m PlaywrightCrawler:[39m All requests from the queue have been processed, the crawler will shut down.
+[32mINFO[39m [33m PlaywrightCrawler:[39m Final request statistics:[90m {"requestsFinished":2,"requestsFailed":0,"retryHistogram":[2],"requestAvgFailedDurationMillis":null,"requestAvgFinishedDurationMillis":55722,"requestsFinishedPerMinute":2,"requestsFailedPerMinute":0,"requestTotalDurationMillis":111444,"requestsTotal":2,"crawlerRuntimeMillis":74900}[39m
+[32mINFO[39m [33m PlaywrightCrawler:[39m Finished! Total 2 requests: 2 succeeded, 0 failed.[90m {"terminal":true}[39m
+Failed trIDRfM5: page.goto: Timeout 60000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.flashscore.com/match/trIDRfM5/", waiting until "networkidle"[22m
+
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league JP1
+{
+  "league_code": "JP1",
+  "premium_root": "data\\v1\\premium",
+  "files": 9,
+  "stats_upserts": 9,
+  "odds_upserts": 9,
+  "results_upserts": 0,
+  "fixture_status_updates": 0,
+  "skipped_missing_fixture": 0,
+  "skipped_bad_json": 0
+}
+COMMAND: node C:\Developer\soccer\footy-model\src\ingest\scrapers\premium_enricher_v4.js CL --ids-root C:\Developer\soccer\footy-model\data\v1\ids\tick\20260301T065218Z --out-root C:\Developer\soccer\footy-model\data\v1\premium
+Starting Playwright Enrichment (v4) for 2 matches in CL...
+[32mINFO[39m [33m PlaywrightCrawler:[39m Starting the crawler.
+[32mINFO[39m [33m PlaywrightCrawler:Statistics:[39m PlaywrightCrawler request statistics:[90m {"requestAvgFailedDurationMillis":null,"requestAvgFinishedDurationMillis":null,"requestsFinishedPerMinute":0,"requestsFailedPerMinute":0,"requestTotalDurationMillis":0,"requestsTotal":0,"crawlerRuntimeMillis":60181,"retryHistogram":[]}[39m
+[32mINFO[39m [33m PlaywrightCrawler:AutoscaledPool:[39m state[90m {"currentConcurrency":2,"desiredConcurrency":4,"systemStatus":{"isSystemIdle":true,"memInfo":{"isOverloaded":false,"limitRatio":0.2,"actualRatio":0},"eventLoopInfo":{"isOverloaded":false,"limitRatio":0.6,"actualRatio":0},"cpuInfo":{"isOverloaded":false,"limitRatio":0.4,"actualRatio":0},"clientInfo":{"isOverloaded":false,"limitRatio":0.3,"actualRatio":0}}}[39m
+Success: tst_cl_f8327240e5 | Stats: 0 | OU: 0 | AH: 0
+Success: tst_cl_b593f75c0b | Stats: 0 | OU: 0 | AH: 0
+[32mINFO[39m [33m PlaywrightCrawler:[39m All requests from the queue have been processed, the crawler will shut down.
+[32mINFO[39m [33m PlaywrightCrawler:[39m Final request statistics:[90m {"requestsFinished":2,"requestsFailed":0,"retryHistogram":[2],"requestAvgFailedDurationMillis":null,"requestAvgFinishedDurationMillis":75980,"requestsFinishedPerMinute":2,"requestsFailedPerMinute":0,"requestTotalDurationMillis":151960,"requestsTotal":2,"crawlerRuntimeMillis":77401}[39m
+[32mINFO[39m [33m PlaywrightCrawler:[39m Finished! Total 2 requests: 2 succeeded, 0 failed.[90m {"terminal":true}[39m
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\ingest\ingest_premium_fixtures_v1.py --league CL
+{
+  "league_code": "CL",
+  "premium_root": "data\\v1\\premium",
+  "files": 2,
+  "stats_upserts": 2,
+  "odds_upserts": 2,
+  "results_upserts": 0,
+  "fixture_status_updates": 0,
+  "skipped_missing_fixture": 0,
+  "skipped_bad_json": 0
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league MX1
+Fetching fixtures for league: MX1
+Fetching premium stats for 323 fixtures...
+Building snapshots for 323 fixtures...
+  Progress: 50/323 fixtures...
+  Progress: 100/323 fixtures...
+  Progress: 200/323 fixtures...
+  Progress: 250/323 fixtures...
+  Progress: 300/323 fixtures...
+Batch upserting 646 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 323,
+  "rows_upserted": 646,
+  "premium_rows_seen": 232
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league MX1
+Loaded 20 features
+Processing 322 fixtures in batches of 500...
+  Batch 1: 322 fixtures
+    Saved 624 predictions
+
+Total predictions saved: 624
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league MX1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 20 records (5 fixtures with adjusted lambdas) for 5 fixtures.
+Rule-layer fired: home=3, away=0, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league MX1 --days 3
+Processed 3 fixtures, upserted 78 market predictions (78 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league MX1 --days 3
+Assessed 78 rows, upserted 78 risk rows: pass=78 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league MX1 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league RU1
+Fetching fixtures for league: RU1
+Fetching premium stats for 240 fixtures...
+Building snapshots for 240 fixtures...
+  Progress: 50/240 fixtures...
+  Progress: 100/240 fixtures...
+  Progress: 150/240 fixtures...
+  Progress: 200/240 fixtures...
+Batch upserting 480 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 240,
+  "rows_upserted": 480,
+  "premium_rows_seen": 240
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league RU1
+Loaded 20 features
+Processing 240 fixtures in batches of 500...
+  Batch 1: 240 fixtures
+    Saved 464 predictions
+
+Total predictions saved: 464
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league RU1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 12 records (3 fixtures with adjusted lambdas) for 3 fixtures.
+Rule-layer fired: home=0, away=0, fixtures=0
+Rule-layer scope events: enabled_league=0, disabled_league_safety=0
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league RU1 --days 3
+Processed 2 fixtures, upserted 52 market predictions (52 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league RU1 --days 3
+Assessed 52 rows, upserted 52 risk rows: pass=52 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league RU1 --days 3
+Saved 2 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league T1
+Fetching fixtures for league: T1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league T1
+Loaded 20 features
+Processing 306 fixtures in batches of 500...
+  Batch 1: 306 fixtures
+    Saved 590 predictions
+
+Total predictions saved: 590
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league T1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 12 records (3 fixtures with adjusted lambdas) for 3 fixtures.
+Rule-layer fired: home=1, away=1, fixtures=2
+Rule-layer scope events: enabled_league=0, disabled_league_safety=2
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league T1 --days 3
+Processed 3 fixtures, upserted 78 market predictions (78 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league T1 --days 3
+Assessed 78 rows, upserted 78 risk rows: pass=78 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league T1 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league N1
+Fetching fixtures for league: N1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 150/306 fixtures...
+  Progress: 200/306 fixtures...
+  Progress: 250/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league N1
+Loaded 20 features
+Processing 306 fixtures in batches of 500...
+  Batch 1: 306 fixtures
+    Saved 594 predictions
+
+Total predictions saved: 594
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league N1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 20 records (5 fixtures with adjusted lambdas) for 5 fixtures.
+Rule-layer fired: home=1, away=1, fixtures=2
+Rule-layer scope events: enabled_league=0, disabled_league_safety=2
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league N1 --days 3
+Processed 5 fixtures, upserted 130 market predictions (130 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league N1 --days 3
+Assessed 130 rows, upserted 130 risk rows: pass=130 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league N1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league PL1
+Fetching fixtures for league: PL1
+Fetching premium stats for 305 fixtures...
+Building snapshots for 305 fixtures...
+  Progress: 50/305 fixtures...
+  Progress: 100/305 fixtures...
+  Progress: 150/305 fixtures...
+  Progress: 200/305 fixtures...
+Batch upserting 610 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 305,
+  "rows_upserted": 610,
+  "premium_rows_seen": 305
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league PL1
+Loaded 20 features
+Processing 305 fixtures in batches of 500...
+  Batch 1: 305 fixtures
+    Saved 590 predictions
+
+Total predictions saved: 590
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league PL1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 16 records (4 fixtures with adjusted lambdas) for 4 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league PL1 --days 3
+Processed 4 fixtures, upserted 104 market predictions (104 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league PL1 --days 3
+Assessed 104 rows, upserted 104 risk rows: pass=104 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league PL1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league I1
+Fetching fixtures for league: I1
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league I1
+Loaded 20 features
+Processing 380 fixtures in batches of 500...
+  Batch 1: 380 fixtures
+    Saved 740 predictions
+
+Total predictions saved: 740
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league I1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 24 records (6 fixtures with adjusted lambdas) for 6 fixtures.
+Rule-layer fired: home=6, away=0, fixtures=6
+Rule-layer scope events: enabled_league=0, disabled_league_safety=6
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league I1 --days 3
+Processed 6 fixtures, upserted 156 market predictions (156 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league I1 --days 3
+Assessed 156 rows, upserted 156 risk rows: pass=156 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league I1 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league D2
+Fetching fixtures for league: D2
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 150/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league D2
+Loaded 20 features
+Processing 306 fixtures in batches of 500...
+  Batch 1: 306 fixtures
+    Saved 594 predictions
+
+Total predictions saved: 594
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league D2 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 12 records (3 fixtures with adjusted lambdas) for 3 fixtures.
+Rule-layer fired: home=0, away=1, fixtures=1
+Rule-layer scope events: enabled_league=0, disabled_league_safety=1
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league D2 --days 3
+Processed 3 fixtures, upserted 78 market predictions (78 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league D2 --days 3
+Assessed 78 rows, upserted 78 risk rows: pass=78 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league D2 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league B1
+Fetching fixtures for league: B1
+Fetching premium stats for 232 fixtures...
+Building snapshots for 232 fixtures...
+  Progress: 50/232 fixtures...
+  Progress: 100/232 fixtures...
+  Progress: 150/232 fixtures...
+  Progress: 200/232 fixtures...
+Batch upserting 464 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 232,
+  "rows_upserted": 464,
+  "premium_rows_seen": 232
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league B1
+Loaded 20 features
+Processing 232 fixtures in batches of 500...
+  Batch 1: 232 fixtures
+    Saved 448 predictions
+
+Total predictions saved: 448
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league B1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 16 records (4 fixtures with adjusted lambdas) for 4 fixtures.
+Rule-layer fired: home=3, away=0, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league B1 --days 3
+Processed 4 fixtures, upserted 104 market predictions (104 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league B1 --days 3
+Assessed 104 rows, upserted 104 risk rows: pass=104 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league B1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league RO1
+Fetching fixtures for league: RO1
+Fetching premium stats for 240 fixtures...
+Building snapshots for 240 fixtures...
+  Progress: 50/240 fixtures...
+  Progress: 100/240 fixtures...
+  Progress: 150/240 fixtures...
+  Progress: 200/240 fixtures...
+Batch upserting 480 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 240,
+  "rows_upserted": 480,
+  "premium_rows_seen": 240
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league RO1
+Loaded 20 features
+Processing 240 fixtures in batches of 500...
+  Batch 1: 240 fixtures
+    Saved 464 predictions
+
+Total predictions saved: 464
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league RO1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 16 records (4 fixtures with adjusted lambdas) for 4 fixtures.
+Rule-layer fired: home=0, away=0, fixtures=0
+Rule-layer scope events: enabled_league=0, disabled_league_safety=0
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league RO1 --days 3
+Processed 4 fixtures, upserted 104 market predictions (104 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league RO1 --days 3
+Assessed 104 rows, upserted 104 risk rows: pass=104 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league RO1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league SC0
+Fetching fixtures for league: SC0
+Fetching premium stats for 197 fixtures...
+Building snapshots for 197 fixtures...
+Batch upserting 394 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 197,
+  "rows_upserted": 394,
+  "premium_rows_seen": 197
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league SC0
+Loaded 20 features
+Processing 197 fixtures in batches of 500...
+  Batch 1: 197 fixtures
+    Saved 382 predictions
+
+Total predictions saved: 382
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league SC0 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 8 records (2 fixtures with adjusted lambdas) for 2 fixtures.
+Rule-layer fired: home=0, away=1, fixtures=1
+Rule-layer scope events: enabled_league=0, disabled_league_safety=1
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league SC0 --days 3
+Processed 2 fixtures, upserted 52 market predictions (52 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league SC0 --days 3
+Assessed 52 rows, upserted 52 risk rows: pass=52 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league SC0 --days 3
+Saved 2 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league SP1
+Fetching fixtures for league: SP1
+Fetching premium stats for 219 fixtures...
+Building snapshots for 219 fixtures...
+  Progress: 50/219 fixtures...
+  Progress: 100/219 fixtures...
+Batch upserting 438 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 219,
+  "rows_upserted": 438,
+  "premium_rows_seen": 219
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league SP1
+Loaded 20 features
+Processing 219 fixtures in batches of 500...
+  Batch 1: 219 fixtures
+    Saved 416 predictions
+
+Total predictions saved: 416
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league SP1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 20 records (5 fixtures with adjusted lambdas) for 5 fixtures.
+Rule-layer fired: home=2, away=3, fixtures=5
+Rule-layer scope events: enabled_league=0, disabled_league_safety=5
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league SP1 --days 3
+Processed 5 fixtures, upserted 130 market predictions (130 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league SP1 --days 3
+Assessed 130 rows, upserted 130 risk rows: pass=130 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league SP1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league SP2
+Fetching fixtures for league: SP2
+Fetching premium stats for 462 fixtures...
+Building snapshots for 462 fixtures...
+  Progress: 50/462 fixtures...
+  Progress: 100/462 fixtures...
+  Progress: 200/462 fixtures...
+  Progress: 250/462 fixtures...
+Batch upserting 924 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 462,
+  "rows_upserted": 924,
+  "premium_rows_seen": 462
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league SP2
+Loaded 20 features
+Processing 462 fixtures in batches of 500...
+  Batch 1: 462 fixtures
+    Saved 902 predictions
+
+Total predictions saved: 902
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league SP2 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 24 records (6 fixtures with adjusted lambdas) for 6 fixtures.
+Rule-layer fired: home=0, away=2, fixtures=2
+Rule-layer scope events: enabled_league=0, disabled_league_safety=2
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league SP2 --days 3
+Processed 6 fixtures, upserted 156 market predictions (156 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league SP2 --days 3
+Assessed 156 rows, upserted 156 risk rows: pass=156 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league SP2 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league G1
+Fetching fixtures for league: G1
+Fetching premium stats for 182 fixtures...
+Building snapshots for 182 fixtures...
+  Progress: 50/182 fixtures...
+  Progress: 100/182 fixtures...
+  Progress: 150/182 fixtures...
+Batch upserting 364 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 182,
+  "rows_upserted": 364,
+  "premium_rows_seen": 182
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league G1
+Loaded 20 features
+Processing 182 fixtures in batches of 500...
+  Batch 1: 182 fixtures
+    Saved 348 predictions
+
+Total predictions saved: 348
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league G1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 16 records (4 fixtures with adjusted lambdas) for 4 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league G1 --days 3
+Processed 4 fixtures, upserted 104 market predictions (104 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league G1 --days 3
+Assessed 104 rows, upserted 104 risk rows: pass=103 watch=0 bet_small=1 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league G1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league CH1
+Fetching fixtures for league: CH1
+Fetching premium stats for 198 fixtures...
+Building snapshots for 198 fixtures...
+  Progress: 50/198 fixtures...
+  Progress: 100/198 fixtures...
+  Progress: 150/198 fixtures...
+Batch upserting 396 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 198,
+  "rows_upserted": 396,
+  "premium_rows_seen": 198
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league CH1
+Loaded 20 features
+Processing 197 fixtures in batches of 500...
+  Batch 1: 197 fixtures
+    Saved 382 predictions
+
+Total predictions saved: 382
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league CH1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 16 records (4 fixtures with adjusted lambdas) for 4 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league CH1 --days 3
+Processed 4 fixtures, upserted 104 market predictions (104 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league CH1 --days 3
+Assessed 104 rows, upserted 104 risk rows: pass=104 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league CH1 --days 3
+Saved 4 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league CH2
+Fetching fixtures for league: CH2
+Fetching premium stats for 180 fixtures...
+Building snapshots for 180 fixtures...
+  Progress: 50/180 fixtures...
+  Progress: 100/180 fixtures...
+  Progress: 150/180 fixtures...
+Batch upserting 360 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 180,
+  "rows_upserted": 360,
+  "premium_rows_seen": 178
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league CH2
+Loaded 20 features
+Processing 180 fixtures in batches of 500...
+  Batch 1: 180 fixtures
+    Saved 348 predictions
+
+Total predictions saved: 348
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league CH2 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 8 records (2 fixtures with adjusted lambdas) for 2 fixtures.
+Rule-layer fired: home=0, away=1, fixtures=1
+Rule-layer scope events: enabled_league=0, disabled_league_safety=1
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league CH2 --days 3
+Processed 2 fixtures, upserted 52 market predictions (52 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league CH2 --days 3
+Assessed 52 rows, upserted 52 risk rows: pass=52 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league CH2 --days 3
+Saved 2 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league I2
+Fetching fixtures for league: I2
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league I2
+Loaded 20 features
+Processing 380 fixtures in batches of 500...
+  Batch 1: 380 fixtures
+    Saved 740 predictions
+
+Total predictions saved: 740
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league I2 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 32 records (8 fixtures with adjusted lambdas) for 8 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league I2 --days 3
+Processed 8 fixtures, upserted 208 market predictions (208 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league I2 --days 3
+Assessed 208 rows, upserted 208 risk rows: pass=208 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league I2 --days 3
+Saved 8 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league F1
+Fetching fixtures for league: F1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 200/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league F1
+Loaded 20 features
+Processing 306 fixtures in batches of 500...
+  Batch 1: 306 fixtures
+    Saved 594 predictions
+
+Total predictions saved: 594
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league F1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 20 records (5 fixtures with adjusted lambdas) for 5 fixtures.
+Rule-layer fired: home=2, away=4, fixtures=5
+Rule-layer scope events: enabled_league=0, disabled_league_safety=6
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league F1 --days 3
+Processed 5 fixtures, upserted 130 market predictions (130 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league F1 --days 3
+Assessed 130 rows, upserted 130 risk rows: pass=130 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league F1 --days 3
+Saved 5 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league D1
+Fetching fixtures for league: D1
+Fetching premium stats for 306 fixtures...
+Building snapshots for 306 fixtures...
+  Progress: 50/306 fixtures...
+  Progress: 100/306 fixtures...
+  Progress: 150/306 fixtures...
+Batch upserting 612 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 306,
+  "rows_upserted": 612,
+  "premium_rows_seen": 306
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league D1
+Loaded 20 features
+Processing 306 fixtures in batches of 500...
+  Batch 1: 306 fixtures
+    Saved 594 predictions
+
+Total predictions saved: 594
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league D1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 12 records (3 fixtures with adjusted lambdas) for 3 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league D1 --days 3
+Processed 3 fixtures, upserted 78 market predictions (78 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league D1 --days 3
+Assessed 78 rows, upserted 78 risk rows: pass=78 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league D1 --days 3
+Saved 3 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league E0
+Fetching fixtures for league: E0
+Fetching premium stats for 380 fixtures...
+Building snapshots for 380 fixtures...
+  Progress: 50/380 fixtures...
+  Progress: 100/380 fixtures...
+  Progress: 150/380 fixtures...
+  Progress: 200/380 fixtures...
+  Progress: 250/380 fixtures...
+  Progress: 300/380 fixtures...
+  Progress: 350/380 fixtures...
+Batch upserting 760 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 380,
+  "rows_upserted": 760,
+  "premium_rows_seen": 380
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league E0
+Loaded 20 features
+Processing 379 fixtures in batches of 500...
+  Batch 1: 379 fixtures
+    Saved 738 predictions
+
+Total predictions saved: 738
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league E0 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 32 records (8 fixtures with adjusted lambdas) for 8 fixtures.
+Rule-layer fired: home=2, away=3, fixtures=5
+Rule-layer scope events: enabled_league=0, disabled_league_safety=5
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league E0 --days 3
+Processed 8 fixtures, upserted 208 market predictions (208 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league E0 --days 3
+Assessed 208 rows, upserted 208 risk rows: pass=208 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league E0 --days 3
+Saved 8 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\features\build_team_premium_snapshots_v1.py --league AT1
+Fetching fixtures for league: AT1
+Fetching premium stats for 132 fixtures...
+Building snapshots for 132 fixtures...
+  Progress: 50/132 fixtures...
+Batch upserting 264 snapshot rows...
+COMPLETED: {
+  "fixtures_processed": 132,
+  "rows_upserted": 264,
+  "premium_rows_seen": 132
+}
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer1_poisson\predict_lambda.py --league AT1
+Loaded 20 features
+Processing 132 fixtures in batches of 500...
+  Batch 1: 132 fixtures
+    Saved 252 predictions
+
+Total predictions saved: 252
+C:\Developer\soccer\footy-model\src\features\build_features.py:110: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql_query(query, conn, params={"fixture_ids": fixture_ids, "target_window_mins": target_window_mins})
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py --league AT1 --days 3 --enable-rule-layer --rule-overlap-mode override
+Loading historical results for state baseline...
+Loading scheduled fixtures (horizon: 3 days)...
+Computing point-in-time standings...
+Loading premium snapshots...
+Loading Poisson predictions...
+Loading Sofascore 1X2 odds snapshots...
+Loading rivalries...
+Loading player injury impact (Phase 4)...
+Computing L5 goals performance...
+Computing schedule flags...
+Upserted 24 records (6 fixtures with adjusted lambdas) for 6 fixtures.
+Rule-layer fired: home=2, away=1, fixtures=3
+Rule-layer scope events: enabled_league=0, disabled_league_safety=3
+Overlap overrides applied: home=0, away=0
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:241: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  history = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:268: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  targets = pd.read_sql(target_query, conn, params=tuple(params))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:288: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  snap_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:349: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  preds = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:365: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  odds_df = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:391: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  rivalries = pd.read_sql("SELECT team_id_a, team_id_b FROM team_rivalries", conn)
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:442: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  impact_df = pd.read_sql(impact_sql, conn, params=(target_ids, target_ids))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:521: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  l5_data = pd.read_sql(l5_query, conn, params=(df["fixture_id"].tolist(),))
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:556: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  all_fixtures_raw = pd.read_sql(
+C:\Developer\soccer\footy-model\src\modeling\layer2_situational\predict_situational_residual.py:572: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  euro_all = pd.read_sql(
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py --league AT1 --days 3
+Processed 6 fixtures, upserted 156 market predictions (156 expected). fallback_rows=0.
+C:\Developer\soccer\footy-model\src\modeling\evaluation\predict_market_outcomes_fixtures_first.py:272: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  df = pd.read_sql(base_query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\assess_prediction_risk.py --league AT1 --days 3
+Assessed 156 rows, upserted 156 risk rows: pass=156 watch=0 bet_small=0 bet=0
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py --league AT1 --days 3
+Saved 6 fixtures to storage\reports\market_predictions.csv
+C:\Developer\soccer\footy-model\src\modeling\export\export_market_outcomes_fixtures_first.py:238: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.
+  return pd.read_sql(query, conn, params=tuple(params))
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E0 --since-days 30 --limit 500
+Scanned 30 predictions, scored 0, skipped 30 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E1 --since-days 30 --limit 500
+Scanned 55 predictions, scored 0, skipped 55 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E2 --since-days 30 --limit 500
+Scanned 60 predictions, scored 0, skipped 60 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league E3 --since-days 30 --limit 500
+Scanned 44 predictions, scored 0, skipped 44 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league EC --since-days 30 --limit 500
+Scanned 15 predictions, scored 0, skipped 15 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC0 --since-days 30 --limit 500
+Scanned 5 predictions, scored 0, skipped 5 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC1 --since-days 30 --limit 500
+Scanned 5 predictions, scored 0, skipped 5 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC2 --since-days 30 --limit 500
+Scanned 23 predictions, scored 0, skipped 23 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SC3 --since-days 30 --limit 500
+Scanned 26 predictions, scored 0, skipped 26 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league D1 --since-days 30 --limit 500
+Scanned 26 predictions, scored 0, skipped 26 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league D2 --since-days 30 --limit 500
+Scanned 30 predictions, scored 0, skipped 30 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league I1 --since-days 30 --limit 500
+Scanned 16 predictions, scored 0, skipped 16 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league I2 --since-days 30 --limit 500
+Scanned 31 predictions, scored 0, skipped 31 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SP1 --since-days 30 --limit 500
+Scanned 21 predictions, scored 0, skipped 21 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league SP2 --since-days 30 --limit 500
+Scanned 17 predictions, scored 0, skipped 17 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league F1 --since-days 30 --limit 500
+Scanned 12 predictions, scored 0, skipped 12 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league F2 --since-days 30 --limit 500
+Scanned 40 predictions, scored 0, skipped 40 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league N1 --since-days 30 --limit 500
+Scanned 16 predictions, scored 0, skipped 16 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league B1 --since-days 30 --limit 500
+Scanned 15 predictions, scored 0, skipped 15 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league P1 --since-days 30 --limit 500
+Scanned 21 predictions, scored 0, skipped 21 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league T1 --since-days 30 --limit 500
+Scanned 25 predictions, scored 0, skipped 25 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league G1 --since-days 30 --limit 500
+Scanned 4 predictions, scored 0, skipped 4 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league AT1 --since-days 30 --limit 500
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league BR1 --since-days 30 --limit 500
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league DK1 --since-days 30 --limit 500
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league IE1 --since-days 30 --limit 500
+Scanned 25 predictions, scored 0, skipped 25 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league JP1 --since-days 30 --limit 500
+Scanned 32 predictions, scored 0, skipped 32 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league MX1 --since-days 30 --limit 500
+Scanned 20 predictions, scored 0, skipped 20 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league PL1 --since-days 30 --limit 500
+Scanned 21 predictions, scored 0, skipped 21 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league RO1 --since-days 30 --limit 500
+Scanned 13 predictions, scored 0, skipped 13 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league RU1 --since-days 30 --limit 500
+Scanned 22 predictions, scored 0, skipped 22 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CH1 --since-days 30 --limit 500
+Scanned 7 predictions, scored 0, skipped 7 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CH2 --since-days 30 --limit 500
+Scanned 11 predictions, scored 0, skipped 11 (missing required settlement inputs).
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league CL --since-days 30 --limit 500
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league EL --since-days 30 --limit 500
+No eligible unscored predictions found.
+COMMAND: C:\Python313\python.exe C:\Developer\soccer\footy-model\src\modeling\evaluation\score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 500
+No eligible unscored predictions found.

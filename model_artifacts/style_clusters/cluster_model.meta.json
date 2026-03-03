@@ -1,0 +1,23 @@
+{
+  "k": 4,
+  "method": "gmm",
+  "features": [
+    "rolling_possession",
+    "rolling_tackles_pct",
+    "rolling_xg_p1",
+    "rolling_xg_h2_delta",
+    "rolling_corners",
+    "defenders",
+    "midfielders",
+    "forwards"
+  ],
+  "silhouette": 0.23974570650766364,
+  "temporal_ari": 0.5810324138111997,
+  "gate_passed": true,
+  "cluster_labels": {
+    "0": "LowBlock",
+    "1": "Direct",
+    "2": "Style_2",
+    "3": "Style_3"
+  }
+}

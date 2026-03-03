@@ -24,12 +24,14 @@ DEFAULT_OUT_PATH = Path("storage/reports/market_predictions.csv")
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
 MARKETS = (
-    # Totals
-    "o15", "o25", "o35", "o45", "u15", "u25",
-    # Corners
-    "c85",
-    # BTTS
-    "btts",
+    # Goals
+    "o15", "u35",
+    # Corners Totals
+    "c75", "c85", "c95", "c105",
+    # Corners Home Team
+    "hc25", "hc35", "hc45", "hc55",
+    # Corners Away Team
+    "ac25", "ac35", "ac45", "ac55",
     # 1X2
     "1x2_h", "1x2_d", "1x2_a",
     # Double Chance
@@ -38,10 +40,6 @@ MARKETS = (
     "ho15", "ao15",
     # Anytime Lead Markets
     "h_1up", "a_1up", "h_2up", "a_2up",
-    # Combo OR
-    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
-    # Combo AND
-    "home_and_o25", "away_and_o25",
 )
 OUT_COLUMNS = [
     "fixture_id",
@@ -55,12 +53,14 @@ OUT_COLUMNS = [
     "risk_score",
     "risk_edge_adjusted",
     "risk_stake_fraction",
-    # Totals
-    "p_o15", "p_o25", "p_o35", "p_o45", "p_u15", "p_u25",
-    # Corners
-    "p_c85",
-    # BTTS
-    "p_btts",
+    # Goals
+    "p_o15", "p_u35",
+    # Corners Totals
+    "p_c75", "p_c85", "p_c95", "p_c105",
+    # Corners Home Team
+    "p_hc25", "p_hc35", "p_hc45", "p_hc55",
+    # Corners Away Team
+    "p_ac25", "p_ac35", "p_ac45", "p_ac55",
     # 1X2
     "p_1x2_h", "p_1x2_d", "p_1x2_a",
     # Double Chance
@@ -69,10 +69,6 @@ OUT_COLUMNS = [
     "p_ho15", "p_ao15",
     # Anytime Lead Markets
     "p_h_1up", "p_a_1up", "p_h_2up", "p_a_2up",
-    # Combo OR
-    "p_home_or_o25", "p_away_or_o25", "p_home_or_o15", "p_away_or_o15",
-    # Combo AND
-    "p_home_and_o25", "p_away_and_o25",
 ]
 
 
@@ -157,17 +153,24 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
     """
     query += risk_select
     query += """
-        -- Totals
+        -- Goals
         MAX(CASE WHEN p.market_code = 'o15' THEN p.p_model END) AS p_o15,
-        MAX(CASE WHEN p.market_code = 'o25' THEN p.p_model END) AS p_o25,
-        MAX(CASE WHEN p.market_code = 'o35' THEN p.p_model END) AS p_o35,
-        MAX(CASE WHEN p.market_code = 'o45' THEN p.p_model END) AS p_o45,
-        MAX(CASE WHEN p.market_code = 'u15' THEN p.p_model END) AS p_u15,
-        MAX(CASE WHEN p.market_code = 'u25' THEN p.p_model END) AS p_u25,
-        -- Corners
+        MAX(CASE WHEN p.market_code = 'u35' THEN p.p_model END) AS p_u35,
+        -- Corners Totals
+        MAX(CASE WHEN p.market_code = 'c75' THEN p.p_model END) AS p_c75,
         MAX(CASE WHEN p.market_code = 'c85' THEN p.p_model END) AS p_c85,
-        -- BTTS
-        MAX(CASE WHEN p.market_code = 'btts' THEN p.p_model END) AS p_btts,
+        MAX(CASE WHEN p.market_code = 'c95' THEN p.p_model END) AS p_c95,
+        MAX(CASE WHEN p.market_code = 'c105' THEN p.p_model END) AS p_c105,
+        -- Corners Home Team
+        MAX(CASE WHEN p.market_code = 'hc25' THEN p.p_model END) AS p_hc25,
+        MAX(CASE WHEN p.market_code = 'hc35' THEN p.p_model END) AS p_hc35,
+        MAX(CASE WHEN p.market_code = 'hc45' THEN p.p_model END) AS p_hc45,
+        MAX(CASE WHEN p.market_code = 'hc55' THEN p.p_model END) AS p_hc55,
+        -- Corners Away Team
+        MAX(CASE WHEN p.market_code = 'ac25' THEN p.p_model END) AS p_ac25,
+        MAX(CASE WHEN p.market_code = 'ac35' THEN p.p_model END) AS p_ac35,
+        MAX(CASE WHEN p.market_code = 'ac45' THEN p.p_model END) AS p_ac45,
+        MAX(CASE WHEN p.market_code = 'ac55' THEN p.p_model END) AS p_ac55,
         -- 1X2
         MAX(CASE WHEN p.market_code = '1x2_h' THEN p.p_model END) AS p_1x2_h,
         MAX(CASE WHEN p.market_code = '1x2_d' THEN p.p_model END) AS p_1x2_d,
@@ -183,15 +186,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
         MAX(CASE WHEN p.market_code = 'h_1up' THEN p.p_model END) AS p_h_1up,
         MAX(CASE WHEN p.market_code = 'a_1up' THEN p.p_model END) AS p_a_1up,
         MAX(CASE WHEN p.market_code = 'h_2up' THEN p.p_model END) AS p_h_2up,
-        MAX(CASE WHEN p.market_code = 'a_2up' THEN p.p_model END) AS p_a_2up,
-        -- Combo OR
-        MAX(CASE WHEN p.market_code = 'home_or_o25' THEN p.p_model END) AS p_home_or_o25,
-        MAX(CASE WHEN p.market_code = 'away_or_o25' THEN p.p_model END) AS p_away_or_o25,
-        MAX(CASE WHEN p.market_code = 'home_or_o15' THEN p.p_model END) AS p_home_or_o15,
-        MAX(CASE WHEN p.market_code = 'away_or_o15' THEN p.p_model END) AS p_away_or_o15,
-        -- Combo AND
-        MAX(CASE WHEN p.market_code = 'home_and_o25' THEN p.p_model END) AS p_home_and_o25,
-        MAX(CASE WHEN p.market_code = 'away_and_o25' THEN p.p_model END) AS p_away_and_o25
+        MAX(CASE WHEN p.market_code = 'a_2up' THEN p.p_model END) AS p_a_2up
     FROM fixtures f
     JOIN teams th ON th.team_id = f.home_team_id
     JOIN teams ta ON ta.team_id = f.away_team_id
@@ -199,7 +194,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
        ON p.fixture_id = f.fixture_id
        AND p.model_name = %s
        AND p.model_version = %s
-       AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'h_1up', 'a_1up', 'h_2up', 'a_2up', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
+       AND p.market_code IN ('o15', 'u35', 'c75', 'c85', 'c95', 'c105', 'hc25', 'hc35', 'hc45', 'hc55', 'ac25', 'ac35', 'ac45', 'ac55', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'h_1up', 'a_1up', 'h_2up', 'a_2up')
     """
     query += risk_join
     query += """

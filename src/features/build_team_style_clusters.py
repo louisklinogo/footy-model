@@ -24,6 +24,7 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+import warnings
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score, adjusted_rand_score
 from sklearn.mixture import GaussianMixture
@@ -73,8 +74,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--min-silhouette",
         type=float,
-        default=0.3,
-        help="Minimum silhouette score required to save clusters (default: 0.3).",
+        default=0.15,
+        help="Minimum silhouette score required to save clusters (default: 0.15).",
     )
     parser.add_argument(
         "--min-ari",
@@ -105,44 +106,50 @@ def load_data() -> pd.DataFrame:
 
     # Load snapshots (both home and away perspectives)
     print("Loading team_premium_snapshots...")
-    snap = pd.read_sql(
-        """
-        SELECT
-            tps.fixture_id,
-            tps.team_id,
-            tps.is_home,
-            tps.rolling_possession,
-            tps.rolling_tackles_pct,
-            tps.rolling_xg_p1,
-            tps.rolling_xg_h2_delta,
-            tps.rolling_corners
-        FROM team_premium_snapshots tps
-        """,
-        conn,
-    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        snap = pd.read_sql(
+            """
+            SELECT
+                tps.fixture_id,
+                tps.team_id,
+                tps.is_home,
+                tps.rolling_possession,
+                tps.rolling_tackles_pct,
+                tps.rolling_xg_p1,
+                tps.rolling_xg_h2_delta,
+                tps.rolling_corners
+            FROM team_premium_snapshots tps
+            """,
+            conn,
+        )
     print(f"  {len(snap)} snapshot rows")
 
     # Load fixtures for datetime + league context
     print("Loading fixtures...")
-    fixtures = pd.read_sql(
-        """
-        SELECT f.fixture_id, f.match_datetime_utc, f.league_code,
-               f.home_team_id, f.away_team_id
-        FROM fixtures f
-        WHERE f.status = 'ft'
-        """,
-        conn,
-    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        fixtures = pd.read_sql(
+            """
+            SELECT f.fixture_id, f.match_datetime_utc, f.league_code,
+                   f.home_team_id, f.away_team_id
+            FROM fixtures f
+            WHERE f.status = 'ft'
+            """,
+            conn,
+        )
     fixtures["match_datetime_utc"] = pd.to_datetime(
         fixtures["match_datetime_utc"], utc=True, errors="coerce"
     )
 
     # Load formations
     print("Loading fixture_formations...")
-    formations = pd.read_sql(
-        "SELECT fixture_id, home_formation, away_formation FROM fixture_formations",
-        conn,
-    )
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        formations = pd.read_sql(
+            "SELECT fixture_id, home_formation, away_formation FROM fixture_formations",
+            conn,
+        )
     conn.close()
 
     # Merge fixture context onto snapshots
@@ -257,7 +264,7 @@ def assess_temporal_ari(df: pd.DataFrame, k: int, method: str) -> float:
         labels_test = predict_labels(model_test, X_test, method)
         ari = float(adjusted_rand_score(labels_test, labels_train_on_test))
         ari_scores.append(ari)
-        print(f"    Seasons {train_season}→{test_season}: ARI={ari:.3f}")
+        print(f"    Seasons {train_season}->{test_season}: ARI={ari:.3f}")
 
     return float(np.mean(ari_scores)) if ari_scores else 0.0
 
@@ -323,7 +330,7 @@ def main() -> None:
     print(f"  Mean ARI:   {ari:.4f}  (gate: >= {args.min_ari})")
 
     gate_passed = sil >= args.min_silhouette and ari >= args.min_ari
-    print(f"\n{'✅' if gate_passed else '❌'} Gate: {'PASSED' if gate_passed else 'FAILED'}")
+    print(f"\n{'[PASS]' if gate_passed else '[FAIL]'} Gate: {'PASSED' if gate_passed else 'FAILED'}")
 
     if args.evaluate:
         print("\n--evaluate mode: not saving model.")

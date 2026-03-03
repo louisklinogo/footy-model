@@ -36,11 +36,39 @@ def test_assess_prediction_risk_writes_rows_and_odds_sensitive_actions(db_case) 
             status="scheduled",
         )
         insert_odds_snapshot(cur, future_fixture, snapshot_time=days_from_now(0))
+        cur.execute(
+            """
+            INSERT INTO fixture_odds_markets (
+                fixture_id,
+                provider,
+                provider_id,
+                market_code,
+                line_num,
+                line_text,
+                odds_json,
+                snapshot_time_utc,
+                snapshot_type
+            )
+            VALUES (%s, 'sofascore', 1, 'ou', 1.5, NULL, %s::jsonb, %s, 'latest_pre_match')
+            ON CONFLICT DO NOTHING
+            """,
+            (
+                future_fixture,
+                json.dumps(
+                    {
+                        "market_code": "ou",
+                        "line_num": 1.5,
+                        "prices_latest": {"over": 1.9, "under": 1.9},
+                    }
+                ),
+                days_from_now(0),
+            ),
+        )
 
         cur.execute(
             """
             INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json)
-            VALUES (%s, 'o25', 'market_outcome_gbm', 'fixtures_first_prematch_v1', %s, %s::jsonb)
+            VALUES (%s, 'o15', 'market_outcome_gbm', 'fixtures_first_prematch_v1', %s, %s::jsonb)
             """,
             (
                 future_fixture,
@@ -109,10 +137,10 @@ def test_assess_prediction_risk_writes_rows_and_odds_sensitive_actions(db_case) 
 
     by_market = {str(row[0]): row for row in rows}
 
-    o25 = by_market["o25"]
-    assert o25[1] is not None
-    assert o25[2] is not None
-    assert str(o25[3]) in {"pass", "watch", "bet_small", "bet"}
+    o15 = by_market["o15"]
+    assert o15[1] is not None
+    assert o15[2] is not None
+    assert str(o15[3]) in {"pass", "watch", "bet_small", "bet"}
 
     c85 = by_market["c85"]
     assert c85[1] is None

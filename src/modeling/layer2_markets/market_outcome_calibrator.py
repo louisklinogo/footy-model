@@ -1,17 +1,16 @@
 """
-Fixtures-first training pipeline for 27 betting markets.
+Fixtures-first training pipeline for focused linchpin markets.
 
 Reads only v1 fixtures-first tables and trains leakage-safe pre-match models
 for the following markets:
 
-TOTALS (6): o15, o25, o35, o45, u15, u25
-CORNERS (1): c85
-BTTS (1): btts
+GOALS (2): o15, u35
+CORNERS TOTALS (4): c75, c85, c95, c105
+CORNERS HOME TEAM (4): hc25, hc35, hc45, hc55
+CORNERS AWAY TEAM (4): ac25, ac35, ac45, ac55
 1X2 (3): 1x2_h, 1x2_d, 1x2_a
 DOUBLE CHANCE (3): dc_1x, dc_x2, dc_12
 TEAM TOTALS (2): ho15, ao15
-COMBO OR (4): home_or_o25, away_or_o25, home_or_o15, away_or_o15
-COMBO AND (2): home_and_o25, away_and_o25
 ANYTIME LEAD (4): h_1up, a_1up, h_2up, a_2up
 """
 
@@ -74,10 +73,6 @@ TEAM_SNAPSHOT_FEATURES = [
     "rolling_sot_h2_delta_against",
     "rolling_possession",
     "rolling_possession_against",
-    "rolling_errors_lead_to_shot",
-    "rolling_errors_lead_to_shot_against",
-    "rolling_tackles_pct",
-    "rolling_tackles_pct_against",
 ]
 
 
@@ -113,10 +108,12 @@ def fetch_dataset() -> pd.DataFrame:
             THEN (sp.h_corners + sp.a_corners)
             ELSE NULL
         END AS total_corners,
-        {_latest_odds_expr('od15', 'over')} AS odds_over_15,
-        {_latest_odds_expr('od15', 'under')} AS odds_under_15,
-        {_latest_odds_expr('od25', 'over')} AS odds_over_25,
-        {_latest_odds_expr('od25', 'under')} AS odds_under_25,
+        sp.h_corners AS home_corners,
+        sp.a_corners AS away_corners,
+        {_latest_odds_expr("od15", "over")} AS odds_over_15,
+        {_latest_odds_expr("od15", "under")} AS odds_under_15,
+        {_latest_odds_expr("od25", "over")} AS odds_over_25,
+        {_latest_odds_expr("od25", "under")} AS odds_under_25,
         GREATEST(od15.snapshot_time_utc, od25.snapshot_time_utc) AS odds_snapshot_time_utc,
         CASE
             WHEN od15.snapshot_type = 'latest_pre_match' OR od25.snapshot_type = 'latest_pre_match'
@@ -153,10 +150,6 @@ def fetch_dataset() -> pd.DataFrame:
         tph.rolling_sot_h2_delta_against AS home_rolling_sot_h2_delta_against,
         tph.rolling_possession AS home_rolling_possession,
         tph.rolling_possession_against AS home_rolling_possession_against,
-        tph.rolling_errors_lead_to_shot AS home_rolling_errors_lead_to_shot,
-        tph.rolling_errors_lead_to_shot_against AS home_rolling_errors_lead_to_shot_against,
-        tph.rolling_tackles_pct AS home_rolling_tackles_pct,
-        tph.rolling_tackles_pct_against AS home_rolling_tackles_pct_against,
 
         tpa.sample_size AS away_sample_size,
         tpa.rolling_xg AS away_rolling_xg,
@@ -188,17 +181,13 @@ def fetch_dataset() -> pd.DataFrame:
         tpa.rolling_sot_h2_delta_against AS away_rolling_sot_h2_delta_against,
         tpa.rolling_possession AS away_rolling_possession,
         tpa.rolling_possession_against AS away_rolling_possession_against,
-        tpa.rolling_errors_lead_to_shot AS away_rolling_errors_lead_to_shot,
-        tpa.rolling_errors_lead_to_shot_against AS away_rolling_errors_lead_to_shot_against,
-        tpa.rolling_tackles_pct AS away_rolling_tackles_pct,
-        tpa.rolling_tackles_pct_against AS away_rolling_tackles_pct_against,
 
         ff.home_formation,
         ff.away_formation,
-        {_json_number_expr('l1h.metadata_json', 'lambda')} AS lambda_home_l1,
-        {_json_number_expr('l1a.metadata_json', 'lambda')} AS lambda_away_l1,
-        {_json_number_expr('l2h.metadata_json', 'lambda')} AS adj_lambda_home_final,
-        {_json_number_expr('l2a.metadata_json', 'lambda')} AS adj_lambda_away_final,
+        {_json_number_expr("l1h.metadata_json", "lambda")} AS lambda_home_l1,
+        {_json_number_expr("l1a.metadata_json", "lambda")} AS lambda_away_l1,
+        {_json_number_expr("l2h.metadata_json", "lambda")} AS adj_lambda_home_final,
+        {_json_number_expr("l2a.metadata_json", "lambda")} AS adj_lambda_away_final,
         ils.home_led_by_1_any AS home_led_by_1_any,
         ils.away_led_by_1_any AS away_led_by_1_any,
         ils.home_led_by_2_any AS home_led_by_2_any,
@@ -299,7 +288,7 @@ def fetch_dataset() -> pd.DataFrame:
 
 def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
-    
+
     # === TOTALS MARKETS ===
     out["target_o15"] = (out["total_goals"] >= 2).astype(int)
     out["target_o25"] = (out["total_goals"] >= 3).astype(int)
@@ -307,36 +296,100 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out["target_o45"] = (out["total_goals"] >= 5).astype(int)
     out["target_u15"] = (out["total_goals"] <= 1).astype(int)
     out["target_u25"] = (out["total_goals"] <= 2).astype(int)
-    
-    # === CORNERS ===
-    out["target_c85"] = np.where(out["total_corners"].notna(), (out["total_corners"] >= 9).astype(int), np.nan)
-    
+    out["target_u35"] = (out["total_goals"] <= 3).astype(int)
+
+    # === CORNERS TOTALS ===
+    out["target_c75"] = np.where(
+        out["total_corners"].notna(), (out["total_corners"] >= 8).astype(int), np.nan
+    )
+    out["target_c85"] = np.where(
+        out["total_corners"].notna(), (out["total_corners"] >= 9).astype(int), np.nan
+    )
+    out["target_c95"] = np.where(
+        out["total_corners"].notna(), (out["total_corners"] >= 10).astype(int), np.nan
+    )
+    out["target_c105"] = np.where(
+        out["total_corners"].notna(), (out["total_corners"] >= 11).astype(int), np.nan
+    )
+
+    # === CORNERS TEAM TOTALS ===
+    out["target_hc25"] = np.where(
+        out["home_corners"].notna(), (out["home_corners"] >= 3).astype(int), np.nan
+    )
+    out["target_hc35"] = np.where(
+        out["home_corners"].notna(), (out["home_corners"] >= 4).astype(int), np.nan
+    )
+    out["target_hc45"] = np.where(
+        out["home_corners"].notna(), (out["home_corners"] >= 5).astype(int), np.nan
+    )
+    out["target_hc55"] = np.where(
+        out["home_corners"].notna(), (out["home_corners"] >= 6).astype(int), np.nan
+    )
+    out["target_ac25"] = np.where(
+        out["away_corners"].notna(), (out["away_corners"] >= 3).astype(int), np.nan
+    )
+    out["target_ac35"] = np.where(
+        out["away_corners"].notna(), (out["away_corners"] >= 4).astype(int), np.nan
+    )
+    out["target_ac45"] = np.where(
+        out["away_corners"].notna(), (out["away_corners"] >= 5).astype(int), np.nan
+    )
+    out["target_ac55"] = np.where(
+        out["away_corners"].notna(), (out["away_corners"] >= 6).astype(int), np.nan
+    )
+
     # === BTTS ===
     out["target_btts"] = ((out["home_goals"] > 0) & (out["away_goals"] > 0)).astype(int)
-    
+
     # === 1X2 ===
     out["target_1x2_h"] = (out["home_goals"] > out["away_goals"]).astype(int)
     out["target_1x2_d"] = (out["home_goals"] == out["away_goals"]).astype(int)
     out["target_1x2_a"] = (out["home_goals"] < out["away_goals"]).astype(int)
-    
+
     # === DOUBLE CHANCE ===
-    out["target_dc_1x"] = (out["home_goals"] >= out["away_goals"]).astype(int)  # Home win or Draw
-    out["target_dc_x2"] = (out["away_goals"] >= out["home_goals"]).astype(int)  # Draw or Away win
-    out["target_dc_12"] = (out["home_goals"] != out["away_goals"]).astype(int)  # Home win or Away win
-    
+    out["target_dc_1x"] = (out["home_goals"] >= out["away_goals"]).astype(
+        int
+    )  # Home win or Draw
+    out["target_dc_x2"] = (out["away_goals"] >= out["home_goals"]).astype(
+        int
+    )  # Draw or Away win
+    out["target_dc_12"] = (out["home_goals"] != out["away_goals"]).astype(
+        int
+    )  # Home win or Away win
+
+    # === HANDICAP (BINARY, SETTLEMENT PUSH IGNORED) ===
+    out["target_ah_h05"] = (out["home_goals"] > out["away_goals"]).astype(int)
+    out["target_ah_a05"] = (out["away_goals"] > out["home_goals"]).astype(int)
+    out["target_ah_h15"] = ((out["home_goals"] - out["away_goals"]) >= 2).astype(int)
+    out["target_ah_a15"] = ((out["away_goals"] - out["home_goals"]) >= 2).astype(int)
+    out["target_eh_h1"] = ((out["home_goals"] - out["away_goals"]) >= 2).astype(int)
+    out["target_eh_a1"] = ((out["away_goals"] - out["home_goals"]) >= 2).astype(int)
+
     # === TEAM TOTALS ===
     out["target_ho15"] = (out["home_goals"] >= 2).astype(int)  # Home team over 1.5
     out["target_ao15"] = (out["away_goals"] >= 2).astype(int)  # Away team over 1.5
-    
+
     # === COMBO OR (Home/Away win OR Over X.5) ===
-    out["target_home_or_o25"] = ((out["home_goals"] > out["away_goals"]) | (out["total_goals"] >= 3)).astype(int)
-    out["target_away_or_o25"] = ((out["away_goals"] > out["home_goals"]) | (out["total_goals"] >= 3)).astype(int)
-    out["target_home_or_o15"] = ((out["home_goals"] > out["away_goals"]) | (out["total_goals"] >= 2)).astype(int)
-    out["target_away_or_o15"] = ((out["away_goals"] > out["home_goals"]) | (out["total_goals"] >= 2)).astype(int)
-    
+    out["target_home_or_o25"] = (
+        (out["home_goals"] > out["away_goals"]) | (out["total_goals"] >= 3)
+    ).astype(int)
+    out["target_away_or_o25"] = (
+        (out["away_goals"] > out["home_goals"]) | (out["total_goals"] >= 3)
+    ).astype(int)
+    out["target_home_or_o15"] = (
+        (out["home_goals"] > out["away_goals"]) | (out["total_goals"] >= 2)
+    ).astype(int)
+    out["target_away_or_o15"] = (
+        (out["away_goals"] > out["home_goals"]) | (out["total_goals"] >= 2)
+    ).astype(int)
+
     # === COMBO AND (Home/Away win AND Over X.5) ===
-    out["target_home_and_o25"] = ((out["home_goals"] > out["away_goals"]) & (out["total_goals"] >= 3)).astype(int)
-    out["target_away_and_o25"] = ((out["away_goals"] > out["home_goals"]) & (out["total_goals"] >= 3)).astype(int)
+    out["target_home_and_o25"] = (
+        (out["home_goals"] > out["away_goals"]) & (out["total_goals"] >= 3)
+    ).astype(int)
+    out["target_away_and_o25"] = (
+        (out["away_goals"] > out["home_goals"]) & (out["total_goals"] >= 3)
+    ).astype(int)
 
     # === ANYTIME LEAD MARKETS (incident timeline derived) ===
     out["target_h_1up"] = out["home_led_by_1_any"].astype(float)
@@ -348,16 +401,26 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out["xg_net_diff"] = out["home_rolling_xg"] - out["away_rolling_xg_against"]
     out["xgot_net_diff"] = out["home_rolling_xgot"] - out["away_rolling_xgot_against"]
     out["xa_net_diff"] = out["home_rolling_xa"] - out["away_rolling_xa_against"]
-    out["corners_net_diff"] = out["home_rolling_corners"] - out["away_rolling_corners_against"]
+    out["corners_net_diff"] = (
+        out["home_rolling_corners"] - out["away_rolling_corners_against"]
+    )
     out["sample_size_diff"] = out["home_sample_size"] - out["away_sample_size"]
-    
+
     # Goal difference feature for 1X2/AH markets
     out["goal_diff_proxy"] = out["home_rolling_xg"] - out["away_rolling_xg"]
 
-    out["implied_over15"] = np.where(out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan)
-    out["implied_under15"] = np.where(out["odds_under_15"] > 1.0, 1.0 / out["odds_under_15"], np.nan)
-    out["implied_over25"] = np.where(out["odds_over_25"] > 1.0, 1.0 / out["odds_over_25"], np.nan)
-    out["implied_under25"] = np.where(out["odds_under_25"] > 1.0, 1.0 / out["odds_under_25"], np.nan)
+    out["implied_over15"] = np.where(
+        out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan
+    )
+    out["implied_under15"] = np.where(
+        out["odds_under_15"] > 1.0, 1.0 / out["odds_under_15"], np.nan
+    )
+    out["implied_over25"] = np.where(
+        out["odds_over_25"] > 1.0, 1.0 / out["odds_over_25"], np.nan
+    )
+    out["implied_under25"] = np.where(
+        out["odds_under_25"] > 1.0, 1.0 / out["odds_under_25"], np.nan
+    )
 
     out["odds_gap_15"] = out["odds_over_15"] - out["odds_under_15"]
     out["odds_gap_25"] = out["odds_over_25"] - out["odds_under_25"]
@@ -369,27 +432,29 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
         parts = [int(p) for p in form_str.split("-") if p.isdigit()]
         if len(parts) == 3:
             return (parts[0], parts[1], parts[2])
-        if len(parts) == 4: # e.g. 4-2-3-1
+        if len(parts) == 4:  # e.g. 4-2-3-1
             return (parts[0], parts[1] + parts[2], parts[3])
-        if len(parts) == 5: # e.g. 5-4-1-0 or something exotic
+        if len(parts) == 5:  # e.g. 5-4-1-0 or something exotic
             return (parts[0], parts[1] + parts[2] + parts[3], parts[4])
         return (4, 4, 2)
 
     for prefix in ("home", "away"):
-        defenders, midfielders, forwards = zip(*out[f"{prefix}_formation"].apply(_parse_form))
+        defenders, midfielders, forwards = zip(
+            *out[f"{prefix}_formation"].apply(_parse_form)
+        )
         out[f"{prefix}_defenders"] = defenders
         out[f"{prefix}_midfielders"] = midfielders
         out[f"{prefix}_forwards"] = forwards
-        
+
         # Calculate style score (higher = more offensive baseline)
         out[f"{prefix}_style_score"] = (
-            out[f"{prefix}_defenders"] * 1 +
-            out[f"{prefix}_midfielders"] * 2 +
-            out[f"{prefix}_forwards"] * 3
+            out[f"{prefix}_defenders"] * 1
+            + out[f"{prefix}_midfielders"] * 2
+            + out[f"{prefix}_forwards"] * 3
         )
 
     out["style_delta"] = out["home_style_score"] - out["away_style_score"]
-    
+
     return out
 
 
@@ -422,8 +487,12 @@ def feature_columns() -> list[str]:
             "rule_fired_home",
             "rule_fired_away",
             # Formation/Style features
-            "home_defenders", "home_midfielders", "home_forwards",
-            "away_defenders", "away_midfielders", "away_forwards",
+            "home_defenders",
+            "home_midfielders",
+            "home_forwards",
+            "away_defenders",
+            "away_midfielders",
+            "away_forwards",
             "style_delta",
         ]
     )
@@ -431,7 +500,9 @@ def feature_columns() -> list[str]:
 
 
 def split_time_respecting(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    ordered = df.sort_values(["match_datetime_utc", "fixture_id"]).reset_index(drop=True)
+    ordered = df.sort_values(["match_datetime_utc", "fixture_id"]).reset_index(
+        drop=True
+    )
     split_idx = int(len(ordered) * 0.8)
     if split_idx <= 0 or split_idx >= len(ordered):
         raise ValueError("Need at least 2 rows to make an 80/20 time split")
@@ -463,10 +534,16 @@ def impute_for_split(
 
         train_fill = train_out["league_code"].map(league_medians[feat])
         test_fill = test_out["league_code"].map(league_medians[feat])
-        train_out[feat] = train_out[feat].fillna(train_fill).fillna(global_med).fillna(0.0)
+        train_out[feat] = (
+            train_out[feat].fillna(train_fill).fillna(global_med).fillna(0.0)
+        )
         test_out[feat] = test_out[feat].fillna(test_fill).fillna(global_med).fillna(0.0)
 
-    return train_out, test_out, {"global_medians": global_medians, "league_medians": league_medians}
+    return (
+        train_out,
+        test_out,
+        {"global_medians": global_medians, "league_medians": league_medians},
+    )
 
 
 def fit_market_model(
@@ -479,7 +556,9 @@ def fit_market_model(
     train = train_df[train_df[target_col].notna()].copy()
     test = test_df[test_df[target_col].notna()].copy()
     if train.empty or test.empty:
-        raise ValueError(f"Insufficient rows for {market_code}: train={len(train)}, test={len(test)}")
+        raise ValueError(
+            f"Insufficient rows for {market_code}: train={len(train)}, test={len(test)}"
+        )
 
     y_train = train[target_col].astype(int)
     y_test = test[target_col].astype(int)
@@ -545,8 +624,12 @@ def main() -> None:
     if df.empty:
         raise RuntimeError("No fixtures-first rows available for training")
 
-    df["match_datetime_utc"] = pd.to_datetime(df["match_datetime_utc"], utc=True, errors="coerce")
-    df["odds_snapshot_time_utc"] = pd.to_datetime(df["odds_snapshot_time_utc"], utc=True, errors="coerce")
+    df["match_datetime_utc"] = pd.to_datetime(
+        df["match_datetime_utc"], utc=True, errors="coerce"
+    )
+    df["odds_snapshot_time_utc"] = pd.to_datetime(
+        df["odds_snapshot_time_utc"], utc=True, errors="coerce"
+    )
     post_kickoff_odds = (
         df["odds_snapshot_time_utc"].notna()
         & df["match_datetime_utc"].notna()
@@ -562,24 +645,33 @@ def main() -> None:
     missing_features = [feat for feat in features if feat not in df.columns]
     if missing_features:
         missing_csv = ", ".join(sorted(missing_features))
-        raise RuntimeError(f"Feature contract mismatch in training dataset: {missing_csv}")
+        raise RuntimeError(
+            f"Feature contract mismatch in training dataset: {missing_csv}"
+        )
 
     train_df, test_df = split_time_respecting(df)
     train_imp, test_imp, imputation = impute_for_split(train_df, test_df, features)
 
     # Define all markets with their targets
     MARKETS = [
-        # Totals
+        # Goals
         ("o15", "target_o15"),
-        ("o25", "target_o25"),
-        ("o35", "target_o35"),
-        ("o45", "target_o45"),
-        ("u15", "target_u15"),
-        ("u25", "target_u25"),
-        # Corners
+        ("u35", "target_u35"),
+        # Corners Totals
+        ("c75", "target_c75"),
         ("c85", "target_c85"),
-        # BTTS
-        ("btts", "target_btts"),
+        ("c95", "target_c95"),
+        ("c105", "target_c105"),
+        # Corners Home Team Totals
+        ("hc25", "target_hc25"),
+        ("hc35", "target_hc35"),
+        ("hc45", "target_hc45"),
+        ("hc55", "target_hc55"),
+        # Corners Away Team Totals
+        ("ac25", "target_ac25"),
+        ("ac35", "target_ac35"),
+        ("ac45", "target_ac45"),
+        ("ac55", "target_ac55"),
         # 1X2
         ("1x2_h", "target_1x2_h"),
         ("1x2_d", "target_1x2_d"),
@@ -588,24 +680,23 @@ def main() -> None:
         ("dc_1x", "target_dc_1x"),
         ("dc_x2", "target_dc_x2"),
         ("dc_12", "target_dc_12"),
+        # Handicap
+        ("ah_h05", "target_ah_h05"),
+        ("ah_a05", "target_ah_a05"),
+        ("ah_h15", "target_ah_h15"),
+        ("ah_a15", "target_ah_a15"),
+        ("eh_h1", "target_eh_h1"),
+        ("eh_a1", "target_eh_a1"),
         # Team Totals
         ("ho15", "target_ho15"),
         ("ao15", "target_ao15"),
-        # Combo OR
-        ("home_or_o25", "target_home_or_o25"),
-        ("away_or_o25", "target_away_or_o25"),
-        ("home_or_o15", "target_home_or_o15"),
-        ("away_or_o15", "target_away_or_o15"),
-        # Combo AND
-        ("home_and_o25", "target_home_and_o25"),
-        ("away_and_o25", "target_away_and_o25"),
         # Anytime Lead
         ("h_1up", "target_h_1up"),
         ("a_1up", "target_a_1up"),
         ("h_2up", "target_h_2up"),
         ("a_2up", "target_a_2up"),
     ]
-    
+
     metrics = []
     for market, target in MARKETS:
         result = fit_market_model(
@@ -616,7 +707,9 @@ def main() -> None:
             features=features,
         )
         metrics.append(result)
-        print(f"{market}: AUC={result['auc']}, Acc={result['accuracy']:.3f}, Brier={result['brier']:.4f}, test_n={result['test_n']}, base_rate={result['base_rate_test']:.3f}")
+        print(
+            f"{market}: AUC={result['auc']}, Acc={result['accuracy']:.3f}, Brier={result['brier']:.4f}, test_n={result['test_n']}, base_rate={result['base_rate_test']:.3f}"
+        )
 
     with (OUT_DIR / "features.json").open("w", encoding="utf-8") as f:
         json.dump(features, f, indent=2)

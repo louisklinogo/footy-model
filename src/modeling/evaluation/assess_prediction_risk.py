@@ -25,6 +25,7 @@ if str(ROOT_DIR) not in sys.path:
 
 from psycopg2.extras import Json
 
+from src.betting.odds_resolver import resolve_odds_for_market
 from src.db.db_utils import connect_db
 
 
@@ -32,29 +33,78 @@ MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
 DEFAULT_POLICY_PATH = Path("model_artifacts/market_models/risk_policy.json")
 EPS = 1e-6
+FOCUS_MARKETS = (
+    "o15",
+    "u35",
+    "c75",
+    "c85",
+    "c95",
+    "c105",
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
+    "1x2_h",
+    "1x2_d",
+    "1x2_a",
+    "dc_1x",
+    "dc_x2",
+    "dc_12",
+    "ho15",
+    "ao15",
+    "h_1up",
+    "a_1up",
+    "h_2up",
+    "a_2up",
+)
 
 
 DEFAULT_POLICY: dict[str, Any] = {
-    "min_edge_watch": 0.02,
-    "min_edge_bet_small": 0.035,
-    "min_edge_bet": 0.06,
+    "min_edge_watch": 0.01,
+    "min_edge_bet_small": 0.02,
+    "min_edge_bet": 0.04,
+    "min_precision_rolling": 0.58,
+    "precision_min_samples": 80,
+    "precision_window": 60,
+    "loss_streak_pause": 2,
+    "hard_precision_gate": False,
+    "hard_loss_streak_pause": True,
+    "tradable_markets": [
+        "o15",
+        "u35",
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "c85",
+        "c95",
+        "c105",
+    ],
     "kelly_scale": 0.25,
-    "max_stake_fraction": 0.03,
+    "max_stake_fraction": 0.02,
     "max_small_stake_fraction": 0.01,
     "calibration_min_samples": 80,
     "calibration_poor_brier": 0.22,
     "calibration_very_poor_brier": 0.24,
     "penalties": {
-        "missing_odds": 35.0,
+        "missing_odds": 12.0,
         "fallback_used": 18.0,
-        "feature_missing_unit": 2.5,
-        "stale_odds_6h": 6.0,
-        "stale_odds_24h": 12.0,
+        "feature_missing_unit": 0.75,
+        "stale_odds_6h": 2.0,
+        "stale_odds_24h": 4.0,
         "low_sample_lt8": 10.0,
         "low_sample_lt5": 18.0,
         "calibration_low_sample": 8.0,
         "calibration_poor": 10.0,
         "calibration_very_poor": 16.0,
+        "precision_gate_fail": 25.0,
+        "loss_streak_pause": 30.0,
     },
 }
 
@@ -65,11 +115,24 @@ class CalibrationStats:
     mean_brier: float | None
 
 
+@dataclass(frozen=True)
+class RollingPerformance:
+    n: int
+    precision: float | None
+    loss_streak: int
+
+
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Assess pre-match risk for prediction rows")
-    parser.add_argument("--league", type=str, default=None, help="Optional league_code filter")
+    parser = argparse.ArgumentParser(
+        description="Assess pre-match risk for prediction rows"
+    )
+    parser.add_argument(
+        "--league", type=str, default=None, help="Optional league_code filter"
+    )
     parser.add_argument("--days", type=int, default=3, help="Future horizon in days")
-    parser.add_argument("--limit", type=int, default=None, help="Optional max prediction rows to assess")
+    parser.add_argument(
+        "--limit", type=int, default=None, help="Optional max prediction rows to assess"
+    )
     parser.add_argument(
         "--history-days",
         type=int,
@@ -77,14 +140,18 @@ def parse_args() -> argparse.Namespace:
         help="Rolling history window used for calibration penalties",
     )
     parser.add_argument("--model", type=str, default=MODEL_NAME, help="Model name")
-    parser.add_argument("--version", type=str, default=MODEL_VERSION, help="Model version")
+    parser.add_argument(
+        "--version", type=str, default=MODEL_VERSION, help="Model version"
+    )
     parser.add_argument(
         "--policy-path",
         type=Path,
         default=DEFAULT_POLICY_PATH,
         help="Optional policy JSON path",
     )
-    parser.add_argument("--dry-run", action="store_true", help="Compute but do not write to DB")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Compute but do not write to DB"
+    )
     return parser.parse_args()
 
 
@@ -178,12 +245,13 @@ def fetch_candidates(
           ON f.fixture_id = p.fixture_id
         WHERE p.model_name = %s
           AND p.model_version = %s
+          AND p.market_code = ANY(%s)
           AND f.status = 'scheduled'
           AND f.match_datetime_utc IS NOT NULL
           AND f.match_datetime_utc > NOW()
           AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
     """
-    params: list[object] = [model, version, days]
+    params: list[object] = [model, version, list(FOCUS_MARKETS), days]
     if league:
         query += " AND f.league_code = %s"
         params.append(league)
@@ -206,7 +274,11 @@ def fetch_candidates(
         lp.metadata_json,
         f.league_code,
         f.match_datetime_utc,
+        fom.provider AS odds_provider,
+        fom.snapshot_type AS odds_snapshot_type,
         fom.snapshot_time_utc AS odds_snapshot_time_utc,
+        fom.line_num AS odds_line_num,
+        fom.market_code AS odds_market_code,
         fom.odds_json
     FROM latest_predictions lp
     JOIN fixtures f
@@ -214,13 +286,13 @@ def fetch_candidates(
     LEFT JOIN LATERAL (
         -- Get the latest pre-match snapshot for ANY market matching this fixture
         -- We will filter for specific markets in Python code to keep query simple
-        SELECT snapshot_time_utc, odds_json, line_num, market_code
+        SELECT provider, snapshot_type, snapshot_time_utc, odds_json, line_num, market_code
         FROM fixture_odds_markets
         WHERE fixture_id = lp.fixture_id
           AND snapshot_time_utc <= f.match_datetime_utc
-          AND snapshot_type = 'latest_pre_match'
-        ORDER BY snapshot_time_utc DESC
-        LIMIT 50 -- Fetch a batch of markets to resolve in Python
+          AND snapshot_type IN ('latest_pre_match', 'closing')
+        ORDER BY (snapshot_type = 'latest_pre_match') DESC, snapshot_time_utc DESC
+        LIMIT 200 -- Fetch enough rows for market mapping + snapshot fallback.
     ) fom ON true
     ORDER BY f.match_datetime_utc ASC, lp.fixture_id ASC, lp.market_code ASC
     """
@@ -244,22 +316,21 @@ def fetch_candidates(
         p_id = d["prediction_id"]
         if p_id not in grouped:
             grouped[p_id] = {**d, "odds_rows": []}
-        
-        
+
         if d.get("odds_json"):
             blob = _as_dict(d["odds_json"])
-            # Inject columns that resolve_odds_for_market expects
-            # We must use 'fom_market_code' or similar if we aliased it,
-            # but right now fetch_candidates query selects 'market_code' from fom
-            # which overhangs 'lp.market_code' if we aren't careful.
-            
-            # The odds_json blob ALREADY contains the provider's 'market_code'.
-            # We shouldn't overwrite it with the prediction's market code.
-            # But the db query also selects `market_code` from the junction.
-            blob["market_code"] = blob.get("market_code") or d.get("market_code") 
-            blob["line_num"] = d.get("line_num")
-            grouped[p_id]["odds_rows"].append(blob)
-            
+            grouped[p_id]["odds_rows"].append(
+                {
+                    "provider": d.get("odds_provider"),
+                    "snapshot_type": d.get("odds_snapshot_type"),
+                    "snapshot_time_utc": d.get("odds_snapshot_time_utc"),
+                    "market_code": blob.get("market_code") or d.get("odds_market_code"),
+                    "line_num": d.get("odds_line_num"),
+                    "odds_json": blob,
+                    "prices_latest": blob.get("prices_latest"),
+                }
+            )
+
     return list(grouped.values())
 
 
@@ -282,6 +353,7 @@ def fetch_calibration_stats(
       ON f.fixture_id = p.fixture_id
     WHERE p.model_name = %s
       AND p.model_version = %s
+      AND p.market_code = ANY(%s)
       AND f.match_datetime_utc IS NOT NULL
       AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval
     GROUP BY f.league_code, p.market_code
@@ -289,7 +361,7 @@ def fetch_calibration_stats(
     conn = connect_db()
     try:
         with conn.cursor() as cur:
-            cur.execute(query, (model, version, history_days))
+            cur.execute(query, (model, version, list(FOCUS_MARKETS), history_days))
             rows = cur.fetchall()
     finally:
         conn.close()
@@ -313,6 +385,87 @@ def fetch_calibration_stats(
             continue
         weighted = sum(count * brier for count, brier in entries) / total_n
         by_market[market] = CalibrationStats(n=total_n, mean_brier=float(weighted))
+
+    return by_league_market, by_market
+
+
+def _compute_loss_streak(hits_desc: list[bool]) -> int:
+    streak = 0
+    for hit in hits_desc:
+        if hit:
+            break
+        streak += 1
+    return streak
+
+
+def fetch_recent_performance_stats(
+    *,
+    model: str,
+    version: str,
+    history_days: int,
+    window: int,
+) -> tuple[dict[tuple[str, str], RollingPerformance], dict[str, RollingPerformance]]:
+    query = """
+    SELECT
+        f.league_code,
+        p.market_code,
+        ps.hit,
+        f.match_datetime_utc
+    FROM predictions p
+    JOIN prediction_scores ps
+      ON ps.prediction_id = p.prediction_id
+    JOIN fixtures f
+      ON f.fixture_id = p.fixture_id
+    WHERE p.model_name = %s
+      AND p.model_version = %s
+      AND p.market_code = ANY(%s)
+      AND f.match_datetime_utc IS NOT NULL
+      AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval
+    ORDER BY p.market_code ASC, f.match_datetime_utc DESC
+    """
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, (model, version, list(FOCUS_MARKETS), history_days))
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    per_league_market_hits: dict[tuple[str, str], list[bool]] = {}
+    per_market_hits: dict[str, list[bool]] = {}
+    for league_code, market_code, hit, _match_dt in rows:
+        league = str(league_code or "")
+        market = str(market_code or "")
+        hit_bool = bool(hit)
+
+        lm_key = (league, market)
+        lm_hits = per_league_market_hits.setdefault(lm_key, [])
+        if len(lm_hits) < window:
+            lm_hits.append(hit_bool)
+
+        market_hits = per_market_hits.setdefault(market, [])
+        if len(market_hits) < window:
+            market_hits.append(hit_bool)
+
+    by_league_market: dict[tuple[str, str], RollingPerformance] = {}
+    for key, hits in per_league_market_hits.items():
+        n = len(hits)
+        precision = float(sum(1 for h in hits if h) / n) if n > 0 else None
+        by_league_market[key] = RollingPerformance(
+            n=n,
+            precision=precision,
+            loss_streak=_compute_loss_streak(hits),
+        )
+
+    by_market: dict[str, RollingPerformance] = {}
+    for market, hits in per_market_hits.items():
+        n = len(hits)
+        precision = float(sum(1 for h in hits if h) / n) if n > 0 else None
+        by_market[market] = RollingPerformance(
+            n=n,
+            precision=precision,
+            loss_streak=_compute_loss_streak(hits),
+        )
 
     return by_league_market, by_market
 
@@ -361,7 +514,9 @@ def _get_nested_odds(payload: dict[str, Any], line: str, side: str) -> float | N
     return _extract_numeric(line_payload.get(side))
 
 
-def _extract_1x2_odds(payload: dict[str, Any]) -> tuple[float | None, float | None, float | None]:
+def _extract_1x2_odds(
+    payload: dict[str, Any],
+) -> tuple[float | None, float | None, float | None]:
     home = None
     draw = None
     away = None
@@ -383,71 +538,16 @@ def _extract_1x2_odds(payload: dict[str, Any]) -> tuple[float | None, float | No
     return home, draw, away
 
 
-def resolve_odds_for_market(prediction_market_code: str, odds_rows: list[dict[str, Any]]) -> float | None:
-    """
-    Resolve model prediction market codes (e.g. p_btts, p_ho15) to real odds values.
-    """
-    # Map internal model codes to odds provider codes + side
-    # Structure: prediction_code -> (odds_market_code, side, optional_line)
-    MAPPING = {
-        # 1X2
-        "1x2_h": ("1x2", "home", None),
-        "1x2_d": ("1x2", "draw", None),
-        "1x2_a": ("1x2", "away", None),
-        # Double Chance
-        "dc_1x": ("dc", "home_draw", None),
-        "dc_x2": ("dc", "draw_away", None),
-        "dc_12": ("dc", "home_away", None),
-        # BTTS
-        "btts": ("btts", "yes", None),
-        # Over/Under Goals
-        "o15": ("ou", "over", 1.5),
-        "u15": ("ou", "under", 1.5),
-        "o25": ("ou", "over", 2.5),
-        "u25": ("ou", "under", 2.5),
-        "o35": ("ou", "over", 3.5),
-        "u35": ("ou", "under", 3.5),
-        "o45": ("ou", "over", 4.5),
-        "u45": ("ou", "under", 4.5),
-        # Team Goals
-        "ho15": ("home_ou", "over", 1.5),
-        "ao15": ("away_ou", "over", 1.5),
-        # Corners
-        "c85": ("corners_ou", "over", 8.5),
-    }
-
-    match_config = MAPPING.get(prediction_market_code)
-    if not match_config and prediction_market_code.startswith("p_"):
-        match_config = MAPPING.get(prediction_market_code[2:])
-
-    if not match_config:
-        return None
-
-    target_market, target_side, target_line = match_config
-
-    for blob in odds_rows:
-        blob = _as_dict(blob)
-        m_code = blob.get("market_code")
-        if m_code != target_market:
-            continue
-
-        # Check line match if applicable
-        if target_line is not None:
-            l_num = _safe_float(blob.get("line_num"))
-            if l_num is None or abs(l_num - target_line) > 0.01:
-                continue
-
-        # Extract price from 'latest' prices map
-        latest_prices = _as_dict(blob.get("prices_latest"))
-        price = _safe_float(latest_prices.get(target_side))
-        if price is not None and price > 1.0:
-            return price
-
-    return None
-
-
 def _clip_probability(prob: float) -> float:
     return float(min(max(prob, 0.0), 1.0))
+
+
+def _is_tradable_market(policy: dict[str, Any], market_code: str) -> bool:
+    configured = policy.get("tradable_markets")
+    if not isinstance(configured, list) or not configured:
+        return True
+    allowed = {str(item) for item in configured}
+    return market_code in allowed
 
 
 def _risk_haircut_from_score(risk_score: float) -> float:
@@ -485,12 +585,27 @@ def _bool_from_json(value: Any) -> bool:
     return False
 
 
+def _fallback_trace_used(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if not normalized:
+            return False
+        return normalized not in {"0", "false", "f", "no", "n", "none"}
+    if isinstance(value, (int, float)):
+        return bool(value)
+    return False
+
+
 def assess_row(
     row: dict[str, Any],
     *,
     policy: dict[str, Any],
     calibration_by_league_market: dict[tuple[str, str], CalibrationStats],
     calibration_by_market: dict[str, CalibrationStats],
+    performance_by_league_market: dict[tuple[str, str], RollingPerformance],
+    performance_by_market: dict[str, RollingPerformance],
 ) -> dict[str, Any]:
     penalties = policy["penalties"]
     flags: list[str] = []
@@ -500,9 +615,13 @@ def assess_row(
     league_code = str(row.get("league_code") or "")
     p_model = _clip_probability(float(row["p_model"]))
     metadata = _as_dict(row.get("metadata_json"))
+    is_tradable = _is_tradable_market(policy, market_code)
 
     odds_rows = row.get("odds_rows", [])
-    odds_used = resolve_odds_for_market(market_code, odds_rows)
+    odds_resolution = resolve_odds_for_market(
+        row.get("match_datetime_utc"), odds_rows, market_code
+    )
+    odds_used = odds_resolution.odds_used
     implied_probability = None
     if odds_used is not None and odds_used > 1.0:
         implied_probability = _clip_probability(1.0 / odds_used)
@@ -511,12 +630,17 @@ def assess_row(
 
     risk_score = 0.0
 
-    if odds_used is None:
+    if is_tradable and odds_used is None:
         risk_score += float(penalties["missing_odds"])
         breakdown["missing_odds"] = float(penalties["missing_odds"])
         flags.append("missing_odds")
+    elif not is_tradable:
+        flags.append("non_tradable_market")
 
-    if _bool_from_json(metadata.get("fallback_used")):
+    fallback_trace = odds_resolution.fallback_used
+    resolver_used_fallback = _fallback_trace_used(fallback_trace)
+    metadata_used_fallback = _bool_from_json(metadata.get("fallback_used"))
+    if resolver_used_fallback or metadata_used_fallback:
         risk_score += float(penalties["fallback_used"])
         breakdown["fallback_used"] = float(penalties["fallback_used"])
         flags.append("fallback_used")
@@ -542,9 +666,9 @@ def assess_row(
             breakdown["low_sample_lt8"] = float(penalties["low_sample_lt8"])
             flags.append("low_sample_lt8")
 
-    odds_snapshot = _parse_iso_datetime(row.get("odds_snapshot_time_utc"))
+    odds_snapshot = odds_resolution.snapshot_time_utc
     match_time = _parse_iso_datetime(row.get("match_datetime_utc"))
-    if odds_snapshot is not None and match_time is not None:
+    if is_tradable and odds_snapshot is not None and match_time is not None:
         stale_hours = (match_time - odds_snapshot).total_seconds() / 3600.0
         if stale_hours >= 24.0:
             risk_score += float(penalties["stale_odds_24h"])
@@ -557,7 +681,9 @@ def assess_row(
 
     calib = calibration_by_league_market.get((league_code, market_code))
     if calib is None:
-        calib = calibration_by_market.get(market_code, CalibrationStats(n=0, mean_brier=None))
+        calib = calibration_by_market.get(
+            market_code, CalibrationStats(n=0, mean_brier=None)
+        )
         if calib.n > 0:
             flags.append("calibration_global_fallback")
     min_calib_n = int(policy["calibration_min_samples"])
@@ -570,12 +696,49 @@ def assess_row(
         poor = float(policy["calibration_poor_brier"])
         if calib.mean_brier >= very_poor:
             risk_score += float(penalties["calibration_very_poor"])
-            breakdown["calibration_very_poor"] = float(penalties["calibration_very_poor"])
+            breakdown["calibration_very_poor"] = float(
+                penalties["calibration_very_poor"]
+            )
             flags.append("calibration_very_poor")
         elif calib.mean_brier >= poor:
             risk_score += float(penalties["calibration_poor"])
             breakdown["calibration_poor"] = float(penalties["calibration_poor"])
             flags.append("calibration_poor")
+
+    perf = performance_by_league_market.get((league_code, market_code))
+    if perf is None:
+        perf = performance_by_market.get(
+            market_code, RollingPerformance(n=0, precision=None, loss_streak=0)
+        )
+        if perf.n > 0:
+            flags.append("performance_global_fallback")
+
+    min_precision = float(policy.get("min_precision_rolling", 0.58))
+    precision_min_samples = int(policy.get("precision_min_samples", 30))
+    loss_streak_pause = int(policy.get("loss_streak_pause", 2))
+
+    force_pass = False
+    hard_precision_gate = bool(policy.get("hard_precision_gate", False))
+    if (
+        perf.n >= precision_min_samples
+        and perf.precision is not None
+        and perf.precision < min_precision
+    ):
+        risk_score += float(penalties.get("precision_gate_fail", 25.0))
+        breakdown["precision_gate_fail"] = float(
+            penalties.get("precision_gate_fail", 25.0)
+        )
+        flags.append("precision_gate_fail")
+        if hard_precision_gate:
+            force_pass = True
+
+    hard_loss_streak_pause = bool(policy.get("hard_loss_streak_pause", True))
+    if perf.loss_streak >= loss_streak_pause and loss_streak_pause > 0:
+        risk_score += float(penalties.get("loss_streak_pause", 30.0))
+        breakdown["loss_streak_pause"] = float(penalties.get("loss_streak_pause", 30.0))
+        flags.append("loss_streak_pause")
+        if hard_loss_streak_pause:
+            force_pass = True
 
     risk_score = float(min(max(risk_score, 0.0), 100.0))
     haircut = _risk_haircut_from_score(risk_score)
@@ -591,7 +754,11 @@ def assess_row(
     min_small = float(policy["min_edge_bet_small"])
     min_bet = float(policy["min_edge_bet"])
 
-    if odds_used is None or edge_adjusted is None:
+    if not is_tradable:
+        action = "pass"
+    elif force_pass:
+        action = "pass"
+    elif odds_used is None or edge_adjusted is None:
         action = "pass"
     elif risk_score >= 75.0:
         action = "pass"
@@ -638,8 +805,21 @@ def assess_row(
             "penalty_breakdown": breakdown,
             "calibration_samples": calib.n,
             "calibration_mean_brier": calib.mean_brier,
+            "rolling_precision_n": perf.n,
+            "rolling_precision": perf.precision,
+            "rolling_loss_streak": perf.loss_streak,
+            "rolling_min_precision_gate": min_precision,
+            "is_tradable_market": is_tradable,
             "risk_haircut": haircut,
-            "odds_snapshot_time_utc": odds_snapshot.isoformat() if odds_snapshot else None,
+            "fallback_used": bool(resolver_used_fallback or metadata_used_fallback),
+            "fallback_trace": fallback_trace,
+            "odds_provider": odds_resolution.provider,
+            "odds_snapshot_type": odds_resolution.snapshot_type,
+            "odds_line_num": odds_resolution.line_num,
+            "odds_field": odds_resolution.odds_field,
+            "odds_snapshot_time_utc": odds_snapshot.isoformat()
+            if odds_snapshot
+            else None,
             "match_datetime_utc": match_time.isoformat() if match_time else None,
             "features_missing_count": missing_count,
             "min_team_sample_size": min_sample,
@@ -767,6 +947,14 @@ def main() -> None:
         version=args.version,
         history_days=args.history_days,
     )
+    performance_by_league_market, performance_by_market = (
+        fetch_recent_performance_stats(
+            model=args.model,
+            version=args.version,
+            history_days=args.history_days,
+            window=int(policy.get("precision_window", 60)),
+        )
+    )
 
     assessed = [
         assess_row(
@@ -774,6 +962,8 @@ def main() -> None:
             policy=policy,
             calibration_by_league_market=calibration_by_league_market,
             calibration_by_market=calibration_by_market,
+            performance_by_league_market=performance_by_league_market,
+            performance_by_market=performance_by_market,
         )
         for row in candidates
     ]
@@ -783,7 +973,9 @@ def main() -> None:
         return
 
     written = upsert_assessments(assessed)
-    print(f"Assessed {len(assessed)} rows, upserted {written} risk rows: {summarize_actions(assessed)}")
+    print(
+        f"Assessed {len(assessed)} rows, upserted {written} risk rows: {summarize_actions(assessed)}"
+    )
 
 
 if __name__ == "__main__":

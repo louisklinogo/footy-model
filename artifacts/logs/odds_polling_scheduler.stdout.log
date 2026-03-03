@@ -1399,3 +1399,434 @@ Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to 
 Log file: artifacts\logs\odds_polling_scheduler.log
 Polling fixtures: 224
 Inserted 68 odds snapshot rows.
+Skip fixture 22185 (Sofa=14038606): odds endpoint returned not found (Failed to fetch /event/14038606/odds/1/all: 404)
+Skip fixture 22186 (Sofa=14038610): odds endpoint returned not found (Failed to fetch /event/14038610/odds/1/all: 404)
+Skip fixture 22187 (Sofa=14038607): odds endpoint returned not found (Failed to fetch /event/14038607/odds/1/all: 404)
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 224
+Inserted 78 odds snapshot rows.
+Skip fixture 22185 (Sofa=14038606): odds endpoint returned not found (Failed to fetch /event/14038606/odds/1/all: 404)
+Skip fixture 22186 (Sofa=14038610): odds endpoint returned not found (Failed to fetch /event/14038610/odds/1/all: 404)
+Skip fixture 22187 (Sofa=14038607): odds endpoint returned not found (Failed to fetch /event/14038607/odds/1/all: 404)
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 224
+Inserted 68 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Odds polling failed: Page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://www.sofascore.com/api/v1/event/14083591/odds/1/all
+Call log:
+  - navigating to "https://www.sofascore.com/api/v1/event/14083591/odds/1/all", waiting until "load"
+
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 186
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 184
+Inserted 654 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 183
+Inserted 1000 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 126
+Inserted 26 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 125
+Inserted 255 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 122
+Inserted 79 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 116
+Inserted 205 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 115
+Inserted 589 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 110
+Inserted 782 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 110
+Inserted 91 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 110
+Inserted 109 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 107
+Inserted 103 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 109
+Inserted 68 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 108
+Inserted 77 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 105
+Inserted 593 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 101
+Inserted 634 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 101
+Inserted 13 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 2770 (Sofa=15489538): odds endpoint returned not found (Failed to fetch /event/15489538/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Inserted 248 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Odds polling failed: Page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://www.sofascore.com/api/v1/event/15581703/odds/1/all
+Call log:
+  - navigating to "https://www.sofascore.com/api/v1/event/15581703/odds/1/all", waiting until "load"
+
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Skip fixture 2770 (Sofa=15489538): odds endpoint returned not found (Failed to fetch /event/15489538/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 125
+Inserted 36 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 2770 (Sofa=15489538): odds endpoint returned not found (Failed to fetch /event/15489538/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Inserted 13 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 2770 (Sofa=15489538): odds endpoint returned not found (Failed to fetch /event/15489538/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Inserted 1134 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Inserted 14 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 124
+Inserted 0 odds snapshot rows.
+Odds polling failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.sofascore.com/api/v1/event/14038608/odds/1/all
+Call log:
+  - navigating to "https://www.sofascore.com/api/v1/event/14038608/odds/1/all", waiting until "load"
+
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Odds polling failed: Page.goto: net::ERR_NAME_NOT_RESOLVED at https://www.sofascore.com/api/v1/event/14038608/odds/1/all
+Call log:
+  - navigating to "https://www.sofascore.com/api/v1/event/14038608/odds/1/all", waiting until "load"
+
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 259 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 876 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 0 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 0 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 0 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 259 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 258 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 0 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Skip fixture 20829 (Sofa=15581703): odds endpoint returned not found (Failed to fetch /event/15581703/odds/1/all: 404)
+Skip fixture 4901 (Sofa=14317738): odds endpoint returned not found (Failed to fetch /event/14317738/odds/1/all: 404)
+Skip fixture 4902 (Sofa=14317731): odds endpoint returned not found (Failed to fetch /event/14317731/odds/1/all: 404)
+Skip fixture 4904 (Sofa=14317740): odds endpoint returned not found (Failed to fetch /event/14317740/odds/1/all: 404)
+Skip fixture 4905 (Sofa=14317736): odds endpoint returned not found (Failed to fetch /event/14317736/odds/1/all: 404)
+Skip fixture 4903 (Sofa=14317741): odds endpoint returned not found (Failed to fetch /event/14317741/odds/1/all: 404)
+Skip fixture 22441 (Sofa=15362695): odds endpoint returned not found (Failed to fetch /event/15362695/odds/1/all: 404)
+Skip fixture 3235 (Sofa=15573411): odds endpoint returned not found (Failed to fetch /event/15573411/odds/1/all: 404)
+Skip fixture 3077 (Sofa=15538757): odds endpoint returned not found (Failed to fetch /event/15538757/odds/1/all: 404)
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123
+Inserted 904 odds snapshot rows.
+Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
+Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
+Skip fixture 22190 (Sofa=14038604): odds endpoint returned not found (Failed to fetch /event/14038604/odds/1/all: 404)
+Odds polling failed: Page.goto: net::ERR_CONNECTION_RESET at https://www.sofascore.com/api/v1/event/15581703/odds/1/all
+Call log:
+  - navigating to "https://www.sofascore.com/api/v1/event/15581703/odds/1/all", waiting until "load"
+
+Log file: artifacts\logs\odds_polling_scheduler.log
+Polling fixtures: 123

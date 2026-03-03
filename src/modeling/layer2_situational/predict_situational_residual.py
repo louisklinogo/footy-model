@@ -63,23 +63,47 @@ def _market_scaled_alpha(base_alpha: float, odds_gap: object, residual_raw: floa
 
 def _predict_non_overlap_residuals(
     frame: pd.DataFrame,
-    features: list[str],
-    home_model: object,
-    away_model: object,
+    features_base: list[str],
+    features_premium: list[str],
+    home_model_base: object,
+    away_model_base: object,
+    home_model_premium: object,
+    away_model_premium: object,
+    mask_premium: pd.Series,
 ) -> tuple[np.ndarray, np.ndarray]:
-    x_base = frame[features].copy()
-    x_home = x_base.copy()
-    x_away = x_base.copy()
+    x_base_full = frame[features_base].copy()
+    x_home_base = x_base_full.copy()
+    x_away_base = x_base_full.copy()
+    
+    x_premium_full = frame[features_premium].copy()
+    x_home_premium = x_premium_full.copy()
+    x_away_premium = x_premium_full.copy()
 
     for col in KEY_ABSENT_OVERLAP_FEATURES["home"]:
-        if col in x_home.columns:
-            x_home[col] = 0.0
+        if col in x_home_base.columns:
+            x_home_base[col] = 0.0
+        if col in x_home_premium.columns:
+            x_home_premium[col] = 0.0
     for col in KEY_ABSENT_OVERLAP_FEATURES["away"]:
-        if col in x_away.columns:
-            x_away[col] = 0.0
+        if col in x_away_base.columns:
+            x_away_base[col] = 0.0
+        if col in x_away_premium.columns:
+            x_away_premium[col] = 0.0
 
-    home_pred = home_model.predict(x_home.fillna(0).values)
-    away_pred = away_model.predict(x_away.fillna(0).values)
+    home_pred = np.zeros(len(frame))
+    away_pred = np.zeros(len(frame))
+    
+    # Base predictions
+    idx_base = ~mask_premium
+    if idx_base.any():
+        home_pred[idx_base] = home_model_base.predict(x_home_base[idx_base].fillna(0).values)
+        away_pred[idx_base] = away_model_base.predict(x_away_base[idx_base].fillna(0).values)
+        
+    # Premium predictions
+    if mask_premium.any():
+        home_pred[mask_premium] = home_model_premium.predict(x_home_premium[mask_premium].fillna(0).values)
+        away_pred[mask_premium] = away_model_premium.predict(x_away_premium[mask_premium].fillna(0).values)
+
     return home_pred, away_pred
 
 
@@ -264,35 +288,62 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
     snap_df = pd.read_sql(
         """
         SELECT fixture_id, is_home,
-               rolling_xg, rolling_xg_against, rolling_corners, rolling_rest_days
+               rolling_xg, rolling_xg_against, rolling_corners, rolling_rest_days,
+               rolling_possession, rolling_possession_against,
+               rolling_xg_p1, rolling_xg_p1_against,
+               rolling_xg_h2_delta, rolling_xg_h2_delta_against,
+               rolling_sot_p1, rolling_sot_p1_against,
+               rolling_sot_h2_delta, rolling_sot_h2_delta_against,
+               rolling_tackles_pct, rolling_tackles_pct_against,
+               rolling_errors_lead_to_shot, rolling_errors_lead_to_shot_against
         FROM team_premium_snapshots
     """,
         conn,
     )
-    home_snap = (
-        snap_df[snap_df.is_home]
-        .rename(
-            columns={
-                "rolling_xg": "home_rolling_xg",
-                "rolling_xg_against": "home_rolling_xg_against",
-                "rolling_corners": "home_rolling_corners",
-                "rolling_rest_days": "home_rest_days",
-            }
-        )
-        .drop(columns=["is_home"])
-    )
-    away_snap = (
-        snap_df[~snap_df.is_home]
-        .rename(
-            columns={
-                "rolling_xg": "away_rolling_xg",
-                "rolling_xg_against": "away_rolling_xg_against",
-                "rolling_corners": "away_rolling_corners",
-                "rolling_rest_days": "away_rest_days",
-            }
-        )
-        .drop(columns=["is_home"])
-    )
+
+    _HOME_RENAME = {
+        "rolling_xg": "home_rolling_xg",
+        "rolling_xg_against": "home_rolling_xg_against",
+        "rolling_corners": "home_rolling_corners",
+        "rolling_rest_days": "home_rest_days",
+        "rolling_possession": "home_rolling_possession",
+        "rolling_possession_against": "home_rolling_possession_against",
+        "rolling_xg_p1": "home_rolling_xg_p1",
+        "rolling_xg_p1_against": "home_rolling_xg_p1_against",
+        "rolling_xg_h2_delta": "home_rolling_xg_h2_delta",
+        "rolling_xg_h2_delta_against": "home_rolling_xg_h2_delta_against",
+        "rolling_sot_p1": "home_rolling_sot_p1",
+        "rolling_sot_p1_against": "home_rolling_sot_p1_against",
+        "rolling_sot_h2_delta": "home_rolling_sot_h2_delta",
+        "rolling_sot_h2_delta_against": "home_rolling_sot_h2_delta_against",
+        "rolling_tackles_pct": "home_rolling_tackles_pct",
+        "rolling_tackles_pct_against": "home_rolling_tackles_pct_against",
+        "rolling_errors_lead_to_shot": "home_rolling_errors_lead_to_shot",
+        "rolling_errors_lead_to_shot_against": "home_rolling_errors_lead_to_shot_against",
+    }
+    _AWAY_RENAME = {
+        "rolling_xg": "away_rolling_xg",
+        "rolling_xg_against": "away_rolling_xg_against",
+        "rolling_corners": "away_rolling_corners",
+        "rolling_rest_days": "away_rest_days",
+        "rolling_possession": "away_rolling_possession",
+        "rolling_possession_against": "away_rolling_possession_against",
+        "rolling_xg_p1": "away_rolling_xg_p1",
+        "rolling_xg_p1_against": "away_rolling_xg_p1_against",
+        "rolling_xg_h2_delta": "away_rolling_xg_h2_delta",
+        "rolling_xg_h2_delta_against": "away_rolling_xg_h2_delta_against",
+        "rolling_sot_p1": "away_rolling_sot_p1",
+        "rolling_sot_p1_against": "away_rolling_sot_p1_against",
+        "rolling_sot_h2_delta": "away_rolling_sot_h2_delta",
+        "rolling_sot_h2_delta_against": "away_rolling_sot_h2_delta_against",
+        "rolling_tackles_pct": "away_rolling_tackles_pct",
+        "rolling_tackles_pct_against": "away_rolling_tackles_pct_against",
+        "rolling_errors_lead_to_shot": "away_rolling_errors_lead_to_shot",
+        "rolling_errors_lead_to_shot_against": "away_rolling_errors_lead_to_shot_against",
+    }
+
+    home_snap = snap_df[snap_df.is_home].rename(columns=_HOME_RENAME).drop(columns=["is_home"])
+    away_snap = snap_df[~snap_df.is_home].rename(columns=_AWAY_RENAME).drop(columns=["is_home"])
 
     print("Loading Poisson predictions...")
     preds = pd.read_sql(
@@ -487,6 +538,14 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
         df["away_rolling_xg_against"].fillna(0) * 5
     )
     df["rest_delta"] = df["home_rest_days"].fillna(0) - df["away_rest_days"].fillna(0)
+    df["xg_p1_delta"] = (
+        df["home_rolling_xg_p1"].fillna(0)
+        - df["away_rolling_xg_p1"].fillna(0)
+    )
+    df["h2_surge_delta"] = (
+        df["home_rolling_xg_h2_delta"].fillna(0)
+        - df["away_rolling_xg_h2_delta"].fillna(0)
+    )
 
     # Congestion & Upcoming Tier
     print("Computing schedule flags...")
@@ -718,10 +777,17 @@ def main():
     )
     args = parser.parse_args()
 
-    model_blob = joblib.load(MODEL_DIR / "situational_model.pkl")
-    features = model_blob["features"]
-    home_model = model_blob["home_model"]
-    away_model = model_blob["away_model"]
+    base_blob = joblib.load(MODEL_DIR / "situational_model_base.pkl")
+    features_base = base_blob["features"]
+    home_model_base = base_blob["home_model"]
+    away_model_base = base_blob["away_model"]
+    
+    premium_blob = joblib.load(MODEL_DIR / "situational_model_premium.pkl")
+    features_premium = premium_blob["features"]
+    home_model_premium = premium_blob["home_model"]
+    away_model_premium = premium_blob["away_model"]
+
+    # We use the deployment policy generated by the base model as the source of truth for league enablement.
     policy = load_layer2_deployment_policy(MODEL_DIR)
     rule_config_path = args.rule_layer_config or (MODEL_DIR / "rule_layer_config.json")
     rule_config = (
@@ -732,16 +798,37 @@ def main():
     if df.empty:
         return
 
-    X = df[features].fillna(0).values
-    df["pred_home_residual_full"] = home_model.predict(X)
-    df["pred_away_residual_full"] = away_model.predict(X)
+    # Determine which rows have complete premium data
+    mask_premium = df[features_premium].notna().all(axis=1)
+
+    df["pred_home_residual_full"] = np.nan
+    df["pred_away_residual_full"] = np.nan
+    df["model_source"] = "base"
+
+    # 1. Base Model Predictions
+    idx_base = ~mask_premium
+    if idx_base.any():
+        X_base = df.loc[idx_base, features_base].fillna(0).values
+        df.loc[idx_base, "pred_home_residual_full"] = home_model_base.predict(X_base)
+        df.loc[idx_base, "pred_away_residual_full"] = away_model_base.predict(X_base)
+
+    # 2. Premium Model Predictions
+    if mask_premium.any():
+        X_premium = df.loc[mask_premium, features_premium].fillna(0).values
+        df.loc[mask_premium, "pred_home_residual_full"] = home_model_premium.predict(X_premium)
+        df.loc[mask_premium, "pred_away_residual_full"] = away_model_premium.predict(X_premium)
+        df.loc[mask_premium, "model_source"] = "premium"
 
     if args.enable_rule_layer and args.rule_overlap_mode == "override":
         home_non_overlap, away_non_overlap = _predict_non_overlap_residuals(
             frame=df,
-            features=features,
-            home_model=home_model,
-            away_model=away_model,
+            features_base=features_base,
+            features_premium=features_premium,
+            home_model_base=home_model_base,
+            away_model_base=away_model_base,
+            home_model_premium=home_model_premium,
+            away_model_premium=away_model_premium,
+            mask_premium=mask_premium,
         )
         df["pred_home_residual_non_overlap"] = home_non_overlap
         df["pred_away_residual_non_overlap"] = away_non_overlap
@@ -767,8 +854,8 @@ def main():
         a_res_raw_full = float(row["pred_away_residual_full"])
         h_res_raw = h_res_raw_full
         a_res_raw = a_res_raw_full
-        h_res_source = "full"
-        a_res_source = "full"
+        h_res_source = row["model_source"]
+        a_res_source = row["model_source"]
         h_overlap_family: str | None = None
         a_overlap_family: str | None = None
         h_override_applied = False
@@ -794,7 +881,7 @@ def main():
 
         is_low = bool(row["is_low_confidence"])
         reason = "early_season_min_4_games_not_met" if is_low else None
-        feature_snapshot = _build_feature_snapshot(row, features)
+        feature_snapshot = _build_feature_snapshot(row, features_premium if row["model_source"] == "premium" else features_base)
         tracking_signals = _build_tracking_signals(row)
         rule_scope = (
             _resolve_rule_scope(

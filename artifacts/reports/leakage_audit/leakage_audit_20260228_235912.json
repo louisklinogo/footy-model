@@ -1,0 +1,40 @@
+{
+  "args": {
+    "days": 14,
+    "league": null,
+    "limit": 500
+  },
+  "availability_check": {
+    "examples": [],
+    "fixture_sample_count": 500,
+    "known_timing_rows": 836,
+    "reason": null,
+    "skipped": false,
+    "status": "pass",
+    "timing_column": "event_recorded_at",
+    "unknown_timing_pct": 0.0,
+    "unknown_timing_rows": 0,
+    "violation_count": 0
+  },
+  "finished_at": "2026-03-01T00:01:14.852238+00:00",
+  "lambda_timing_check": {
+    "examples": [],
+    "reason": null,
+    "skipped": false,
+    "status": "info",
+    "timing_column": "feature_asof_utc",
+    "violation_count": 0
+  },
+  "overall_status": "pass",
+  "snapshot_sample_size_check": {
+    "examples": [],
+    "fixture_sample_count": 500,
+    "missing_snapshot_rows": 0,
+    "reason": null,
+    "skipped": false,
+    "status": "pass",
+    "team_rows_with_snapshot": 1000,
+    "violation_count": 0
+  },
+  "started_at": "2026-03-01T00:01:13.615619+00:00"
+}

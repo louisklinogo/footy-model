@@ -30,13 +30,25 @@ from sofascore_wrapper.api import SofascoreAPI
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Backfill Sofascore 1X2 odds into fixture_odds_markets")
-    parser.add_argument("--league", type=str, default=None, help="Optional league code filter")
+    parser = argparse.ArgumentParser(
+        description="Backfill Sofascore 1X2 odds into fixture_odds_markets"
+    )
+    parser.add_argument(
+        "--league", type=str, default=None, help="Optional league code filter"
+    )
     parser.add_argument("--limit", type=int, default=50, help="Max fixtures to process")
-    parser.add_argument("--sleep-sec", type=float, default=1.0, help="Sleep between API calls")
-    parser.add_argument("--dry-run", action="store_true", help="Fetch data but do not write to DB")
-    parser.add_argument("--resume-file", type=str, default=None, help="Path to resume log (JSONL)")
-    parser.add_argument("--provider-id", type=int, default=1, help="Provider ID (default: Bet365 = 1)")
+    parser.add_argument(
+        "--sleep-sec", type=float, default=1.0, help="Sleep between API calls"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Fetch data but do not write to DB"
+    )
+    parser.add_argument(
+        "--resume-file", type=str, default=None, help="Path to resume log (JSONL)"
+    )
+    parser.add_argument(
+        "--provider-id", type=int, default=1, help="Provider ID (default: Bet365 = 1)"
+    )
     return parser.parse_args()
 
 
@@ -103,22 +115,34 @@ def extract_line(raw_text: str) -> float | None:
         return None
 
 
-def _filter_choices(choices: list[Any], provider_id: int | None) -> list[dict[str, Any]]:
+def _filter_choices(
+    choices: list[Any], provider_id: int | None
+) -> list[dict[str, Any]]:
     has_provider_id = any("providerId" in c for c in choices if isinstance(c, dict))
     filtered: list[dict[str, Any]] = []
     for choice in choices:
         if not isinstance(choice, dict):
             continue
-        if provider_id is not None and has_provider_id and choice.get("providerId") != provider_id:
+        if (
+            provider_id is not None
+            and has_provider_id
+            and choice.get("providerId") != provider_id
+        ):
             continue
         filtered.append(choice)
     return filtered
 
 
-def _build_price_map(choices: dict[str, dict[str, Any]], use_initial: bool) -> dict[str, float] | None:
+def _build_price_map(
+    choices: dict[str, dict[str, Any]], use_initial: bool
+) -> dict[str, float] | None:
     prices: dict[str, float] = {}
     for key, choice in choices.items():
-        raw_val = choice.get("initialFractionalValue") if use_initial else choice.get("fractionalValue")
+        raw_val = (
+            choice.get("initialFractionalValue")
+            if use_initial
+            else choice.get("fractionalValue")
+        )
         dec = None
         if raw_val is not None:
             if isinstance(raw_val, str):
@@ -134,10 +158,14 @@ def _build_price_map(choices: dict[str, dict[str, Any]], use_initial: bool) -> d
 
 
 def normalize_prices(choices: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
-    opening = _build_price_map(choices, use_initial=True)
     latest = _build_price_map(choices, use_initial=False)
-    if not opening or not latest:
+    if not latest:
         return None
+
+    # Fallback to latest for opening if initial is missing/invalid
+    opening = _build_price_map(choices, use_initial=True)
+    if not opening:
+        opening = latest
 
     inv_sum = sum(1.0 / p for p in latest.values())
     if inv_sum <= 0:
@@ -153,7 +181,17 @@ def normalize_prices(choices: dict[str, dict[str, Any]]) -> dict[str, Any] | Non
 
 def map_market_code(market_name: str) -> str | None:
     name = market_name.strip().lower()
-    if name in {"1x2", "match result", "full time"} or ("full time" in name and "1x2" not in name):
+
+    def _team_side(label: str) -> str | None:
+        if re.search(r"\b(home|home team|team 1|team1)\b", label):
+            return "home"
+        if re.search(r"\b(away|away team|team 2|team2)\b", label):
+            return "away"
+        return None
+
+    if name in {"1x2", "match result", "full time"} or (
+        "full time" in name and "1x2" not in name
+    ):
         return "1x2"
     if "double chance" in name:
         return "dc"
@@ -161,18 +199,31 @@ def map_market_code(market_name: str) -> str | None:
         return "dnb"
     if "both teams to score" in name:
         return "btts"
+    if "corner" in name:
+        side = _team_side(name)
+        if side == "home":
+            return "home_corners_ou"
+        if side == "away":
+            return "away_corners_ou"
+        return "corners_ou"
+    if "goal" in name and "total" in name:
+        side = _team_side(name)
+        if side == "home":
+            return "home_ou"
+        if side == "away":
+            return "away_ou"
     if "match goals" in name or "total goals" in name:
         return "ou"
     if "asian handicap" in name:
         return "ah"
-    if "corner" in name:
-        return "corners_ou"
     if "card" in name:
         return "cards_ou"
     return None
 
 
-def extract_markets(odds_payload: dict[str, Any], provider_id: int | None) -> list[dict[str, Any]]:
+def extract_markets(
+    odds_payload: dict[str, Any], provider_id: int | None
+) -> list[dict[str, Any]]:
     markets = odds_payload.get("markets") or []
     if not isinstance(markets, list):
         return []
@@ -203,22 +254,45 @@ def extract_markets(odds_payload: dict[str, Any], provider_id: int | None) -> li
                 continue
             mapped[key] = choice
 
-        if market_code == "1x2" and not {"home", "draw", "away"}.issubset(mapped.keys()):
+        if market_code == "1x2" and not {"home", "draw", "away"}.issubset(
+            mapped.keys()
+        ):
             continue
-        if market_code in {"dc"} and not {"home_draw", "home_away", "draw_away"}.issubset(mapped.keys()):
+        if market_code in {"dc"} and not {
+            "home_draw",
+            "home_away",
+            "draw_away",
+        }.issubset(mapped.keys()):
             continue
         if market_code in {"dnb"} and not {"home", "away"}.issubset(mapped.keys()):
             continue
         if market_code in {"btts"} and not {"yes", "no"}.issubset(mapped.keys()):
             continue
-        if market_code in {"ou", "corners_ou", "cards_ou"} and not {"over", "under"}.issubset(mapped.keys()):
+        if market_code in {
+            "ou",
+            "home_ou",
+            "away_ou",
+            "corners_ou",
+            "home_corners_ou",
+            "away_corners_ou",
+            "cards_ou",
+        } and not {"over", "under"}.issubset(mapped.keys()):
             continue
         if market_code == "ah" and not {"home", "away"}.issubset(mapped.keys()):
             continue
 
         line_num = None
         line_text = None
-        if market_code in {"ou", "corners_ou", "cards_ou", "ah"}:
+        if market_code in {
+            "ou",
+            "home_ou",
+            "away_ou",
+            "corners_ou",
+            "home_corners_ou",
+            "away_corners_ou",
+            "cards_ou",
+            "ah",
+        }:
             choice_group = market.get("choiceGroup")
             if choice_group is not None:
                 line_num = extract_line(str(choice_group))
@@ -276,12 +350,18 @@ def append_resume(resume_file: str | None, fixture_id: int, status: str) -> None
     if not resume_file:
         return
     path = Path(resume_file)
-    payload = {"fixture_id": fixture_id, "status": status, "ts": datetime.now(timezone.utc).isoformat()}
+    payload = {
+        "fixture_id": fixture_id,
+        "status": status,
+        "ts": datetime.now(timezone.utc).isoformat(),
+    }
     with path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(payload) + "\n")
 
 
-def fetch_targets(league: str | None, limit: int, resume_set: set[int], provider: str) -> list[dict[str, Any]]:
+def fetch_targets(
+    league: str | None, limit: int, resume_set: set[int], provider: str
+) -> list[dict[str, Any]]:
     # Exclude fixtures that already have a closing row OR that are marked as
     # permanently failed (404) in odds_fetch_failures.
     query = """
@@ -318,7 +398,7 @@ def fetch_targets(league: str | None, limit: int, resume_set: set[int], provider
         with conn.cursor() as cur:
             cur.execute(query, tuple(params))
             rows = cur.fetchall()
-            cols = [desc[0] for desc in cur.description]
+            cols = [desc[0] for desc in (cur.description or [])]
             out = [dict(zip(cols, row)) for row in rows]
     finally:
         conn.close()
@@ -350,6 +430,8 @@ def _insert_not_available(fixture_id: int, provider: str, match_dt: Any) -> None
 
 async def run_backfill(args: argparse.Namespace) -> int:
     provider = "sofascore"
+    tracked_team_codes = ["home_ou", "away_ou", "home_corners_ou", "away_corners_ou"]
+    dry_seen_counts = {code: 0 for code in tracked_team_codes}
     resume_set = load_resume_set(args.resume_file)
     targets = fetch_targets(args.league, args.limit, resume_set, provider)
 
@@ -378,8 +460,14 @@ async def run_backfill(args: argparse.Namespace) -> int:
                 is_404 = "404" in err_str
                 if is_404:
                     _insert_not_available(fixture_id, provider, match_dt)
-                    print(f"  Marked as not_available (404 — will skip in future batches).")
-                append_resume(args.resume_file, fixture_id, "fetch_error_404" if is_404 else "fetch_error")
+                    print(
+                        f"  Marked as not_available (404 — will skip in future batches)."
+                    )
+                append_resume(
+                    args.resume_file,
+                    fixture_id,
+                    "fetch_error_404" if is_404 else "fetch_error",
+                )
                 await asyncio.sleep(args.sleep_sec)
                 continue
 
@@ -419,16 +507,25 @@ async def run_backfill(args: argparse.Namespace) -> int:
             if args.dry_run:
                 sample = markets[0]
                 market_codes = sorted({m["market_code"] for m in markets})
+                market_code_set = set(market_codes)
                 sample_lines = [
                     f"{m['market_code']}:{m['line_num']}"
                     for m in markets
                     if m["line_num"] is not None
                 ][:6]
+                for code in tracked_team_codes:
+                    if code in market_code_set:
+                        dry_seen_counts[code] += 1
+                missing_team_codes = [
+                    code for code in tracked_team_codes if code not in market_code_set
+                ]
                 print(
                     f"  [DRY RUN] markets={len(markets)} codes={market_codes} "
                     f"sample={sample['market_code']} odds={sample['prices_latest']} "
                     f"lines={sample_lines}"
                 )
+                if missing_team_codes:
+                    print(f"  [DRY RUN] missing_team_codes={missing_team_codes}")
                 append_resume(args.resume_file, fixture_id, "dry_run")
                 await asyncio.sleep(args.sleep_sec)
                 continue
@@ -460,11 +557,25 @@ async def run_backfill(args: argparse.Namespace) -> int:
             finally:
                 conn.close()
 
-            print(f"  Inserted {len(odds_rows)} closing market snapshot(s) at {match_dt.isoformat()}")
+            print(
+                f"  Inserted {len(odds_rows)} closing market snapshot(s) at {match_dt.isoformat()}"
+            )
             append_resume(args.resume_file, fixture_id, "inserted")
             await asyncio.sleep(args.sleep_sec)
     finally:
         await api.close()
+
+    if args.dry_run:
+        total = len(targets)
+        extracted_any = [code for code, count in dry_seen_counts.items() if count > 0]
+        not_found = [code for code, count in dry_seen_counts.items() if count == 0]
+        print(
+            f"[DRY RUN] extracted_team_market_codes fixtures={total} codes={extracted_any}"
+        )
+        if not_found:
+            print(
+                f"[DRY RUN] team_market_codes_not_found fixtures={total} codes={not_found}"
+            )
 
     return 0
 

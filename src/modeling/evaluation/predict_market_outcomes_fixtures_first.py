@@ -30,33 +30,62 @@ MODEL_DIR = Path("model_artifacts/market_models")
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
 MARKETS = (
-    # Totals
-    "o15", "o25", "o35", "o45", "u15", "u25",
-    # Corners
+    # Goals
+    "o15",
+    "u35",
+    # Corners Totals
+    "c75",
     "c85",
-    # BTTS
-    "btts",
+    "c95",
+    "c105",
+    # Corners Home Team
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    # Corners Away Team
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
     # 1X2
-    "1x2_h", "1x2_d", "1x2_a",
+    "1x2_h",
+    "1x2_d",
+    "1x2_a",
     # Double Chance
-    "dc_1x", "dc_x2", "dc_12",
+    "dc_1x",
+    "dc_x2",
+    "dc_12",
     # Team Totals
-    "ho15", "ao15",
+    "ho15",
+    "ao15",
+    # Handicap Markets
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
     # Anytime Lead Markets
-    "h_1up", "a_1up", "h_2up", "a_2up",
-    # Combo OR
-    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
-    # Combo AND
-    "home_and_o25", "away_and_o25",
+    "h_1up",
+    "a_1up",
+    "h_2up",
+    "a_2up",
 )
 
 _MARKOV_PRICER = MarkovPricer(max_goals=8)
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Predict fixtures-first markets and write to DB")
-    parser.add_argument("--league", type=str, default=None, help="Optional league_code filter")
-    parser.add_argument("--days", type=int, default=3, help="Prediction horizon in days")
+    parser = argparse.ArgumentParser(
+        description="Predict fixtures-first markets and write to DB"
+    )
+    parser.add_argument(
+        "--league", type=str, default=None, help="Optional league_code filter"
+    )
+    parser.add_argument(
+        "--days", type=int, default=3, help="Prediction horizon in days"
+    )
     parser.add_argument(
         "--backfill-days",
         type=int,
@@ -120,10 +149,10 @@ def fetch_candidate_fixtures(
         f.fixture_id,
         f.league_code,
         f.match_datetime_utc,
-        {_latest_odds_expr('od15', 'over')} AS odds_over_15,
-        {_latest_odds_expr('od15', 'under')} AS odds_under_15,
-        {_latest_odds_expr('od25', 'over')} AS odds_over_25,
-        {_latest_odds_expr('od25', 'under')} AS odds_under_25,
+        {_latest_odds_expr("od15", "over")} AS odds_over_15,
+        {_latest_odds_expr("od15", "under")} AS odds_under_15,
+        {_latest_odds_expr("od25", "over")} AS odds_over_25,
+        {_latest_odds_expr("od25", "under")} AS odds_under_25,
         GREATEST(od15.snapshot_time_utc, od25.snapshot_time_utc) AS odds_snapshot_time_utc,
         tph.sample_size AS home_sample_size,
         tph.rolling_xg AS home_rolling_xg,
@@ -163,10 +192,10 @@ def fetch_candidate_fixtures(
         tpa.rolling_corners_against AS away_rolling_corners_against,
         tpa.rolling_goals_prevented AS away_rolling_goals_prevented,
         tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against,
-        {_json_number_expr('l1h.metadata_json', 'lambda')} AS lambda_home_l1,
-        {_json_number_expr('l1a.metadata_json', 'lambda')} AS lambda_away_l1,
-        {_json_number_expr('l2h.metadata_json', 'lambda')} AS adj_lambda_home_final,
-        {_json_number_expr('l2a.metadata_json', 'lambda')} AS adj_lambda_away_final,
+        {_json_number_expr("l1h.metadata_json", "lambda")} AS lambda_home_l1,
+        {_json_number_expr("l1a.metadata_json", "lambda")} AS lambda_away_l1,
+        {_json_number_expr("l2h.metadata_json", "lambda")} AS adj_lambda_home_final,
+        {_json_number_expr("l2a.metadata_json", "lambda")} AS adj_lambda_away_final,
         CASE
             WHEN lower(COALESCE(l2h.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
             THEN 1 ELSE 0
@@ -280,21 +309,33 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     out["xg_net_diff"] = out["home_rolling_xg"] - out["away_rolling_xg_against"]
     out["xgot_net_diff"] = out["home_rolling_xgot"] - out["away_rolling_xgot_against"]
     out["xa_net_diff"] = out["home_rolling_xa"] - out["away_rolling_xa_against"]
-    out["corners_net_diff"] = out["home_rolling_corners"] - out["away_rolling_corners_against"]
+    out["corners_net_diff"] = (
+        out["home_rolling_corners"] - out["away_rolling_corners_against"]
+    )
     out["sample_size_diff"] = out["home_sample_size"] - out["away_sample_size"]
     out["goal_diff_proxy"] = out["home_rolling_xg"] - out["away_rolling_xg"]
 
-    out["implied_over15"] = np.where(out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan)
-    out["implied_under15"] = np.where(out["odds_under_15"] > 1.0, 1.0 / out["odds_under_15"], np.nan)
-    out["implied_over25"] = np.where(out["odds_over_25"] > 1.0, 1.0 / out["odds_over_25"], np.nan)
-    out["implied_under25"] = np.where(out["odds_under_25"] > 1.0, 1.0 / out["odds_under_25"], np.nan)
+    out["implied_over15"] = np.where(
+        out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan
+    )
+    out["implied_under15"] = np.where(
+        out["odds_under_15"] > 1.0, 1.0 / out["odds_under_15"], np.nan
+    )
+    out["implied_over25"] = np.where(
+        out["odds_over_25"] > 1.0, 1.0 / out["odds_over_25"], np.nan
+    )
+    out["implied_under25"] = np.where(
+        out["odds_under_25"] > 1.0, 1.0 / out["odds_under_25"], np.nan
+    )
 
     out["odds_gap_15"] = out["odds_over_15"] - out["odds_under_15"]
     out["odds_gap_25"] = out["odds_over_25"] - out["odds_under_25"]
     return out
 
 
-def apply_imputation(df: pd.DataFrame, features: list[str], imputation: dict[str, object]) -> pd.DataFrame:
+def apply_imputation(
+    df: pd.DataFrame, features: list[str], imputation: dict[str, object]
+) -> pd.DataFrame:
     out = df.copy()
     global_medians = imputation.get("global_medians", {})
     league_medians = imputation.get("league_medians", {})
@@ -324,12 +365,22 @@ def _safe_float(value: object, default: float) -> float:
 def _resolve_backbone_lambdas(fixture: pd.Series) -> tuple[float, float, str]:
     adj_home = _safe_float(fixture.get("adj_lambda_home_final"), float("nan"))
     adj_away = _safe_float(fixture.get("adj_lambda_away_final"), float("nan"))
-    if np.isfinite(adj_home) and np.isfinite(adj_away) and adj_home > 0.0 and adj_away > 0.0:
+    if (
+        np.isfinite(adj_home)
+        and np.isfinite(adj_away)
+        and adj_home > 0.0
+        and adj_away > 0.0
+    ):
         return max(0.01, adj_home), max(0.01, adj_away), "adj_lambda_final"
 
     l1_home = _safe_float(fixture.get("lambda_home_l1"), float("nan"))
     l1_away = _safe_float(fixture.get("lambda_away_l1"), float("nan"))
-    if np.isfinite(l1_home) and np.isfinite(l1_away) and l1_home > 0.0 and l1_away > 0.0:
+    if (
+        np.isfinite(l1_home)
+        and np.isfinite(l1_away)
+        and l1_home > 0.0
+        and l1_away > 0.0
+    ):
         return max(0.01, l1_home), max(0.01, l1_away), "lambda_l1"
 
     home_proxy = max(0.01, _safe_float(fixture.get("home_rolling_xg"), 1.35))
@@ -337,7 +388,9 @@ def _resolve_backbone_lambdas(fixture: pd.Series) -> tuple[float, float, str]:
     return home_proxy, away_proxy, "rolling_xg_proxy"
 
 
-def _score_matrix(lambda_home: float, lambda_away: float, max_goals: int = 10) -> np.ndarray:
+def _score_matrix(
+    lambda_home: float, lambda_away: float, max_goals: int = 10
+) -> np.ndarray:
     goals = np.arange(max_goals + 1, dtype=float)
     factorials = np.array([math.factorial(int(g)) for g in goals], dtype=float)
     home_pmf = np.exp(-lambda_home) * np.power(lambda_home, goals) / factorials
@@ -345,8 +398,18 @@ def _score_matrix(lambda_home: float, lambda_away: float, max_goals: int = 10) -
     mat = np.outer(home_pmf, away_pmf)
     mass = float(mat.sum())
     if mass <= 0.0:
-        return np.full((max_goals + 1, max_goals + 1), 1.0 / ((max_goals + 1) ** 2), dtype=float)
+        return np.full(
+            (max_goals + 1, max_goals + 1), 1.0 / ((max_goals + 1) ** 2), dtype=float
+        )
     return mat / mass
+
+
+def _poisson_over(mu: float, line_half: float) -> float:
+    threshold = int(line_half) + 1
+    cdf = 0.0
+    for k in range(threshold):
+        cdf += math.exp(-mu) * (mu**k) / math.factorial(k)
+    return float(max(0.0, min(1.0, 1.0 - cdf)))
 
 
 @lru_cache(maxsize=4096)
@@ -354,7 +417,9 @@ def _markov_anytime_probs(lambda_home: float, lambda_away: float) -> dict[str, f
     return _MARKOV_PRICER.calculate_lead_probs(lambda_home, lambda_away)
 
 
-def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float], dict[str, object]]:
+def _fallback_market_probabilities(
+    fixture: pd.Series,
+) -> tuple[dict[str, float], dict[str, object]]:
     lambda_home, lambda_away, lambda_source = _resolve_backbone_lambdas(fixture)
     score = _score_matrix(lambda_home, lambda_away, max_goals=10)
     home_idx, away_idx = np.indices(score.shape)
@@ -376,35 +441,46 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
     p_away_by2_final = float(score[(away_idx - home_idx) >= 2].sum())
     p_btts = float(score[(home_idx >= 1) & (away_idx >= 1)].sum())
 
-    markov = _markov_anytime_probs(round(float(lambda_home), 4), round(float(lambda_away), 4))
+    markov = _markov_anytime_probs(
+        round(float(lambda_home), 4), round(float(lambda_away), 4)
+    )
     p_h_1up = float(markov.get("h_1up", p_home))
     p_a_1up = float(markov.get("a_1up", p_away))
     p_h_2up = float(markov.get("h_2up", p_home_by2_final))
     p_a_2up = float(markov.get("a_2up", p_away_by2_final))
 
-    p_home_and_o25 = float(score[(home_idx > away_idx) & ((home_idx + away_idx) >= 3)].sum())
-    p_away_and_o25 = float(score[(home_idx < away_idx) & ((home_idx + away_idx) >= 3)].sum())
+    p_home_and_o25 = float(
+        score[(home_idx > away_idx) & ((home_idx + away_idx) >= 3)].sum()
+    )
+    p_away_and_o25 = float(
+        score[(home_idx < away_idx) & ((home_idx + away_idx) >= 3)].sum()
+    )
     p_home_or_o25 = p_home + p_total_ge3 - p_home_and_o25
     p_away_or_o25 = p_away + p_total_ge3 - p_away_and_o25
 
-    p_home_and_o15 = float(score[(home_idx > away_idx) & ((home_idx + away_idx) >= 2)].sum())
-    p_away_and_o15 = float(score[(home_idx < away_idx) & ((home_idx + away_idx) >= 2)].sum())
+    p_home_and_o15 = float(
+        score[(home_idx > away_idx) & ((home_idx + away_idx) >= 2)].sum()
+    )
+    p_away_and_o15 = float(
+        score[(home_idx < away_idx) & ((home_idx + away_idx) >= 2)].sum()
+    )
     p_home_or_o15 = p_home + p_total_ge2 - p_home_and_o15
     p_away_or_o15 = p_away + p_total_ge2 - p_away_and_o15
 
     home_corners = _safe_float(fixture.get("home_rolling_corners"), float("nan"))
     away_corners = _safe_float(fixture.get("away_rolling_corners"), float("nan"))
-    corners_mu = home_corners + away_corners
-    if not np.isfinite(corners_mu) or corners_mu <= 0.0:
-        corners_mu = 9.5
-        corners_source = "default_mu_9_5"
-    else:
-        corners_source = "rolling_corners_sum"
-
-    corners_cdf_8 = sum(
-        math.exp(-corners_mu) * (corners_mu**k) / math.factorial(k) for k in range(9)
+    home_corners_mu = (
+        home_corners if np.isfinite(home_corners) and home_corners > 0.0 else 5.0
     )
-    p_c85 = 1.0 - float(corners_cdf_8)
+    away_corners_mu = (
+        away_corners if np.isfinite(away_corners) and away_corners > 0.0 else 4.5
+    )
+    corners_mu = home_corners_mu + away_corners_mu
+    corners_source = (
+        "rolling_corners_split"
+        if np.isfinite(home_corners) and np.isfinite(away_corners)
+        else "default_mu_split_5_0_4_5"
+    )
 
     raw_probs = {
         "o15": p_total_ge2,
@@ -413,7 +489,19 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "o45": p_total_ge5,
         "u15": p_total_le1,
         "u25": p_total_le2,
-        "c85": p_c85,
+        "u35": 1.0 - p_total_ge4,
+        "c75": _poisson_over(corners_mu, 7.5),
+        "c85": _poisson_over(corners_mu, 8.5),
+        "c95": _poisson_over(corners_mu, 9.5),
+        "c105": _poisson_over(corners_mu, 10.5),
+        "hc25": _poisson_over(home_corners_mu, 2.5),
+        "hc35": _poisson_over(home_corners_mu, 3.5),
+        "hc45": _poisson_over(home_corners_mu, 4.5),
+        "hc55": _poisson_over(home_corners_mu, 5.5),
+        "ac25": _poisson_over(away_corners_mu, 2.5),
+        "ac35": _poisson_over(away_corners_mu, 3.5),
+        "ac45": _poisson_over(away_corners_mu, 4.5),
+        "ac55": _poisson_over(away_corners_mu, 5.5),
         "btts": p_btts,
         "1x2_h": p_home,
         "1x2_d": p_draw,
@@ -423,6 +511,12 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "dc_12": p_home + p_away,
         "ho15": p_home_ge2,
         "ao15": p_away_ge2,
+        "ah_h05": p_home,
+        "ah_a05": p_away,
+        "ah_h15": p_home_by2_final,
+        "ah_a15": p_away_by2_final,
+        "eh_h1": p_home_by2_final,
+        "eh_a1": p_away_by2_final,
         "h_1up": p_h_1up,
         "a_1up": p_a_1up,
         "h_2up": p_h_2up,
@@ -434,7 +528,9 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "home_and_o25": p_home_and_o25,
         "away_and_o25": p_away_and_o25,
     }
-    clipped = {market: float(np.clip(prob, 0.001, 0.999)) for market, prob in raw_probs.items()}
+    clipped = {
+        market: float(np.clip(prob, 0.001, 0.999)) for market, prob in raw_probs.items()
+    }
     trace = {
         "lambda_source": lambda_source,
         "lambda_home": float(lambda_home),
@@ -443,6 +539,8 @@ def _fallback_market_probabilities(fixture: pd.Series) -> tuple[dict[str, float]
         "anytime_markov_max_goals": 8,
         "corners_source": corners_source,
         "corners_mu": float(corners_mu),
+        "home_corners_mu": float(home_corners_mu),
+        "away_corners_mu": float(away_corners_mu),
     }
     return clipped, trace
 
@@ -463,16 +561,36 @@ def build_prediction_rows(
         fallback_probs, fallback_trace = _fallback_market_probabilities(fixture)
         base_metadata = {
             "features_missing_count": int(fixture["features_missing_count"]),
-            "home_sample_size": None if pd.isna(fixture["home_sample_size"]) else float(fixture["home_sample_size"]),
-            "away_sample_size": None if pd.isna(fixture["away_sample_size"]) else float(fixture["away_sample_size"]),
-            "home_played": None if pd.isna(fixture["home_sample_size"]) else float(fixture["home_sample_size"]),
-            "away_played": None if pd.isna(fixture["away_sample_size"]) else float(fixture["away_sample_size"]),
-            "lambda_home_l1": None if pd.isna(fixture.get("lambda_home_l1")) else float(fixture["lambda_home_l1"]),
-            "lambda_away_l1": None if pd.isna(fixture.get("lambda_away_l1")) else float(fixture["lambda_away_l1"]),
-            "adj_lambda_home_final": None if pd.isna(fixture.get("adj_lambda_home_final")) else float(fixture["adj_lambda_home_final"]),
-            "adj_lambda_away_final": None if pd.isna(fixture.get("adj_lambda_away_final")) else float(fixture["adj_lambda_away_final"]),
-            "rule_fired_home": int(fixture["rule_fired_home"]) if not pd.isna(fixture.get("rule_fired_home")) else 0,
-            "rule_fired_away": int(fixture["rule_fired_away"]) if not pd.isna(fixture.get("rule_fired_away")) else 0,
+            "home_sample_size": None
+            if pd.isna(fixture["home_sample_size"])
+            else float(fixture["home_sample_size"]),
+            "away_sample_size": None
+            if pd.isna(fixture["away_sample_size"])
+            else float(fixture["away_sample_size"]),
+            "home_played": None
+            if pd.isna(fixture["home_sample_size"])
+            else float(fixture["home_sample_size"]),
+            "away_played": None
+            if pd.isna(fixture["away_sample_size"])
+            else float(fixture["away_sample_size"]),
+            "lambda_home_l1": None
+            if pd.isna(fixture.get("lambda_home_l1"))
+            else float(fixture["lambda_home_l1"]),
+            "lambda_away_l1": None
+            if pd.isna(fixture.get("lambda_away_l1"))
+            else float(fixture["lambda_away_l1"]),
+            "adj_lambda_home_final": None
+            if pd.isna(fixture.get("adj_lambda_home_final"))
+            else float(fixture["adj_lambda_home_final"]),
+            "adj_lambda_away_final": None
+            if pd.isna(fixture.get("adj_lambda_away_final"))
+            else float(fixture["adj_lambda_away_final"]),
+            "rule_fired_home": int(fixture["rule_fired_home"])
+            if not pd.isna(fixture.get("rule_fired_home"))
+            else 0,
+            "rule_fired_away": int(fixture["rule_fired_away"])
+            if not pd.isna(fixture.get("rule_fired_away"))
+            else 0,
             "odds_snapshot_time_utc": None
             if pd.isna(fixture["odds_snapshot_time_utc"])
             else fixture["odds_snapshot_time_utc"].isoformat(),
@@ -506,7 +624,9 @@ def build_prediction_rows(
                     "fallback_lambda_home": fallback_trace["lambda_home"],
                     "fallback_lambda_away": fallback_trace["lambda_away"],
                     "fallback_anytime_source": fallback_trace["anytime_source"],
-                    "fallback_anytime_markov_max_goals": fallback_trace["anytime_markov_max_goals"],
+                    "fallback_anytime_markov_max_goals": fallback_trace[
+                        "anytime_markov_max_goals"
+                    ],
                     "fallback_corners_source": fallback_trace["corners_source"],
                     "fallback_corners_mu": fallback_trace["corners_mu"],
                 }
@@ -582,8 +702,12 @@ def main() -> None:
         limit=args.limit,
         backfill_days=args.backfill_days,
     )
-    fixtures["match_datetime_utc"] = pd.to_datetime(fixtures["match_datetime_utc"], utc=True, errors="coerce")
-    fixtures["odds_snapshot_time_utc"] = pd.to_datetime(fixtures["odds_snapshot_time_utc"], utc=True, errors="coerce")
+    fixtures["match_datetime_utc"] = pd.to_datetime(
+        fixtures["match_datetime_utc"], utc=True, errors="coerce"
+    )
+    fixtures["odds_snapshot_time_utc"] = pd.to_datetime(
+        fixtures["odds_snapshot_time_utc"], utc=True, errors="coerce"
+    )
     post_kickoff_mask = (
         fixtures["match_datetime_utc"].notna()
         & fixtures["odds_snapshot_time_utc"].notna()
@@ -599,7 +723,9 @@ def main() -> None:
         return
 
     featured = add_derived_features(fixtures)
-    featured["features_missing_count"] = featured.reindex(columns=features).isna().sum(axis=1)
+    featured["features_missing_count"] = (
+        featured.reindex(columns=features).isna().sum(axis=1)
+    )
     scored = apply_imputation(featured, features, imputation)
 
     prediction_rows, fallback_rows = build_prediction_rows(

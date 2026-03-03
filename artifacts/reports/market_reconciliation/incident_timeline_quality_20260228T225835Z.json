@@ -1,0 +1,205 @@
+{
+  "generated_at": "2026-02-28T22:58:35.246152+00:00",
+  "scope": {
+    "league": null,
+    "status": "ft",
+    "limit": 0
+  },
+  "summary": {
+    "fixtures": 7734,
+    "fixtures_with_goals": 7235,
+    "fixtures_home_led_by_1_any": 4651,
+    "fixtures_away_led_by_1_any": 3743,
+    "fixtures_home_led_by_2_any": 2140,
+    "fixtures_away_led_by_2_any": 1517,
+    "avg_total_goal_events": 2.7591155934833203,
+    "scoreline_check": {
+      "fixtures_with_ft_result": 7734,
+      "scoreline_match_count": 7732,
+      "scoreline_mismatch_count": 2,
+      "scoreline_match_rate": 0.99974140160331
+    },
+    "league_fixture_counts": [
+      {
+        "league_code": "EL",
+        "fixtures": 411
+      },
+      {
+        "league_code": "E1",
+        "fixtures": 406
+      },
+      {
+        "league_code": "EC",
+        "fixtures": 406
+      },
+      {
+        "league_code": "E3",
+        "fixtures": 398
+      },
+      {
+        "league_code": "E2",
+        "fixtures": 391
+      },
+      {
+        "league_code": "CL",
+        "fixtures": 389
+      },
+      {
+        "league_code": "ECL",
+        "fixtures": 339
+      },
+      {
+        "league_code": "SP2",
+        "fixtures": 299
+      },
+      {
+        "league_code": "E0",
+        "fixtures": 271
+      },
+      {
+        "league_code": "I1",
+        "fixtures": 261
+      },
+      {
+        "league_code": "I2",
+        "fixtures": 261
+      },
+      {
+        "league_code": "MX1",
+        "fixtures": 232
+      },
+      {
+        "league_code": "RO1",
+        "fixtures": 225
+      },
+      {
+        "league_code": "N1",
+        "fixtures": 217
+      },
+      {
+        "league_code": "F2",
+        "fixtures": 216
+      },
+      {
+        "league_code": "F1",
+        "fixtures": 209
+      },
+      {
+        "league_code": "P1",
+        "fixtures": 208
+      },
+      {
+        "league_code": "D1",
+        "fixtures": 207
+      },
+      {
+        "league_code": "D2",
+        "fixtures": 207
+      },
+      {
+        "league_code": "T1",
+        "fixtures": 207
+      },
+      {
+        "league_code": "B1",
+        "fixtures": 201
+      },
+      {
+        "league_code": "PL1",
+        "fixtures": 197
+      },
+      {
+        "league_code": "SC0",
+        "fixtures": 170
+      },
+      {
+        "league_code": "CH1",
+        "fixtures": 157
+      },
+      {
+        "league_code": "G1",
+        "fixtures": 154
+      },
+      {
+        "league_code": "RU1",
+        "fixtures": 144
+      },
+      {
+        "league_code": "SC1",
+        "fixtures": 132
+      },
+      {
+        "league_code": "SC2",
+        "fixtures": 130
+      },
+      {
+        "league_code": "SC3",
+        "fixtures": 129
+      },
+      {
+        "league_code": "DK1",
+        "fixtures": 126
+      },
+      {
+        "league_code": "AT1",
+        "fixtures": 120
+      },
+      {
+        "league_code": "SP1",
+        "fixtures": 119
+      },
+      {
+        "league_code": "CH2",
+        "fixtures": 116
+      },
+      {
+        "league_code": "BR1",
+        "fixtures": 36
+      },
+      {
+        "league_code": "JP1",
+        "fixtures": 30
+      },
+      {
+        "league_code": "IE1",
+        "fixtures": 13
+      }
+    ]
+  },
+  "quality": {
+    "goal_quality": {
+      "goal_rows": 21339,
+      "goal_minute_null": 0,
+      "goal_is_home_null": 0,
+      "goal_score_null": 0,
+      "goal_player_name_null": 0
+    },
+    "goal_quality_regulation_90": {
+      "goal_rows": 21307,
+      "goal_minute_null": 0,
+      "goal_is_home_null": 0,
+      "goal_score_null": 0,
+      "goal_player_name_null": 0
+    },
+    "progression_quality": {
+      "goal_rows": 21339,
+      "valid_progress_rows": 21331,
+      "suspicious_progress_rows": 8
+    },
+    "progression_quality_regulation_90": {
+      "goal_rows": 21307,
+      "valid_progress_rows": 21299,
+      "suspicious_progress_rows": 8
+    },
+    "minute_outlier_incidents": [
+      {
+        "incident_type": "card",
+        "count": 1314
+      },
+      {
+        "incident_type": "period",
+        "count": 21
+      }
+    ]
+  }
+}

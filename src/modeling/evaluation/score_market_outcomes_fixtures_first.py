@@ -7,8 +7,10 @@ Score settled market outcome predictions into prediction_scores.
 from __future__ import annotations
 
 import argparse
+import json
 import math
 import sys
+from datetime import datetime
 from pathlib import Path
 
 
@@ -16,38 +18,84 @@ ROOT_DIR = Path(__file__).resolve().parents[3]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from src.betting.odds_resolver import OddsResolution, resolve_odds_for_market
 from src.db.db_utils import connect_db
 
 
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
 MARKETS = (
-    # Totals
-    "o15", "o25", "o35", "o45", "u15", "u25",
-    # Corners
+    # Goals
+    "o15",
+    "u35",
+    # Corners Totals
+    "c75",
     "c85",
-    # BTTS
-    "btts",
+    "c95",
+    "c105",
+    # Corners Home Team
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    # Corners Away Team
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
     # 1X2
-    "1x2_h", "1x2_d", "1x2_a",
+    "1x2_h",
+    "1x2_d",
+    "1x2_a",
     # Double Chance
-    "dc_1x", "dc_x2", "dc_12",
+    "dc_1x",
+    "dc_x2",
+    "dc_12",
     # Team Totals
-    "ho15", "ao15",
+    "ho15",
+    "ao15",
+    # Linchpin Handicap Markets
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
     # Anytime Lead Markets
-    "h_1up", "a_1up", "h_2up", "a_2up",
-    # Combo OR
-    "home_or_o25", "away_or_o25", "home_or_o15", "away_or_o15",
-    # Combo AND
-    "home_and_o25", "away_and_o25",
+    "h_1up",
+    "a_1up",
+    "h_2up",
+    "a_2up",
+)
+ODDS_MARKET_CODES = (
+    "1x2",
+    "dc",
+    "ou",
+    "home_ou",
+    "away_ou",
+    "corners_ou",
+    "home_corners_ou",
+    "corners_home_ou",
+    "team_corners_home_ou",
+    "away_corners_ou",
+    "corners_away_ou",
+    "team_corners_away_ou",
+    "ah",
+    "eh",
 )
 EPS = 1e-6
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Score settled market outcome predictions")
-    parser.add_argument("--league", type=str, default=None, help="Optional league_code filter")
-    parser.add_argument("--limit", type=int, default=None, help="Optional max predictions to score")
+    parser = argparse.ArgumentParser(
+        description="Score settled market outcome predictions"
+    )
+    parser.add_argument(
+        "--league", type=str, default=None, help="Optional league_code filter"
+    )
+    parser.add_argument(
+        "--limit", type=int, default=None, help="Optional max predictions to score"
+    )
     parser.add_argument(
         "--since-days",
         type=int,
@@ -57,13 +105,18 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def _latest_over_odds_expr(row_alias: str) -> str:
-    return (
-        "CASE "
-        f"WHEN ({row_alias}.odds_json -> 'prices_latest' ->> 'over') ~ '^[-+]?[0-9]*\\.?[0-9]+$' "
-        f"THEN ({row_alias}.odds_json -> 'prices_latest' ->> 'over')::double precision "
-        "ELSE NULL END"
-    )
+def ensure_prediction_scores_schema() -> None:
+    query = """
+    ALTER TABLE prediction_scores
+    ADD COLUMN IF NOT EXISTS metadata_json JSONB NOT NULL DEFAULT '{}'::jsonb;
+    """
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query)
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def fetch_unscored_predictions(
@@ -71,7 +124,7 @@ def fetch_unscored_predictions(
     limit: int | None,
     since_days: int | None,
 ) -> list[dict[str, object]]:
-    query = f"""
+    query = """
     SELECT
         p.prediction_id,
         p.market_code,
@@ -88,11 +141,7 @@ def fetch_unscored_predictions(
         ils.away_led_by_1_any,
         ils.home_led_by_2_any,
         ils.away_led_by_2_any,
-        CASE
-            WHEN p.market_code = 'o15' THEN {_latest_over_odds_expr('od15')}
-            WHEN p.market_code = 'o25' THEN {_latest_over_odds_expr('od25')}
-            ELSE NULL
-        END AS odds_used
+        od.odds_rows
     FROM predictions p
     JOIN fixtures f
       ON f.fixture_id = p.fixture_id
@@ -103,39 +152,40 @@ def fetch_unscored_predictions(
     LEFT JOIN fixture_incident_lead_states ils
       ON ils.fixture_id = f.fixture_id
     LEFT JOIN LATERAL (
-        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        SELECT COALESCE(
+            jsonb_agg(
+                jsonb_build_object(
+                    'provider', fom.provider,
+                    'snapshot_type', fom.snapshot_type,
+                    'snapshot_time_utc', fom.snapshot_time_utc,
+                    'market_code', fom.market_code,
+                    'line_num', fom.line_num,
+                    'odds_json', fom.odds_json
+                )
+                ORDER BY fom.snapshot_time_utc DESC
+            ),
+            '[]'::jsonb
+        ) AS odds_rows
         FROM fixture_odds_markets fom
         WHERE fom.fixture_id = f.fixture_id
-          AND fom.provider = 'sofascore'
-          AND fom.market_code = 'ou'
-          AND fom.line_num = 1.5
-          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.market_code = ANY(%s)
           AND fom.snapshot_time_utc <= f.match_datetime_utc
-        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
-        LIMIT 1
-    ) od15 ON true
-    LEFT JOIN LATERAL (
-        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
-        FROM fixture_odds_markets fom
-        WHERE fom.fixture_id = f.fixture_id
-          AND fom.provider = 'sofascore'
-          AND fom.market_code = 'ou'
-          AND fom.line_num = 2.5
-          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
-        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
-        LIMIT 1
-    ) od25 ON true
+    ) od ON true
     LEFT JOIN prediction_scores ps
       ON ps.prediction_id = p.prediction_id
     WHERE p.model_name = %s
       AND p.model_version = %s
-      AND p.market_code IN ('o15', 'o25', 'o35', 'o45', 'u15', 'u25', 'c85', 'btts', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'h_1up', 'a_1up', 'h_2up', 'a_2up', 'home_or_o25', 'away_or_o25', 'home_or_o15', 'away_or_o15', 'home_and_o25', 'away_and_o25')
+      AND p.market_code = ANY(%s)
       AND f.status = 'ft'
       AND f.status NOT IN ('postponed', 'cancelled', 'abandoned')
       AND ps.prediction_id IS NULL
     """
-    params: list[object] = [MODEL_NAME, MODEL_VERSION]
+    params: list[object] = [
+        list(ODDS_MARKET_CODES),
+        MODEL_NAME,
+        MODEL_VERSION,
+        list(MARKETS),
+    ]
 
     if since_days is not None:
         query += " AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval"
@@ -189,14 +239,48 @@ def compute_actual(row: dict[str, object]) -> float | None:
         return 1.0 if total_goals <= 1 else 0.0
     if market == "u25":
         return 1.0 if total_goals <= 2 else 0.0
+    if market == "u35":
+        return 1.0 if total_goals <= 3 else 0.0
 
-    # === CORNERS ===
-    if market == "c85":
+    # === CORNERS TOTALS ===
+    if market in {"c75", "c85", "c95", "c105"}:
         h_corners = row.get("h_corners")
         a_corners = row.get("a_corners")
         if h_corners is None or a_corners is None:
             return None
-        return 1.0 if (int(h_corners) + int(a_corners)) >= 9 else 0.0
+        total_corners = int(h_corners) + int(a_corners)
+        threshold = {
+            "c75": 8,
+            "c85": 9,
+            "c95": 10,
+            "c105": 11,
+        }[market]
+        return 1.0 if total_corners >= threshold else 0.0
+
+    # === CORNERS TEAM TOTALS ===
+    if market in {"hc25", "hc35", "hc45", "hc55"}:
+        h_corners = row.get("h_corners")
+        if h_corners is None:
+            return None
+        threshold = {
+            "hc25": 3,
+            "hc35": 4,
+            "hc45": 5,
+            "hc55": 6,
+        }[market]
+        return 1.0 if int(h_corners) >= threshold else 0.0
+
+    if market in {"ac25", "ac35", "ac45", "ac55"}:
+        a_corners = row.get("a_corners")
+        if a_corners is None:
+            return None
+        threshold = {
+            "ac25": 3,
+            "ac35": 4,
+            "ac45": 5,
+            "ac55": 6,
+        }[market]
+        return 1.0 if int(a_corners) >= threshold else 0.0
 
     # === BTTS ===
     if market == "btts":
@@ -223,6 +307,29 @@ def compute_actual(row: dict[str, object]) -> float | None:
         return 1.0 if h >= 2 else 0.0
     if market == "ao15":
         return 1.0 if a >= 2 else 0.0
+
+    # === HANDICAP MARKETS ===
+    goal_diff = h - a
+    if market == "ah_h05":
+        return 1.0 if goal_diff > 0 else 0.0
+    if market == "ah_a05":
+        return 1.0 if goal_diff < 0 else 0.0
+    if market == "ah_h15":
+        return 1.0 if goal_diff >= 2 else 0.0
+    if market == "ah_a15":
+        return 1.0 if goal_diff <= -2 else 0.0
+    if market == "eh_h1":
+        if goal_diff >= 2:
+            return 1.0
+        if goal_diff == 1:
+            return None
+        return 0.0
+    if market == "eh_a1":
+        if goal_diff <= -2:
+            return 1.0
+        if goal_diff == -1:
+            return None
+        return 0.0
 
     # === ANYTIME LEAD MARKETS (incident timeline derived) ===
     if market == "h_1up":
@@ -257,37 +364,121 @@ def compute_actual(row: dict[str, object]) -> float | None:
     return None
 
 
-def build_score_rows(candidates: list[dict[str, object]]) -> tuple[list[tuple[object, ...]], int]:
+def compute_return_factor(
+    actual: float | None,
+    odds_used: float | None,
+    is_push: bool,
+) -> float | None:
+    if odds_used is None:
+        return None
+    if is_push:
+        return 1.0
+    if actual is None:
+        return None
+    return odds_used if actual == 1.0 else 0.0
+
+
+def is_push_outcome(row: dict[str, object]) -> bool:
+    market = str(row["market_code"])
+    if market not in {"eh_h1", "eh_a1"}:
+        return False
+
+    home_goals = row.get("home_goals")
+    away_goals = row.get("away_goals")
+    if home_goals is None or away_goals is None:
+        return False
+
+    goal_diff = int(home_goals) - int(away_goals)
+    if market == "eh_h1":
+        return goal_diff == 1
+    return goal_diff == -1
+
+
+def _isoformat_or_none(value: object) -> str | None:
+    if isinstance(value, datetime):
+        return value.isoformat()
+    return None
+
+
+def _parse_odds_rows(raw_rows: object) -> list[dict[str, object]]:
+    if isinstance(raw_rows, list):
+        return [item for item in raw_rows if isinstance(item, dict)]
+    if isinstance(raw_rows, str):
+        try:
+            parsed = json.loads(raw_rows)
+        except json.JSONDecodeError:
+            return []
+        if isinstance(parsed, list):
+            return [item for item in parsed if isinstance(item, dict)]
+    return []
+
+
+def _build_metadata_json(resolution: OddsResolution) -> dict[str, object]:
+    return {
+        "odds_trace": {
+            "provider": resolution.provider,
+            "snapshot_type": resolution.snapshot_type,
+            "snapshot_time_utc": _isoformat_or_none(resolution.snapshot_time_utc),
+            "line_num": resolution.line_num,
+            "odds_field": resolution.odds_field,
+            "fallback_used": resolution.fallback_used,
+        }
+    }
+
+
+def build_score_rows(
+    candidates: list[dict[str, object]],
+) -> tuple[list[tuple[object, ...]], int]:
     rows: list[tuple[object, ...]] = []
     skipped = 0
 
     for candidate in candidates:
         actual = compute_actual(candidate)
-        if actual is None:
+        is_push = is_push_outcome(candidate)
+        if actual is None and not is_push:
             skipped += 1
             continue
 
         p_raw = float(candidate["p_model"])
         p_clipped = min(max(p_raw, EPS), 1.0 - EPS)
-        brier = (p_clipped - actual) ** 2
-        log_loss = -(
-            actual * math.log(p_clipped)
-            + (1.0 - actual) * math.log(1.0 - p_clipped)
-        )
-        hit = (p_clipped >= 0.5) == (actual == 1.0)
+        brier: float | None
+        log_loss: float | None
+        hit: bool | None
+        if actual in (0.0, 1.0):
+            brier = (p_clipped - actual) ** 2
+            log_loss = -(
+                actual * math.log(p_clipped)
+                + (1.0 - actual) * math.log(1.0 - p_clipped)
+            )
+            hit = (p_clipped >= 0.5) == (actual == 1.0)
+        else:
+            brier = None
+            log_loss = None
+            hit = None
 
-        odds_used_raw = candidate.get("odds_used")
+        odds_rows = _parse_odds_rows(candidate.get("odds_rows"))
+        resolution = resolve_odds_for_market(
+            fixture_kickoff_utc=candidate["match_datetime_utc"],
+            odds_rows=odds_rows,
+            market_code=str(candidate["market_code"]),
+        )
+
         odds_used: float | None = None
         edge: float | None = None
+        return_factor: float | None = None
         roi_unit: float | None = None
 
-        if odds_used_raw is not None:
-            parsed_odds = float(odds_used_raw)
+        if resolution.odds_used is not None:
+            parsed_odds = float(resolution.odds_used)
             if parsed_odds > 0.0:
                 odds_used = parsed_odds
                 if odds_used > 1.0:
                     edge = p_clipped - (1.0 / odds_used)
-                roi_unit = (odds_used - 1.0) if actual == 1.0 else -1.0
+                return_factor = compute_return_factor(actual, odds_used, is_push)
+                if return_factor is not None:
+                    roi_unit = return_factor - 1.0
+
+        metadata_json = json.dumps(_build_metadata_json(resolution))
 
         rows.append(
             (
@@ -299,6 +490,7 @@ def build_score_rows(candidates: list[dict[str, object]]) -> tuple[list[tuple[ob
                 odds_used,
                 edge,
                 roi_unit,
+                metadata_json,
             )
         )
 
@@ -319,8 +511,9 @@ def upsert_scores(rows: list[tuple[object, ...]]) -> int:
         odds_used,
         edge,
         roi_unit,
+        metadata_json,
         scored_at
-    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, NOW())
+    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::jsonb, NOW())
     ON CONFLICT (prediction_id)
     DO UPDATE SET
         actual = EXCLUDED.actual,
@@ -330,6 +523,7 @@ def upsert_scores(rows: list[tuple[object, ...]]) -> int:
         odds_used = EXCLUDED.odds_used,
         edge = EXCLUDED.edge,
         roi_unit = EXCLUDED.roi_unit,
+        metadata_json = EXCLUDED.metadata_json,
         scored_at = NOW();
     """
 
@@ -345,6 +539,7 @@ def upsert_scores(rows: list[tuple[object, ...]]) -> int:
 
 def main() -> None:
     args = parse_args()
+    ensure_prediction_scores_schema()
     candidates = fetch_unscored_predictions(
         league=args.league,
         limit=args.limit,

@@ -82,9 +82,25 @@ FEATURE_COLS = [
     "away_playing_top4",
     "derby_position_gap",
     "away_rolling_corners",
-    # league_home_adv intentionally excluded from Layer 2.
-    # It is a structural baseline feature that Layer 1 already captures.
-    # Keeping it here acts as a crutch and steals importance from genuine situational signals.
+    # Group D: Defensive Tactical Stats (Promoted from Phase 2)
+    "home_rolling_tackles_pct",
+    "away_rolling_tackles_pct",
+    "home_rolling_errors_lead_to_shot",
+    "away_rolling_errors_lead_to_shot",
+]
+
+FEATURE_COLS_PREMIUM = FEATURE_COLS + [
+    # Group E: H1/H2 Splits (Premium rows only)
+    "home_rolling_xg_p1",
+    "away_rolling_xg_p1",
+    "xg_p1_delta",
+    "home_rolling_xg_h2_delta",
+    "away_rolling_xg_h2_delta",
+    "h2_surge_delta",
+    "home_rolling_sot_p1",
+    "away_rolling_sot_p1",
+    "home_rolling_sot_h2_delta",
+    "away_rolling_sot_h2_delta",
 ]
 
 ODDS_FEATURE_COLS = [
@@ -441,6 +457,18 @@ def load_feature_data() -> pd.DataFrame:
 
     # rest delta
     df["rest_delta"] = df["home_rest_days"].fillna(0) - df["away_rest_days"].fillna(0)
+    
+    print("Loading style clusters...")
+    cluster_path = ROOT_DIR / "model_artifacts" / "style_clusters" / "cluster_labels.parquet"
+    if cluster_path.exists():
+        clusters = pd.read_parquet(cluster_path)
+        df = df.merge(clusters[["fixture_id", "home_style_cluster", "away_style_cluster", "style_matchup"]], on="fixture_id", how="left", suffixes=("", "_DROP"))
+        for col in ["home_style_cluster", "away_style_cluster", "style_matchup"]:
+            df[col] = df[col].fillna("Unknown").astype(str)
+            dummies = pd.get_dummies(df[col], prefix=col).astype(int)
+            df = pd.concat([df, dummies], axis=1)
+    else:
+        print("  Style clusters not found!")
 
     df["home_key_absent"] = df["home_key_absent"].fillna(0).astype(int)
     df["away_key_absent"] = df["away_key_absent"].fillna(0).astype(int)
@@ -676,7 +704,7 @@ def add_odds_model_gap(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def train_model(
-    df: pd.DataFrame, out_dir: Path, feature_override: list[str] | None = None
+    df: pd.DataFrame, out_dir: Path, feature_override: list[str] | None = None, model_name: str = "situational_model"
 ) -> dict:
     from sklearn.ensemble import GradientBoostingRegressor
     from sklearn.metrics import mean_squared_error, r2_score
@@ -949,8 +977,8 @@ def train_model(
     }
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    joblib.dump(result, out_dir / "situational_model.pkl")
-    print(f"\nModel saved to {out_dir / 'situational_model.pkl'}")
+    joblib.dump(result, out_dir / f"{model_name}.pkl")
+    print(f"\nModel saved to {out_dir / f'{model_name}.pkl'}")
 
     holdout_eval = test_df[["league_code"]].copy()
     holdout_eval["y_home_true"] = y_home_test_main
@@ -1029,7 +1057,7 @@ def train_model(
         "deployment_policy_file": str(policy_path),
         "enabled_leagues": enabled_leagues,
     }
-    sidecar_path = out_dir / "situational_model.meta.json"
+    sidecar_path = out_dir / f"{model_name}.meta.json"
     sidecar_path.write_text(json.dumps(sidecar, indent=2), encoding="utf-8")
     print(f"Metadata saved to {sidecar_path}")
     return result
@@ -1051,26 +1079,38 @@ def main():
     df = add_odds_model_gap(df)
 
     all_features = FEATURE_COLS + ODDS_FEATURE_COLS
+    all_features_premium = FEATURE_COLS_PREMIUM + ODDS_FEATURE_COLS
+    
     drop_features = [f.strip() for f in args.drop_features.split(",") if f.strip()]
-    unknown = sorted(set(drop_features) - set(all_features))
+    unknown = sorted(set(drop_features) - set(all_features + all_features_premium))
     if unknown:
         raise ValueError(f"Unknown features in --drop-features: {unknown}")
-    selected_features = [f for f in all_features if f not in set(drop_features)]
-    if not selected_features:
-        raise ValueError("No features remain after applying --drop-features.")
-    if drop_features:
-        print(f"Dropping {len(drop_features)} features: {drop_features}")
-        print(f"Candidate feature pool size: {len(selected_features)}")
 
     if args.train:
-        train_model(df, args.out_dir, feature_override=selected_features)
+        # Run BASE model
+        selected_base = [f for f in all_features if f not in set(drop_features)]
+        if not selected_base:
+            raise ValueError("No features remain in BASE after applying --drop-features.")
+        print("\n" + "="*50)
+        print("TRAINING BASE MODEL (All Rows)")
+        print("="*50)
+        train_model(df, args.out_dir, feature_override=selected_base, model_name="situational_model_base")
+
+        # Run PREMIUM model
+        selected_premium = [f for f in all_features_premium if f not in set(drop_features)]
+        if not selected_premium:
+            raise ValueError("No features remain in PREMIUM after applying --drop-features.")
+        print("\n" + "="*50)
+        print("TRAINING PREMIUM MODEL (H1/H2 Rows)")
+        print("="*50)
+        train_model(df, args.out_dir, feature_override=selected_premium, model_name="situational_model_premium")
     else:
         out = args.out_dir / "situational_features.parquet"
         args.out_dir.mkdir(parents=True, exist_ok=True)
         df.to_parquet(out, index=False)
         print(f"Feature data saved to {out}")
         print(f"Columns: {list(df.columns)}")
-        print(df[selected_features].describe())
+        print(df[all_features_premium].describe())
 
 
 if __name__ == "__main__":

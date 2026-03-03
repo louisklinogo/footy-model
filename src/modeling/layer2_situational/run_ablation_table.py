@@ -148,13 +148,19 @@ def main() -> None:
         "home_rolling_errors_lead_to_shot",
         "away_rolling_errors_lead_to_shot",
     ]
+    
+    style_cluster_feats = [c for c in df.columns if (
+        c.startswith("home_style_cluster_") or 
+        c.startswith("away_style_cluster_") or 
+        c.startswith("style_matchup_")
+    ) and not c.endswith("_raw") and not c.endswith("_DROP")]
 
     existing_full = standings_feats + schedule_feats + player_feats + ODDS_FEATURE_COLS
-    all_candidates = existing_full + tactical_feats + h1h2_feats + formation_feats + defensive_feats
+    all_candidates = existing_full + tactical_feats + h1h2_feats + formation_feats + defensive_feats + style_cluster_feats
 
     # Filter to only columns actually in the dataframe
     def _available(feats):
-        return [f for f in feats if f in train_df.columns]
+        return sorted(list(set([f for f in feats if f in train_df.columns])))
 
     # ================================================================
     # PASS 1: Additive ablation
@@ -166,8 +172,8 @@ def main() -> None:
         ("existing_full+tactical", _available(existing_full + tactical_feats)),
         ("existing_full+tactical+h1h2", _available(existing_full + tactical_feats + h1h2_feats)),
         ("existing_full+tactical+h1h2+formations", _available(existing_full + tactical_feats + h1h2_feats + formation_feats)),
-        ("existing_full+tactical+h1h2+formations+defensive", _available(all_candidates)),
-        ("all_candidates", _available(all_candidates)),
+        ("existing_full+tactical+h1h2+formations+defensive", _available(existing_full + tactical_feats + h1h2_feats + formation_feats + defensive_feats)),
+        ("all_candidates (with style)", _available(all_candidates)),
     ]
 
     additive_results = []
@@ -208,6 +214,7 @@ def main() -> None:
         ("drop_h1h2", h1h2_feats),
         ("drop_formations", formation_feats),
         ("drop_defensive", defensive_feats),
+        ("drop_style_clusters", style_cluster_feats),
     ]
     drop_one_results = [{"pass": "drop_one", "stage": "all_candidates", "n_features": len(full_avail),
                          "home_rmse": full_home, "away_rmse": full_away,
@@ -305,11 +312,18 @@ def main() -> None:
             "additive": _additive_verdict("defensive", "existing_full+tactical+h1h2+formations+defensive", "existing_full+tactical+h1h2+formations"),
             "drop_one": drop_one_verdicts.get("drop_defensive", "UNKNOWN"),
         },
+        "style_clusters": {
+            "additive": _additive_verdict("style_clusters", "all_candidates (with style)", "existing_full+tactical+h1h2+formations+defensive"),
+            "drop_one": drop_one_verdicts.get("drop_style_clusters", "UNKNOWN"),
+        },
     }
     for group, verdict in promotions.items():
-        overall = "PROMOTE" if verdict["additive"] == "PASS" and verdict["drop_one"] == "VALUABLE" else "REJECT"
+        if group == "h1h2":
+            overall = "PROMOTE" if verdict["additive"] == "PASS" and verdict["drop_one"] == "VALUABLE" and verdict.get("coverage", "WEAK") == "SIGNAL" else "REJECT"
+        else:
+            overall = "PROMOTE" if verdict["additive"] == "PASS" and verdict["drop_one"] == "VALUABLE" else "REJECT"
         verdict["overall"] = overall
-        print(f"  {group}: additive={verdict['additive']} drop_one={verdict['drop_one']} → {overall}")
+        print(f"  {group}: additive={verdict['additive']} drop_one={verdict['drop_one']} -> {overall}")
 
     all_results = additive_results + drop_one_results + h1h2_coverage_results
 

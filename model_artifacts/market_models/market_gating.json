@@ -1,0 +1,1051 @@
+{
+  "generated_at_utc": "2026-03-03T15:50:49.688964+00:00",
+  "model_name": "market_outcome_gbm",
+  "model_version": "fixtures_first_prematch_v1",
+  "since_days": 365,
+  "markets": [
+    {
+      "market_code": "ah_h05",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6431936102457199,
+        "brier": 0.22889936012124815,
+        "bss": 0.06855114184192768,
+        "ece": 0.015853011254357962,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ah_a05",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.654650680422412,
+        "brier": 0.19725107425299077,
+        "bss": 0.05809529464153562,
+        "ece": 0.03765144415483721,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ah_h15",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.654002727971927,
+        "brier": 0.14978187593566808,
+        "bss": 0.048782993166807787,
+        "ece": 0.03198524460735515,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ah_a15",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6398110643970467,
+        "brier": 0.10743650313931205,
+        "bss": 0.027973973057789925,
+        "ece": 0.02921224452442578,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "eh_h1",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.654002727971927,
+        "brier": 0.14978187593566808,
+        "bss": 0.048782993166807787,
+        "ece": 0.03198524460735515,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "eh_a1",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6398110643970467,
+        "brier": 0.10743650313931205,
+        "bss": 0.027973973057789925,
+        "ece": 0.02921224452442578,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "dc_1x",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6826995049013861,
+        "brier": 0.19145610856228898,
+        "bss": 0.0857671614343225,
+        "ece": 0.032269702843546806,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1416,
+        "bookmaker_brier": 0.19015332909417787,
+        "bookmaker_bss": 0.09648574659062703,
+        "bookmaker_ece": 0.04405046666192045,
+        "bookmaker_auc": 0.6935825390050743,
+        "delta_brier_vs_bookmaker": -0.0019332880165200683
+      },
+      "notes": []
+    },
+    {
+      "market_code": "dc_x2",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6818348468881429,
+        "brier": 0.22036000408943557,
+        "bss": 0.10329992148475342,
+        "ece": 0.029598230235706992,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1416,
+        "bookmaker_brier": 0.21755266698666278,
+        "bookmaker_bss": 0.11315193627068254,
+        "bookmaker_ece": 0.04188314225610106,
+        "bookmaker_auc": 0.6939280885626862,
+        "delta_brier_vs_bookmaker": -0.0023374384571090145
+      },
+      "notes": []
+    },
+    {
+      "market_code": "dc_12",
+      "eligible": false,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5401059598181481,
+        "brier": 0.1957569037329827,
+        "bss": 0.0009237316159783626,
+        "ece": 0.027947678501413175,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1416,
+        "bookmaker_brier": 0.1965519605864972,
+        "bookmaker_bss": -0.0019187759117735848,
+        "bookmaker_ece": 0.05779700191153327,
+        "bookmaker_auc": 0.5522768387600727,
+        "delta_brier_vs_bookmaker": 0.0005909914979855269
+      },
+      "notes": [
+        "low_bss"
+      ]
+    },
+    {
+      "market_code": "h_1up",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1416,
+        "auc": 0.6446521289806395,
+        "brier": 0.22395423047685237,
+        "bss": 0.06457293029670919,
+        "ece": 0.02872200734394228,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "a_1up",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1416,
+        "auc": 0.6196010005929291,
+        "brier": 0.23838450392125182,
+        "bss": 0.045774890038071,
+        "ece": 0.03065726839735853,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "h_2up",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1416,
+        "auc": 0.6391853666265783,
+        "brier": 0.18100829448292963,
+        "bss": 0.058516503630737016,
+        "ece": 0.034812831865911234,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "a_2up",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1416,
+        "auc": 0.6238208746503942,
+        "brier": 0.15185345538332082,
+        "bss": 0.03231469442816515,
+        "ece": 0.02109352330697181,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ho15",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5986190901049437,
+        "brier": 0.23884890352220703,
+        "bss": 0.032935729956787285,
+        "ece": 0.029397398573768385,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ao15",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5974620224029462,
+        "brier": 0.22361663173737734,
+        "bss": 0.03092637340611948,
+        "ece": 0.030951299366052176,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "home_or_o25",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5791938183242531,
+        "brier": 0.2089353034970148,
+        "bss": 0.01444143131618092,
+        "ece": 0.023644007156117718,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "away_or_o25",
+      "eligible": false,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5523626200205988,
+        "brier": 0.22639712072801205,
+        "bss": 0.0035337302609019794,
+        "ece": 0.02867933582510808,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "low_bss",
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "home_or_o15",
+      "eligible": false,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5594928729742369,
+        "brier": 0.11605261419540935,
+        "bss": -0.0002458700048193485,
+        "ece": 0.030197304359519124,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "low_bss",
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "away_or_o15",
+      "eligible": false,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5647062150840313,
+        "brier": 0.14172416336155708,
+        "bss": 0.0005601644914998705,
+        "ece": 0.028785486526943266,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "low_bss",
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "home_and_o25",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6077837088323266,
+        "brier": 0.19316304704671255,
+        "bss": 0.04200056560455068,
+        "ece": 0.0359670734367183,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "away_and_o25",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.6353074696939587,
+        "brier": 0.14640368655851535,
+        "bss": 0.03627903442484803,
+        "ece": 0.029864703146948834,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "c75",
+      "eligible": true,
+      "limited_to_one_leg": true,
+      "edge_bump": 0.01,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.5504647967883851,
+        "brier": 0.20034311085343456,
+        "bss": 0.005224643034873133,
+        "ece": 0.03694887209927676,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1,
+        "bookmaker_brier": 0.25,
+        "bookmaker_bss": 0.5203311417641616,
+        "bookmaker_ece": 0.5,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": -0.3133455060114131
+      },
+      "notes": [
+        "limited_eligibility_band"
+      ]
+    },
+    {
+      "market_code": "c85",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.5629023641892447,
+        "brier": 0.2327259722690215,
+        "bss": 0.013140937710605205,
+        "ece": 0.032468438854448715,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 181,
+        "bookmaker_brier": 0.2541888254490904,
+        "bookmaker_bss": 0.03493395287542467,
+        "bookmaker_ece": 0.08728056538466536,
+        "bookmaker_auc": 0.5446886446886446,
+        "delta_brier_vs_bookmaker": -0.008025918617331262
+      },
+      "notes": []
+    },
+    {
+      "market_code": "c95",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.5862241602067184,
+        "brier": 0.24514318820546477,
+        "bss": 0.01935123480944112,
+        "ece": 0.03406718079213086,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 872,
+        "bookmaker_brier": 0.25270138481224885,
+        "bookmaker_bss": -0.01118049086128381,
+        "bookmaker_ece": 0.059329307422016274,
+        "bookmaker_auc": 0.5216509222956082,
+        "delta_brier_vs_bookmaker": 0.004568775131044145
+      },
+      "notes": []
+    },
+    {
+      "market_code": "c105",
+      "eligible": false,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.5470537124434526,
+        "brier": 0.23042589695253238,
+        "bss": 0.0038863726481513927,
+        "ece": 0.04579869809909157,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 269,
+        "bookmaker_brier": 0.2484416760738847,
+        "bookmaker_bss": 0.033812419658996506,
+        "bookmaker_ece": 0.041874004601455225,
+        "bookmaker_auc": 0.5656010656010655,
+        "delta_brier_vs_bookmaker": -0.00652375895229404
+      },
+      "notes": [
+        "low_bss"
+      ]
+    },
+    {
+      "market_code": "hc25",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.601646070824153,
+        "brier": 0.131382964465891,
+        "bss": 0.026797696620055933,
+        "ece": 0.02625473344967779,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "hc35",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6305730931115902,
+        "brier": 0.19937946513721114,
+        "bss": 0.049380186261593795,
+        "ece": 0.03442800134564542,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "hc45",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6223487276072389,
+        "brier": 0.23566790995528275,
+        "bss": 0.045616963289432766,
+        "ece": 0.030809000559900324,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "hc55",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6301234764457181,
+        "brier": 0.2316115494998395,
+        "bss": 0.04855293265713956,
+        "ece": 0.045773399793968036,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ac25",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.61743618304018,
+        "brier": 0.1927918746612133,
+        "bss": 0.035916760584525975,
+        "ece": 0.03696828918984246,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ac35",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6323813900560225,
+        "brier": 0.23375791946261992,
+        "bss": 0.05301548891007024,
+        "ece": 0.0398264909897712,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ac45",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6198194867042959,
+        "brier": 0.23081361700300265,
+        "bss": 0.04668584671120524,
+        "ece": 0.03531605885914914,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "ac55",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1363,
+        "auc": 0.6522396935156242,
+        "brier": 0.19261090994321564,
+        "bss": 0.05861014874216941,
+        "ece": 0.047094517155705506,
+        "bookmaker_available": false,
+        "bookmaker_test_n": 0,
+        "bookmaker_brier": null,
+        "bookmaker_bss": null,
+        "bookmaker_ece": null,
+        "bookmaker_auc": null,
+        "delta_brier_vs_bookmaker": null
+      },
+      "notes": [
+        "bookmaker_baseline_unavailable"
+      ]
+    },
+    {
+      "market_code": "o15",
+      "eligible": true,
+      "limited_to_one_leg": true,
+      "edge_bump": 0.01,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5747716230377576,
+        "brier": 0.17653268187843663,
+        "bss": 0.00999859859724428,
+        "ece": 0.025032754114874697,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1415,
+        "bookmaker_brier": 0.17615905621292663,
+        "bookmaker_bss": 0.013146792850335265,
+        "bookmaker_ece": 0.03111202892517595,
+        "bookmaker_auc": 0.5858998471846715,
+        "delta_brier_vs_bookmaker": -0.00027501084478123716
+      },
+      "notes": [
+        "limited_eligibility_band"
+      ]
+    },
+    {
+      "market_code": "u35",
+      "eligible": true,
+      "limited_to_one_leg": false,
+      "edge_bump": 0.0,
+      "thresholds": {
+        "min_test_n": 500,
+        "full_min_bss": 0.01,
+        "full_max_ece": 0.05,
+        "limited_min_bss": 0.005,
+        "hard_max_ece": 0.08
+      },
+      "metrics": {
+        "test_n": 1456,
+        "auc": 0.5764589662905093,
+        "brier": 0.20570813464557466,
+        "bss": 0.014288183350836037,
+        "ece": 0.027096769754084118,
+        "bookmaker_available": true,
+        "bookmaker_test_n": 1415,
+        "bookmaker_brier": 0.20461965280498698,
+        "bookmaker_bss": 0.01835062208549798,
+        "bookmaker_ece": 0.03748084094966141,
+        "bookmaker_auc": 0.5920016581840489,
+        "delta_brier_vs_bookmaker": -0.0005483009947196138
+      },
+      "notes": []
+    }
+  ]
+}
