@@ -147,4 +147,4 @@ def test_assess_prediction_risk_writes_rows_and_odds_sensitive_actions(db_case) 
     assert c85[2] is None
     assert str(c85[3]) == "pass"
     flags = c85[4] if isinstance(c85[4], list) else []
-    assert "missing_odds" in flags
+    assert "non_tradable_market" in flags

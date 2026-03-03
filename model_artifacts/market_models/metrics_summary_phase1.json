@@ -1,0 +1,26 @@
+[
+  {
+    "market": "1x2_d",
+    "selected_model": "1x2_multi_gbm",
+    "holdout_auc": 0.5358130998325774,
+    "holdout_brier": 0.19527630788636777,
+    "candidate_auc_mean": 0.5311650302383499,
+    "candidate_auc_std": 0.003919057859643138,
+    "candidate_brier_mean": 0.19406709706840747,
+    "candidate_brier_std": 0.00038615179541231365,
+    "folds_used": 2,
+    "promoted": false
+  },
+  {
+    "market": "dc_12",
+    "selected_model": "1x2_multi_gbm",
+    "holdout_auc": 0.5358130998325774,
+    "holdout_brier": 0.19527630788636774,
+    "candidate_auc_mean": 0.5311650302383499,
+    "candidate_auc_std": 0.003919057859643138,
+    "candidate_brier_mean": 0.19406709706840747,
+    "candidate_brier_std": 0.00038615179541231365,
+    "folds_used": 2,
+    "promoted": false
+  }
+]

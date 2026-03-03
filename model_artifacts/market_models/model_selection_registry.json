@@ -1,0 +1,60 @@
+[
+  {
+    "market_code": "1x2_d",
+    "candidate_model": "1x2_multi_gbm",
+    "model_family": "1x2_dc_multiclass",
+    "candidate_summary": {
+      "gbm": {
+        "auc_mean": 0.5311650302383499,
+        "auc_std": 0.003919057859643138,
+        "brier_mean": 0.19406709706840747,
+        "brier_std": 0.00038615179541231365,
+        "folds_used": 2
+      },
+      "hgbm": {
+        "auc_mean": 0.5239393848275811,
+        "auc_std": 0.014907364221956959,
+        "brier_mean": 0.2097095218826507,
+        "brier_std": 0.00365202457853233,
+        "folds_used": 2
+      }
+    },
+    "baseline_auc": 0.5180637541953892,
+    "baseline_brier": 0.1945666055598713,
+    "current_auc": 0.5358130998325774,
+    "current_brier": 0.19527630788636777,
+    "auc_delta": 0.01774934563718822,
+    "brier_delta": 0.0007097023264964752,
+    "promoted": false,
+    "promotion_reason": "auc_brier_gate_failed_or_missing"
+  },
+  {
+    "market_code": "dc_12",
+    "candidate_model": "1x2_multi_gbm",
+    "model_family": "1x2_dc_multiclass",
+    "candidate_summary": {
+      "gbm": {
+        "auc_mean": 0.5311650302383499,
+        "auc_std": 0.003919057859643138,
+        "brier_mean": 0.19406709706840747,
+        "brier_std": 0.00038615179541231365,
+        "folds_used": 2
+      },
+      "hgbm": {
+        "auc_mean": 0.5239393848275811,
+        "auc_std": 0.014907364221956959,
+        "brier_mean": 0.2097095218826507,
+        "brier_std": 0.00365202457853233,
+        "folds_used": 2
+      }
+    },
+    "baseline_auc": 0.5146406310179763,
+    "baseline_brier": 0.19475065148430062,
+    "current_auc": 0.5358130998325774,
+    "current_brier": 0.19527630788636774,
+    "auc_delta": 0.02117246881460111,
+    "brier_delta": 0.0005256564020671151,
+    "promoted": false,
+    "promotion_reason": "auc_brier_gate_failed_or_missing"
+  }
+]

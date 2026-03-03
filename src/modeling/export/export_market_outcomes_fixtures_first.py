@@ -49,6 +49,7 @@ OUT_COLUMNS = [
     "home_team",
     "away_team",
     "risk_market_code",
+    "risk_market_mode",
     "risk_action",
     "risk_score",
     "risk_edge_adjusted",
@@ -96,12 +97,14 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
 
     risk_select = """
         risk.risk_market_code,
+        risk.risk_market_mode,
         risk.risk_action,
         risk.risk_score,
         risk.risk_edge_adjusted,
         risk.risk_stake_fraction,
     """ if has_risk_table else """
         NULL::text AS risk_market_code,
+        NULL::text AS risk_market_mode,
         NULL::text AS risk_action,
         NULL::double precision AS risk_score,
         NULL::double precision AS risk_edge_adjusted,
@@ -112,6 +115,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
     LEFT JOIN LATERAL (
         SELECT
             pra.market_code AS risk_market_code,
+            COALESCE(pra.metadata_json ->> 'market_mode', 'predict_only') AS risk_market_mode,
             pra.action AS risk_action,
             pra.risk_score AS risk_score,
             pra.edge_adjusted AS risk_edge_adjusted,
@@ -136,6 +140,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
 
     risk_group_by = """
         risk.risk_market_code,
+        risk.risk_market_mode,
         risk.risk_action,
         risk.risk_score,
         risk.risk_edge_adjusted,

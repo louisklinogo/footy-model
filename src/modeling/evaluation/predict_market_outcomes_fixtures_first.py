@@ -72,6 +72,7 @@ MARKETS = (
     "h_2up",
     "a_2up",
 )
+MULTICLASS_MARKETS = ("1x2_h", "1x2_d", "1x2_a", "dc_1x", "dc_x2", "dc_12")
 
 _MARKOV_PRICER = MarkovPricer(max_goals=8)
 
@@ -119,6 +120,8 @@ def load_artifacts() -> tuple[
     dict[str, dict[str, dict[str, float] | float]],
     dict[str, object],
     dict[str, str],
+    object | None,
+    set[str],
 ]:
     with (MODEL_DIR / "features.json").open("r", encoding="utf-8") as f:
         features = json.load(f)
@@ -135,7 +138,47 @@ def load_artifacts() -> tuple[
             models[market] = joblib.load(model_path)
         except Exception as exc:
             model_failures[market] = f"load_error:{exc.__class__.__name__}"
-    return features, imputation, models, model_failures
+    multiclass_model: object | None = None
+    multiclass_path = MODEL_DIR / "gbm_1x2_dc_multiclass.pkl"
+    if multiclass_path.exists():
+        try:
+            multiclass_model = joblib.load(multiclass_path)
+        except Exception:
+            multiclass_model = None
+    multiclass_markets = _load_multiclass_markets_from_registry()
+    return (
+        features,
+        imputation,
+        models,
+        model_failures,
+        multiclass_model,
+        multiclass_markets,
+    )
+
+
+def _load_multiclass_markets_from_registry() -> set[str]:
+    path = MODEL_DIR / "model_selection_registry.json"
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    if not isinstance(payload, list):
+        return set()
+    selected: set[str] = set()
+    allowed = set(MULTICLASS_MARKETS)
+    for row in payload:
+        if not isinstance(row, dict):
+            continue
+        market = str(row.get("market_code") or "").strip()
+        if market not in allowed:
+            continue
+        family = str(row.get("model_family") or "").strip()
+        candidate = str(row.get("candidate_model") or "").strip()
+        if family == "1x2_dc_multiclass" or candidate.startswith("1x2_multi_"):
+            selected.add(market)
+    return selected
 
 
 def fetch_candidate_fixtures(
@@ -153,6 +196,16 @@ def fetch_candidate_fixtures(
         {_latest_odds_expr("od15", "under")} AS odds_under_15,
         {_latest_odds_expr("od25", "over")} AS odds_over_25,
         {_latest_odds_expr("od25", "under")} AS odds_under_25,
+        {_latest_odds_expr("od35", "over")} AS odds_over_35,
+        {_latest_odds_expr("od35", "under")} AS odds_under_35,
+        {_latest_odds_expr("odc75", "over")} AS odds_c75_over,
+        {_latest_odds_expr("odc75", "under")} AS odds_c75_under,
+        {_latest_odds_expr("odc85", "over")} AS odds_c85_over,
+        {_latest_odds_expr("odc85", "under")} AS odds_c85_under,
+        {_latest_odds_expr("odc95", "over")} AS odds_c95_over,
+        {_latest_odds_expr("odc95", "under")} AS odds_c95_under,
+        {_latest_odds_expr("odc105", "over")} AS odds_c105_over,
+        {_latest_odds_expr("odc105", "under")} AS odds_c105_under,
         GREATEST(od15.snapshot_time_utc, od25.snapshot_time_utc) AS odds_snapshot_time_utc,
         tph.sample_size AS home_sample_size,
         tph.rolling_xg AS home_rolling_xg,
@@ -235,6 +288,66 @@ def fetch_candidate_fixtures(
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) od25 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'ou'
+          AND fom.line_num = 3.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) od35 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'corners_ou'
+          AND fom.line_num = 7.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) odc75 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'corners_ou'
+          AND fom.line_num = 8.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) odc85 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'corners_ou'
+          AND fom.line_num = 9.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) odc95 ON true
+    LEFT JOIN LATERAL (
+        SELECT fom.snapshot_time_utc, fom.snapshot_type, fom.odds_json
+        FROM fixture_odds_markets fom
+        WHERE fom.fixture_id = f.fixture_id
+          AND fom.provider = 'sofascore'
+          AND fom.market_code = 'corners_ou'
+          AND fom.line_num = 10.5
+          AND fom.snapshot_type IN ('latest_pre_match', 'closing')
+          AND fom.snapshot_time_utc <= f.match_datetime_utc
+        ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
+        LIMIT 1
+    ) odc105 ON true
     LEFT JOIN LATERAL (
         SELECT p.metadata_json
         FROM predictions p
@@ -327,9 +440,33 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     out["implied_under25"] = np.where(
         out["odds_under_25"] > 1.0, 1.0 / out["odds_under_25"], np.nan
     )
+    out["implied_over35"] = np.where(
+        out["odds_over_35"] > 1.0, 1.0 / out["odds_over_35"], np.nan
+    )
+    out["implied_under35"] = np.where(
+        out["odds_under_35"] > 1.0, 1.0 / out["odds_under_35"], np.nan
+    )
 
     out["odds_gap_15"] = out["odds_over_15"] - out["odds_under_15"]
     out["odds_gap_25"] = out["odds_over_25"] - out["odds_under_25"]
+    out["odds_gap_35"] = out["odds_over_35"] - out["odds_under_35"]
+    out["corners_gap_75"] = out["odds_c75_over"] - out["odds_c75_under"]
+    out["corners_gap_85"] = out["odds_c85_over"] - out["odds_c85_under"]
+    out["corners_gap_95"] = out["odds_c95_over"] - out["odds_c95_under"]
+    out["corners_gap_105"] = out["odds_c105_over"] - out["odds_c105_under"]
+
+    out["implied_c75_over"] = np.where(
+        out["odds_c75_over"] > 1.0, 1.0 / out["odds_c75_over"], np.nan
+    )
+    out["implied_c85_over"] = np.where(
+        out["odds_c85_over"] > 1.0, 1.0 / out["odds_c85_over"], np.nan
+    )
+    out["implied_c95_over"] = np.where(
+        out["odds_c95_over"] > 1.0, 1.0 / out["odds_c95_over"], np.nan
+    )
+    out["implied_c105_over"] = np.where(
+        out["odds_c105_over"] > 1.0, 1.0 / out["odds_c105_over"], np.nan
+    )
     return out
 
 
@@ -550,11 +687,15 @@ def build_prediction_rows(
     features: list[str],
     models: dict[str, object],
     model_failures: dict[str, str] | None = None,
+    multiclass_model: object | None = None,
+    multiclass_markets: set[str] | None = None,
 ) -> tuple[list[tuple[int, str, str, str, float, str]], int]:
     x_mat = scored[features]
     rows: list[tuple[int, str, str, str, float, str]] = []
     fallback_rows = 0
     failures = model_failures or {}
+    configured_multiclass_markets = set(multiclass_markets or set())
+    configured_multiclass_markets &= set(MULTICLASS_MARKETS)
 
     for _, fixture in scored.iterrows():
         fixture_id = int(fixture["fixture_id"])
@@ -596,21 +737,36 @@ def build_prediction_rows(
             else fixture["odds_snapshot_time_utc"].isoformat(),
         }
         row_df = x_mat.loc[[fixture.name]]
+        multiclass_probs: dict[str, float] = {}
+        if multiclass_model is not None and configured_multiclass_markets:
+            try:
+                p_home, p_draw, p_away = multiclass_probabilities(multiclass_model, row_df)
+                for market in configured_multiclass_markets:
+                    multiclass_probs[market] = multiclass_probability_for_market(
+                        market, p_home=p_home, p_draw=p_draw, p_away=p_away
+                    )
+            except Exception:
+                multiclass_probs = {}
         for market in MARKETS:
             fallback_used = False
             fallback_reason: str | None = None
-            model = models.get(market)
-            if model is None:
-                fallback_used = True
-                fallback_reason = failures.get(market, "missing_artifact")
-                p_model = fallback_probs[market]
+            prediction_model_family = "binary"
+            if market in multiclass_probs:
+                p_model = multiclass_probs[market]
+                prediction_model_family = "1x2_dc_multiclass"
             else:
-                try:
-                    p_model = positive_class_probability(model=model, x_row=row_df)
-                except Exception as exc:
+                model = models.get(market)
+                if model is None:
                     fallback_used = True
-                    fallback_reason = f"predict_error:{exc.__class__.__name__}"
+                    fallback_reason = failures.get(market, "missing_artifact")
                     p_model = fallback_probs[market]
+                else:
+                    try:
+                        p_model = positive_class_probability(model=model, x_row=row_df)
+                    except Exception as exc:
+                        fallback_used = True
+                        fallback_reason = f"predict_error:{exc.__class__.__name__}"
+                        p_model = fallback_probs[market]
 
             if fallback_used:
                 fallback_rows += 1
@@ -629,6 +785,7 @@ def build_prediction_rows(
                     ],
                     "fallback_corners_source": fallback_trace["corners_source"],
                     "fallback_corners_mu": fallback_trace["corners_mu"],
+                    "prediction_model_family": prediction_model_family,
                 }
             )
             rows.append(
@@ -659,6 +816,41 @@ def positive_class_probability(model: object, x_row: pd.DataFrame) -> float:
 
     idx = int(np.where(classes_arr == 1)[0][0]) if np.any(classes_arr == 1) else 1
     return float(np.clip(probs[0, idx], 0.001, 0.999))
+
+
+def multiclass_probabilities(
+    model: object, x_row: pd.DataFrame
+) -> tuple[float, float, float]:
+    probs = model.predict_proba(x_row)
+    classes = np.asarray(getattr(model, "classes_", [0, 1, 2]), dtype=int)
+    idx_home = int(np.where(classes == 0)[0][0]) if np.any(classes == 0) else None
+    idx_draw = int(np.where(classes == 1)[0][0]) if np.any(classes == 1) else None
+    idx_away = int(np.where(classes == 2)[0][0]) if np.any(classes == 2) else None
+    p_home = float(probs[0, idx_home]) if idx_home is not None else 0.0
+    p_draw = float(probs[0, idx_draw]) if idx_draw is not None else 0.0
+    p_away = float(probs[0, idx_away]) if idx_away is not None else 0.0
+    total = p_home + p_draw + p_away
+    if total <= 0.0:
+        return (1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0)
+    return (p_home / total, p_draw / total, p_away / total)
+
+
+def multiclass_probability_for_market(
+    market: str, *, p_home: float, p_draw: float, p_away: float
+) -> float:
+    if market == "1x2_h":
+        return float(np.clip(p_home, 0.001, 0.999))
+    if market == "1x2_d":
+        return float(np.clip(p_draw, 0.001, 0.999))
+    if market == "1x2_a":
+        return float(np.clip(p_away, 0.001, 0.999))
+    if market == "dc_1x":
+        return float(np.clip(p_home + p_draw, 0.001, 0.999))
+    if market == "dc_x2":
+        return float(np.clip(p_draw + p_away, 0.001, 0.999))
+    if market == "dc_12":
+        return float(np.clip(p_home + p_away, 0.001, 0.999))
+    raise ValueError(f"unsupported multiclass market: {market}")
 
 
 def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int:
@@ -694,7 +886,14 @@ def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int
 
 def main() -> None:
     args = parse_args()
-    features, imputation, models, model_failures = load_artifacts()
+    (
+        features,
+        imputation,
+        models,
+        model_failures,
+        multiclass_model,
+        multiclass_markets,
+    ) = load_artifacts()
 
     fixtures = fetch_candidate_fixtures(
         days=args.days,
@@ -733,6 +932,8 @@ def main() -> None:
         features=features,
         models=models,
         model_failures=model_failures,
+        multiclass_model=multiclass_model,
+        multiclass_markets=multiclass_markets,
     )
     written = upsert_predictions(prediction_rows)
 

@@ -32,6 +32,8 @@ from src.db.db_utils import connect_db
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
 DEFAULT_POLICY_PATH = Path("model_artifacts/market_models/risk_policy.json")
+DEFAULT_GATING_PATH = Path("model_artifacts/market_models/market_gating.json")
+DEFAULT_COVERAGE_DIR = Path("artifacts/reports/odds_coverage")
 EPS = 1e-6
 FOCUS_MARKETS = (
     "o15",
@@ -71,7 +73,7 @@ DEFAULT_POLICY: dict[str, Any] = {
     "precision_min_samples": 80,
     "precision_window": 60,
     "loss_streak_pause": 2,
-    "hard_precision_gate": False,
+    "hard_precision_gate": True,
     "hard_loss_streak_pause": True,
     "tradable_markets": [
         "o15",
@@ -86,6 +88,23 @@ DEFAULT_POLICY: dict[str, Any] = {
         "c95",
         "c105",
     ],
+    "required_markets": [
+        "o15",
+        "u35",
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "c85",
+        "c95",
+        "c105",
+    ],
+    "market_gating_path": str(DEFAULT_GATING_PATH),
+    "odds_coverage_dir": str(DEFAULT_COVERAGE_DIR),
+    "odds_coverage_report_path": None,
+    "odds_coverage_min_pct": 0.6,
     "kelly_scale": 0.25,
     "max_stake_fraction": 0.02,
     "max_small_stake_fraction": 0.01,
@@ -220,6 +239,127 @@ def load_policy(path: Path) -> dict[str, Any]:
         return policy
     merged = _merge_dict(policy, payload)
     return merged
+
+
+def _coerce_market_list(value: Any) -> set[str]:
+    if not isinstance(value, list):
+        return set()
+    out: set[str] = set()
+    for item in value:
+        code = str(item or "").strip()
+        if code:
+            out.add(code)
+    return out
+
+
+def _load_gating_eligible(path: Path) -> set[str]:
+    if not path.exists():
+        return set()
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return set()
+    if not isinstance(payload, dict):
+        return set()
+    rows = payload.get("markets")
+    if not isinstance(rows, list):
+        return set()
+    eligible: set[str] = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        code = str(row.get("market_code") or "").strip()
+        if not code:
+            continue
+        if bool(row.get("eligible")):
+            eligible.add(code)
+    return eligible
+
+
+def _latest_coverage_report_path(root_dir: Path) -> Path | None:
+    if not root_dir.exists() or not root_dir.is_dir():
+        return None
+    candidates = sorted(root_dir.glob("*.json"))
+    if not candidates:
+        return None
+    return candidates[-1]
+
+
+def _load_coverage_rates(path: Path) -> dict[str, float]:
+    if not path.exists():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(payload, dict):
+        return {}
+    rows = payload.get("coverage_by_market")
+    if not isinstance(rows, list):
+        return {}
+    rates: dict[str, float] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        code = str(row.get("market_code") or "").strip()
+        if not code:
+            continue
+        pct_raw = row.get("coverage_pct")
+        try:
+            pct = float(pct_raw)
+        except (TypeError, ValueError):
+            continue
+        if math.isnan(pct):
+            continue
+        rates[code] = pct
+    return rates
+
+
+def resolve_tradable_markets(policy: dict[str, Any]) -> tuple[set[str], dict[str, Any]]:
+    required = _coerce_market_list(policy.get("required_markets"))
+    configured = _coerce_market_list(policy.get("tradable_markets"))
+    if not required:
+        required = set(configured) if configured else set(FOCUS_MARKETS)
+
+    gating_path = Path(str(policy.get("market_gating_path") or DEFAULT_GATING_PATH))
+    gating_eligible = _load_gating_eligible(gating_path)
+    if not gating_eligible:
+        gating_eligible = set(required)
+
+    coverage_rates: dict[str, float] = {}
+    coverage_path_raw = str(policy.get("odds_coverage_report_path") or "").strip()
+    if coverage_path_raw:
+        coverage_path = Path(coverage_path_raw)
+    else:
+        coverage_dir_raw = str(policy.get("odds_coverage_dir") or "").strip()
+        coverage_dir = Path(coverage_dir_raw) if coverage_dir_raw else DEFAULT_COVERAGE_DIR
+        coverage_path = _latest_coverage_report_path(coverage_dir)
+
+    coverage_path_str = None
+    if coverage_path is not None:
+        coverage_path_str = str(coverage_path)
+        coverage_rates = _load_coverage_rates(coverage_path)
+
+    min_cov = float(policy.get("odds_coverage_min_pct", 0.6))
+    coverage_eligible = {
+        code for code, pct in coverage_rates.items() if pct >= min_cov - EPS
+    }
+
+    tradable = set(required) & set(gating_eligible)
+    coverage_applied = bool(coverage_rates)
+    if coverage_applied:
+        tradable &= coverage_eligible
+
+    summary = {
+        "required_count": len(required),
+        "gating_eligible_count": len(gating_eligible),
+        "coverage_applied": coverage_applied,
+        "coverage_min_pct": min_cov,
+        "coverage_report_path": coverage_path_str,
+        "coverage_eligible_count": len(coverage_eligible),
+        "resolved_tradable_count": len(tradable),
+    }
+    return tradable, summary
 
 
 def fetch_candidates(
@@ -602,6 +742,7 @@ def assess_row(
     row: dict[str, Any],
     *,
     policy: dict[str, Any],
+    tradable_summary: dict[str, Any] | None,
     calibration_by_league_market: dict[tuple[str, str], CalibrationStats],
     calibration_by_market: dict[str, CalibrationStats],
     performance_by_league_market: dict[tuple[str, str], RollingPerformance],
@@ -784,6 +925,8 @@ def assess_row(
             scaled = min(scaled, float(policy["max_stake_fraction"]))
         stake_fraction = float(max(0.0, scaled))
 
+    market_mode = "tradable" if is_tradable else "predict_only"
+
     return {
         "prediction_id": int(row["prediction_id"]),
         "fixture_id": int(row["fixture_id"]),
@@ -810,6 +953,7 @@ def assess_row(
             "rolling_loss_streak": perf.loss_streak,
             "rolling_min_precision_gate": min_precision,
             "is_tradable_market": is_tradable,
+            "market_mode": market_mode,
             "risk_haircut": haircut,
             "fallback_used": bool(resolver_used_fallback or metadata_used_fallback),
             "fallback_trace": fallback_trace,
@@ -823,6 +967,7 @@ def assess_row(
             "match_datetime_utc": match_time.isoformat() if match_time else None,
             "features_missing_count": missing_count,
             "min_team_sample_size": min_sample,
+            "tradable_resolution": tradable_summary or {},
         },
     }
 
@@ -931,6 +1076,15 @@ def main() -> None:
     args = parse_args()
     ensure_risk_schema()
     policy = load_policy(args.policy_path)
+    resolved_tradable, tradable_summary = resolve_tradable_markets(policy)
+    policy["tradable_markets"] = sorted(resolved_tradable)
+    print(
+        "Resolved tradable markets: "
+        f"{tradable_summary['resolved_tradable_count']} "
+        f"(required={tradable_summary['required_count']}, "
+        f"gating={tradable_summary['gating_eligible_count']}, "
+        f"coverage_applied={tradable_summary['coverage_applied']})"
+    )
     candidates = fetch_candidates(
         model=args.model,
         version=args.version,
@@ -960,6 +1114,7 @@ def main() -> None:
         assess_row(
             row,
             policy=policy,
+            tradable_summary=tradable_summary,
             calibration_by_league_market=calibration_by_league_market,
             calibration_by_market=calibration_by_market,
             performance_by_league_market=performance_by_league_market,

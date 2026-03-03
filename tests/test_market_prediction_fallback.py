@@ -15,6 +15,14 @@ class _MockBinaryModel:
         return np.array([[0.2, 0.8]], dtype=float)
 
 
+class _MockMulticlassModel:
+    classes_ = np.array([0, 1, 2], dtype=int)
+
+    def predict_proba(self, x_row: pd.DataFrame):
+        _ = x_row
+        return np.array([[0.52, 0.21, 0.27]], dtype=float)
+
+
 def _base_scored_df() -> pd.DataFrame:
     return pd.DataFrame(
         [
@@ -81,3 +89,30 @@ def test_build_prediction_rows_uses_model_when_available():
     o15_meta = json.loads(by_market["o15"][5])
     assert o15_meta["fallback_used"] is False
     assert abs(float(by_market["o15"][4]) - 0.8) < 1e-9
+
+
+def test_build_prediction_rows_uses_multiclass_for_configured_1x2_dc_markets():
+    scored = _base_scored_df()
+    failure_map = {market: "missing_artifact" for market in MARKETS}
+
+    rows, fallback_rows = build_prediction_rows(
+        scored=scored,
+        features=["f1"],
+        models={},
+        model_failures=failure_map,
+        multiclass_model=_MockMulticlassModel(),
+        multiclass_markets={"1x2_h", "dc_12"},
+    )
+
+    by_market = {row[1]: row for row in rows}
+    assert abs(float(by_market["1x2_h"][4]) - 0.52) < 1e-9
+    assert abs(float(by_market["dc_12"][4]) - 0.79) < 1e-9
+
+    m_1x2 = json.loads(by_market["1x2_h"][5])
+    m_dc12 = json.loads(by_market["dc_12"][5])
+    assert m_1x2["fallback_used"] is False
+    assert m_dc12["fallback_used"] is False
+    assert m_1x2["prediction_model_family"] == "1x2_dc_multiclass"
+    assert m_dc12["prediction_model_family"] == "1x2_dc_multiclass"
+
+    assert fallback_rows == len(MARKETS) - 2

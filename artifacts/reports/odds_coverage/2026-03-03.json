@@ -1,0 +1,1230 @@
+{
+  "generated_at_utc": "2026-03-03T20:25:21.162462+00:00",
+  "fixture_count": 10,
+  "markets": [
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
+    "dc_1x",
+    "dc_x2",
+    "dc_12",
+    "h_1up",
+    "a_1up",
+    "h_2up",
+    "a_2up",
+    "ho15",
+    "ao15",
+    "c75",
+    "c85",
+    "c95",
+    "c105",
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
+    "o15",
+    "u35"
+  ],
+  "coverage_by_market": [
+    {
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "c105",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 10,
+      "coverage_pct": 0.1
+    },
+    {
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "c85",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 10,
+      "coverage_pct": 0.1
+    },
+    {
+      "market_code": "c95",
+      "fixtures_with_odds": 8,
+      "fixtures_total": 10,
+      "coverage_pct": 0.8
+    },
+    {
+      "market_code": "dc_12",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "market_code": "o15",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "market_code": "u35",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    }
+  ],
+  "coverage_by_league_market": [
+    {
+      "league_code": "G1",
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "c105",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "c85",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 2,
+      "coverage_pct": 0.5
+    },
+    {
+      "league_code": "G1",
+      "market_code": "c95",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 2,
+      "coverage_pct": 0.5
+    },
+    {
+      "league_code": "G1",
+      "market_code": "dc_12",
+      "fixtures_with_odds": 2,
+      "fixtures_total": 2,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 2,
+      "fixtures_total": 2,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 2,
+      "fixtures_total": 2,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 2,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "o15",
+      "fixtures_with_odds": 2,
+      "fixtures_total": 2,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "G1",
+      "market_code": "u35",
+      "fixtures_with_odds": 2,
+      "fixtures_total": 2,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "c105",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "c85",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "c95",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "dc_12",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 3,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "o15",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "I2",
+      "market_code": "u35",
+      "fixtures_with_odds": 3,
+      "fixtures_total": 3,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "c105",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "c85",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "c95",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "dc_12",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 4,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "o15",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "MX1",
+      "market_code": "u35",
+      "fixtures_with_odds": 4,
+      "fixtures_total": 4,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "c105",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "c85",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "c95",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "dc_12",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 1,
+      "coverage_pct": 0.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "o15",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    },
+    {
+      "league_code": "SP1",
+      "market_code": "u35",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 1,
+      "coverage_pct": 1.0
+    }
+  ],
+  "coverage_by_bucket_market": [
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "a_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "a_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ac25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ac35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ac45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ac55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ah_a05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ah_a15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ah_h05",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ah_h15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ao15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "c105",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 10,
+      "coverage_pct": 0.1
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "c75",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "c85",
+      "fixtures_with_odds": 1,
+      "fixtures_total": 10,
+      "coverage_pct": 0.1
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "c95",
+      "fixtures_with_odds": 8,
+      "fixtures_total": 10,
+      "coverage_pct": 0.8
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "dc_12",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "dc_1x",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "dc_x2",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "eh_a1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "eh_h1",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "h_1up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "h_2up",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "hc25",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "hc35",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "hc45",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "hc55",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "ho15",
+      "fixtures_with_odds": 0,
+      "fixtures_total": 10,
+      "coverage_pct": 0.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "o15",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    },
+    {
+      "kickoff_bucket": "0_24h",
+      "market_code": "u35",
+      "fixtures_with_odds": 10,
+      "fixtures_total": 10,
+      "coverage_pct": 1.0
+    }
+  ]
+}

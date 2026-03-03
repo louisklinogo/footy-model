@@ -6,7 +6,7 @@
   "precision_min_samples": 80,
   "precision_window": 60,
   "loss_streak_pause": 2,
-  "hard_precision_gate": false,
+  "hard_precision_gate": true,
   "hard_loss_streak_pause": true,
   "tradable_markets": [
     "o15",
@@ -21,6 +21,23 @@
     "c95",
     "c105"
   ],
+  "required_markets": [
+    "o15",
+    "u35",
+    "1x2_h",
+    "1x2_d",
+    "1x2_a",
+    "dc_1x",
+    "dc_x2",
+    "dc_12",
+    "c85",
+    "c95",
+    "c105"
+  ],
+  "market_gating_path": "model_artifacts/market_models/market_gating.json",
+  "odds_coverage_dir": "artifacts/reports/odds_coverage",
+  "odds_coverage_report_path": null,
+  "odds_coverage_min_pct": 0.6,
   "kelly_scale": 0.25,
   "max_stake_fraction": 0.02,
   "max_small_stake_fraction": 0.01,
