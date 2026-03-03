@@ -37,7 +37,7 @@ def test_calibration_check_smoke(db_case) -> None:
 
     model_name = "calib_test"
     model_version = "v1"
-    market_code = "home_win"
+    market_code = "1x2_h"
 
     fixture_ids: list[int] = []
     try:

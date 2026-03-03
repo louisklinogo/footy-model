@@ -17,19 +17,23 @@ class ValueFinder:
         Calculates EV for a set of markets given the predicted lambdas.
         
         Args:
-            market_odds: A dict like {"home_win": 1.95, "over_2.5": 2.10, ...}
+            market_odds: A dict like {"1x2_h": 1.95, "o15": 1.55, ...}
         """
         model_report = self.pricer.audit_report(lambda_h, lambda_a)
         edges = []
         
-        # Mapping market_odds keys to pricer report keys
-        # This is a simplified mapping for Phase 1
+        # Canonical market codes first; legacy aliases kept for compatibility.
         mappings = {
+            "1x2_h": ("1x2", "home"),
+            "1x2_d": ("1x2", "draw"),
+            "1x2_a": ("1x2", "away"),
+            "o15": ("totals", "over_1.5"),
+            "u35": ("totals", "over_3.5", True),
             "home_win": ("1x2", "home"),
             "draw": ("1x2", "draw"),
             "away_win": ("1x2", "away"),
             "over_2.5": ("totals", "over_2.5"),
-            "under_2.5": ("totals", "under_2.5", True) # True means invert over
+            "under_2.5": ("totals", "over_2.5", True),  # True means invert key
         }
 
         # 1. 1X2 and Totals
@@ -45,8 +49,8 @@ class ValueFinder:
             if len(report_path) == 2:
                 prob = model_report[report_path[0]][report_path[1]]
             else:
-                # Handle Under by inverting Over
-                prob = 1.0 - model_report["totals"]["over_2.5"]
+                # Handle "under" style markets by inverting their paired "over" key.
+                prob = 1.0 - model_report[report_path[0]][report_path[1]]
                 
             ev = (prob * odds) - 1.0
             
@@ -80,10 +84,7 @@ if __name__ == "__main__":
     
     # Imagine our model predicts 1.8 vs 1.1 (Home Win prob ~55%)
     # Bookie offers 2.10 (Value!)
-    test_odds = {
-        "home_win": 2.10,
-        "over_2.5": 1.85
-    }
+    test_odds = {"1x2_h": 2.10, "o15": 1.45}
     
     found_edges = finder.find_edges(1.8, 1.1, test_odds)
     print("--- VALUE DISCOVERY TEST ---")

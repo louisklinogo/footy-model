@@ -65,15 +65,12 @@ class TestPoissonPricer:
         # Over 100 should be ~0.0
         assert self.pricer.get_over_under(matrix, 100) == pytest.approx(0.0, abs=1e-6)
 
-    def test_btts_between_zero_and_one(self):
-        matrix = self.pricer.generate_matrix(1.5, 1.2)
-        btts = self.pricer.get_btts(matrix)
-        assert 0.0 < btts < 1.0
-
-    def test_btts_high_lambda_gives_high_btts(self):
-        low = self.pricer.get_btts(self.pricer.generate_matrix(0.5, 0.4))
-        high = self.pricer.get_btts(self.pricer.generate_matrix(2.5, 2.0))
-        assert high > low
+    def test_under_35_monotonic(self):
+        matrix_low = self.pricer.generate_matrix(0.8, 0.7)
+        matrix_high = self.pricer.generate_matrix(2.0, 1.8)
+        under_low = 1.0 - self.pricer.get_over_under(matrix_low, 3.5)
+        under_high = 1.0 - self.pricer.get_over_under(matrix_high, 3.5)
+        assert under_low > under_high
 
     def test_dixon_coles_negative_rho_increases_draw(self):
         """Negative rho should increase draw probability (the DC correction)."""
@@ -218,7 +215,7 @@ class TestValueFinder:
         fair_odds = 1.0 / home_prob
 
         # Offering fair odds should yield EV = 0, so no edges
-        edges = finder.find_edges(1.5, 1.0, {"home_win": fair_odds})
+        edges = finder.find_edges(1.5, 1.0, {"1x2_h": fair_odds})
         assert len(edges) == 0
 
     def test_edge_found_when_odds_exceed_fair(self):
@@ -229,7 +226,7 @@ class TestValueFinder:
         home_prob = pricer.get_1x2(matrix)["home"]
         generous_odds = (1.0 / home_prob) * 1.20  # 20% above fair
 
-        edges = finder.find_edges(1.5, 1.0, {"home_win": generous_odds})
+        edges = finder.find_edges(1.5, 1.0, {"1x2_h": generous_odds})
         assert len(edges) >= 1
         assert edges[0]["ev"] > 0
 
@@ -250,7 +247,7 @@ class TestValueFinder:
     def test_edge_ev_calculation_is_correct(self):
         """Verify EV = (prob * odds) - 1."""
         finder = ValueFinder(min_ev=0.0)
-        edges = finder.find_edges(2.0, 0.8, {"home_win": 3.0})
+        edges = finder.find_edges(2.0, 0.8, {"1x2_h": 3.0})
         if edges:
             edge = edges[0]
             expected_ev = (edge["model_prob"] * edge["odds"]) - 1.0

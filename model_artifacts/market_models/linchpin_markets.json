@@ -1,637 +1,966 @@
 [
-  {
-    "market_code": "ah_h05",
-    "description": "Asian handicap home -0.5 (home must win in regulation)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if home_goals > away_goals; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ah_h05",
+        "description":  "Asian handicap home -0.5 (home must win in regulation)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if home_goals \u003e away_goals; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ah",
+                                                    "line_num":  -0.5,
+                                                    "side":  "home"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  0.5,
+                                                             "side":  "home"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ah", "line_num": -0.5, "side": "home"}],
-      "fallback_selections": [{"market_code": "ah", "line_num": 0.5, "side": "home"}]
-    }
-  },
-  {
-    "market_code": "ah_a05",
-    "description": "Asian handicap away -0.5 (away must win in regulation)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if away_goals > home_goals; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ah_a05",
+        "description":  "Asian handicap away -0.5 (away must win in regulation)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if away_goals \u003e home_goals; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ah",
+                                                    "line_num":  0.5,
+                                                    "side":  "away"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  -0.5,
+                                                             "side":  "away"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ah", "line_num": 0.5, "side": "away"}],
-      "fallback_selections": [{"market_code": "ah", "line_num": -0.5, "side": "away"}]
-    }
-  },
-  {
-    "market_code": "ah_h15",
-    "description": "Asian handicap home -1.5 (home must win by 2+)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals - away_goals) >= 2; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ah_h15",
+        "description":  "Asian handicap home -1.5 (home must win by 2+)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (home_goals - away_goals) \u003e= 2; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ah",
+                                                    "line_num":  -1.5,
+                                                    "side":  "home"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  1.5,
+                                                             "side":  "home"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ah", "line_num": -1.5, "side": "home"}],
-      "fallback_selections": [{"market_code": "ah", "line_num": 1.5, "side": "home"}]
-    }
-  },
-  {
-    "market_code": "ah_a15",
-    "description": "Asian handicap away -1.5 (away must win by 2+)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (away_goals - home_goals) >= 2; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ah_a15",
+        "description":  "Asian handicap away -1.5 (away must win by 2+)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (away_goals - home_goals) \u003e= 2; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ah",
+                                                    "line_num":  1.5,
+                                                    "side":  "away"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  -1.5,
+                                                             "side":  "away"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ah", "line_num": 1.5, "side": "away"}],
-      "fallback_selections": [{"market_code": "ah", "line_num": -1.5, "side": "away"}]
-    }
-  },
-  {
-    "market_code": "eh_h1",
-    "description": "European handicap home -1 (home needs 2+ margin; exactly 1 is push)",
-    "selection_type": "3-way",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals - away_goals) >= 2; push if margin == 1; else loss",
-      "push": "home wins by exactly 1",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "eh_h1",
+        "description":  "European handicap home -1 (home needs 2+ margin; exactly 1 is push)",
+        "selection_type":  "3-way",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (home_goals - away_goals) \u003e= 2; push if margin == 1; else loss",
+                                 "push":  "home wins by exactly 1",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "eh",
+                                                    "line_num":  -1.0,
+                                                    "side":  "home"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  -1.5,
+                                                             "side":  "home"
+                                                         },
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  1.5,
+                                                             "side":  "home"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "eh", "line_num": -1.0, "side": "home"}],
-      "fallback_selections": [
-        {"market_code": "ah", "line_num": -1.5, "side": "home"},
-        {"market_code": "ah", "line_num": 1.5, "side": "home"}
-      ]
-    }
-  },
-  {
-    "market_code": "eh_a1",
-    "description": "European handicap away -1 (away needs 2+ margin; exactly 1 is push)",
-    "selection_type": "3-way",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (away_goals - home_goals) >= 2; push if margin == 1; else loss",
-      "push": "away wins by exactly 1",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "eh_a1",
+        "description":  "European handicap away -1 (away needs 2+ margin; exactly 1 is push)",
+        "selection_type":  "3-way",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (away_goals - home_goals) \u003e= 2; push if margin == 1; else loss",
+                                 "push":  "away wins by exactly 1",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "eh",
+                                                    "line_num":  1.0,
+                                                    "side":  "away"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  1.5,
+                                                             "side":  "away"
+                                                         },
+                                                         {
+                                                             "market_code":  "ah",
+                                                             "line_num":  -1.5,
+                                                             "side":  "away"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "eh", "line_num": 1.0, "side": "away"}],
-      "fallback_selections": [
-        {"market_code": "ah", "line_num": 1.5, "side": "away"},
-        {"market_code": "ah", "line_num": -1.5, "side": "away"}
-      ]
-    }
-  },
-  {
-    "market_code": "dc_1x",
-    "description": "Double chance 1X (home win or draw)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if home_goals >= away_goals; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "dc_1x",
+        "description":  "Double chance 1X (home win or draw)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if home_goals \u003e= away_goals; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "dc",
+                                                    "line_num":  null,
+                                                    "side":  "home_draw"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "dc", "line_num": null, "side": "home_draw"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "dc_x2",
-    "description": "Double chance X2 (draw or away win)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if away_goals >= home_goals; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "dc_x2",
+        "description":  "Double chance X2 (draw or away win)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if away_goals \u003e= home_goals; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "dc",
+                                                    "line_num":  null,
+                                                    "side":  "draw_away"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "dc", "line_num": null, "side": "draw_away"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "dc_12",
-    "description": "Double chance 12 (home win or away win)",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if home_goals != away_goals; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "dc_12",
+        "description":  "Double chance 12 (home win or away win)",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if home_goals != away_goals; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "dc",
+                                                    "line_num":  null,
+                                                    "side":  "home_away"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "dc", "line_num": null, "side": "home_away"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "h_1up",
-    "description": "Home led by at least one goal at any point",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": false, "incidents": true, "odds": true},
-    "settlement_rules": {
-      "rule": "win if fixture_incident_lead_states.home_led_by_1_any is true; else loss",
-      "push": "none",
-      "void": "void if incident lead-state row is missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "h_1up",
+        "description":  "Home led by at least one goal at any point",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  false,
+                                "incidents":  true,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if fixture_incident_lead_states.home_led_by_1_any is true; else loss",
+                                 "push":  "none",
+                                 "void":  "void if incident lead-state row is missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ],
+                             "notes":  "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
-    }
-  },
-  {
-    "market_code": "a_1up",
-    "description": "Away led by at least one goal at any point",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": false, "incidents": true, "odds": true},
-    "settlement_rules": {
-      "rule": "win if fixture_incident_lead_states.away_led_by_1_any is true; else loss",
-      "push": "none",
-      "void": "void if incident lead-state row is missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "a_1up",
+        "description":  "Away led by at least one goal at any point",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  false,
+                                "incidents":  true,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if fixture_incident_lead_states.away_led_by_1_any is true; else loss",
+                                 "push":  "none",
+                                 "void":  "void if incident lead-state row is missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ],
+                             "notes":  "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
-    }
-  },
-  {
-    "market_code": "h_2up",
-    "description": "Home led by at least two goals at any point",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": false, "incidents": true, "odds": true},
-    "settlement_rules": {
-      "rule": "win if fixture_incident_lead_states.home_led_by_2_any is true; else loss",
-      "push": "none",
-      "void": "void if incident lead-state row is missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "h_2up",
+        "description":  "Home led by at least two goals at any point",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  false,
+                                "incidents":  true,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if fixture_incident_lead_states.home_led_by_2_any is true; else loss",
+                                 "push":  "none",
+                                 "void":  "void if incident lead-state row is missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ],
+                             "notes":  "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
-    }
-  },
-  {
-    "market_code": "a_2up",
-    "description": "Away led by at least two goals at any point",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": false, "incidents": true, "odds": true},
-    "settlement_rules": {
-      "rule": "win if fixture_incident_lead_states.away_led_by_2_any is true; else loss",
-      "push": "none",
-      "void": "void if incident lead-state row is missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "a_2up",
+        "description":  "Away led by at least two goals at any point",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  false,
+                                "incidents":  true,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if fixture_incident_lead_states.away_led_by_2_any is true; else loss",
+                                 "push":  "none",
+                                 "void":  "void if incident lead-state row is missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ],
+                             "notes":  "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this incident-derived market"
-    }
-  },
-  {
-    "market_code": "ho15",
-    "description": "Home team over 1.5 goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if home_goals >= 2; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ho15",
+        "description":  "Home team over 1.5 goals",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if home_goals \u003e= 2; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "home_ou",
+                                                    "line_num":  1.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "home_ou", "line_num": 1.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "ao15",
-    "description": "Away team over 1.5 goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if away_goals >= 2; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ao15",
+        "description":  "Away team over 1.5 goals",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if away_goals \u003e= 2; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "away_ou",
+                                                    "line_num":  1.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "away_ou", "line_num": 1.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "home_or_o25",
-    "description": "Home win OR over 2.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals > away_goals) OR ((home_goals + away_goals) >= 3); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "c75",
+        "description":  "Total corners over 7.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (h_corners + a_corners) \u003e= 8; else loss",
+                                 "push":  "none",
+                                 "void":  "void if corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "corners_ou",
+                                                    "line_num":  7.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "away_or_o25",
-    "description": "Away win OR over 2.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (away_goals > home_goals) OR ((home_goals + away_goals) >= 3); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "c85",
+        "description":  "Total corners over 8.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (h_corners + a_corners) \u003e= 9; else loss",
+                                 "push":  "none",
+                                 "void":  "void if corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "corners_ou",
+                                                    "line_num":  8.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "home_or_o15",
-    "description": "Home win OR over 1.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals > away_goals) OR ((home_goals + away_goals) >= 2); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "c95",
+        "description":  "Total corners over 9.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (h_corners + a_corners) \u003e= 10; else loss",
+                                 "push":  "none",
+                                 "void":  "void if corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "corners_ou",
+                                                    "line_num":  9.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "away_or_o15",
-    "description": "Away win OR over 1.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (away_goals > home_goals) OR ((home_goals + away_goals) >= 2); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "c105",
+        "description":  "Total corners over 10.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (h_corners + a_corners) \u003e= 11; else loss",
+                                 "push":  "none",
+                                 "void":  "void if corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "corners_ou",
+                                                    "line_num":  10.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "home_and_o25",
-    "description": "Home win AND over 2.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals > away_goals) AND ((home_goals + away_goals) >= 3); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "hc25",
+        "description":  "Home team corners over 2.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if h_corners \u003e= 3; else loss",
+                                 "push":  "none",
+                                 "void":  "void if home corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "home_corners_ou",
+                                                    "line_num":  2.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_home_ou",
+                                                             "line_num":  2.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_home_ou",
+                                                             "line_num":  2.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "away_and_o25",
-    "description": "Away win AND over 2.5 total goals",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (away_goals > home_goals) AND ((home_goals + away_goals) >= 3); else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
+    {
+        "market_code":  "hc35",
+        "description":  "Home team corners over 3.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if h_corners \u003e= 4; else loss",
+                                 "push":  "none",
+                                 "void":  "void if home corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "home_corners_ou",
+                                                    "line_num":  3.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_home_ou",
+                                                             "line_num":  3.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_home_ou",
+                                                             "line_num":  3.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [],
-      "fallback_selections": [],
-      "notes": "No canonical fixture_odds_markets key currently mapped for this combo market"
-    }
-  },
-  {
-    "market_code": "c75",
-    "description": "Total corners over 7.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (h_corners + a_corners) >= 8; else loss",
-      "push": "none",
-      "void": "void if corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "hc45",
+        "description":  "Home team corners over 4.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if h_corners \u003e= 5; else loss",
+                                 "push":  "none",
+                                 "void":  "void if home corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "home_corners_ou",
+                                                    "line_num":  4.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_home_ou",
+                                                             "line_num":  4.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_home_ou",
+                                                             "line_num":  4.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "corners_ou", "line_num": 7.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "c85",
-    "description": "Total corners over 8.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (h_corners + a_corners) >= 9; else loss",
-      "push": "none",
-      "void": "void if corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "hc55",
+        "description":  "Home team corners over 5.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if h_corners \u003e= 6; else loss",
+                                 "push":  "none",
+                                 "void":  "void if home corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "home_corners_ou",
+                                                    "line_num":  5.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_home_ou",
+                                                             "line_num":  5.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_home_ou",
+                                                             "line_num":  5.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "corners_ou", "line_num": 8.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "c95",
-    "description": "Total corners over 9.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (h_corners + a_corners) >= 10; else loss",
-      "push": "none",
-      "void": "void if corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ac25",
+        "description":  "Away team corners over 2.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if a_corners \u003e= 3; else loss",
+                                 "push":  "none",
+                                 "void":  "void if away corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "away_corners_ou",
+                                                    "line_num":  2.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_away_ou",
+                                                             "line_num":  2.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_away_ou",
+                                                             "line_num":  2.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "corners_ou", "line_num": 9.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "c105",
-    "description": "Total corners over 10.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (h_corners + a_corners) >= 11; else loss",
-      "push": "none",
-      "void": "void if corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ac35",
+        "description":  "Away team corners over 3.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if a_corners \u003e= 4; else loss",
+                                 "push":  "none",
+                                 "void":  "void if away corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "away_corners_ou",
+                                                    "line_num":  3.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_away_ou",
+                                                             "line_num":  3.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_away_ou",
+                                                             "line_num":  3.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "corners_ou", "line_num": 10.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "hc25",
-    "description": "Home team corners over 2.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if h_corners >= 3; else loss",
-      "push": "none",
-      "void": "void if home corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ac45",
+        "description":  "Away team corners over 4.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if a_corners \u003e= 5; else loss",
+                                 "push":  "none",
+                                 "void":  "void if away corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "away_corners_ou",
+                                                    "line_num":  4.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_away_ou",
+                                                             "line_num":  4.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_away_ou",
+                                                             "line_num":  4.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "home_corners_ou", "line_num": 2.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_home_ou", "line_num": 2.5, "side": "over"},
-        {"market_code": "team_corners_home_ou", "line_num": 2.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "hc35",
-    "description": "Home team corners over 3.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if h_corners >= 4; else loss",
-      "push": "none",
-      "void": "void if home corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "ac55",
+        "description":  "Away team corners over 5.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  false,
+                                "corners":  true,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if a_corners \u003e= 6; else loss",
+                                 "push":  "none",
+                                 "void":  "void if away corners are missing",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "away_corners_ou",
+                                                    "line_num":  5.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+                                                         {
+                                                             "market_code":  "corners_away_ou",
+                                                             "line_num":  5.5,
+                                                             "side":  "over"
+                                                         },
+                                                         {
+                                                             "market_code":  "team_corners_away_ou",
+                                                             "line_num":  5.5,
+                                                             "side":  "over"
+                                                         }
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "home_corners_ou", "line_num": 3.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_home_ou", "line_num": 3.5, "side": "over"},
-        {"market_code": "team_corners_home_ou", "line_num": 3.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "hc45",
-    "description": "Home team corners over 4.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if h_corners >= 5; else loss",
-      "push": "none",
-      "void": "void if home corners are missing",
-      "half_outcomes": "none"
+    {
+        "market_code":  "o15",
+        "description":  "Total goals over 1.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (home_goals + away_goals) \u003e= 2; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ou",
+                                                    "line_num":  1.5,
+                                                    "side":  "over"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "home_corners_ou", "line_num": 4.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_home_ou", "line_num": 4.5, "side": "over"},
-        {"market_code": "team_corners_home_ou", "line_num": 4.5, "side": "over"}
-      ]
+    {
+        "market_code":  "u35",
+        "description":  "Total goals under 3.5",
+        "selection_type":  "binary",
+        "required_inputs":  {
+                                "goals":  true,
+                                "corners":  false,
+                                "incidents":  false,
+                                "odds":  true
+                            },
+        "settlement_rules":  {
+                                 "rule":  "win if (home_goals + away_goals) \u003c= 3; else loss",
+                                 "push":  "none",
+                                 "void":  "none",
+                                 "half_outcomes":  "none"
+                             },
+        "odds_mapping":  {
+                             "provider":  "sofascore",
+                             "selections":  [
+                                                {
+                                                    "market_code":  "ou",
+                                                    "line_num":  3.5,
+                                                    "side":  "under"
+                                                }
+                                            ],
+                             "fallback_selections":  [
+
+                                                     ]
+                         }
     }
-  },
-  {
-    "market_code": "hc55",
-    "description": "Home team corners over 5.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if h_corners >= 6; else loss",
-      "push": "none",
-      "void": "void if home corners are missing",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "home_corners_ou", "line_num": 5.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_home_ou", "line_num": 5.5, "side": "over"},
-        {"market_code": "team_corners_home_ou", "line_num": 5.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "ac25",
-    "description": "Away team corners over 2.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if a_corners >= 3; else loss",
-      "push": "none",
-      "void": "void if away corners are missing",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "away_corners_ou", "line_num": 2.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_away_ou", "line_num": 2.5, "side": "over"},
-        {"market_code": "team_corners_away_ou", "line_num": 2.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "ac35",
-    "description": "Away team corners over 3.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if a_corners >= 4; else loss",
-      "push": "none",
-      "void": "void if away corners are missing",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "away_corners_ou", "line_num": 3.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_away_ou", "line_num": 3.5, "side": "over"},
-        {"market_code": "team_corners_away_ou", "line_num": 3.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "ac45",
-    "description": "Away team corners over 4.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if a_corners >= 5; else loss",
-      "push": "none",
-      "void": "void if away corners are missing",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "away_corners_ou", "line_num": 4.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_away_ou", "line_num": 4.5, "side": "over"},
-        {"market_code": "team_corners_away_ou", "line_num": 4.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "ac55",
-    "description": "Away team corners over 5.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": false, "corners": true, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if a_corners >= 6; else loss",
-      "push": "none",
-      "void": "void if away corners are missing",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "away_corners_ou", "line_num": 5.5, "side": "over"}],
-      "fallback_selections": [
-        {"market_code": "corners_away_ou", "line_num": 5.5, "side": "over"},
-        {"market_code": "team_corners_away_ou", "line_num": 5.5, "side": "over"}
-      ]
-    }
-  },
-  {
-    "market_code": "o15",
-    "description": "Total goals over 1.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals + away_goals) >= 2; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ou", "line_num": 1.5, "side": "over"}],
-      "fallback_selections": []
-    }
-  },
-  {
-    "market_code": "u35",
-    "description": "Total goals under 3.5",
-    "selection_type": "binary",
-    "required_inputs": {"goals": true, "corners": false, "incidents": false, "odds": true},
-    "settlement_rules": {
-      "rule": "win if (home_goals + away_goals) <= 3; else loss",
-      "push": "none",
-      "void": "none",
-      "half_outcomes": "none"
-    },
-    "odds_mapping": {
-      "provider": "sofascore",
-      "selections": [{"market_code": "ou", "line_num": 3.5, "side": "under"}],
-      "fallback_selections": []
-    }
-  }
 ]

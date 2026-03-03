@@ -16,8 +16,8 @@ def test_slip_round_trip_json(local_tmp_path: Path):
     json_path = local_tmp_path / "slip.json"
     leg1 = Leg(
         fixture_id="f1",
-        market_code="1X2",
-        selection="1",
+        market_code="1x2_h",
+        selection="home",
         line_num=0.0,
         odds_used=2.0,
         p_model=0.55,
@@ -28,9 +28,9 @@ def test_slip_round_trip_json(local_tmp_path: Path):
 
     leg2 = Leg(
         fixture_id="f2",
-        market_code="OU2.5",
-        selection="OVER",
-        line_num=2.5,
+        market_code="o15",
+        selection="over",
+        line_num=1.5,
         odds_used=1.9,
         p_model=0.6,
         p_conservative=0.58,
@@ -58,7 +58,7 @@ def test_slip_round_trip_json(local_tmp_path: Path):
     assert loaded_slip.stake == slip.stake
     assert len(loaded_slip.legs) == 2
     assert loaded_slip.legs[0].fixture_id == "f1"
-    assert loaded_slip.legs[1].selection == "OVER"
+    assert loaded_slip.legs[1].selection == "over"
     assert loaded_slip.ticket_odds == 3.8
     assert loaded_slip.pnl == -100.0
     assert "low_liquidity" in loaded_slip.legs[0].risk_flags
@@ -66,9 +66,9 @@ def test_slip_round_trip_json(local_tmp_path: Path):
 def test_leg_to_from_dict():
     data = {
         "fixture_id": "f3",
-        "market_code": "BTTS",
-        "selection": "YES",
-        "line_num": 0.0,
+        "market_code": "u35",
+        "selection": "under",
+        "line_num": 3.5,
         "odds_used": 1.8,
         "p_model": 0.6,
         "p_conservative": 0.55,
