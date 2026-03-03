@@ -52,6 +52,7 @@ models/v3_fixtures_first/
 .sisyphus/
 .agent/
 .agents/
+.learnings/
 .geminiignore
 skills/
 
