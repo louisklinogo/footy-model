@@ -1,0 +1,67 @@
+version: 1
+family: anytime
+description: Feature contract for 1UP/2UP path-dependent markets.
+
+required_features:
+  - home_sample_size
+  - away_sample_size
+  - lambda_home_l1
+  - lambda_away_l1
+  - adj_lambda_home_resolved
+  - adj_lambda_away_resolved
+  - home_rolling_xg
+  - away_rolling_xg
+  - home_rolling_sot
+  - away_rolling_sot
+  - goal_diff_proxy
+  - xg_net_diff
+
+optional_features:
+  - home_rolling_xg_p1
+  - away_rolling_xg_p1
+  - home_rolling_xg_h2_delta
+  - away_rolling_xg_h2_delta
+  - home_season_baseline_xg
+  - away_season_baseline_xg
+  - home_recent_xg_mean_5
+  - away_recent_xg_mean_5
+  - home_recent_vs_baseline_zscore
+  - away_recent_vs_baseline_zscore
+  - home_regressed_recent_xg
+  - away_regressed_recent_xg
+  - regressed_xg_diff
+  - recent_vs_baseline_gap
+  - home_rolling_sot_p1
+  - away_rolling_sot_p1
+  - home_rolling_sot_h2_delta
+  - away_rolling_sot_h2_delta
+  - home_rolling_big_chances
+  - away_rolling_big_chances
+  - sample_size_diff
+  - rule_fired_home
+  - rule_fired_away
+
+missingness_indicators:
+  - adj_lambda_home_resolved_is_fallback
+  - adj_lambda_away_resolved_is_fallback
+  - adj_lambda_home_final_is_missing
+  - adj_lambda_away_final_is_missing
+  - home_season_baseline_xg_is_missing
+  - away_season_baseline_xg_is_missing
+  - home_recent_xg_mean_5_is_missing
+  - away_recent_xg_mean_5_is_missing
+  - home_rolling_xg_p1_is_missing
+  - away_rolling_xg_p1_is_missing
+
+forbidden_cross_family_features:
+  - odds_c75_over
+  - odds_c85_over
+  - odds_c95_over
+  - odds_c105_over
+
+disabled_features:
+  - home_recent_xg_mean_5
+  - away_recent_xg_mean_5
+  - home_season_baseline_xg
+  - away_season_baseline_xg
+  - home_rolling_xg_h2_delta

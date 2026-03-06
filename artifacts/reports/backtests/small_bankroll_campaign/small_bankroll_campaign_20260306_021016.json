@@ -1,0 +1,94 @@
+{
+  "generated_at_utc": "2026-03-06T02:10:16.610800+00:00",
+  "model_name": "market_outcome_gbm",
+  "model_version": "fixtures_first_prematch_v1",
+  "policy_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\market_models\\accumulator_policy_small_bankroll.json",
+  "whitelist_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\market_models\\accumulator_market_whitelist_small_bankroll.json",
+  "since_days": 365,
+  "slip_size": 2,
+  "initial_bankroll": 100.0,
+  "eligible_market_count": 27,
+  "resolved_market_count": 18,
+  "resolved_markets": [
+    "a_1up",
+    "a_2up",
+    "ac35",
+    "ac45",
+    "ac55",
+    "ao15",
+    "c85",
+    "c95",
+    "dc_1x",
+    "dc_x2",
+    "h_1up",
+    "h_2up",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ho15",
+    "o15",
+    "u35"
+  ],
+  "resolution_summary": {
+    "requested_tradable_count": 1,
+    "requested_watchlist_count": 17,
+    "requested_blocked_count": 4,
+    "eligible_market_count": 27,
+    "resolved_market_count": 18,
+    "requested_but_ineligible": [],
+    "blocked_markets": [
+      "1x2_d",
+      "c105",
+      "dc_12",
+      "ms_draw"
+    ],
+    "include_watchlist": true
+  },
+  "raw_rows": 71999,
+  "candidate_legs": 1151,
+  "reject_reasons": {
+    "below_min_leg_edge_adjusted": 9152,
+    "below_min_leg_p_conservative": 4540,
+    "missing_odds": 54765,
+    "missing_odds_trace_time": 1488,
+    "missing_p_conservative_fallback": 16286,
+    "missing_risk_score_fallback": 16286,
+    "outside_per_leg_odds_band": 903
+  },
+  "backtest_metrics": {
+    "slip_count": 111,
+    "ticket_hit_rate": 0.6036036036036037,
+    "roi": 0.31598041283093625,
+    "max_drawdown": 0.26073676896067643,
+    "total_stake": 462.29868899713944,
+    "total_pnl": 146.07733060051672,
+    "ending_bankroll": 246.0773306005165,
+    "starting_bankroll": 100.0
+  },
+  "simulation": {
+    "simulation_count": 3000,
+    "campaign_slips": 120,
+    "bankroll_floor": 20.0,
+    "mean_ending_bankroll": 274.21835261395995,
+    "median_ending_bankroll": 264.5914613436716,
+    "ruin_probability": 0.0,
+    "milestone_hit_probability": {
+      "200": 0.8863333333333333,
+      "500": 0.010333333333333333,
+      "1000": 0.0,
+      "5000": 0.0
+    }
+  },
+  "support_assessment": {
+    "observed_slips": 111,
+    "min_recommended_slips_for_bootstrap": 30,
+    "bootstrap_support_ok": true,
+    "warning": ""
+  },
+  "outputs": {
+    "json": "C:\\Developer\\soccer\\footy-model\\artifacts\\reports\\backtests\\small_bankroll_campaign\\small_bankroll_campaign_20260306_021016.json",
+    "md": "C:\\Developer\\soccer\\footy-model\\artifacts\\reports\\backtests\\small_bankroll_campaign\\small_bankroll_campaign_20260306_021016.md",
+    "slips_csv": "C:\\Developer\\soccer\\footy-model\\artifacts\\reports\\backtests\\small_bankroll_campaign\\small_bankroll_campaign_20260306_021016_slips.csv",
+    "slips_json": "C:\\Developer\\soccer\\footy-model\\artifacts\\reports\\backtests\\small_bankroll_campaign\\small_bankroll_campaign_20260306_021016_slips.json"
+  }
+}

@@ -31,6 +31,10 @@ from sklearn.dummy import DummyClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import accuracy_score, brier_score_loss, roc_auc_score
+try:
+    from sklearn.frozen import FrozenEstimator
+except Exception:  # pragma: no cover - compatibility across sklearn versions
+    FrozenEstimator = None
 
 
 ROOT_DIR = Path(__file__).resolve().parents[3]
@@ -171,6 +175,28 @@ def parse_args() -> argparse.Namespace:
         default=0.02,
         help="Minimum AUC lift required for promotion.",
     )
+    parser.add_argument(
+        "--allow-missing-baseline",
+        action="store_true",
+        help="Allow selected markets without baseline rows (they will be non-promotable).",
+    )
+    parser.add_argument(
+        "--multiclass-calibration-fraction",
+        type=float,
+        default=0.2,
+        help="Fraction of 1X2/DC training rows reserved for chronological calibration holdout.",
+    )
+    parser.add_argument(
+        "--multiclass-calibration-min-rows",
+        type=int,
+        default=600,
+        help="Minimum 1X2/DC rows reserved for chronological calibration holdout.",
+    )
+    parser.add_argument(
+        "--disable-multiclass-calibration",
+        action="store_true",
+        help="Disable chrono holdout calibration for the 1X2/DC multiclass model.",
+    )
     return parser.parse_args()
 
 
@@ -197,6 +223,8 @@ def fetch_dataset() -> pd.DataFrame:
     SELECT
         f.fixture_id,
         f.league_code,
+        f.home_team_id,
+        f.away_team_id,
         f.match_datetime_utc,
         fr.home_goals,
         fr.away_goals,
@@ -289,6 +317,14 @@ def fetch_dataset() -> pd.DataFrame:
         tpa.rolling_sot_h2_delta_against AS away_rolling_sot_h2_delta_against,
         tpa.rolling_possession AS away_rolling_possession,
         tpa.rolling_possession_against AS away_rolling_possession_against,
+        tph.rolling_lead_rate_1up AS home_rolling_lead_rate_1up,
+        tph.rolling_lead_rate_1up_against AS home_rolling_lead_rate_1up_against,
+        tph.rolling_lead_rate_2up AS home_rolling_lead_rate_2up,
+        tph.rolling_lead_rate_2up_against AS home_rolling_lead_rate_2up_against,
+        tpa.rolling_lead_rate_1up AS away_rolling_lead_rate_1up,
+        tpa.rolling_lead_rate_1up_against AS away_rolling_lead_rate_1up_against,
+        tpa.rolling_lead_rate_2up AS away_rolling_lead_rate_2up,
+        tpa.rolling_lead_rate_2up_against AS away_rolling_lead_rate_2up_against,
 
         ff.home_formation,
         ff.away_formation,
@@ -296,6 +332,16 @@ def fetch_dataset() -> pd.DataFrame:
         {_json_number_expr("l1a.metadata_json", "lambda")} AS lambda_away_l1,
         {_json_number_expr("l2h.metadata_json", "lambda")} AS adj_lambda_home_final,
         {_json_number_expr("l2a.metadata_json", "lambda")} AS adj_lambda_away_final,
+        CASE
+            WHEN ig.home_goals_inc = fr.home_goals AND ig.away_goals_inc = fr.away_goals
+            THEN ig.home_goals_p1
+            ELSE NULL
+        END AS home_goals_p1,
+        CASE
+            WHEN ig.home_goals_inc = fr.home_goals AND ig.away_goals_inc = fr.away_goals
+            THEN ig.away_goals_p1
+            ELSE NULL
+        END AS away_goals_p1,
         ils.home_led_by_1_any AS home_led_by_1_any,
         ils.away_led_by_1_any AS away_led_by_1_any,
         ils.home_led_by_2_any AS home_led_by_2_any,
@@ -319,6 +365,31 @@ def fetch_dataset() -> pd.DataFrame:
     LEFT JOIN team_premium_snapshots tpa
         ON tpa.fixture_id = f.fixture_id
        AND tpa.is_home = false
+    LEFT JOIN LATERAL (
+        SELECT
+            COUNT(*) FILTER (
+                WHERE i.incident_type = 'goal'
+                  AND i.is_home IS TRUE
+                  AND i.minute IS NOT NULL
+                  AND i.minute <= 45
+            )::int AS home_goals_p1,
+            COUNT(*) FILTER (
+                WHERE i.incident_type = 'goal'
+                  AND i.is_home IS FALSE
+                  AND i.minute IS NOT NULL
+                  AND i.minute <= 45
+            )::int AS away_goals_p1,
+            COUNT(*) FILTER (
+                WHERE i.incident_type = 'goal'
+                  AND i.is_home IS TRUE
+            )::int AS home_goals_inc,
+            COUNT(*) FILTER (
+                WHERE i.incident_type = 'goal'
+                  AND i.is_home IS FALSE
+            )::int AS away_goals_inc
+        FROM fixture_incidents_sofascore i
+        WHERE i.fixture_id = f.fixture_id
+    ) ig ON true
     LEFT JOIN LATERAL (
         SELECT fom.odds_json, fom.snapshot_time_utc, fom.snapshot_type
         FROM fixture_odds_markets fom
@@ -537,6 +608,69 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out["target_ho15"] = (out["home_goals"] >= 2).astype(int)  # Home team over 1.5
     out["target_ao15"] = (out["away_goals"] >= 2).astype(int)  # Away team over 1.5
 
+    # === TOTAL MULTIGOALS (range bins) ===
+    out["target_mg_0"] = (out["total_goals"] == 0).astype(int)
+    out["target_mg_1_2"] = out["total_goals"].between(1, 2).astype(int)
+    out["target_mg_1_3"] = out["total_goals"].between(1, 3).astype(int)
+    out["target_mg_1_4"] = out["total_goals"].between(1, 4).astype(int)
+    out["target_mg_1_5"] = out["total_goals"].between(1, 5).astype(int)
+    out["target_mg_1_6"] = out["total_goals"].between(1, 6).astype(int)
+    out["target_mg_2_3"] = out["total_goals"].between(2, 3).astype(int)
+    out["target_mg_2_4"] = out["total_goals"].between(2, 4).astype(int)
+    out["target_mg_2_5"] = out["total_goals"].between(2, 5).astype(int)
+    out["target_mg_2_6"] = out["total_goals"].between(2, 6).astype(int)
+    out["target_mg_3_4"] = out["total_goals"].between(3, 4).astype(int)
+    out["target_mg_3_5"] = out["total_goals"].between(3, 5).astype(int)
+    out["target_mg_3_6"] = out["total_goals"].between(3, 6).astype(int)
+    out["target_mg_4_5"] = out["total_goals"].between(4, 5).astype(int)
+    out["target_mg_4_6"] = out["total_goals"].between(4, 6).astype(int)
+    out["target_mg_5_6"] = out["total_goals"].between(5, 6).astype(int)
+    out["target_mg_7p"] = (out["total_goals"] >= 7).astype(int)
+
+    # === HOME / AWAY MULTIGOALS ===
+    out["target_hmg_0"] = (out["home_goals"] == 0).astype(int)
+    out["target_hmg_1_2"] = out["home_goals"].between(1, 2).astype(int)
+    out["target_hmg_1_3"] = out["home_goals"].between(1, 3).astype(int)
+    out["target_hmg_2_3"] = out["home_goals"].between(2, 3).astype(int)
+    out["target_hmg_4p"] = (out["home_goals"] >= 4).astype(int)
+
+    out["target_amg_0"] = (out["away_goals"] == 0).astype(int)
+    out["target_amg_1_2"] = out["away_goals"].between(1, 2).astype(int)
+    out["target_amg_1_3"] = out["away_goals"].between(1, 3).astype(int)
+    out["target_amg_2_3"] = out["away_goals"].between(2, 3).astype(int)
+    out["target_amg_4p"] = (out["away_goals"] >= 4).astype(int)
+
+    # === MULTISCORES (grouped exact scorelines) ===
+    h = out["home_goals"]
+    a = out["away_goals"]
+    ms_h_1_0_2_0_3_0 = ((h == 1) & (a == 0)) | ((h == 2) & (a == 0)) | ((h == 3) & (a == 0))
+    ms_a_0_1_0_2_0_3 = ((h == 0) & (a == 1)) | ((h == 0) & (a == 2)) | ((h == 0) & (a == 3))
+    ms_h_4_0_5_0_6_0 = ((h == 4) & (a == 0)) | ((h == 5) & (a == 0)) | ((h == 6) & (a == 0))
+    ms_a_0_4_0_5_0_6 = ((h == 0) & (a == 4)) | ((h == 0) & (a == 5)) | ((h == 0) & (a == 6))
+    ms_h_2_1_3_1_4_1 = ((h == 2) & (a == 1)) | ((h == 3) & (a == 1)) | ((h == 4) & (a == 1))
+    ms_h_1_2_1_3_1_4 = ((h == 1) & (a == 2)) | ((h == 1) & (a == 3)) | ((h == 1) & (a == 4))
+    ms_h_3_2_4_2_5_1 = ((h == 3) & (a == 2)) | ((h == 4) & (a == 2)) | ((h == 5) & (a == 1))
+    ms_a_2_3_2_4_1_5 = ((h == 2) & (a == 3)) | ((h == 2) & (a == 4)) | ((h == 1) & (a == 5))
+    ms_draw = h == a
+
+    out["target_ms_h_1_0_2_0_3_0"] = ms_h_1_0_2_0_3_0.astype(int)
+    out["target_ms_a_0_1_0_2_0_3"] = ms_a_0_1_0_2_0_3.astype(int)
+    out["target_ms_h_4_0_5_0_6_0"] = ms_h_4_0_5_0_6_0.astype(int)
+    out["target_ms_a_0_4_0_5_0_6"] = ms_a_0_4_0_5_0_6.astype(int)
+    out["target_ms_h_2_1_3_1_4_1"] = ms_h_2_1_3_1_4_1.astype(int)
+    out["target_ms_h_1_2_1_3_1_4"] = ms_h_1_2_1_3_1_4.astype(int)
+    out["target_ms_h_3_2_4_2_5_1"] = ms_h_3_2_4_2_5_1.astype(int)
+    out["target_ms_a_2_3_2_4_1_5"] = ms_a_2_3_2_4_1_5.astype(int)
+    out["target_ms_draw"] = ms_draw.astype(int)
+    out["target_ms_other_homewin"] = (
+        (h > a)
+        & ~(ms_h_1_0_2_0_3_0 | ms_h_4_0_5_0_6_0 | ms_h_2_1_3_1_4_1 | ms_h_3_2_4_2_5_1)
+    ).astype(int)
+    out["target_ms_other_awaywin"] = (
+        (h < a)
+        & ~(ms_a_0_1_0_2_0_3 | ms_a_0_4_0_5_0_6 | ms_h_1_2_1_3_1_4 | ms_a_2_3_2_4_1_5)
+    ).astype(int)
+
     # === COMBO OR (Home/Away win OR Over X.5) ===
     out["target_home_or_o25"] = (
         (out["home_goals"] > out["away_goals"]) | (out["total_goals"] >= 3)
@@ -647,6 +781,155 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
 
     out["style_delta"] = out["home_style_score"] - out["away_style_score"]
 
+    out = _add_xg_anchor_features(out)
+
+    return out
+
+
+def _add_xg_anchor_features(df: pd.DataFrame) -> pd.DataFrame:
+    required = {
+        "fixture_id",
+        "league_code",
+        "match_datetime_utc",
+        "home_team_id",
+        "away_team_id",
+        "home_rolling_xg",
+        "away_rolling_xg",
+    }
+    if not required.issubset(df.columns):
+        out = df.copy()
+        for col in (
+            "home_season_baseline_xg",
+            "away_season_baseline_xg",
+            "home_recent_xg_mean_5",
+            "away_recent_xg_mean_5",
+            "home_recent_vs_baseline_zscore",
+            "away_recent_vs_baseline_zscore",
+            "home_regressed_recent_xg",
+            "away_regressed_recent_xg",
+            "regressed_xg_diff",
+            "recent_vs_baseline_gap",
+            "home_season_baseline_xg_is_missing",
+            "away_season_baseline_xg_is_missing",
+            "home_recent_xg_mean_5_is_missing",
+            "away_recent_xg_mean_5_is_missing",
+        ):
+            out[col] = np.nan
+        return out
+
+    out = df.copy()
+    ordered = (
+        out.reset_index()
+        .rename(columns={"index": "_orig_idx"})
+        .sort_values(["match_datetime_utc", "fixture_id"])
+        .reset_index(drop=True)
+    )
+    ordered["match_datetime_utc"] = pd.to_datetime(
+        ordered["match_datetime_utc"], utc=True, errors="coerce"
+    )
+    ordered["home_rolling_xg"] = pd.to_numeric(
+        ordered["home_rolling_xg"], errors="coerce"
+    )
+    ordered["away_rolling_xg"] = pd.to_numeric(
+        ordered["away_rolling_xg"], errors="coerce"
+    )
+
+    home_rows = ordered[
+        ["_orig_idx", "fixture_id", "league_code", "match_datetime_utc", "home_team_id"]
+    ].rename(columns={"home_team_id": "team_id"}).copy()
+    home_rows["side"] = "home"
+    home_rows["team_xg_recent"] = ordered["home_rolling_xg"]
+
+    away_rows = ordered[
+        ["_orig_idx", "fixture_id", "league_code", "match_datetime_utc", "away_team_id"]
+    ].rename(columns={"away_team_id": "team_id"}).copy()
+    away_rows["side"] = "away"
+    away_rows["team_xg_recent"] = ordered["away_rolling_xg"]
+
+    long = pd.concat([home_rows, away_rows], ignore_index=True)
+    long["team_xg_recent"] = pd.to_numeric(long["team_xg_recent"], errors="coerce")
+    long = long.sort_values(
+        ["team_id", "match_datetime_utc", "fixture_id", "side"]
+    ).reset_index(drop=True)
+
+    by_team = long.groupby("team_id", dropna=False)["team_xg_recent"]
+    by_league = long.groupby("league_code", dropna=False)["team_xg_recent"]
+
+    long["team_prior_n"] = (
+        long.groupby("team_id", dropna=False).cumcount().astype(float)
+    )
+    long["season_baseline_xg"] = by_team.transform(
+        lambda s: s.shift(1).expanding(min_periods=1).mean()
+    )
+    long["recent_xg_mean_5"] = by_team.transform(
+        lambda s: s.shift(1).rolling(window=5, min_periods=1).mean()
+    )
+    long["recent_xg_std"] = by_team.transform(
+        lambda s: s.shift(1).expanding(min_periods=2).std()
+    )
+    long["league_baseline_xg"] = by_league.transform(
+        lambda s: s.shift(1).expanding(min_periods=5).mean()
+    )
+
+    global_baseline = float(long["team_xg_recent"].median(skipna=True))
+    if np.isnan(global_baseline):
+        global_baseline = 1.2
+
+    long["season_baseline_xg"] = (
+        long["season_baseline_xg"]
+        .fillna(long["league_baseline_xg"])
+        .fillna(global_baseline)
+    )
+    long["recent_xg_mean_5"] = (
+        long["recent_xg_mean_5"]
+        .fillna(long["season_baseline_xg"])
+        .fillna(global_baseline)
+    )
+    long["recent_xg_std"] = long["recent_xg_std"].fillna(0.35).clip(lower=0.15)
+
+    long["recent_vs_baseline_zscore"] = (
+        (long["recent_xg_mean_5"] - long["season_baseline_xg"]) / long["recent_xg_std"]
+    ).clip(-4.0, 4.0)
+    prior_weight = (long["team_prior_n"] / (long["team_prior_n"] + 10.0)).clip(0.0, 1.0)
+    long["regressed_recent_xg"] = (
+        prior_weight * long["recent_xg_mean_5"]
+        + (1.0 - prior_weight) * long["season_baseline_xg"]
+    )
+
+    long["season_baseline_xg_is_missing"] = (
+        long["team_prior_n"] <= 0.0
+    ).astype(float)
+    long["recent_xg_mean_5_is_missing"] = (
+        long["team_prior_n"] <= 0.0
+    ).astype(float)
+
+    for side in ("home", "away"):
+        side_frame = long[long["side"] == side].set_index("_orig_idx")
+        out.loc[
+            side_frame.index, f"{side}_season_baseline_xg"
+        ] = side_frame["season_baseline_xg"].to_numpy(dtype=float)
+        out.loc[
+            side_frame.index, f"{side}_recent_xg_mean_5"
+        ] = side_frame["recent_xg_mean_5"].to_numpy(dtype=float)
+        out.loc[
+            side_frame.index, f"{side}_recent_vs_baseline_zscore"
+        ] = side_frame["recent_vs_baseline_zscore"].to_numpy(dtype=float)
+        out.loc[
+            side_frame.index, f"{side}_regressed_recent_xg"
+        ] = side_frame["regressed_recent_xg"].to_numpy(dtype=float)
+        out.loc[
+            side_frame.index, f"{side}_season_baseline_xg_is_missing"
+        ] = side_frame["season_baseline_xg_is_missing"].to_numpy(dtype=float)
+        out.loc[
+            side_frame.index, f"{side}_recent_xg_mean_5_is_missing"
+        ] = side_frame["recent_xg_mean_5_is_missing"].to_numpy(dtype=float)
+
+    out["regressed_xg_diff"] = (
+        out["home_regressed_recent_xg"] - out["away_regressed_recent_xg"]
+    )
+    out["recent_vs_baseline_gap"] = (
+        out["home_recent_vs_baseline_zscore"] - out["away_recent_vs_baseline_zscore"]
+    )
     return out
 
 
@@ -676,6 +959,20 @@ def feature_columns() -> list[str]:
             "corners_net_diff",
             "sample_size_diff",
             "goal_diff_proxy",
+            "home_season_baseline_xg",
+            "away_season_baseline_xg",
+            "home_recent_xg_mean_5",
+            "away_recent_xg_mean_5",
+            "home_recent_vs_baseline_zscore",
+            "away_recent_vs_baseline_zscore",
+            "home_regressed_recent_xg",
+            "away_regressed_recent_xg",
+            "regressed_xg_diff",
+            "recent_vs_baseline_gap",
+            "home_season_baseline_xg_is_missing",
+            "away_season_baseline_xg_is_missing",
+            "home_recent_xg_mean_5_is_missing",
+            "away_recent_xg_mean_5_is_missing",
             "implied_over15",
             "implied_under15",
             "implied_over25",
@@ -896,6 +1193,30 @@ def load_baseline_metrics(path: Path) -> dict[str, dict[str, float | None]]:
     return out
 
 
+def validate_baseline_coverage(
+    *,
+    selected_market_codes: list[str],
+    baseline_metrics: dict[str, dict[str, float | None]],
+    baseline_path: Path,
+    allow_missing: bool,
+) -> set[str]:
+    missing = sorted(
+        {
+            market
+            for market in selected_market_codes
+            if market not in baseline_metrics
+        }
+    )
+    if missing and not allow_missing:
+        missing_csv = ", ".join(missing)
+        raise RuntimeError(
+            "Promotion baseline is missing required markets: "
+            f"{missing_csv}. Baseline path={baseline_path}. "
+            "Provide a complete baseline or pass --allow-missing-baseline."
+        )
+    return set(missing)
+
+
 def impute_for_split(
     train: pd.DataFrame,
     test: pd.DataFrame,
@@ -1093,6 +1414,26 @@ def _binary_prob_for_market(
     raise ValueError(f"unsupported 1x2/dc market: {market_code}")
 
 
+def _mean_binary_brier_for_markets(
+    *,
+    y_class: np.ndarray,
+    p_home: np.ndarray,
+    p_draw: np.ndarray,
+    p_away: np.ndarray,
+    markets: set[str],
+) -> float:
+    briers: list[float] = []
+    for market in sorted(markets):
+        y_bin = _binary_target_for_market(market, y_class)
+        p_bin = np.clip(_binary_prob_for_market(market, p_home, p_draw, p_away), 0.001, 0.999)
+        if len(np.unique(y_bin)) < 2:
+            continue
+        briers.append(float(brier_score_loss(y_bin, p_bin)))
+    if not briers:
+        return float("nan")
+    return float(np.mean(briers))
+
+
 def evaluate_1x2_dc_multiclass_walkforward(
     *,
     frame: pd.DataFrame,
@@ -1190,22 +1531,136 @@ def fit_1x2_dc_multiclass(
     features: list[str],
     model_kind: str,
     selected_markets: set[str],
-) -> tuple[object, dict[str, dict[str, object]]]:
+    calibration_fraction: float,
+    calibration_min_rows: int,
+    enable_calibration: bool,
+) -> tuple[object, dict[str, dict[str, object]], dict[str, object]]:
     train = train_df[train_df["home_goals"].notna() & train_df["away_goals"].notna()].copy()
     test = test_df[test_df["home_goals"].notna() & test_df["away_goals"].notna()].copy()
     if train.empty or test.empty:
         raise ValueError("Insufficient rows for 1x2/dc multiclass fit.")
 
+    train = train.sort_values(["match_datetime_utc", "fixture_id"]).reset_index(drop=True)
+    test = test.sort_values(["match_datetime_utc", "fixture_id"]).reset_index(drop=True)
     y_train = _y_1x2_class(train)
     y_test = _y_1x2_class(test)
-    model = _build_base_estimator(model_kind)
-    model.fit(train[features], y_train)
-    p_home, p_draw, p_away = _multiclass_probs(model, test[features])
+    model: object | None = None
 
     markets = ("1x2_h", "1x2_d", "1x2_a", "dc_1x", "dc_x2", "dc_12")
     requested = {market for market in selected_markets if market in markets}
     if not requested:
         raise ValueError("No 1x2/dc markets selected for multiclass fit.")
+
+    calibration_info: dict[str, object] = {
+        "enabled": bool(enable_calibration),
+        "method": None,
+        "brier_eval": None,
+        "core_train_n": int(len(train)),
+        "calibration_fit_n": 0,
+        "calibration_eval_n": 0,
+        "status": "not_attempted",
+    }
+    candidate_model_label = f"1x2_multi_{model_kind}"
+    calibrated = False
+
+    calibration_fraction = float(np.clip(calibration_fraction, 0.05, 0.5))
+    min_rows = max(1, int(calibration_min_rows))
+    if enable_calibration and len(train) >= (min_rows + 200):
+        holdout_n = max(min_rows, int(len(train) * calibration_fraction))
+        max_holdout = max(0, len(train) - 200)
+        holdout_n = min(holdout_n, max_holdout)
+        if holdout_n >= 80:
+            core = train.iloc[:-holdout_n]
+            calibration_pool = train.iloc[-holdout_n:]
+            split_idx = int(len(calibration_pool) * 0.5)
+            calib_fit = calibration_pool.iloc[:split_idx]
+            calib_eval = calibration_pool.iloc[split_idx:]
+            y_core = _y_1x2_class(core)
+            y_calib_fit = _y_1x2_class(calib_fit)
+            y_calib_eval = _y_1x2_class(calib_eval)
+            calibration_info.update(
+                {
+                    "core_train_n": int(len(core)),
+                    "calibration_fit_n": int(len(calib_fit)),
+                    "calibration_eval_n": int(len(calib_eval)),
+                }
+            )
+
+            if (
+                len(core) > 0
+                and len(calib_fit) > 0
+                and len(calib_eval) > 0
+                and len(np.unique(y_core)) >= 2
+                and len(np.unique(y_calib_fit)) >= 2
+            ):
+                base_for_cal = _build_base_estimator(model_kind)
+                base_for_cal.fit(core[features], y_core)
+                best_model: object | None = None
+                best_method: str | None = None
+                best_brier: float | None = None
+
+                for method in ("isotonic", "sigmoid"):
+                    try:
+                        if FrozenEstimator is not None:
+                            calibrated_model = CalibratedClassifierCV(
+                                estimator=FrozenEstimator(base_for_cal),
+                                method=method,
+                                cv=None,
+                            )
+                        else:
+                            calibrated_model = CalibratedClassifierCV(
+                                estimator=base_for_cal,
+                                method=method,
+                                cv="prefit",
+                            )
+                        calibrated_model.fit(calib_fit[features], y_calib_fit)
+                        p_h_eval, p_d_eval, p_a_eval = _multiclass_probs(
+                            calibrated_model, calib_eval[features]
+                        )
+                        eval_brier = _mean_binary_brier_for_markets(
+                            y_class=y_calib_eval,
+                            p_home=p_h_eval,
+                            p_draw=p_d_eval,
+                            p_away=p_a_eval,
+                            markets=requested,
+                        )
+                        if not np.isfinite(eval_brier):
+                            continue
+                        if best_brier is None or eval_brier < best_brier:
+                            best_brier = float(eval_brier)
+                            best_method = method
+                            best_model = calibrated_model
+                    except Exception:
+                        continue
+
+                if best_model is not None and best_method is not None and best_brier is not None:
+                    model = best_model
+                    calibrated = True
+                    candidate_model_label = f"1x2_multi_{model_kind}_{best_method}"
+                    calibration_info.update(
+                        {
+                            "method": best_method,
+                            "brier_eval": float(best_brier),
+                            "status": "selected",
+                        }
+                    )
+                else:
+                    calibration_info["status"] = "no_valid_method"
+            else:
+                calibration_info["status"] = "insufficient_class_diversity"
+        else:
+            calibration_info["status"] = "holdout_too_small"
+    elif enable_calibration:
+        calibration_info["status"] = "insufficient_rows"
+    else:
+        calibration_info["status"] = "disabled"
+
+    if model is None:
+        model = _build_base_estimator(model_kind)
+        model.fit(train[features], y_train)
+
+    p_home, p_draw, p_away = _multiclass_probs(model, test[features])
+
     metrics: dict[str, dict[str, object]] = {}
     for market in markets:
         if market not in requested:
@@ -1218,10 +1673,13 @@ def fit_1x2_dc_multiclass(
             p_true=p_bin,
             train=train,
             test=test,
-            candidate_model=f"1x2_multi_{model_kind}",
-            calibrated=False,
+            candidate_model=candidate_model_label,
+            calibrated=calibrated,
         )
-    return model, metrics
+        metrics[market]["calibration_method"] = calibration_info["method"]
+        metrics[market]["calibration_status"] = calibration_info["status"]
+        metrics[market]["calibration_eval_brier"] = calibration_info["brier_eval"]
+    return model, metrics, calibration_info
 
 
 def main() -> None:
@@ -1258,6 +1716,7 @@ def main() -> None:
     train_df, test_df = split_time_respecting(df)
     train_imp, test_imp, imputation = impute_for_split(train_df, test_df, features)
     selected_markets = resolve_market_selection(args)
+    selected_market_codes = [market for market, _ in selected_markets]
     one_x2_dc_markets = {"1x2_h", "1x2_d", "1x2_a", "dc_1x", "dc_x2", "dc_12"}
     selected_1x2_dc = [market for market, _ in selected_markets if market in one_x2_dc_markets]
     selected_non_1x2_dc = [
@@ -1267,6 +1726,17 @@ def main() -> None:
     ]
     market_df = pd.concat([train_imp, test_imp], ignore_index=True)
     baseline_metrics = load_baseline_metrics(args.promotion_baseline_path)
+    missing_baselines = validate_baseline_coverage(
+        selected_market_codes=selected_market_codes,
+        baseline_metrics=baseline_metrics,
+        baseline_path=args.promotion_baseline_path,
+        allow_missing=bool(args.allow_missing_baseline),
+    )
+    if missing_baselines:
+        print(
+            "Warning: missing baseline rows for markets (non-promotable): "
+            + ", ".join(sorted(missing_baselines))
+        )
 
     metrics: list[dict[str, object]] = []
     fold_metrics: list[dict[str, object]] = []
@@ -1284,12 +1754,15 @@ def main() -> None:
             )
         )
         fold_metrics.extend(fold_rows)
-        multiclass_model, multiclass_results = fit_1x2_dc_multiclass(
+        multiclass_model, multiclass_results, multiclass_calibration = fit_1x2_dc_multiclass(
             train_df=train_imp,
             test_df=test_imp,
             features=features,
             model_kind=selected_model,
             selected_markets=set(selected_1x2_dc),
+            calibration_fraction=float(args.multiclass_calibration_fraction),
+            calibration_min_rows=int(args.multiclass_calibration_min_rows),
+            enable_calibration=not bool(args.disable_multiclass_calibration),
         )
         joblib.dump(multiclass_model, OUT_DIR / "gbm_1x2_dc_multiclass.pkl")
 
@@ -1320,14 +1793,19 @@ def main() -> None:
                 and auc_delta >= float(args.promotion_min_auc_delta)
                 and brier_delta <= 0.0
             )
-            promotion_reason = (
-                "auc_brier_gate_passed" if promoted else "auc_brier_gate_failed_or_missing"
-            )
+            baseline_missing = market in missing_baselines
+            if baseline_missing:
+                promotion_reason = "baseline_missing"
+            elif promoted:
+                promotion_reason = "auc_brier_gate_passed"
+            else:
+                promotion_reason = "auc_brier_gate_failed"
             selection_registry.append(
                 {
                     "market_code": market,
-                    "candidate_model": f"1x2_multi_{selected_model}",
+                    "candidate_model": result["candidate_model"],
                     "model_family": "1x2_dc_multiclass",
+                    "multiclass_calibration": multiclass_calibration,
                     "candidate_summary": candidate_summary,
                     "baseline_auc": baseline_auc,
                     "baseline_brier": baseline_brier,
@@ -1335,6 +1813,7 @@ def main() -> None:
                     "current_brier": current_brier,
                     "auc_delta": auc_delta,
                     "brier_delta": brier_delta,
+                    "baseline_missing": baseline_missing,
                     "promoted": promoted,
                     "promotion_reason": promotion_reason,
                 }
@@ -1342,7 +1821,7 @@ def main() -> None:
             summary_rows.append(
                 {
                     "market": market,
-                    "selected_model": f"1x2_multi_{selected_model}",
+                    "selected_model": result["candidate_model"],
                     "holdout_auc": current_auc,
                     "holdout_brier": current_brier,
                     "candidate_auc_mean": candidate_summary[selected_model]["auc_mean"],
@@ -1350,15 +1829,20 @@ def main() -> None:
                     "candidate_brier_mean": candidate_summary[selected_model]["brier_mean"],
                     "candidate_brier_std": candidate_summary[selected_model]["brier_std"],
                     "folds_used": candidate_summary[selected_model]["folds_used"],
+                    "calibrated": result["calibrated"],
+                    "calibration_method": result.get("calibration_method"),
+                    "calibration_status": result.get("calibration_status"),
+                    "baseline_missing": baseline_missing,
                     "promoted": promoted,
                 }
             )
 
             print(
-                f"{market}: model=1x2_multi_{selected_model} "
+                f"{market}: model={result['candidate_model']} "
                 f"AUC={result['auc']}, Acc={result['accuracy']:.3f}, "
                 f"Brier={result['brier']:.4f}, test_n={result['test_n']}, "
-                f"base_rate={result['base_rate_test']:.3f}, promoted={promoted}"
+                f"base_rate={result['base_rate_test']:.3f}, "
+                f"calibration={result.get('calibration_status')}, promoted={promoted}"
             )
 
     for market, target in selected_non_1x2_dc:
@@ -1407,9 +1891,13 @@ def main() -> None:
             and auc_delta >= float(args.promotion_min_auc_delta)
             and brier_delta <= 0.0
         )
-        promotion_reason = (
-            "auc_brier_gate_passed" if promoted else "auc_brier_gate_failed_or_missing"
-        )
+        baseline_missing = market in missing_baselines
+        if baseline_missing:
+            promotion_reason = "baseline_missing"
+        elif promoted:
+            promotion_reason = "auc_brier_gate_passed"
+        else:
+            promotion_reason = "auc_brier_gate_failed"
         selection_registry.append(
             {
                 "market_code": market,
@@ -1422,6 +1910,7 @@ def main() -> None:
                 "current_brier": current_brier,
                 "auc_delta": auc_delta,
                 "brier_delta": brier_delta,
+                "baseline_missing": baseline_missing,
                 "promoted": promoted,
                 "promotion_reason": promotion_reason,
             }
@@ -1437,6 +1926,7 @@ def main() -> None:
                 "candidate_brier_mean": candidate_summary[selected_model]["brier_mean"],
                 "candidate_brier_std": candidate_summary[selected_model]["brier_std"],
                 "folds_used": candidate_summary[selected_model]["folds_used"],
+                "baseline_missing": baseline_missing,
                 "promoted": promoted,
             }
         )

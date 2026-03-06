@@ -1,0 +1,184 @@
+{
+  "generated_at_utc": "2026-03-05T02:51:52.318424+00:00",
+  "model_name": "market_outcome_gbm",
+  "model_version": "fixtures_first_prematch_v1",
+  "history_days": 180,
+  "window": 60,
+  "edge_bucket_by_market": [
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "2-4%",
+      "n": 3,
+      "precision": 0.6666666666666666,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "4-6%",
+      "n": 7,
+      "precision": 0.5714285714285714,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "6%+",
+      "n": 8,
+      "precision": 1.0,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "2-4%",
+      "n": 1,
+      "precision": 1.0,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "4-6%",
+      "n": 1,
+      "precision": 1.0,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "6%+",
+      "n": 2,
+      "precision": 0.5,
+      "loss_streak": 1,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "2-4%",
+      "n": 11,
+      "precision": 0.5454545454545454,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "4-6%",
+      "n": 4,
+      "precision": 0.25,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "6%+",
+      "n": 13,
+      "precision": 0.46153846153846156,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_12",
+      "edge_bucket": "2-4%",
+      "n": 1,
+      "precision": 0.0,
+      "loss_streak": 1,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "2-4%",
+      "n": 11,
+      "precision": 0.6363636363636364,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "4-6%",
+      "n": 2,
+      "precision": 0.5,
+      "loss_streak": 1,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "6%+",
+      "n": 10,
+      "precision": 0.3,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "2-4%",
+      "n": 4,
+      "precision": 0.5,
+      "loss_streak": 2,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "4-6%",
+      "n": 3,
+      "precision": 0.3333333333333333,
+      "loss_streak": 0,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "6%+",
+      "n": 4,
+      "precision": 0.25,
+      "loss_streak": 3,
+      "mean_roi_unit": null
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.0031666666666666623
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.7,
+      "loss_streak": 1,
+      "mean_roi_unit": -0.0457897657897658
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.7333333333333333,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.0634225959225959
+    }
+  ],
+  "edge_bucket_global": [
+    {
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.7,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.0031666666666666623
+    },
+    {
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.65,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.0457897657897658
+    },
+    {
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.55,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.0634225959225959
+    }
+  ]
+}

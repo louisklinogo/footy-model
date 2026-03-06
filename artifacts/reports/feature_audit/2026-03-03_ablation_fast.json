@@ -1,0 +1,82 @@
+[
+  {
+    "market": "1x2_d",
+    "all_auc": 0.5242399173105492,
+    "odds_only_auc": 0.538047365649293,
+    "no_odds_auc": 0.5044036848683021,
+    "no_corner_line_odds_auc": 0.5164789385567075,
+    "auc_loss_without_odds": 0.01983623244224708,
+    "auc_loss_without_corner_line_odds": 0.007760978753841741,
+    "all_brier": 0.19714261292908225
+  },
+  {
+    "market": "c105",
+    "all_auc": 0.5452624749321694,
+    "odds_only_auc": 0.5851173764303409,
+    "no_odds_auc": 0.5289689748731863,
+    "no_corner_line_odds_auc": 0.5335024183083638,
+    "auc_loss_without_odds": 0.016293500058983112,
+    "auc_loss_without_corner_line_odds": 0.011760056623805637,
+    "all_brier": 0.23265198213476712
+  },
+  {
+    "market": "c75",
+    "all_auc": 0.5478570115489425,
+    "odds_only_auc": 0.5759629525498507,
+    "no_odds_auc": 0.5257674964315066,
+    "no_corner_line_odds_auc": 0.5284952311951209,
+    "auc_loss_without_odds": 0.022089515117435954,
+    "auc_loss_without_corner_line_odds": 0.019361780353821634,
+    "all_brier": 0.20236879762383603
+  },
+  {
+    "market": "c85",
+    "all_auc": 0.5642295183450213,
+    "odds_only_auc": 0.5790300376047528,
+    "no_odds_auc": 0.5529284585747152,
+    "no_corner_line_odds_auc": 0.5599181380565642,
+    "auc_loss_without_odds": 0.011301059770306154,
+    "auc_loss_without_corner_line_odds": 0.004311380288457123,
+    "all_brier": 0.23406110806267996
+  },
+  {
+    "market": "c95",
+    "all_auc": 0.5508911646148817,
+    "odds_only_auc": 0.5830264734720558,
+    "no_odds_auc": 0.5439840941279006,
+    "no_corner_line_odds_auc": 0.5518880052293278,
+    "auc_loss_without_odds": 0.006907070486981137,
+    "auc_loss_without_corner_line_odds": -0.0009968406144460484,
+    "all_brier": 0.25066425739433057
+  },
+  {
+    "market": "dc_12",
+    "all_auc": 0.5242399173105492,
+    "odds_only_auc": 0.538047365649293,
+    "no_odds_auc": 0.5044036848683021,
+    "no_corner_line_odds_auc": 0.5164789385567075,
+    "auc_loss_without_odds": 0.01983623244224708,
+    "auc_loss_without_corner_line_odds": 0.007760978753841741,
+    "all_brier": 0.19714261292908225
+  },
+  {
+    "market": "o15",
+    "all_auc": 0.581914250690075,
+    "odds_only_auc": 0.5736344231659437,
+    "no_odds_auc": 0.5753210348552128,
+    "no_corner_line_odds_auc": 0.5859657619970169,
+    "auc_loss_without_odds": 0.006593215834862165,
+    "auc_loss_without_corner_line_odds": -0.004051511306941924,
+    "all_brier": 0.1789141749242898
+  },
+  {
+    "market": "u35",
+    "all_auc": 0.5526192832014072,
+    "odds_only_auc": 0.5748424215772501,
+    "no_odds_auc": 0.5416666666666667,
+    "no_corner_line_odds_auc": 0.5560988346525946,
+    "auc_loss_without_odds": 0.010952616534740445,
+    "auc_loss_without_corner_line_odds": -0.0034795514511873904,
+    "all_brier": 0.21348451443750463
+  }
+]

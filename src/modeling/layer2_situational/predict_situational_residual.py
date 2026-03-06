@@ -716,6 +716,21 @@ def load_prediction_data(days: int = 3, league: str | None = None) -> pd.DataFra
     return df
 
 
+def _has_prediction_lineage_columns(conn: object) -> bool:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT COUNT(*)
+            FROM information_schema.columns
+            WHERE table_schema = 'public'
+              AND table_name = 'predictions'
+              AND column_name IN ('first_created_at', 'last_refreshed_at', 'feature_asof_utc')
+            """
+        )
+        row = cur.fetchone()
+    return bool(row and int(row[0]) == 3)
+
+
 def save_residuals(results: list[dict]):
     """Upsert situational outputs.
 
@@ -727,26 +742,63 @@ def save_residuals(results: list[dict]):
     if not results:
         return
     conn = connect_db()
-    sql = """
-        INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json, created_at)
-        VALUES (%s, %s, %s, %s, 0.5, %s, NOW())
-        ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
-            p_model = EXCLUDED.p_model,
-            metadata_json = EXCLUDED.metadata_json,
-            created_at = NOW()
-    """
+    has_lineage_cols = _has_prediction_lineage_columns(conn)
+    if has_lineage_cols:
+        sql = """
+            INSERT INTO predictions
+                (
+                    fixture_id,
+                    market_code,
+                    model_name,
+                    model_version,
+                    p_model,
+                    metadata_json,
+                    created_at,
+                    first_created_at,
+                    last_refreshed_at,
+                    feature_asof_utc
+                )
+            VALUES (%s, %s, %s, %s, 0.5, %s, NOW(), NOW(), NOW(), %s)
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
+                p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json,
+                last_refreshed_at = NOW(),
+                feature_asof_utc = COALESCE(EXCLUDED.feature_asof_utc, predictions.feature_asof_utc)
+        """
+    else:
+        sql = """
+            INSERT INTO predictions (fixture_id, market_code, model_name, model_version, p_model, metadata_json, created_at)
+            VALUES (%s, %s, %s, %s, 0.5, %s, NOW())
+            ON CONFLICT (fixture_id, market_code, model_name, model_version) DO UPDATE SET
+                p_model = EXCLUDED.p_model,
+                metadata_json = EXCLUDED.metadata_json,
+                created_at = NOW()
+        """
     with conn.cursor() as cur:
         for r in results:
-            cur.execute(
-                sql,
-                (
-                    r["fixture_id"],
-                    r["market_code"],
-                    MODEL_NAME,
-                    MODEL_VERSION,
-                    json.dumps(r["meta"]),
-                ),
-            )
+            if has_lineage_cols:
+                cur.execute(
+                    sql,
+                    (
+                        r["fixture_id"],
+                        r["market_code"],
+                        MODEL_NAME,
+                        MODEL_VERSION,
+                        json.dumps(r["meta"]),
+                        r.get("feature_asof_utc"),
+                    ),
+                )
+            else:
+                cur.execute(
+                    sql,
+                    (
+                        r["fixture_id"],
+                        r["market_code"],
+                        MODEL_NAME,
+                        MODEL_VERSION,
+                        json.dumps(r["meta"]),
+                    ),
+                )
     conn.commit()
     conn.close()
 
@@ -849,6 +901,7 @@ def main():
         RULE_SCOPE_GLOBAL: 0,
         RULE_SCOPE_DISABLED_SAFETY: 0,
     }
+    run_asof_utc = pd.Timestamp.now(tz="UTC")
     for _, row in df.iterrows():
         h_res_raw_full = float(row["pred_home_residual_full"])
         a_res_raw_full = float(row["pred_away_residual_full"])
@@ -864,6 +917,10 @@ def main():
         a_res_non_overlap = float(row["pred_away_residual_non_overlap"])
         lh = None if pd.isna(row.get("lambda_home")) else float(row["lambda_home"])
         la = None if pd.isna(row.get("lambda_away")) else float(row["lambda_away"])
+        kickoff = pd.to_datetime(row.get("match_datetime_utc"), utc=True, errors="coerce")
+        feature_asof_utc = None
+        if pd.notna(kickoff):
+            feature_asof_utc = min(run_asof_utc, kickoff).to_pydatetime()
 
         league_policy = resolve_league_policy(policy, row.get("league_code"))
         layer2_enabled = bool(league_policy.get("enabled", False))
@@ -1129,6 +1186,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "home_residual",
                     "meta": res_meta_h,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
             out_rows.append(
@@ -1136,6 +1194,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "away_residual",
                     "meta": res_meta_a,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
             out_rows.append(
@@ -1143,6 +1202,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "adj_lambda_home",
                     "meta": adj_meta_h,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
             out_rows.append(
@@ -1150,6 +1210,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "adj_lambda_away",
                     "meta": adj_meta_a,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
         else:
@@ -1202,6 +1263,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "home_residual",
                     "meta": res_meta_h,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
             out_rows.append(
@@ -1209,6 +1271,7 @@ def main():
                     "fixture_id": int(row["fixture_id"]),
                     "market_code": "away_residual",
                     "meta": res_meta_a,
+                    "feature_asof_utc": feature_asof_utc,
                 }
             )
     save_residuals(out_rows)

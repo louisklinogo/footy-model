@@ -45,6 +45,9 @@ class Options:
     max_predict: int
     max_score: int
     score_since_days: int
+    skip_settle: bool
+    skip_predict: bool
+    skip_score: bool
     log_file: str | None
     dry_run: bool
 
@@ -64,7 +67,7 @@ class PredictTarget:
 
 
 def parse_args() -> Options:
-    parser = argparse.ArgumentParser(description="Run fixtures-first settle/predict/score tick")
+    parser = argparse.ArgumentParser(description="Run fixtures-first tick phases")
     _ = parser.add_argument("--leagues", default=None)
     _ = parser.add_argument("--predict-days", type=int, default=3)
     _ = parser.add_argument("--settlement-delay-minutes", type=int, default=180)
@@ -72,6 +75,9 @@ def parse_args() -> Options:
     _ = parser.add_argument("--max-predict", type=int, default=50)
     _ = parser.add_argument("--max-score", type=int, default=500)
     _ = parser.add_argument("--score-since-days", type=int, default=30)
+    _ = parser.add_argument("--skip-settle", action="store_true")
+    _ = parser.add_argument("--skip-predict", action="store_true")
+    _ = parser.add_argument("--skip-score", action="store_true")
     _ = parser.add_argument("--log-file", default=None)
     _ = parser.add_argument("--dry-run", action="store_true")
     ns = parser.parse_args()
@@ -83,6 +89,9 @@ def parse_args() -> Options:
         max_predict=int(ns.max_predict),
         max_score=int(ns.max_score),
         score_since_days=int(ns.score_since_days),
+        skip_settle=bool(ns.skip_settle),
+        skip_predict=bool(ns.skip_predict),
+        skip_score=bool(ns.skip_score),
         log_file=ns.log_file if isinstance(ns.log_file, str) else None,
         dry_run=bool(ns.dry_run),
     )
@@ -233,8 +242,8 @@ def select_settle_targets(
                   AND f.match_datetime_utc + (%s || ' minutes')::interval < NOW()
                   AND COALESCE(f.status, '') NOT IN ('ft', 'cancelled', 'abandoned', 'postponed')
                   AND f.league_code = ANY(%s)
-                  AND (f.sofascore_id IS NOT NULL OR f.flashscore_id IS NOT NULL)
-                ORDER BY (f.sofascore_id IS NOT NULL) DESC, f.match_datetime_utc ASC, f.fixture_id ASC
+                  AND f.sofascore_id IS NOT NULL
+                ORDER BY f.match_datetime_utc ASC, f.fixture_id ASC
                 LIMIT %s
                 """,
                 (settlement_delay_minutes, list(leagues), max_settle),
@@ -277,47 +286,50 @@ def run_sofa_reconcile_for_targets(fixture_ids: Sequence[int], dry_run: bool) ->
     run_command(cmd, dry_run)
 
 
-def select_unresolved_flash_targets(
-    fixture_ids: Sequence[int],
-) -> list[SettleTarget]:
-    if not fixture_ids:
-        return []
-
-    conn = connect_db()
-    try:
-        with conn.cursor() as cur:
-            cur.execute(
-                """
-                SELECT fixture_id, sofascore_id, flashscore_id, league_code
-                FROM fixtures
-                WHERE fixture_id = ANY(%s)
-                  AND COALESCE(status, '') NOT IN ('ft', 'cancelled', 'abandoned', 'postponed')
-                  AND flashscore_id IS NOT NULL
-                ORDER BY fixture_id ASC
-                """,
-                (list(fixture_ids),),
-            )
-            rows = cur.fetchall()
-    finally:
-        conn.close()
-
-    out: list[SettleTarget] = []
-    for row in rows:
-        if not isinstance(row[0], int) or not isinstance(row[3], str):
-            continue
-        sofa_id = row[1].strip() if isinstance(row[1], str) and row[1].strip() else None
-        fs_id = row[2].strip() if isinstance(row[2], str) and row[2].strip() else None
-        league = row[3].strip()
-        if league and fs_id:
-            out.append(
-                SettleTarget(
-                    fixture_id=row[0],
-                    sofascore_id=sofa_id,
-                    flashscore_id=fs_id,
-                    league_code=league,
-                )
-            )
-    return out
+def run_sofa_enrichment_for_league(league: str, limit: int, dry_run: bool) -> None:
+    limit_str = str(max(1, int(limit)))
+    commands = [
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_stats.py"),
+            "--league",
+            league,
+            "--limit",
+            limit_str,
+        ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_players.py"),
+            "--league",
+            league,
+            "--limit",
+            limit_str,
+        ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_incidents.py"),
+            "--league",
+            league,
+            "--limit",
+            limit_str,
+            "--status",
+            "ft",
+        ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_availability.py"),
+            "--league",
+            league,
+            "--limit",
+            limit_str,
+            "--status",
+            "ft",
+        ],
+    ]
+    for cmd in commands:
+        if dry_run:
+            cmd = [*cmd, "--dry-run"]
+        run_command(cmd, dry_run)
 
 
 def mark_settle_selection(fixture_ids: Sequence[int]) -> None:
@@ -377,10 +389,11 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
                 True,
             )
             for league in leagues:
-                fake_root = TICK_IDS_BASE / "<run-ts>"
-                _log_info(f"DRY RUN WRITE: {fake_root / f'match_ids_{league}.json'}")
-                run_command(["node", str(ROOT / "src" / "ingest" / "scrapers" / "premium_enricher_v4.js"), league, "--ids-root", str(fake_root), "--out-root", str(PREMIUM_ROOT)], True)
-                run_command([sys.executable, str(ROOT / "src" / "ingest" / "ingest_premium_fixtures_v1.py"), "--league", league], True)
+                run_sofa_enrichment_for_league(
+                    league=league,
+                    limit=options.max_settle,
+                    dry_run=True,
+                )
             _finish_run(run_id, "success", "settle dry-run complete", details, options.dry_run)
             return
 
@@ -394,30 +407,24 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
                 run_sofa_reconcile_for_targets(sofa_fixture_ids, options.dry_run)
             except Exception as exc:
                 _log_warn(
-                    f"WARN: Sofa reconcile pass failed ({exc}); proceeding to flashscore fallback."
+                    f"WARN: Sofa reconcile pass failed ({exc}); continuing with Sofa-only enrichment."
                 )
 
-        unresolved = select_unresolved_flash_targets([t.fixture_id for t in targets])
         grouped: dict[str, list[SettleTarget]] = defaultdict(list)
-        for target in unresolved:
+        for target in targets:
             grouped[target.league_code].append(target)
 
-        ids_root = TICK_IDS_BASE / datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         for league, league_targets in grouped.items():
-            fs_ids = [
-                t.flashscore_id for t in league_targets if isinstance(t.flashscore_id, str)
-            ]
-            if not fs_ids:
-                continue
-            write_ids_file(ids_root, league, fs_ids)
-            delete_existing_premium_json(league, fs_ids, False)
-            run_command(["node", str(ROOT / "src" / "ingest" / "scrapers" / "premium_enricher_v4.js"), league, "--ids-root", str(ids_root), "--out-root", str(PREMIUM_ROOT)], False)
-            run_command([sys.executable, str(ROOT / "src" / "ingest" / "ingest_premium_fixtures_v1.py"), "--league", league], False)
+            run_sofa_enrichment_for_league(
+                league=league,
+                limit=len(league_targets),
+                dry_run=False,
+            )
 
         _finish_run(
             run_id,
             "success",
-            f"settle complete targets={len(targets)} flash_fallback_targets={len(unresolved)}",
+            f"settle complete targets={len(targets)} sofa_enrichment_leagues={len(grouped)}",
             details,
             options.dry_run,
         )
@@ -455,6 +462,29 @@ def select_predict_targets(leagues: Sequence[str], predict_days: int, max_predic
     return targets
 
 
+def select_predict_active_leagues(leagues: Sequence[str], predict_days: int) -> list[str]:
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT DISTINCT f.league_code
+                FROM fixtures f
+                WHERE f.status = 'scheduled'
+                  AND f.match_datetime_utc IS NOT NULL
+                  AND f.match_datetime_utc > NOW()
+                  AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
+                  AND f.league_code = ANY(%s)
+                ORDER BY f.league_code ASC
+                """,
+                (predict_days, list(leagues)),
+            )
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+    return [row[0] for row in rows if isinstance(row[0], str) and row[0].strip()]
+
+
 def mark_predict_selection(fixture_ids: Sequence[int]) -> None:
     if not fixture_ids:
         return
@@ -479,11 +509,23 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
     details = {"leagues": list(leagues), "dry_run": options.dry_run}
     run_id = _start_run(PREDICT_JOB, details, options.dry_run)
     try:
+        run_command(
+            [
+                sys.executable,
+                str(ROOT / "src" / "ingest" / "report_odds_market_coverage.py"),
+                "--days",
+                str(options.predict_days),
+            ],
+            options.dry_run,
+        )
+
         if options.dry_run:
             for league in leagues:
+                health_path = ROOT / "artifacts" / "reports" / "backbone_health" / f"backbone_health_{league}.json"
                 run_command([sys.executable, str(ROOT / "src" / "features" / "build_team_premium_snapshots_v1.py"), "--league", league], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], True)
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
@@ -492,20 +534,29 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
 
         targets = select_predict_targets(leagues, options.predict_days, options.max_predict)
         mark_predict_selection([target.fixture_id for target in targets])
+        active_leagues = select_predict_active_leagues(leagues, options.predict_days)
 
-        grouped: dict[str, list[PredictTarget]] = defaultdict(list)
-        for target in targets:
-            grouped[target.league_code].append(target)
+        if not active_leagues:
+            _finish_run(
+                run_id,
+                "success",
+                "predict complete targets=0 active_leagues=0",
+                details,
+                options.dry_run,
+            )
+            return
 
-        for league in grouped:
+        for league in active_leagues:
+            health_path = ROOT / "artifacts" / "reports" / "backbone_health" / f"backbone_health_{league}.json"
             run_command([sys.executable, str(ROOT / "src" / "features" / "build_team_premium_snapshots_v1.py"), "--league", league], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], False)
+            run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
 
-        _finish_run(run_id, "success", f"predict complete targets={len(targets)}", details, options.dry_run)
+        _finish_run(run_id, "success", f"predict complete targets={len(targets)} active_leagues={len(active_leagues)}", details, options.dry_run)
     except Exception as exc:
         _finish_run(run_id, "fail", f"predict failed: {exc}", details, options.dry_run)
         raise
@@ -595,6 +646,9 @@ def main() -> int:
         "max_settle": options.max_settle,
         "max_predict": options.max_predict,
         "max_score": options.max_score,
+        "skip_settle": options.skip_settle,
+        "skip_predict": options.skip_predict,
+        "skip_score": options.skip_score,
         "log_file": str(_LOG_PATH) if _LOG_PATH is not None else None,
         "dry_run": options.dry_run,
     }
@@ -605,9 +659,20 @@ def main() -> int:
         else:
             ensure_fixture_job_state_table()
 
-        run_settle_phase(options, leagues)
-        run_predict_phase(options, leagues)
-        run_score_phase(options, leagues)
+        if options.skip_settle:
+            _log_info("Skipping settle phase (--skip-settle).")
+        else:
+            run_settle_phase(options, leagues)
+
+        if options.skip_predict:
+            _log_info("Skipping predict phase (--skip-predict).")
+        else:
+            run_predict_phase(options, leagues)
+
+        if options.skip_score:
+            _log_info("Skipping score phase (--skip-score).")
+        else:
+            run_score_phase(options, leagues)
 
         _finish_run(run_id, "success", "tick complete", details, options.dry_run)
         return 0

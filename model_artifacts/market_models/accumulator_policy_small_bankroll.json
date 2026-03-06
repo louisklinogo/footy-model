@@ -1,0 +1,37 @@
+{
+  "profile_name": "small_bankroll_moonshot_v1",
+  "objective": "Maximize step-up bankroll target hit probability while keeping correlation and ruin risk bounded.",
+  "slip_size_default": 2,
+  "slip_size_allow_4": true,
+  "max_tickets_per_day": 1,
+  "stake_fraction_per_ticket": 0.02,
+  "daily_stop_loss_fraction": 0.05,
+  "min_leg_p_conservative": 0.6,
+  "min_leg_edge_adjusted": 0.01,
+  "max_leg_risk_score": 100,
+  "per_leg_odds_min": 1.2,
+  "per_leg_odds_max": 1.72,
+  "ticket_total_odds_min": 1.7,
+  "ticket_total_odds_max": 5.2,
+  "odds_snapshot_preference": [
+    "latest_pre_match",
+    "closing"
+  ],
+  "allow_missing_odds": false,
+  "enforce_limited_market_uniqueness": false,
+  "market_gating_path": "model_artifacts/market_models/market_gating.json",
+  "correlation_policy": {
+    "forbid_same_fixture": true,
+    "forbid_same_team_across_legs": true,
+    "max_legs_per_league": 1,
+    "same_league_probability_haircut": 0.95,
+    "p_ticket_formula_default": "prod(p_leg_conservative) * (same_league_probability_haircut ** extra_same_league_legs)"
+  },
+  "ticket_hit_rate_floor_target": 0.45,
+  "ticket_hit_rate_stretch_target": 0.6,
+  "odds_time_integrity": {
+    "require_snapshot_le_kickoff": true,
+    "allow_closing_if_pre_kickoff": true,
+    "closing_adds_risk_flag": true
+  }
+}

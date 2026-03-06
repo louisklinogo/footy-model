@@ -14,7 +14,7 @@ import json
 import math
 import sys
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -34,7 +34,13 @@ MODEL_VERSION = "fixtures_first_prematch_v1"
 DEFAULT_POLICY_PATH = Path("model_artifacts/market_models/risk_policy.json")
 DEFAULT_GATING_PATH = Path("model_artifacts/market_models/market_gating.json")
 DEFAULT_COVERAGE_DIR = Path("artifacts/reports/odds_coverage")
+DEFAULT_EDGE_BUCKET_REPORT_DIR = Path("artifacts/reports/risk_edge_buckets")
 EPS = 1e-6
+EDGE_BUCKET_SPECS: tuple[tuple[str, float, float | None], ...] = (
+    ("2-4%", 0.02, 0.04),
+    ("4-6%", 0.04, 0.06),
+    ("6%+", 0.06, None),
+)
 FOCUS_MARKETS = (
     "o15",
     "u35",
@@ -111,6 +117,12 @@ DEFAULT_POLICY: dict[str, Any] = {
     "calibration_min_samples": 80,
     "calibration_poor_brier": 0.22,
     "calibration_very_poor_brier": 0.24,
+    "edge_bucket_min_samples": 60,
+    "edge_bucket_min_precision": 0.54,
+    "edge_bucket_loss_streak_pause": 3,
+    "hard_edge_bucket_precision_gate": True,
+    "hard_edge_bucket_loss_streak_pause": True,
+    "edge_bucket_report_dir": str(DEFAULT_EDGE_BUCKET_REPORT_DIR),
     "penalties": {
         "missing_odds": 12.0,
         "fallback_used": 18.0,
@@ -124,6 +136,8 @@ DEFAULT_POLICY: dict[str, Any] = {
         "calibration_very_poor": 16.0,
         "precision_gate_fail": 25.0,
         "loss_streak_pause": 30.0,
+        "edge_bucket_precision_gate_fail": 20.0,
+        "edge_bucket_loss_streak_pause": 24.0,
     },
 }
 
@@ -139,6 +153,14 @@ class RollingPerformance:
     n: int
     precision: float | None
     loss_streak: int
+
+
+@dataclass(frozen=True)
+class EdgeBucketPerformance:
+    n: int
+    precision: float | None
+    loss_streak: int
+    mean_roi_unit: float | None
 
 
 def parse_args() -> argparse.Namespace:
@@ -610,6 +632,219 @@ def fetch_recent_performance_stats(
     return by_league_market, by_market
 
 
+def _edge_bucket_label(edge_value: float | None) -> str | None:
+    if edge_value is None:
+        return None
+    edge = float(edge_value)
+    if math.isnan(edge):
+        return None
+    for label, lo, hi in EDGE_BUCKET_SPECS:
+        if edge < lo:
+            continue
+        if hi is None or edge < hi:
+            return label
+    return None
+
+
+def _resolve_edge_bucket_gate(
+    *,
+    policy: dict[str, Any],
+    market_code: str,
+    edge_bucket: str | None,
+) -> dict[str, Any]:
+    resolved = {
+        "min_samples": int(policy.get("edge_bucket_min_samples", 60)),
+        "min_precision": float(policy.get("edge_bucket_min_precision", 0.54)),
+        "loss_streak_pause": int(policy.get("edge_bucket_loss_streak_pause", 3)),
+        "hard_precision_gate": bool(
+            policy.get("hard_edge_bucket_precision_gate", True)
+        ),
+        "hard_loss_streak_pause": bool(
+            policy.get("hard_edge_bucket_loss_streak_pause", True)
+        ),
+    }
+    if not edge_bucket:
+        return resolved
+
+    overrides = policy.get("edge_bucket_overrides")
+    if not isinstance(overrides, dict):
+        return resolved
+    market_overrides = overrides.get(market_code)
+    if not isinstance(market_overrides, dict):
+        return resolved
+    bucket_override = market_overrides.get(edge_bucket)
+    if not isinstance(bucket_override, dict):
+        return resolved
+
+    if "min_samples" in bucket_override:
+        try:
+            resolved["min_samples"] = max(1, int(bucket_override.get("min_samples")))
+        except (TypeError, ValueError):
+            pass
+    if "min_precision" in bucket_override:
+        try:
+            resolved["min_precision"] = float(bucket_override.get("min_precision"))
+        except (TypeError, ValueError):
+            pass
+    if "loss_streak_pause" in bucket_override:
+        try:
+            resolved["loss_streak_pause"] = int(bucket_override.get("loss_streak_pause"))
+        except (TypeError, ValueError):
+            pass
+    if "hard_precision_gate" in bucket_override:
+        resolved["hard_precision_gate"] = bool(bucket_override.get("hard_precision_gate"))
+    if "hard_loss_streak_pause" in bucket_override:
+        resolved["hard_loss_streak_pause"] = bool(
+            bucket_override.get("hard_loss_streak_pause")
+        )
+    return resolved
+
+
+def fetch_edge_bucket_performance_stats(
+    *,
+    model: str,
+    version: str,
+    history_days: int,
+    window: int,
+) -> tuple[
+    dict[tuple[str, str], EdgeBucketPerformance],
+    dict[str, EdgeBucketPerformance],
+]:
+    query = """
+    SELECT
+        p.market_code,
+        ps.hit,
+        ps.roi_unit,
+        COALESCE(pra.edge_adjusted, ps.edge) AS edge_value,
+        f.match_datetime_utc
+    FROM predictions p
+    JOIN prediction_scores ps
+      ON ps.prediction_id = p.prediction_id
+    JOIN fixtures f
+      ON f.fixture_id = p.fixture_id
+    LEFT JOIN prediction_risk_assessments pra
+      ON pra.prediction_id = p.prediction_id
+    WHERE p.model_name = %s
+      AND p.model_version = %s
+      AND p.market_code = ANY(%s)
+      AND f.match_datetime_utc IS NOT NULL
+      AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval
+    ORDER BY p.market_code ASC, f.match_datetime_utc DESC
+    """
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(query, (model, version, list(FOCUS_MARKETS), history_days))
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+
+    per_market_bucket_hits: dict[tuple[str, str], list[bool]] = {}
+    per_market_bucket_roi: dict[tuple[str, str], list[float]] = {}
+    per_bucket_hits: dict[str, list[bool]] = {}
+    per_bucket_roi: dict[str, list[float]] = {}
+
+    for market_code, hit, roi_unit, edge_value, _match_dt in rows:
+        market = str(market_code or "")
+        bucket = _edge_bucket_label(_safe_float(edge_value))
+        if not market or not bucket:
+            continue
+
+        key = (market, bucket)
+        hits = per_market_bucket_hits.setdefault(key, [])
+        if len(hits) < window:
+            hits.append(bool(hit))
+        roi_rows = per_market_bucket_roi.setdefault(key, [])
+        if len(roi_rows) < window:
+            roi = _safe_float(roi_unit)
+            if roi is not None:
+                roi_rows.append(float(roi))
+
+        bucket_hits = per_bucket_hits.setdefault(bucket, [])
+        if len(bucket_hits) < window:
+            bucket_hits.append(bool(hit))
+        bucket_roi_rows = per_bucket_roi.setdefault(bucket, [])
+        if len(bucket_roi_rows) < window:
+            roi = _safe_float(roi_unit)
+            if roi is not None:
+                bucket_roi_rows.append(float(roi))
+
+    by_market_bucket: dict[tuple[str, str], EdgeBucketPerformance] = {}
+    for key, hits in per_market_bucket_hits.items():
+        n = len(hits)
+        precision = float(sum(1 for h in hits if h) / n) if n > 0 else None
+        roi_rows = per_market_bucket_roi.get(key, [])
+        mean_roi = float(sum(roi_rows) / len(roi_rows)) if roi_rows else None
+        by_market_bucket[key] = EdgeBucketPerformance(
+            n=n,
+            precision=precision,
+            loss_streak=_compute_loss_streak(hits),
+            mean_roi_unit=mean_roi,
+        )
+
+    by_bucket: dict[str, EdgeBucketPerformance] = {}
+    for bucket, hits in per_bucket_hits.items():
+        n = len(hits)
+        precision = float(sum(1 for h in hits if h) / n) if n > 0 else None
+        roi_rows = per_bucket_roi.get(bucket, [])
+        mean_roi = float(sum(roi_rows) / len(roi_rows)) if roi_rows else None
+        by_bucket[bucket] = EdgeBucketPerformance(
+            n=n,
+            precision=precision,
+            loss_streak=_compute_loss_streak(hits),
+            mean_roi_unit=mean_roi,
+        )
+
+    return by_market_bucket, by_bucket
+
+
+def write_edge_bucket_report(
+    *,
+    output_dir: Path,
+    model: str,
+    version: str,
+    history_days: int,
+    window: int,
+    by_market_bucket: dict[tuple[str, str], EdgeBucketPerformance],
+    by_bucket: dict[str, EdgeBucketPerformance],
+) -> Path:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(tz=UTC).strftime("%Y%m%dT%H%M%SZ")
+    out_path = output_dir / f"edge_bucket_report_{stamp}.json"
+    rows_market = [
+        {
+            "market_code": market,
+            "edge_bucket": bucket,
+            "n": stats.n,
+            "precision": stats.precision,
+            "loss_streak": stats.loss_streak,
+            "mean_roi_unit": stats.mean_roi_unit,
+        }
+        for (market, bucket), stats in sorted(by_market_bucket.items())
+    ]
+    rows_bucket = [
+        {
+            "edge_bucket": bucket,
+            "n": stats.n,
+            "precision": stats.precision,
+            "loss_streak": stats.loss_streak,
+            "mean_roi_unit": stats.mean_roi_unit,
+        }
+        for bucket, stats in sorted(by_bucket.items())
+    ]
+    payload = {
+        "generated_at_utc": datetime.now(tz=UTC).isoformat(),
+        "model_name": model,
+        "model_version": version,
+        "history_days": int(history_days),
+        "window": int(window),
+        "edge_bucket_by_market": rows_market,
+        "edge_bucket_global": rows_bucket,
+    }
+    out_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return out_path
+
+
 def _safe_float(value: Any) -> float | None:
     if value is None:
         return None
@@ -747,6 +982,8 @@ def assess_row(
     calibration_by_market: dict[str, CalibrationStats],
     performance_by_league_market: dict[tuple[str, str], RollingPerformance],
     performance_by_market: dict[str, RollingPerformance],
+    edge_bucket_by_market: dict[tuple[str, str], EdgeBucketPerformance],
+    edge_bucket_global: dict[str, EdgeBucketPerformance],
 ) -> dict[str, Any]:
     penalties = policy["penalties"]
     flags: list[str] = []
@@ -881,14 +1118,52 @@ def assess_row(
         if hard_loss_streak_pause:
             force_pass = True
 
+    edge_raw = None
+    if implied_probability is not None:
+        edge_raw = p_model - implied_probability
+
+    edge_bucket = _edge_bucket_label(edge_raw)
+    edge_bucket_stats: EdgeBucketPerformance | None = None
+    edge_bucket_scope: str | None = None
+    if edge_bucket:
+        edge_bucket_stats = edge_bucket_by_market.get((market_code, edge_bucket))
+        edge_bucket_scope = "market"
+        if edge_bucket_stats is None:
+            edge_bucket_stats = edge_bucket_global.get(edge_bucket)
+            edge_bucket_scope = "global"
+            if edge_bucket_stats and edge_bucket_stats.n > 0:
+                flags.append("edge_bucket_global_fallback")
+
+    edge_bucket_gate = _resolve_edge_bucket_gate(
+        policy=policy, market_code=market_code, edge_bucket=edge_bucket
+    )
+    edge_bucket_min_samples = int(edge_bucket_gate["min_samples"])
+    edge_bucket_min_precision = float(edge_bucket_gate["min_precision"])
+    edge_bucket_loss_pause = int(edge_bucket_gate["loss_streak_pause"])
+    if edge_bucket_stats is not None and edge_bucket_stats.n >= edge_bucket_min_samples:
+        if (
+            edge_bucket_stats.precision is not None
+            and edge_bucket_stats.precision < edge_bucket_min_precision
+        ):
+            penalty = float(penalties.get("edge_bucket_precision_gate_fail", 20.0))
+            risk_score += penalty
+            breakdown["edge_bucket_precision_gate_fail"] = penalty
+            flags.append("edge_bucket_precision_gate_fail")
+            if bool(edge_bucket_gate["hard_precision_gate"]):
+                force_pass = True
+        if edge_bucket_loss_pause > 0 and edge_bucket_stats.loss_streak >= edge_bucket_loss_pause:
+            penalty = float(penalties.get("edge_bucket_loss_streak_pause", 24.0))
+            risk_score += penalty
+            breakdown["edge_bucket_loss_streak_pause"] = penalty
+            flags.append("edge_bucket_loss_streak_pause")
+            if bool(edge_bucket_gate["hard_loss_streak_pause"]):
+                force_pass = True
+
     risk_score = float(min(max(risk_score, 0.0), 100.0))
     haircut = _risk_haircut_from_score(risk_score)
     p_conservative = _clip_probability(p_model - haircut)
-
-    edge_raw = None
     edge_adjusted = None
     if implied_probability is not None:
-        edge_raw = p_model - implied_probability
         edge_adjusted = p_conservative - implied_probability
 
     min_watch = float(policy["min_edge_watch"])
@@ -952,6 +1227,19 @@ def assess_row(
             "rolling_precision": perf.precision,
             "rolling_loss_streak": perf.loss_streak,
             "rolling_min_precision_gate": min_precision,
+            "edge_bucket": edge_bucket,
+            "edge_bucket_scope": edge_bucket_scope,
+            "edge_bucket_n": edge_bucket_stats.n if edge_bucket_stats else 0,
+            "edge_bucket_precision": (
+                edge_bucket_stats.precision if edge_bucket_stats else None
+            ),
+            "edge_bucket_loss_streak": (
+                edge_bucket_stats.loss_streak if edge_bucket_stats else None
+            ),
+            "edge_bucket_mean_roi_unit": (
+                edge_bucket_stats.mean_roi_unit if edge_bucket_stats else None
+            ),
+            "edge_bucket_gate": edge_bucket_gate,
             "is_tradable_market": is_tradable,
             "market_mode": market_mode,
             "risk_haircut": haircut,
@@ -1109,6 +1397,27 @@ def main() -> None:
             window=int(policy.get("precision_window", 60)),
         )
     )
+    edge_bucket_by_market, edge_bucket_global = fetch_edge_bucket_performance_stats(
+        model=args.model,
+        version=args.version,
+        history_days=args.history_days,
+        window=int(policy.get("precision_window", 60)),
+    )
+    edge_bucket_report_dir_raw = str(
+        policy.get("edge_bucket_report_dir") or DEFAULT_EDGE_BUCKET_REPORT_DIR
+    ).strip()
+    edge_bucket_report_path: str | None = None
+    if edge_bucket_report_dir_raw:
+        report_path = write_edge_bucket_report(
+            output_dir=Path(edge_bucket_report_dir_raw),
+            model=args.model,
+            version=args.version,
+            history_days=args.history_days,
+            window=int(policy.get("precision_window", 60)),
+            by_market_bucket=edge_bucket_by_market,
+            by_bucket=edge_bucket_global,
+        )
+        edge_bucket_report_path = str(report_path)
 
     assessed = [
         assess_row(
@@ -1119,6 +1428,8 @@ def main() -> None:
             calibration_by_market=calibration_by_market,
             performance_by_league_market=performance_by_league_market,
             performance_by_market=performance_by_market,
+            edge_bucket_by_market=edge_bucket_by_market,
+            edge_bucket_global=edge_bucket_global,
         )
         for row in candidates
     ]
@@ -1128,6 +1439,8 @@ def main() -> None:
         return
 
     written = upsert_assessments(assessed)
+    if edge_bucket_report_path:
+        print(f"Edge bucket report: {edge_bucket_report_path}")
     print(
         f"Assessed {len(assessed)} rows, upserted {written} risk rows: {summarize_actions(assessed)}"
     )

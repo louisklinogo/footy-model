@@ -164,6 +164,30 @@ def _pct(part: int, total: int) -> float:
     return float(part / total)
 
 
+def _as_dict(value: Any) -> dict[str, Any]:
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            return {}
+        return parsed if isinstance(parsed, dict) else {}
+    return {}
+
+
+def _has_prices(odds_json: Any) -> bool:
+    payload = _as_dict(odds_json)
+    prices = _as_dict(payload.get("prices_latest"))
+    for value in prices.values():
+        try:
+            if float(value) > 1.0:
+                return True
+        except (TypeError, ValueError):
+            continue
+    return False
+
+
 def build_coverage_report(
     fixtures: list[FixtureRow],
     odds_by_fixture: dict[int, list[dict[str, Any]]],
@@ -179,10 +203,31 @@ def build_coverage_report(
     bucket_counts: dict[tuple[str, str], dict[str, int]] = defaultdict(
         lambda: {"with_odds": 0, "total": 0}
     )
+    market_line_counts: dict[tuple[str, float], dict[str, int]] = defaultdict(
+        lambda: {"with_odds": 0}
+    )
 
     for fixture in fixtures:
         odds_rows = odds_by_fixture.get(fixture.fixture_id, [])
         bucket = _bucket_for_kickoff(fixture.match_datetime_utc, now_utc)
+
+        fixture_line_seen: set[tuple[str, float]] = set()
+        for row in odds_rows:
+            market_code = str(row.get("market_code") or "").strip()
+            line_num_raw = row.get("line_num")
+            if not market_code or line_num_raw is None:
+                continue
+            try:
+                line_num = float(line_num_raw)
+            except (TypeError, ValueError):
+                continue
+            if not _has_prices(row.get("odds_json")):
+                continue
+            fixture_line_seen.add((market_code, line_num))
+
+        for key in fixture_line_seen:
+            market_line_counts[key]["with_odds"] += 1
+
         for market in markets:
             overall_counts[market]["total"] += 0
             league_key = (fixture.league_code, market)
@@ -242,6 +287,21 @@ def build_coverage_report(
         key=lambda item: (item["kickoff_bucket"], item["market_code"])
     )
 
+    coverage_by_market_line = []
+    for (market_code, line_num), counts in sorted(
+        market_line_counts.items(), key=lambda item: (item[0][0], item[0][1])
+    ):
+        with_odds = int(counts["with_odds"])
+        coverage_by_market_line.append(
+            {
+                "market_code": market_code,
+                "line_num": line_num,
+                "fixtures_with_odds": with_odds,
+                "fixtures_total": overall_total,
+                "coverage_pct": _pct(with_odds, overall_total),
+            }
+        )
+
     return {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "fixture_count": overall_total,
@@ -249,6 +309,7 @@ def build_coverage_report(
         "coverage_by_market": coverage_by_market,
         "coverage_by_league_market": coverage_by_league_market,
         "coverage_by_bucket_market": coverage_by_bucket_market,
+        "coverage_by_market_line": coverage_by_market_line,
     }
 
 
@@ -277,6 +338,16 @@ def render_markdown(report: dict[str, Any]) -> str:
         pct = float(row["coverage_pct"]) * 100.0
         lines.append(
             f"| {row['kickoff_bucket']} | {row['market_code']} | {row['fixtures_with_odds']} | {row['fixtures_total']} | {pct:.1f}% |"
+        )
+    lines.append("")
+    lines.append("## Coverage by Market Line")
+    lines.append("")
+    lines.append("| Market | Line | Fixtures w/ Odds | Fixtures Total | Coverage |")
+    lines.append("|---|---:|---:|---:|---:|")
+    for row in report.get("coverage_by_market_line", []):
+        pct = float(row["coverage_pct"]) * 100.0
+        lines.append(
+            f"| {row['market_code']} | {row['line_num']} | {row['fixtures_with_odds']} | {row['fixtures_total']} | {pct:.1f}% |"
         )
     lines.append("")
     return "\n".join(lines)

@@ -1,0 +1,169 @@
+{
+  "generated_at_utc": "2026-03-06T01:13:22.115268+00:00",
+  "slips": [
+    {
+      "slip_id": "2026-02-27-001",
+      "date": "2026-02-27",
+      "stake": 2.0,
+      "legs": [
+        {
+          "fixture_id": "4511",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7611327460404923,
+          "p_conservative": 0.6736327460404923,
+          "edge": 0.06882505373280001,
+          "risk_flags": [
+            "missing_odds"
+          ]
+        },
+        {
+          "fixture_id": "19341",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7740565162726467,
+          "p_conservative": 0.6865565162726467,
+          "edge": 0.05977080198693241,
+          "risk_flags": [
+            "missing_odds"
+          ]
+        }
+      ],
+      "ticket_odds": 2.022222222222222,
+      "ticket_win_prob": 0.4624869513687369,
+      "ticket_ev": -0.12949721890866406,
+      "result_return_factor": 2.022222222222222,
+      "pnl": 2.0444444444444443
+    },
+    {
+      "slip_id": "2026-03-01-001",
+      "date": "2026-03-01",
+      "stake": 2.040888888888889,
+      "legs": [
+        {
+          "fixture_id": "20291",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8261607181205171,
+          "p_conservative": 0.7086607181205171,
+          "edge": 0.13385302581282477,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_6h"
+          ]
+        },
+        {
+          "fixture_id": "4518",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7875070248723935,
+          "p_conservative": 0.6700070248723935,
+          "edge": 0.07322131058667924,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_6h"
+          ]
+        }
+      ],
+      "ticket_odds": 2.022222222222222,
+      "ticket_win_prob": 0.47480765939186154,
+      "ticket_ev": -0.08129554325534863,
+      "result_return_factor": 2.022222222222222,
+      "pnl": 2.086241975308642
+    },
+    {
+      "slip_id": "2026-03-02-001",
+      "date": "2026-03-02",
+      "stake": 2.082613728395062,
+      "legs": [
+        {
+          "fixture_id": "20829",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7714504181864162,
+          "p_conservative": 0.6510375406443984,
+          "edge": 0.03811708485308296,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "low_sample_lt5",
+            "stale_odds_24h",
+            "calibration_low_sample"
+          ]
+        },
+        {
+          "fixture_id": "12137",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.7879247648954407,
+          "p_conservative": 0.6673513680373574,
+          "edge": 0.01014698711766282,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_24h"
+          ]
+        }
+      ],
+      "ticket_odds": 1.7532467532467533,
+      "ticket_win_prob": 0.434470793392716,
+      "ticket_ev": -0.49621498485792864,
+      "result_return_factor": 0.0,
+      "pnl": -2.082613728395062
+    },
+    {
+      "slip_id": "2026-03-04-001",
+      "date": "2026-03-04",
+      "stake": 2.0409614538271605,
+      "legs": [
+        {
+          "fixture_id": "5139",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7629432560595687,
+          "p_conservative": 0.7029432560595688,
+          "edge": 0.029609922726235416,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness"
+          ]
+        },
+        {
+          "fixture_id": "20145",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8058428754621687,
+          "p_conservative": 0.7458428754621687,
+          "edge": 0.028065097684390805,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness"
+          ]
+        }
+      ],
+      "ticket_odds": 1.7532467532467533,
+      "ticket_win_prob": 0.5242852193862083,
+      "ticket_ev": -0.1649069124881136,
+      "result_return_factor": 1.7532467532467533,
+      "pnl": 1.537347588597082
+    }
+  ]
+}

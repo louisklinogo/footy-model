@@ -1,0 +1,4157 @@
+{
+  "generated_at_utc": "2026-03-06T02:11:06.229623+00:00",
+  "slips": [
+    {
+      "slip_id": "2025-08-01-001",
+      "date": "2025-08-01",
+      "stake": 2.0,
+      "legs": [
+        {
+          "fixture_id": "20692",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7957065288968243,
+          "p_conservative": 0.7957065288968243,
+          "edge": 0.12903986223015762,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20167",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.026457761434424243,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.3,
+      "ticket_win_prob": 0.5399916540982513,
+      "ticket_ev": 0.4839616088519558,
+      "result_return_factor": 0.0,
+      "pnl": -2.0
+    },
+    {
+      "slip_id": "2025-08-03-001",
+      "date": "2025-08-03",
+      "stake": 1.96,
+      "legs": [
+        {
+          "fixture_id": "20693",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6585809983328262,
+          "p_conservative": 0.6585809983328262,
+          "edge": 0.05858099833282615,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22288",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.6979624653965152,
+          "p_conservative": 0.6979624653965152,
+          "edge": 0.031295798729848556,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5,
+      "ticket_win_prob": 0.45966481725967767,
+      "ticket_ev": 0.2923576045724207,
+      "result_return_factor": 0.0,
+      "pnl": -1.96
+    },
+    {
+      "slip_id": "2025-08-09-001",
+      "date": "2025-08-09",
+      "stake": 1.9208,
+      "legs": [
+        {
+          "fixture_id": "20173",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8098693326554155,
+          "p_conservative": 0.8098693326554155,
+          "edge": 0.032091554877637596,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3109",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7215170207239421,
+          "p_conservative": 0.7215170207239421,
+          "edge": 0.02920932841624979,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.857142857142857,
+      "ticket_win_prob": 0.5843345080732225,
+      "ticket_ev": 0.16363805719879898,
+      "result_return_factor": 1.857142857142857,
+      "pnl": 1.6463999999999996
+    },
+    {
+      "slip_id": "2025-08-17-001",
+      "date": "2025-08-17",
+      "stake": 1.9537280000000001,
+      "legs": [
+        {
+          "fixture_id": "20184",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8395988874249743,
+          "p_conservative": 0.8395988874249743,
+          "edge": 0.06182110964719645,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20707",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7519473915354923,
+          "p_conservative": 0.7519473915354923,
+          "edge": 0.03766167724977798,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.7999999999999996,
+      "ticket_win_prob": 0.6313341933353109,
+      "ticket_ev": 0.2664915235778981,
+      "result_return_factor": 1.7999999999999996,
+      "pnl": 1.5629823999999992
+    },
+    {
+      "slip_id": "2025-08-23-001",
+      "date": "2025-08-23",
+      "stake": 1.9849876480000002,
+      "legs": [
+        {
+          "fixture_id": "3116",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.55,
+          "p_model": 0.7556140350877193,
+          "p_conservative": 0.7556140350877193,
+          "edge": 0.11045274476513867,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22298",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.654816380492908,
+          "p_conservative": 0.654816380492908,
+          "edge": 0.054816380492907935,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.583333333333333,
+      "ticket_win_prob": 0.49478844750578155,
+      "ticket_ev": 0.552230490069521,
+      "result_return_factor": 2.583333333333333,
+      "pnl": 3.142897109333333
+    },
+    {
+      "slip_id": "2025-08-29-001",
+      "date": "2025-08-29",
+      "stake": 2.047845590186667,
+      "legs": [
+        {
+          "fixture_id": "20715",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8160398401239434,
+          "p_conservative": 0.8160398401239434,
+          "edge": 0.12373214781625108,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21543",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7539514950565942,
+          "p_conservative": 0.7539514950565942,
+          "edge": 0.11758785869295785,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.2698412698412698,
+      "ticket_win_prob": 0.6152544574871912,
+      "ticket_ev": 0.812032128034291,
+      "result_return_factor": 0.0,
+      "pnl": -2.047845590186667
+    },
+    {
+      "slip_id": "2025-08-30-001",
+      "date": "2025-08-30",
+      "stake": 2.0068886783829334,
+      "legs": [
+        {
+          "fixture_id": "21544",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7741283634298579,
+          "p_conservative": 0.7741283634298579,
+          "edge": 0.08182067112216562,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3120",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7896030188112845,
+          "p_conservative": 0.7896030188112845,
+          "edge": 0.07531730452557017,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.022222222222222,
+      "ticket_win_prob": 0.611254092711655,
+      "ticket_ev": 0.4738095785797547,
+      "result_return_factor": 0.0,
+      "pnl": -2.0068886783829334
+    },
+    {
+      "slip_id": "2025-08-31-001",
+      "date": "2025-08-31",
+      "stake": 1.9667509048152747,
+      "legs": [
+        {
+          "fixture_id": "20194",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.769006237312381,
+          "p_conservative": 0.769006237312381,
+          "edge": 0.14995861826476198,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22306",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7919973544973545,
+          "p_conservative": 0.7919973544973545,
+          "edge": 0.13982344145387626,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.476923076923077,
+      "ticket_win_prob": 0.6090509055433706,
+      "ticket_ev": 1.000234919008015,
+      "result_return_factor": 2.476923076923077,
+      "pnl": 2.9047397978810214
+    },
+    {
+      "slip_id": "2025-09-12-001",
+      "date": "2025-09-12",
+      "stake": 2.0248457007728953,
+      "legs": [
+        {
+          "fixture_id": "20721",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7705782550836301,
+          "p_conservative": 0.7705782550836301,
+          "edge": 0.05629254079791579,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21551",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7802391140247097,
+          "p_conservative": 0.7802391140247097,
+          "edge": 0.04690578069137641,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.9090909090909092,
+      "ticket_win_prob": 0.6012352950331583,
+      "ticket_ev": 0.2992981854377494,
+      "result_return_factor": 0.0,
+      "pnl": -2.0248457007728953
+    },
+    {
+      "slip_id": "2025-09-13-001",
+      "date": "2025-09-13",
+      "stake": 1.984348786757437,
+      "legs": [
+        {
+          "fixture_id": "3129",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7236760946647977,
+          "p_conservative": 0.7236760946647977,
+          "edge": 0.07150218162131938,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22308",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7605625441645413,
+          "p_conservative": 0.7605625441645413,
+          "edge": 0.06825485185684899,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.214814814814815,
+      "ticket_win_prob": 0.5504009317093179,
+      "ticket_ev": 0.4346440939773546,
+      "result_return_factor": 2.214814814814815,
+      "pnl": 2.410616303912738
+    },
+    {
+      "slip_id": "2025-09-14-001",
+      "date": "2025-09-14",
+      "stake": 2.0325611128356917,
+      "legs": [
+        {
+          "fixture_id": "20200",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.6970404184390917,
+          "p_conservative": 0.6970404184390917,
+          "edge": 0.04486650539561343,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20724",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6336377216575945,
+          "p_conservative": 0.6336377216575945,
+          "edge": 0.03363772165759438,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.44167110264300236,
+      "ticket_ev": 0.26162118511929017,
+      "result_return_factor": 0.0,
+      "pnl": -2.0325611128356917
+    },
+    {
+      "slip_id": "2025-09-20-001",
+      "date": "2025-09-20",
+      "stake": 1.9919098905789778,
+      "legs": [
+        {
+          "fixture_id": "20202",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8085689237498683,
+          "p_conservative": 0.8085689237498683,
+          "edge": 0.05856892374986833,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21562",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.692649796488733,
+          "p_conservative": 0.692649796488733,
+          "edge": 0.056286160125096685,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.095238095238095,
+      "ticket_win_prob": 0.5600551004824602,
+      "ticket_ev": 0.3454943443014738,
+      "result_return_factor": 2.095238095238095,
+      "pnl": 2.1816155944436417
+    },
+    {
+      "slip_id": "2025-09-21-001",
+      "date": "2025-09-21",
+      "stake": 2.035542202467851,
+      "legs": [
+        {
+          "fixture_id": "21565",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6795375508246795,
+          "p_conservative": 0.6795375508246795,
+          "edge": 0.07953755082467939,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19194",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7673767191716657,
+          "p_conservative": 0.7673767191716657,
+          "edge": 0.05309100488595142,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.333333333333333,
+      "ticket_win_prob": 0.5214612963057916,
+      "ticket_ev": 0.4411895738948893,
+      "result_return_factor": 2.333333333333333,
+      "pnl": 2.714056269957134
+    },
+    {
+      "slip_id": "2025-09-27-001",
+      "date": "2025-09-27",
+      "stake": 2.0898233278669935,
+      "legs": [
+        {
+          "fixture_id": "3136",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7292160056492095,
+          "p_conservative": 0.7292160056492095,
+          "edge": 0.12921600564920943,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21573",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.09825024515244574,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.5472213071823022,
+      "ticket_ev": 0.8326994082302542,
+      "result_return_factor": 2.555555555555555,
+      "pnl": 3.2508362877930996
+    },
+    {
+      "slip_id": "2025-09-28-001",
+      "date": "2025-09-28",
+      "stake": 2.1548400536228556,
+      "legs": [
+        {
+          "fixture_id": "22320",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7307156780840991,
+          "p_conservative": 0.7307156780840991,
+          "edge": 0.130715678084099,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19201",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6926819946904709,
+          "p_conservative": 0.6926819946904709,
+          "edge": 0.10444670057282379,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.833333333333333,
+      "ticket_win_prob": 0.5061535934468937,
+      "ticket_ev": 0.9354200496365762,
+      "result_return_factor": 0.0,
+      "pnl": -2.1548400536228556
+    },
+    {
+      "slip_id": "2025-09-29-001",
+      "date": "2025-09-29",
+      "stake": 2.1117432525503985,
+      "legs": [
+        {
+          "fixture_id": "21269",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6970229678871656,
+          "p_conservative": 0.6970229678871656,
+          "edge": 0.10878767376951848,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "11984",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6769897422940154,
+          "p_conservative": 0.6769897422940154,
+          "edge": 0.05794212324639636,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.746153846153846,
+      "ticket_win_prob": 0.471877399402942,
+      "ticket_ev": 0.6247548811158216,
+      "result_return_factor": 0.0,
+      "pnl": -2.1117432525503985
+    },
+    {
+      "slip_id": "2025-10-02-001",
+      "date": "2025-10-02",
+      "stake": 2.0695083874993903,
+      "legs": [
+        {
+          "fixture_id": "23466",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7332500893259016,
+          "p_conservative": 0.7332500893259016,
+          "edge": 0.13325008932590154,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "23092",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.011965007811235884,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5,
+      "ticket_win_prob": 0.49760673593030824,
+      "ticket_ev": 0.5049948967105273,
+      "result_return_factor": 0.0,
+      "pnl": -2.0695083874993903
+    },
+    {
+      "slip_id": "2025-10-03-001",
+      "date": "2025-10-03",
+      "stake": 2.0281182197494023,
+      "legs": [
+        {
+          "fixture_id": "11985",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7779423305739095,
+          "p_conservative": 0.7779423305739095,
+          "edge": 0.12576841753043122,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4008",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7770061728395062,
+          "p_conservative": 0.7770061728395062,
+          "edge": 0.12483225979602797,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.351111111111111,
+      "ticket_win_prob": 0.6044659929690794,
+      "ticket_ev": 0.8541758828860537,
+      "result_return_factor": 2.351111111111111,
+      "pnl": 2.7402130613503033
+    },
+    {
+      "slip_id": "2025-10-04-001",
+      "date": "2025-10-04",
+      "stake": 2.0829224809764084,
+      "legs": [
+        {
+          "fixture_id": "4011",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.16447918211936896,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21583",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7536890170632059,
+          "p_conservative": 0.7536890170632059,
+          "edge": 0.08702235039653927,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5,
+      "ticket_win_prob": 0.5761795633368308,
+      "ticket_ev": 0.9174209329072298,
+      "result_return_factor": 2.5,
+      "pnl": 3.1243837214646124
+    },
+    {
+      "slip_id": "2025-10-05-001",
+      "date": "2025-10-05",
+      "stake": 2.145410155405701,
+      "legs": [
+        {
+          "fixture_id": "5751",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7673767191716657,
+          "p_conservative": 0.7673767191716657,
+          "edge": 0.14832910012404665,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22324",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.712931108258451,
+          "p_conservative": 0.712931108258451,
+          "edge": 0.11293110825845087,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.5470867348507897,
+      "ticket_ev": 1.014619866846765,
+      "result_return_factor": 2.692307692307692,
+      "pnl": 3.6306941091481084
+    },
+    {
+      "slip_id": "2025-10-17-001",
+      "date": "2025-10-17",
+      "stake": 2.218024037588663,
+      "legs": [
+        {
+          "fixture_id": "11994",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7840608465608465,
+          "p_conservative": 0.7840608465608465,
+          "edge": 0.09175315425315422,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21895",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.7973360470375397,
+          "p_conservative": 0.7973360470375397,
+          "edge": 0.047336047037539686,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.9259259259259258,
+      "ticket_win_prob": 0.6251599760337323,
+      "ticket_ev": 0.4525030889824804,
+      "result_return_factor": 1.9259259259259258,
+      "pnl": 2.0537259607302434
+    },
+    {
+      "slip_id": "2025-10-18-001",
+      "date": "2025-10-18",
+      "stake": 2.2590985568032678,
+      "legs": [
+        {
+          "fixture_id": "21590",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.769006237312381,
+          "p_conservative": 0.769006237312381,
+          "edge": 0.11683232426890278,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "18911",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6860417143453196,
+          "p_conservative": 0.6860417143453196,
+          "edge": 0.0978064202276725,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.6066666666666665,
+      "ticket_win_prob": 0.5275703573880296,
+      "ticket_ev": 0.8476139251841014,
+      "result_return_factor": 2.6066666666666665,
+      "pnl": 3.6296183479305832
+    },
+    {
+      "slip_id": "2025-10-19-001",
+      "date": "2025-10-19",
+      "stake": 2.3316909237618795,
+      "legs": [
+        {
+          "fixture_id": "20029",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7779423305739095,
+          "p_conservative": 0.7779423305739095,
+          "edge": 0.15889471152629042,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21283",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7577469793619468,
+          "p_conservative": 0.7577469793619468,
+          "edge": 0.1577469793619467,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.589483451110173,
+      "ticket_ev": 1.3688677257111739,
+      "result_return_factor": 2.692307692307692,
+      "pnl": 3.945938486366257
+    },
+    {
+      "slip_id": "2025-10-22-001",
+      "date": "2025-10-22",
+      "stake": 2.4106096934892047,
+      "legs": [
+        {
+          "fixture_id": "22734",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7676096883065316,
+          "p_conservative": 0.7676096883065316,
+          "edge": 0.1312460519428953,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19758",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7875881834215167,
+          "p_conservative": 0.7875881834215167,
+          "edge": 0.054254850088183426,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.142857142857143,
+      "ticket_win_prob": 0.604560319990098,
+      "ticket_ev": 0.7123023800830787,
+      "result_return_factor": 2.142857142857143,
+      "pnl": 2.7549825068448053
+    },
+    {
+      "slip_id": "2025-10-23-001",
+      "date": "2025-10-23",
+      "stake": 2.4657093436261013,
+      "legs": [
+        {
+          "fixture_id": "23110",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.20943472461566914,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "23486",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.8475529100529101,
+          "p_conservative": 0.8475529100529101,
+          "edge": 0.11421957671957683,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.272727272727273,
+      "ticket_win_prob": 0.6860387563458864,
+      "ticket_ev": 1.3787728645822683,
+      "result_return_factor": 2.272727272727273,
+      "pnl": 3.138175528251402
+    },
+    {
+      "slip_id": "2025-10-24-001",
+      "date": "2025-10-24",
+      "stake": 2.5284728541911288,
+      "legs": [
+        {
+          "fixture_id": "3702",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7737204389013835,
+          "p_conservative": 0.7737204389013835,
+          "edge": 0.05943472461566923,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19445",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7919973544973545,
+          "p_conservative": 0.7919973544973545,
+          "edge": 0.05866402116402125,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.9090909090909092,
+      "ticket_win_prob": 0.6127845407304278,
+      "ticket_ev": 0.4294899286090675,
+      "result_return_factor": 1.9090909090909092,
+      "pnl": 2.298611685628299
+    },
+    {
+      "slip_id": "2025-10-25-001",
+      "date": "2025-10-25",
+      "stake": 2.574445087903695,
+      "legs": [
+        {
+          "fixture_id": "20227",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7500403323737972,
+          "p_conservative": 0.7500403323737972,
+          "edge": 0.11367669601016084,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4028",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7275352626926477,
+          "p_conservative": 0.7275352626926477,
+          "edge": 0.10848764364502861,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5384615384615383,
+      "ticket_win_prob": 0.5456807902436513,
+      "ticket_ev": 0.9916497267273637,
+      "result_return_factor": 2.5384615384615383,
+      "pnl": 3.9606847506210685
+    },
+    {
+      "slip_id": "2025-10-26-001",
+      "date": "2025-10-26",
+      "stake": 2.653658782916116,
+      "legs": [
+        {
+          "fixture_id": "3710",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8189477577802172,
+          "p_conservative": 0.8189477577802172,
+          "edge": 0.21894775778021713,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21300",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.8025611975143337,
+          "p_conservative": 0.8025611975143337,
+          "edge": 0.18351357846671468,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.6572556931857697,
+      "ticket_ev": 2.042082140125524,
+      "result_return_factor": 2.692307692307692,
+      "pnl": 4.490807171088811
+    },
+    {
+      "slip_id": "2025-10-29-001",
+      "date": "2025-10-29",
+      "stake": 2.743474926337892,
+      "legs": [
+        {
+          "fixture_id": "5776",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7547545339627996,
+          "p_conservative": 0.7547545339627996,
+          "edge": 0.06244684165510728,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2961",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7048251404354428,
+          "p_conservative": 0.7048251404354428,
+          "edge": 0.038158473768776124,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1666666666666665,
+      "ticket_win_prob": 0.5319699703946174,
+      "ticket_ev": 0.418658670237185,
+      "result_return_factor": 2.1666666666666665,
+      "pnl": 3.200720747394207
+    },
+    {
+      "slip_id": "2025-10-31-001",
+      "date": "2025-10-31",
+      "stake": 2.8074893412857764,
+      "legs": [
+        {
+          "fixture_id": "4036",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.667385966592888,
+          "p_conservative": 0.667385966592888,
+          "edge": 0.04833834754526889,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19769",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8085689237498683,
+          "p_conservative": 0.8085689237498683,
+          "edge": 0.030791145972090428,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.0769230769230766,
+      "ticket_win_prob": 0.539627552733777,
+      "ticket_ev": 0.33904621788603856,
+      "result_return_factor": 2.0769230769230766,
+      "pnl": 3.02345005984622
+    },
+    {
+      "slip_id": "2025-11-01-001",
+      "date": "2025-11-01",
+      "stake": 2.8679583424827007,
+      "legs": [
+        {
+          "fixture_id": "19457",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7265723907879202,
+          "p_conservative": 0.7265723907879202,
+          "edge": 0.12657239078792015,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "12027",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7066527076968843,
+          "p_conservative": 0.7066527076968843,
+          "edge": 0.10665270769688417,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5134343472880826,
+      "ticket_ev": 1.222342545356233,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 5.098592608858133
+    },
+    {
+      "slip_id": "2025-11-02-001",
+      "date": "2025-11-02",
+      "stake": 2.969930194659863,
+      "legs": [
+        {
+          "fixture_id": "19233",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.730894477102454,
+          "p_conservative": 0.730894477102454,
+          "edge": 0.14265918298480695,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "18930",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7964426880990679,
+          "p_conservative": 0.7964426880990679,
+          "edge": 0.10413499579137564,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4555555555555553,
+      "ticket_win_prob": 0.5821155620602412,
+      "ticket_ev": 1.2753388184984453,
+      "result_return_factor": 0.0,
+      "pnl": -2.969930194659863
+    },
+    {
+      "slip_id": "2025-11-03-001",
+      "date": "2025-11-03",
+      "stake": 2.910531590766666,
+      "legs": [
+        {
+          "fixture_id": "20046",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6788302013970254,
+          "p_conservative": 0.6788302013970254,
+          "edge": 0.09059490727937836,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "12028",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6519351422064574,
+          "p_conservative": 0.6519351422064574,
+          "edge": 0.05193514220645734,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.833333333333333,
+      "ticket_win_prob": 0.44255326388180793,
+      "ticket_ev": 0.7389866320872127,
+      "result_return_factor": 0.0,
+      "pnl": -2.910531590766666
+    },
+    {
+      "slip_id": "2025-11-06-001",
+      "date": "2025-11-06",
+      "stake": 2.8523209589513328,
+      "legs": [
+        {
+          "fixture_id": "23497",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8481433683711767,
+          "p_conservative": 0.8481433683711767,
+          "edge": 0.24814336837117656,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "23136",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7054123112659698,
+          "p_conservative": 0.7054123112659698,
+          "edge": 0.10541231126596973,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5982907737676165,
+      "ticket_ev": 1.8880049120613964,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 5.070792815913479
+    },
+    {
+      "slip_id": "2025-11-07-001",
+      "date": "2025-11-07",
+      "stake": 2.9537368152696026,
+      "legs": [
+        {
+          "fixture_id": "21616",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.07863167447790242,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "12030",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7673767191716657,
+          "p_conservative": 0.7673767191716657,
+          "edge": 0.05309100488595142,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.333333333333333,
+      "ticket_win_prob": 0.5207661478868266,
+      "ticket_ev": 0.6354108521024565,
+      "result_return_factor": 2.333333333333333,
+      "pnl": 3.9383157536928026
+    },
+    {
+      "slip_id": "2025-11-08-001",
+      "date": "2025-11-08",
+      "stake": 3.0325031303434584,
+      "legs": [
+        {
+          "fixture_id": "3723",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.769006237312381,
+          "p_conservative": 0.769006237312381,
+          "edge": 0.1326426009487447,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3169",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.09781251545270242,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.357142857142857,
+      "ticket_win_prob": 0.5878892593452625,
+      "ticket_ev": 1.1697546293403693,
+      "result_return_factor": 2.357142857142857,
+      "pnl": 4.115539962608979
+    },
+    {
+      "slip_id": "2025-11-09-001",
+      "date": "2025-11-09",
+      "stake": 3.1148139295956376,
+      "legs": [
+        {
+          "fixture_id": "19241",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7645893873319215,
+          "p_conservative": 0.7645893873319215,
+          "edge": 0.1645893873319214,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20241",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6905217433157654,
+          "p_conservative": 0.6905217433157654,
+          "edge": 0.10228644919811836,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.833333333333333,
+      "ticket_win_prob": 0.5279655966611715,
+      "ticket_ev": 1.5446440890822473,
+      "result_return_factor": 2.833333333333333,
+      "pnl": 5.710492204258668
+    },
+    {
+      "slip_id": "2025-11-21-001",
+      "date": "2025-11-21",
+      "stake": 3.229023773680811,
+      "legs": [
+        {
+          "fixture_id": "5800",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8512529137529139,
+          "p_conservative": 0.8512529137529139,
+          "edge": 0.073475135975136,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19245",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7733655869233743,
+          "p_conservative": 0.7733655869233743,
+          "edge": 0.059079872637660014,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.7999999999999996,
+      "ticket_win_prob": 0.6583297092647548,
+      "ticket_ev": 0.5973483341644737,
+      "result_return_factor": 1.7999999999999996,
+      "pnl": 2.583219018944648
+    },
+    {
+      "slip_id": "2025-11-22-001",
+      "date": "2025-11-22",
+      "stake": 3.2806881540597037,
+      "legs": [
+        {
+          "fixture_id": "4055",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.16218886407827693,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "5386",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.09825024515244574,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.6066666666666665,
+      "ticket_win_prob": 0.5631364172040612,
+      "ticket_ev": 1.535063275667134,
+      "result_return_factor": 2.6066666666666665,
+      "pnl": 5.270972300855924
+    },
+    {
+      "slip_id": "2025-11-23-001",
+      "date": "2025-11-23",
+      "stake": 3.3861076000768224,
+      "legs": [
+        {
+          "fixture_id": "5389",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.16218886407827693,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22360",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8230158991481297,
+          "p_conservative": 0.8230158991481297,
+          "edge": 0.13070820684043738,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4555555555555553,
+      "ticket_win_prob": 0.6176110133000967,
+      "ticket_ev": 1.7491892162773957,
+      "result_return_factor": 2.4555555555555553,
+      "pnl": 4.928667729000707
+    },
+    {
+      "slip_id": "2025-11-24-001",
+      "date": "2025-11-24",
+      "stake": 3.4846809546568362,
+      "legs": [
+        {
+          "fixture_id": "20059",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7955246913580246,
+          "p_conservative": 0.7955246913580246,
+          "edge": 0.062191358024691334,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "12046",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.05943472461566923,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.8181818181818183,
+      "ticket_win_prob": 0.6439253094743479,
+      "ticket_ev": 0.5950904310645626,
+      "result_return_factor": 1.8181818181818183,
+      "pnl": 2.8511025992646846
+    },
+    {
+      "slip_id": "2025-11-27-001",
+      "date": "2025-11-27",
+      "stake": 3.5417030066421304,
+      "legs": [
+        {
+          "fixture_id": "23521",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.8532744905742616,
+          "p_conservative": 0.8532744905742616,
+          "edge": 0.13898877628854733,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21329",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7421409312511855,
+          "p_conservative": 0.7421409312511855,
+          "edge": 0.12309331220356645,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.2615384615384615,
+      "ticket_win_prob": 0.6332499250476634,
+      "ticket_ev": 1.530437378497721,
+      "result_return_factor": 2.2615384615384615,
+      "pnl": 4.467994562225456
+    },
+    {
+      "slip_id": "2025-11-28-001",
+      "date": "2025-11-28",
+      "stake": 3.6310628978866397,
+      "legs": [
+        {
+          "fixture_id": "19253",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7048251404354428,
+          "p_conservative": 0.7048251404354428,
+          "edge": 0.0684615040718064,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21330",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8085689237498683,
+          "p_conservative": 0.8085689237498683,
+          "edge": 0.05856892374986833,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.095238095238095,
+      "ticket_win_prob": 0.5698997052337358,
+      "ticket_ev": 0.7047006120368363,
+      "result_return_factor": 2.095238095238095,
+      "pnl": 3.9768784119710805
+    },
+    {
+      "slip_id": "2025-11-29-001",
+      "date": "2025-11-29",
+      "stake": 3.710600466126061,
+      "legs": [
+        {
+          "fixture_id": "3740",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2222222222222223,
+          "p_model": 0.944973544973545,
+          "p_conservative": 0.944973544973545,
+          "edge": 0.1267917267917269,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2982",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7055121913417771,
+          "p_conservative": 0.7055121913417771,
+          "edge": 0.11727689722413004,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.077777777777778,
+      "ticket_win_prob": 0.6666903564742931,
+      "ticket_ev": 1.4294509714474273,
+      "result_return_factor": 2.077777777777778,
+      "pnl": 3.9992027246025335
+    },
+    {
+      "slip_id": "2025-11-30-001",
+      "date": "2025-11-30",
+      "stake": 3.7905845206181117,
+      "legs": [
+        {
+          "fixture_id": "19259",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6729642568490656,
+          "p_conservative": 0.6729642568490656,
+          "edge": 0.07296425684906549,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4376",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7577469793619468,
+          "p_conservative": 0.7577469793619468,
+          "edge": 0.0654392870542545,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.407407407407407,
+      "ticket_win_prob": 0.5099366328459367,
+      "ticket_ev": 0.8628326628087534,
+      "result_return_factor": 2.407407407407407,
+      "pnl": 5.334896732721785
+    },
+    {
+      "slip_id": "2025-12-01-001",
+      "date": "2025-12-01",
+      "stake": 3.8972824552725474,
+      "legs": [
+        {
+          "fixture_id": "21942",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7488925755093779,
+          "p_conservative": 0.7488925755093779,
+          "edge": 0.0822259088427113,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21640",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6825939966587846,
+          "p_conservative": 0.6825939966587846,
+          "edge": 0.06354637761116555,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4230769230769234,
+      "ticket_win_prob": 0.5111895761850369,
+      "ticket_ev": 0.9300929483736712,
+      "result_return_factor": 2.4230769230769234,
+      "pnl": 5.546132724810934
+    },
+    {
+      "slip_id": "2025-12-03-001",
+      "date": "2025-12-03",
+      "stake": 4.008205109768766,
+      "legs": [
+        {
+          "fixture_id": "461",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7082558445994942,
+          "p_conservative": 0.7082558445994942,
+          "edge": 0.05608193155601593,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2992",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6349396345538322,
+          "p_conservative": 0.6349396345538322,
+          "edge": 0.03493963455383209,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.4496997071406186,
+      "ticket_ev": 0.598154809399959,
+      "result_return_factor": 0.0,
+      "pnl": -4.008205109768766
+    },
+    {
+      "slip_id": "2025-12-05-001",
+      "date": "2025-12-05",
+      "stake": 3.928041007573391,
+      "legs": [
+        {
+          "fixture_id": "12051",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7840608465608465,
+          "p_conservative": 0.7840608465608465,
+          "edge": 0.13188693351736824,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21642",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8531719586514107,
+          "p_conservative": 0.8531719586514107,
+          "edge": 0.10317195865141071,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.0444444444444443,
+      "ticket_win_prob": 0.6689387281622006,
+      "ticket_ev": 1.443979559789062,
+      "result_return_factor": 2.0444444444444443,
+      "pnl": 4.102620607909985
+    },
+    {
+      "slip_id": "2025-12-06-001",
+      "date": "2025-12-06",
+      "stake": 4.01009341973159,
+      "legs": [
+        {
+          "fixture_id": "4073",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.8880122358383229,
+          "p_conservative": 0.8880122358383229,
+          "edge": 0.1546789025049896,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3748",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7135323514844965,
+          "p_conservative": 0.7135323514844965,
+          "edge": 0.12529705736684937,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.3181818181818183,
+      "ticket_win_prob": 0.6336254587847238,
+      "ticket_ev": 1.8801684632319813,
+      "result_return_factor": 2.3181818181818183,
+      "pnl": 5.286032235100733
+    },
+    {
+      "slip_id": "2025-12-07-001",
+      "date": "2025-12-07",
+      "stake": 4.115814064433605,
+      "legs": [
+        {
+          "fixture_id": "4386",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7875881834215167,
+          "p_conservative": 0.7875881834215167,
+          "edge": 0.16854056437389764,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22374",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.8128370071853656,
+          "p_conservative": 0.8128370071853656,
+          "edge": 0.16066309414188729,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.476923076923077,
+      "ticket_win_prob": 0.6401808219069044,
+      "ticket_ev": 2.410544429784879,
+      "result_return_factor": 2.476923076923077,
+      "pnl": 6.078740772086556
+    },
+    {
+      "slip_id": "2025-12-08-001",
+      "date": "2025-12-08",
+      "stake": 4.237388879875336,
+      "legs": [
+        {
+          "fixture_id": "4775",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.8189477577802172,
+          "p_conservative": 0.8189477577802172,
+          "edge": 0.08561442444688394,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "5414",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6790699333357854,
+          "p_conservative": 0.6790699333357854,
+          "edge": 0.07906993333578527,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.272727272727273,
+      "ticket_win_prob": 0.556122799281303,
+      "ticket_ev": 1.1183124053967939,
+      "result_return_factor": 2.272727272727273,
+      "pnl": 5.393040392568611
+    },
+    {
+      "slip_id": "2025-12-11-001",
+      "date": "2025-12-11",
+      "stake": 4.345249687726708,
+      "legs": [
+        {
+          "fixture_id": "23167",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7352419096807973,
+          "p_conservative": 0.7352419096807973,
+          "edge": 0.1352419096807972,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "23529",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.8641277738292663,
+          "p_conservative": 0.8641277738292663,
+          "edge": 0.13079444049593303,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.272727272727273,
+      "ticket_win_prob": 0.6353429546384458,
+      "ticket_ev": 1.9291225287325446,
+      "result_return_factor": 0.0,
+      "pnl": -4.345249687726708
+    },
+    {
+      "slip_id": "2025-12-12-001",
+      "date": "2025-12-12",
+      "stake": 4.258344693972174,
+      "legs": [
+        {
+          "fixture_id": "19269",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6841471734118301,
+          "p_conservative": 0.6841471734118301,
+          "edge": 0.065099554364211,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4080",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6581522343734129,
+          "p_conservative": 0.6581522343734129,
+          "edge": 0.05815223437341277,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.4502729908212507,
+      "ticket_ev": 0.9039334633811256,
+      "result_return_factor": 2.692307692307692,
+      "pnl": 7.206429482106755
+    },
+    {
+      "slip_id": "2025-12-13-001",
+      "date": "2025-12-13",
+      "stake": 4.4024732836143095,
+      "legs": [
+        {
+          "fixture_id": "3189",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7325111914414668,
+          "p_conservative": 0.7325111914414668,
+          "edge": 0.11346357239384774,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "18970",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6629693805339378,
+          "p_conservative": 0.6629693805339378,
+          "edge": 0.07473408641629076,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.746153846153846,
+      "ticket_win_prob": 0.485632490824126,
+      "ticket_ev": 1.4687598836430604,
+      "result_return_factor": 2.746153846153846,
+      "pnl": 7.687395656772678
+    },
+    {
+      "slip_id": "2025-12-14-001",
+      "date": "2025-12-14",
+      "stake": 4.556221196749763,
+      "legs": [
+        {
+          "fixture_id": "19273",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.725389778021357,
+          "p_conservative": 0.725389778021357,
+          "edge": 0.12538977802135687,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3762",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.09039638036025543,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.833333333333333,
+      "ticket_win_prob": 0.4922724797077875,
+      "ticket_ev": 1.7986686720102716,
+      "result_return_factor": 2.833333333333333,
+      "pnl": 8.35307219404123
+    },
+    {
+      "slip_id": "2025-12-15-001",
+      "date": "2025-12-15",
+      "stake": 4.723282640630587,
+      "legs": [
+        {
+          "fixture_id": "4400",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6717725148265975,
+          "p_conservative": 0.6717725148265975,
+          "edge": 0.07177251482659741,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3003",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.05943472461566923,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.222222222222222,
+      "ticket_win_prob": 0.5437560005430425,
+      "ticket_ev": 0.984080199599787,
+      "result_return_factor": 0.0,
+      "pnl": -4.723282640630587
+    },
+    {
+      "slip_id": "2025-12-19-001",
+      "date": "2025-12-19",
+      "stake": 4.6288169878179755,
+      "legs": [
+        {
+          "fixture_id": "4791",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.07863167447790242,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4090",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3,
+          "p_model": 0.7853394530502964,
+          "p_conservative": 0.7853394530502964,
+          "edge": 0.016108683819527236,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1666666666666665,
+      "ticket_win_prob": 0.5329562280570828,
+      "ticket_ev": 0.7162561702690579,
+      "result_return_factor": 0.0,
+      "pnl": -4.6288169878179755
+    },
+    {
+      "slip_id": "2025-12-20-001",
+      "date": "2025-12-20",
+      "stake": 4.536240648061616,
+      "legs": [
+        {
+          "fixture_id": "19278",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.14543156307174998,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3196",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.11406052183228765,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5384615384615383,
+      "ticket_win_prob": 0.573683646700236,
+      "ticket_ev": 2.0697680865971813,
+      "result_return_factor": 2.5384615384615383,
+      "pnl": 6.97883176624864
+    },
+    {
+      "slip_id": "2025-12-21-001",
+      "date": "2025-12-21",
+      "stake": 4.675817283386589,
+      "legs": [
+        {
+          "fixture_id": "21965",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8277804957599478,
+          "p_conservative": 0.8277804957599478,
+          "edge": 0.07778049575994783,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20085",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7919973544973545,
+          "p_conservative": 0.7919973544973545,
+          "edge": 0.07771164021164023,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.8666666666666665,
+      "ticket_win_prob": 0.6555999627463873,
+      "ticket_ev": 1.046385238634779,
+      "result_return_factor": 1.8666666666666665,
+      "pnl": 4.052374978935043
+    },
+    {
+      "slip_id": "2025-12-26-001",
+      "date": "2025-12-26",
+      "stake": 4.756864782965289,
+      "legs": [
+        {
+          "fixture_id": "2636",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.844472181771953,
+          "p_conservative": 0.844472181771953,
+          "edge": 0.11113884843861976,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19286",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6780615784821213,
+          "p_conservative": 0.6780615784821213,
+          "edge": 0.07806157848212125,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.272727272727273,
+      "ticket_win_prob": 0.5726041405565314,
+      "ticket_ev": 1.4335908324744182,
+      "result_return_factor": 2.272727272727273,
+      "pnl": 6.054191541955824
+    },
+    {
+      "slip_id": "2025-12-27-001",
+      "date": "2025-12-27",
+      "stake": 4.8779486138044055,
+      "legs": [
+        {
+          "fixture_id": "3015",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8160398401239434,
+          "p_conservative": 0.8160398401239434,
+          "edge": 0.21603984012394328,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3197",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6736396318832822,
+          "p_conservative": 0.6736396318832822,
+          "edge": 0.07363963188328215,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5497167775031857,
+      "ticket_ev": 2.5706352551030642,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 8.671908646763384
+    },
+    {
+      "slip_id": "2025-12-28-001",
+      "date": "2025-12-28",
+      "stake": 5.051386786739673,
+      "legs": [
+        {
+          "fixture_id": "19512",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6886574074074074,
+          "p_conservative": 0.6886574074074074,
+          "edge": 0.08865740740740735,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "504",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7629511489160611,
+          "p_conservative": 0.7629511489160611,
+          "edge": 0.04866543463034678,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.333333333333333,
+      "ticket_win_prob": 0.5254119601910374,
+      "ticket_ev": 1.1414176243029872,
+      "result_return_factor": 2.333333333333333,
+      "pnl": 6.735182382319563
+    },
+    {
+      "slip_id": "2025-12-29-001",
+      "date": "2025-12-29",
+      "stake": 5.186090434386065,
+      "legs": [
+        {
+          "fixture_id": "2072",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7018756420434867,
+          "p_conservative": 0.7018756420434867,
+          "edge": 0.11364034792583966,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "1520",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.722386775018354,
+          "p_conservative": 0.722386775018354,
+          "edge": 0.03007908271066173,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4555555555555553,
+      "ticket_win_prob": 0.507025681519731,
+      "ticket_ev": 1.270746334044813,
+      "result_return_factor": 2.4555555555555553,
+      "pnl": 7.54864274338416
+    },
+    {
+      "slip_id": "2025-12-30-001",
+      "date": "2025-12-30",
+      "stake": 5.337063289253748,
+      "legs": [
+        {
+          "fixture_id": "3018",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.1281155457557327,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "507",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6490998617528125,
+          "p_conservative": 0.6490998617528125,
+          "edge": 0.060864567635165456,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.6714285714285713,
+      "ticket_win_prob": 0.49622333142658565,
+      "ticket_ev": 1.7378822229611206,
+      "result_return_factor": 2.6714285714285713,
+      "pnl": 8.920520069181263
+    },
+    {
+      "slip_id": "2026-01-01-001",
+      "date": "2026-01-01",
+      "stake": 5.515473690637373,
+      "legs": [
+        {
+          "fixture_id": "1531",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.09825024515244574,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2085",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8512529137529139,
+          "p_conservative": 0.8512529137529139,
+          "edge": 0.073475135975136,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.971428571428571,
+      "ticket_win_prob": 0.6388007512148579,
+      "ticket_ev": 1.4304383906500766,
+      "result_return_factor": 1.971428571428571,
+      "pnl": 5.357888728047732
+    },
+    {
+      "slip_id": "2026-01-03-001",
+      "date": "2026-01-03",
+      "stake": 5.622631465198327,
+      "legs": [
+        {
+          "fixture_id": "5054",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7274687043767277,
+          "p_conservative": 0.7274687043767277,
+          "edge": 0.09110506801309137,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4422",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6860417143453196,
+          "p_conservative": 0.6860417143453196,
+          "edge": 0.0669940952977005,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5384615384615383,
+      "ticket_win_prob": 0.4990738770831788,
+      "ticket_ev": 1.5005669960810046,
+      "result_return_factor": 0.0,
+      "pnl": -5.622631465198327
+    },
+    {
+      "slip_id": "2026-01-04-001",
+      "date": "2026-01-04",
+      "stake": 5.5101788358943615,
+      "legs": [
+        {
+          "fixture_id": "522",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.09825024515244574,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4425",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.07217148981167676,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.214814814814815,
+      "ticket_win_prob": 0.573683646700236,
+      "ticket_ev": 1.4910711424416025,
+      "result_return_factor": 2.214814814814815,
+      "pnl": 6.693846882123521
+    },
+    {
+      "slip_id": "2026-01-07-001",
+      "date": "2026-01-07",
+      "stake": 5.644055773536832,
+      "legs": [
+        {
+          "fixture_id": "4434",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.11406052183228765,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "530",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7011238091406655,
+          "p_conservative": 0.7011238091406655,
+          "edge": 0.04894989609718725,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4095238095238094,
+      "ticket_win_prob": 0.5261402442655037,
+      "ticket_ev": 1.5111815167889686,
+      "result_return_factor": 2.4095238095238094,
+      "pnl": 7.955430995080486
+    },
+    {
+      "slip_id": "2026-01-10-001",
+      "date": "2026-01-10",
+      "stake": 5.803164393438441,
+      "legs": [
+        {
+          "fixture_id": "2658",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7246689510962666,
+          "p_conservative": 0.7246689510962666,
+          "edge": 0.12466895109626652,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "1547",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7005666481632709,
+          "p_conservative": 0.7005666481632709,
+          "edge": 0.10056664816327077,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5076788980975048,
+      "ticket_ev": 2.380569230837953,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 10.316736699446114
+    },
+    {
+      "slip_id": "2026-01-11-001",
+      "date": "2026-01-11",
+      "stake": 6.009499127427363,
+      "legs": [
+        {
+          "fixture_id": "4442",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6667401800212324,
+          "p_conservative": 0.6667401800212324,
+          "edge": 0.047692560973613296,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20094",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.2,
+          "p_model": 0.8664397038236334,
+          "p_conservative": 0.8664397038236334,
+          "edge": 0.033106370490300074,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.9384615384615385,
+      "ticket_win_prob": 0.5776901641049126,
+      "ticket_ev": 0.7201192675894396,
+      "result_return_factor": 1.9384615384615385,
+      "pnl": 5.639683796508756
+    },
+    {
+      "slip_id": "2026-01-12-001",
+      "date": "2026-01-12",
+      "stake": 6.122292803357538,
+      "legs": [
+        {
+          "fixture_id": "4445",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.64775869392248,
+          "p_conservative": 0.64775869392248,
+          "edge": 0.04775869392247989,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21349",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6516456093965994,
+          "p_conservative": 0.6516456093965994,
+          "edge": 0.032597990348980366,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.4221091088430598,
+      "ticket_ev": 0.8353721639927305,
+      "result_return_factor": 0.0,
+      "pnl": -6.122292803357538
+    },
+    {
+      "slip_id": "2026-01-16-001",
+      "date": "2026-01-16",
+      "stake": 5.999846947290386,
+      "legs": [
+        {
+          "fixture_id": "12079",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7680065189800391,
+          "p_conservative": 0.7680065189800391,
+          "edge": 0.07569882667234684,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3789",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.710766483968771,
+          "p_conservative": 0.710766483968771,
+          "edge": 0.04409981730210433,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1666666666666665,
+      "ticket_win_prob": 0.5458732931605376,
+      "ticket_ev": 1.0963248444589158,
+      "result_return_factor": 2.1666666666666665,
+      "pnl": 6.99982143850545
+    },
+    {
+      "slip_id": "2026-01-17-001",
+      "date": "2026-01-17",
+      "stake": 6.1398433760604965,
+      "legs": [
+        {
+          "fixture_id": "536",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8085689237498683,
+          "p_conservative": 0.8085689237498683,
+          "edge": 0.20856892374986824,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "1553",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7217160242246322,
+          "p_conservative": 0.7217160242246322,
+          "edge": 0.06954211118115394,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.5835571489603447,
+      "ticket_ev": 3.0165831126871883,
+      "result_return_factor": 2.555555555555555,
+      "pnl": 9.550867473871879
+    },
+    {
+      "slip_id": "2026-01-18-001",
+      "date": "2026-01-18",
+      "stake": 6.330860725537934,
+      "legs": [
+        {
+          "fixture_id": "4105",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.09825024515244574,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21972",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7320990313059527,
+          "p_conservative": 0.7320990313059527,
+          "edge": 0.07992511826247439,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.351111111111111,
+      "ticket_win_prob": 0.5493847992838209,
+      "ticket_ev": 1.8464886314289641,
+      "result_return_factor": 0.0,
+      "pnl": -6.330860725537934
+    },
+    {
+      "slip_id": "2026-01-19-001",
+      "date": "2026-01-19",
+      "stake": 6.204243511027175,
+      "legs": [
+        {
+          "fixture_id": "19840",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7205508485035144,
+          "p_conservative": 0.7205508485035144,
+          "edge": 0.13231555438586728,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4459",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.08375749152925738,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.55,
+      "ticket_win_prob": 0.5407187639256086,
+      "ticket_ev": 2.350371239031859,
+      "result_return_factor": 0.0,
+      "pnl": -6.204243511027175
+    },
+    {
+      "slip_id": "2026-01-20-001",
+      "date": "2026-01-20",
+      "stake": 6.080158640806632,
+      "legs": [
+        {
+          "fixture_id": "1032",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6535426117862623,
+          "p_conservative": 0.6535426117862623,
+          "edge": 0.034494992738643204,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3037",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7539514950565942,
+          "p_conservative": 0.7539514950565942,
+          "edge": 0.02061816172326092,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.202797202797203,
+      "ticket_win_prob": 0.4927394292394438,
+      "ticket_ev": 0.5192761702580161,
+      "result_return_factor": 2.202797202797203,
+      "pnl": 7.31319780572546
+    },
+    {
+      "slip_id": "2026-01-23-001",
+      "date": "2026-01-23",
+      "stake": 6.22642259692114,
+      "legs": [
+        {
+          "fixture_id": "5079",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7523986317828557,
+          "p_conservative": 0.7523986317828557,
+          "edge": 0.15239863178285562,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19535",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6289984617807008,
+          "p_conservative": 0.6289984617807008,
+          "edge": 0.04076316766305377,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.833333333333333,
+      "ticket_win_prob": 0.47325758203732016,
+      "ticket_ev": 2.122565561469579,
+      "result_return_factor": 0.0,
+      "pnl": -6.22642259692114
+    },
+    {
+      "slip_id": "2026-01-24-001",
+      "date": "2026-01-24",
+      "stake": 6.101894144982717,
+      "legs": [
+        {
+          "fixture_id": "3804",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7973360470375397,
+          "p_conservative": 0.7973360470375397,
+          "edge": 0.17828842798992062,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "5082",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8078568604884394,
+          "p_conservative": 0.8078568604884394,
+          "edge": 0.11554916818074712,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.3333333333333335,
+      "ticket_win_prob": 0.6441333957140095,
+      "ticket_ev": 3.069118045439301,
+      "result_return_factor": 0.0,
+      "pnl": -6.101894144982717
+    },
+    {
+      "slip_id": "2026-01-25-001",
+      "date": "2026-01-25",
+      "stake": 5.979856262083063,
+      "legs": [
+        {
+          "fixture_id": "20105",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.821338383838384,
+          "p_conservative": 0.821338383838384,
+          "edge": 0.15467171717171735,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "552",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6946180690357258,
+          "p_conservative": 0.6946180690357258,
+          "edge": 0.10638277491807868,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.55,
+      "ticket_win_prob": 0.570516482206742,
+      "ticket_ev": 2.7197404627181823,
+      "result_return_factor": 0.0,
+      "pnl": -5.979856262083063
+    },
+    {
+      "slip_id": "2026-01-29-001",
+      "date": "2026-01-29",
+      "stake": 5.860259136841401,
+      "legs": [
+        {
+          "fixture_id": "23210",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.11712703230797694,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20306",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6516456093965994,
+          "p_conservative": 0.6516456093965994,
+          "edge": 0.06341031527895236,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.4555555555555553,
+      "ticket_win_prob": 0.5274645843889464,
+      "ticket_ev": 1.730057442665844,
+      "result_return_factor": 2.4555555555555553,
+      "pnl": 8.529932743624705
+    },
+    {
+      "slip_id": "2026-01-30-001",
+      "date": "2026-01-30",
+      "stake": 6.030857791713896,
+      "legs": [
+        {
+          "fixture_id": "12093",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.759423812055391,
+          "p_conservative": 0.759423812055391,
+          "edge": 0.1594238120553909,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4471",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7352684237419439,
+          "p_conservative": 0.7352684237419439,
+          "edge": 0.11622080469432483,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.692307692307692,
+      "ticket_win_prob": 0.5583803492420656,
+      "ticket_ev": 3.0355219620418965,
+      "result_return_factor": 0.0,
+      "pnl": -6.030857791713896
+    },
+    {
+      "slip_id": "2026-01-31-001",
+      "date": "2026-01-31",
+      "stake": 5.910240635879618,
+      "legs": [
+        {
+          "fixture_id": "3214",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7734788359788359,
+          "p_conservative": 0.7734788359788359,
+          "edge": 0.18524354186118885,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19545",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7814696674345797,
+          "p_conservative": 0.7814696674345797,
+          "edge": 0.16242204838696062,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.746153846153846,
+      "ticket_win_prob": 0.6044502487200667,
+      "ticket_ev": 3.9002468470432916,
+      "result_return_factor": 0.0,
+      "pnl": -5.910240635879618
+    },
+    {
+      "slip_id": "2026-02-01-001",
+      "date": "2026-02-01",
+      "stake": 5.792035823162025,
+      "legs": [
+        {
+          "fixture_id": "21988",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.25,
+          "p_model": 0.9375,
+          "p_conservative": 0.9375,
+          "edge": 0.13749999999999996,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19316",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7246689510962666,
+          "p_conservative": 0.7246689510962666,
+          "edge": 0.10562133204864754,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.019230769230769,
+      "ticket_win_prob": 0.67937714165275,
+      "ticket_ev": 2.1535902902700075,
+      "result_return_factor": 0.0,
+      "pnl": -5.792035823162025
+    },
+    {
+      "slip_id": "2026-02-02-001",
+      "date": "2026-02-02",
+      "stake": 5.676195106698784,
+      "legs": [
+        {
+          "fixture_id": "5098",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.764479182119369,
+          "p_conservative": 0.764479182119369,
+          "edge": 0.07217148981167676,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21376",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.059584055430283445,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.3333333333333335,
+      "ticket_win_prob": 0.5187997874651649,
+      "ticket_ev": 1.1950254615555382,
+      "result_return_factor": 0.0,
+      "pnl": -5.676195106698784
+    },
+    {
+      "slip_id": "2026-02-05-001",
+      "date": "2026-02-05",
+      "stake": 5.562671204564809,
+      "legs": [
+        {
+          "fixture_id": "20314",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.11406052183228765,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2150",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6281043075678359,
+          "p_conservative": 0.6281043075678359,
+          "edge": 0.028104307567835773,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.6190476190476186,
+      "ticket_win_prob": 0.47134464626582695,
+      "ticket_ev": 1.3043021771722652,
+      "result_return_factor": 0.0,
+      "pnl": -5.562671204564809
+    },
+    {
+      "slip_id": "2026-02-06-001",
+      "date": "2026-02-06",
+      "stake": 5.451417780473512,
+      "legs": [
+        {
+          "fixture_id": "20315",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.7099023805114876,
+          "p_conservative": 0.7099023805114876,
+          "edge": 0.1216670863938405,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4125",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7779423305739095,
+          "p_conservative": 0.7779423305739095,
+          "edge": 0.11127566390724286,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.55,
+      "ticket_win_prob": 0.552263112375073,
+      "ticket_ev": 2.225655442794329,
+      "result_return_factor": 2.55,
+      "pnl": 8.449697559733941
+    },
+    {
+      "slip_id": "2026-02-07-001",
+      "date": "2026-02-07",
+      "stake": 5.620411731668191,
+      "legs": [
+        {
+          "fixture_id": "1605",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6889506514068887,
+          "p_conservative": 0.6889506514068887,
+          "edge": 0.10071535728924164,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19319",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3333333333333333,
+          "p_model": 0.8330561819836962,
+          "p_conservative": 0.8330561819836962,
+          "edge": 0.08305618198369624,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.2666666666666666,
+      "ticket_win_prob": 0.5739345992362032,
+      "ticket_ev": 1.691285445782001,
+      "result_return_factor": 0.0,
+      "pnl": -5.620411731668191
+    },
+    {
+      "slip_id": "2026-02-08-001",
+      "date": "2026-02-08",
+      "stake": 5.508003497034827,
+      "legs": [
+        {
+          "fixture_id": "21670",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7128346215812984,
+          "p_conservative": 0.7128346215812984,
+          "edge": 0.09378700253367933,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20274",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.7244292191575067,
+          "p_conservative": 0.7244292191575067,
+          "edge": 0.07225530611402842,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.476923076923077,
+      "ticket_win_prob": 0.5163982283005768,
+      "ticket_ev": 1.5371663925357695,
+      "result_return_factor": 0.0,
+      "pnl": -5.508003497034827
+    },
+    {
+      "slip_id": "2026-02-09-001",
+      "date": "2026-02-09",
+      "stake": 5.39784342709413,
+      "legs": [
+        {
+          "fixture_id": "1075",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.15042415819592392,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19865",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6519351422064574,
+          "p_conservative": 0.6519351422064574,
+          "edge": 0.05193514220645734,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.4892278802886208,
+      "ticket_ev": 1.9376440672589954,
+      "result_return_factor": 0.0,
+      "pnl": -5.39784342709413
+    },
+    {
+      "slip_id": "2026-02-10-001",
+      "date": "2026-02-10",
+      "stake": 5.289886558552247,
+      "legs": [
+        {
+          "fixture_id": "578",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.11406052183228765,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2712",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6460924788747179,
+          "p_conservative": 0.6460924788747179,
+          "edge": 0.0578571847570708,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.6714285714285713,
+      "ticket_win_prob": 0.484843404576278,
+      "ticket_ev": 1.561704239431074,
+      "result_return_factor": 0.0,
+      "pnl": -5.289886558552247
+    },
+    {
+      "slip_id": "2026-02-11-001",
+      "date": "2026-02-11",
+      "stake": 5.184088827381202,
+      "legs": [
+        {
+          "fixture_id": "4867",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.6786316744779025,
+          "p_conservative": 0.6786316744779025,
+          "edge": 0.07863167447790242,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3057",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.6780615784821213,
+          "p_conservative": 0.6780615784821213,
+          "edge": 0.02588766543864307,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.4601540644044517,
+      "ticket_ev": 0.9121366743435596,
+      "result_return_factor": 2.555555555555555,
+      "pnl": 8.06413817592631
+    },
+    {
+      "slip_id": "2026-02-13-001",
+      "date": "2026-02-13",
+      "stake": 5.3453715908997275,
+      "legs": [
+        {
+          "fixture_id": "20327",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5714285714285714,
+          "p_model": 0.7973360470375397,
+          "p_conservative": 0.7973360470375397,
+          "edge": 0.16097241067390333,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4135",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2222222222222223,
+          "p_model": 0.8875676689237424,
+          "p_conservative": 0.8875676689237424,
+          "edge": 0.06938585074192427,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 1.9206349206349207,
+      "ticket_win_prob": 0.7076896966179805,
+      "ticket_ev": 1.92012987475707,
+      "result_return_factor": 0.0,
+      "pnl": -5.3453715908997275
+    },
+    {
+      "slip_id": "2026-02-14-001",
+      "date": "2026-02-14",
+      "stake": 5.238464159081733,
+      "legs": [
+        {
+          "fixture_id": "21009",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.8702149095989552,
+          "p_conservative": 0.8702149095989552,
+          "edge": 0.1559291953132409,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "5507",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7004153982533893,
+          "p_conservative": 0.7004153982533893,
+          "edge": 0.10041539825338919,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.333333333333333,
+      "ticket_win_prob": 0.6095119224727894,
+      "ticket_ev": 2.211650681867259,
+      "result_return_factor": 0.0,
+      "pnl": -5.238464159081733
+    },
+    {
+      "slip_id": "2026-02-15-001",
+      "date": "2026-02-15",
+      "stake": 5.133694875900098,
+      "legs": [
+        {
+          "fixture_id": "20126",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.750424158195924,
+          "edge": 0.15042415819592392,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "21677",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7099023805114876,
+          "p_conservative": 0.7099023805114876,
+          "edge": 0.10990238051148749,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5327278962966155,
+      "ticket_ev": 2.4631453226192725,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 9.126568668266838
+    },
+    {
+      "slip_id": "2026-02-16-001",
+      "date": "2026-02-16",
+      "stake": 5.316226249265435,
+      "legs": [
+        {
+          "fixture_id": "21393",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7246689510962666,
+          "p_conservative": 0.7246689510962666,
+          "edge": 0.12466895109626652,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "20798",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.8513457088732883,
+          "p_conservative": 0.8513457088732883,
+          "edge": 0.07356793109551041,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1428571428571423,
+      "ticket_win_prob": 0.6169438018695134,
+      "ticket_ev": 1.7119441089209646,
+      "result_return_factor": 0.0,
+      "pnl": -5.316226249265435
+    },
+    {
+      "slip_id": "2026-02-17-001",
+      "date": "2026-02-17",
+      "stake": 5.209901724280127,
+      "legs": [
+        {
+          "fixture_id": "24287",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.77172088541997,
+          "p_conservative": 0.77172088541997,
+          "edge": 0.17172088541996988,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "19041",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7643672308908043,
+          "p_conservative": 0.7643672308908043,
+          "edge": 0.07205953858311198,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.407407407407407,
+      "ticket_win_prob": 0.5898781562090621,
+      "ticket_ev": 2.188560109226182,
+      "result_return_factor": 0.0,
+      "pnl": -5.209901724280127
+    },
+    {
+      "slip_id": "2026-02-18-001",
+      "date": "2026-02-18",
+      "stake": 5.105703689794525,
+      "legs": [
+        {
+          "fixture_id": "1632",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7700058226374016,
+          "p_conservative": 0.7700058226374016,
+          "edge": 0.07769813032970929,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "4500",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7047207390456819,
+          "p_conservative": 0.7047207390456819,
+          "edge": 0.03805407237901526,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1666666666666665,
+      "ticket_win_prob": 0.5426390723985078,
+      "ticket_ev": 0.897163990910911,
+      "result_return_factor": 0.0,
+      "pnl": -5.105703689794525
+    },
+    {
+      "slip_id": "2026-02-19-001",
+      "date": "2026-02-19",
+      "stake": 5.003589615998634,
+      "legs": [
+        {
+          "fixture_id": "24954",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7392434098525169,
+          "p_conservative": 0.7392434098525169,
+          "edge": 0.12019579080489784,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "25625",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.6745673928906495,
+          "p_conservative": 0.6745673928906495,
+          "edge": 0.022393479847171216,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.476923076923077,
+      "ticket_win_prob": 0.4986694996958062,
+      "ticket_ev": 1.1766741133767562,
+      "result_return_factor": 0.0,
+      "pnl": -5.003589615998634
+    },
+    {
+      "slip_id": "2026-02-20-001",
+      "date": "2026-02-20",
+      "stake": 4.903517823678661,
+      "legs": [
+        {
+          "fixture_id": "21011",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.20943472461566914,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22015",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7244292191575067,
+          "p_conservative": 0.7244292191575067,
+          "edge": 0.1244292191575066,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.7777777777777772,
+      "ticket_win_prob": 0.5863781655123007,
+      "ticket_ev": 3.083470470781233,
+      "result_return_factor": 2.7777777777777772,
+      "pnl": 8.717365019873172
+    },
+    {
+      "slip_id": "2026-02-21-001",
+      "date": "2026-02-21",
+      "stake": 5.077865124076125,
+      "legs": [
+        {
+          "fixture_id": "5519",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.7938202114603984,
+          "p_conservative": 0.7938202114603984,
+          "edge": 0.1938202114603983,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "2744",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.15726081157219096,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.555555555555555,
+      "ticket_win_prob": 0.6425456442577999,
+      "ticket_ev": 3.2602996209111232,
+      "result_return_factor": 0.0,
+      "pnl": -5.077865124076125
+    },
+    {
+      "slip_id": "2026-02-22-001",
+      "date": "2026-02-22",
+      "stake": 4.976307821594602,
+      "legs": [
+        {
+          "fixture_id": "20286",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.8094347246156692,
+          "p_conservative": 0.8094347246156692,
+          "edge": 0.1427680579490026,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "5895",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.8531719586514107,
+          "p_conservative": 0.8531719586514107,
+          "edge": 0.11983862531807743,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.045454545454546,
+      "ticket_win_prob": 0.6905870094008157,
+      "ticket_ev": 2.053047139168158,
+      "result_return_factor": 0.0,
+      "pnl": -4.976307821594602
+    },
+    {
+      "slip_id": "2026-02-23-001",
+      "date": "2026-02-23",
+      "stake": 4.876781665162711,
+      "legs": [
+        {
+          "fixture_id": "12128",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.701136744159052,
+          "p_conservative": 0.701136744159052,
+          "edge": 0.0344700774923854,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "22021",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5333333333333332,
+          "p_model": 0.6804743090352273,
+          "p_conservative": 0.6804743090352273,
+          "edge": 0.02830039599174905,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.3,
+      "ticket_win_prob": 0.4771055415208399,
+      "ticket_ev": 0.4747193164809131,
+      "result_return_factor": 2.3,
+      "pnl": 6.339816164711523
+    },
+    {
+      "slip_id": "2026-02-24-001",
+      "date": "2026-02-24",
+      "stake": 5.003577988456941,
+      "legs": [
+        {
+          "fixture_id": "2751",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6153846153846154,
+          "p_model": 0.7317410868812738,
+          "p_conservative": 0.7317410868812738,
+          "edge": 0.11269346783365475,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "3586",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.7,
+          "p_model": 0.6519351422064574,
+          "p_conservative": 0.6519351422064574,
+          "edge": 0.06369984808881035,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.746153846153846,
+      "ticket_win_prob": 0.47704772953425095,
+      "ticket_ev": 1.551341628942405,
+      "result_return_factor": 0.0,
+      "pnl": -5.003577988456941
+    },
+    {
+      "slip_id": "2026-02-25-001",
+      "date": "2026-02-25",
+      "stake": 4.903506428687802,
+      "legs": [
+        {
+          "fixture_id": "2757",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7519473915354923,
+          "p_conservative": 0.7519473915354923,
+          "edge": 0.08528072486882565,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "1109",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.7621327102110454,
+          "p_conservative": 0.7621327102110454,
+          "edge": 0.06982501790335316,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        }
+      ],
+      "ticket_odds": 2.1666666666666665,
+      "ticket_win_prob": 0.5730837034470708,
+      "ticket_ev": 1.1850860900415365,
+      "result_return_factor": 0.0,
+      "pnl": -4.903506428687802
+    },
+    {
+      "slip_id": "2026-02-26-001",
+      "date": "2026-02-26",
+      "stake": 4.805436300114046,
+      "legs": [
+        {
+          "fixture_id": "20333",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.25,
+          "p_model": 0.8481433683711767,
+          "p_conservative": 0.8481433683711767,
+          "edge": 0.04814336837117661,
+          "risk_flags": [
+            "closing_snapshot"
+          ]
+        },
+        {
+          "fixture_id": "24968",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7802391140247097,
+          "p_conservative": 0.7802391140247097,
+          "edge": 0.04690578069137641,
+          "risk_flags": []
+        }
+      ],
+      "ticket_odds": 1.7045454545454546,
+      "ticket_win_prob": 0.6617546303038598,
+      "ticket_ev": 0.6150518627792243,
+      "result_return_factor": 1.7045454545454546,
+      "pnl": 3.385648302353078
+    },
+    {
+      "slip_id": "2026-02-27-001",
+      "date": "2026-02-27",
+      "stake": 4.873149266161108,
+      "legs": [
+        {
+          "fixture_id": "19051",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.8254392212725546,
+          "p_conservative": 0.7379392212725546,
+          "edge": 0.15877255460588802,
+          "risk_flags": [
+            "missing_odds"
+          ]
+        },
+        {
+          "fixture_id": "20828",
+          "market_code": "dc_x2",
+          "selection": "dc_x2",
+          "line_num": 0.0,
+          "odds_used": 1.6666666666666665,
+          "p_model": 0.750424158195924,
+          "p_conservative": 0.685424158195924,
+          "edge": 0.08542415819592386,
+          "risk_flags": [
+            "low_sample_lt5",
+            "calibration_low_sample"
+          ]
+        }
+      ],
+      "ticket_odds": 2.5,
+      "ticket_win_prob": 0.5058013695404964,
+      "ticket_ev": 1.2889646658377751,
+      "result_return_factor": 0.0,
+      "pnl": -4.873149266161108
+    },
+    {
+      "slip_id": "2026-03-01-001",
+      "date": "2026-03-01",
+      "stake": 4.775686280837886,
+      "legs": [
+        {
+          "fixture_id": "20291",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4444444444444444,
+          "p_model": 0.8261607181205171,
+          "p_conservative": 0.7086607181205171,
+          "edge": 0.13385302581282477,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_6h"
+          ]
+        },
+        {
+          "fixture_id": "4518",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.4,
+          "p_model": 0.7875070248723935,
+          "p_conservative": 0.6700070248723935,
+          "edge": 0.07322131058667924,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_6h"
+          ]
+        }
+      ],
+      "ticket_odds": 2.022222222222222,
+      "ticket_win_prob": 0.47480765939186154,
+      "ticket_ev": -0.19023182140464298,
+      "result_return_factor": 2.022222222222222,
+      "pnl": 4.881812642634283
+    },
+    {
+      "slip_id": "2026-03-02-001",
+      "date": "2026-03-02",
+      "stake": 4.873322533690572,
+      "legs": [
+        {
+          "fixture_id": "20829",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7714504181864162,
+          "p_conservative": 0.6510375406443984,
+          "edge": 0.03811708485308296,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "low_sample_lt5",
+            "stale_odds_24h",
+            "calibration_low_sample"
+          ]
+        },
+        {
+          "fixture_id": "12137",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.2857142857142856,
+          "p_model": 0.7879247648954407,
+          "p_conservative": 0.6673513680373574,
+          "edge": 0.01014698711766282,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness",
+            "stale_odds_24h"
+          ]
+        }
+      ],
+      "ticket_odds": 1.7532467532467533,
+      "ticket_win_prob": 0.434470793392716,
+      "ticket_ev": -1.1611445916697356,
+      "result_return_factor": 0.0,
+      "pnl": -4.873322533690572
+    },
+    {
+      "slip_id": "2026-03-04-001",
+      "date": "2026-03-04",
+      "stake": 4.77585608301676,
+      "legs": [
+        {
+          "fixture_id": "615",
+          "market_code": "dc_1x",
+          "selection": "dc_1x",
+          "line_num": 0.0,
+          "odds_used": 1.5,
+          "p_model": 0.7990326444074601,
+          "p_conservative": 0.7765326444074602,
+          "edge": 0.10986597774079354,
+          "risk_flags": [
+            "feature_missingness"
+          ]
+        },
+        {
+          "fixture_id": "5139",
+          "market_code": "o15",
+          "selection": "o15",
+          "line_num": 0.0,
+          "odds_used": 1.3636363636363638,
+          "p_model": 0.7629432560595687,
+          "p_conservative": 0.7029432560595688,
+          "edge": 0.029609922726235416,
+          "risk_flags": [
+            "missing_odds",
+            "feature_missingness"
+          ]
+        }
+      ],
+      "ticket_odds": 2.045454545454546,
+      "ticket_win_prob": 0.5458583854963274,
+      "ticket_ev": 0.5565234209707599,
+      "result_return_factor": 2.045454545454546,
+      "pnl": 4.992940450426614
+    }
+  ]
+}

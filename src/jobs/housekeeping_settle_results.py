@@ -165,6 +165,20 @@ def settle_fixture_record(
                         "SELECT settle_fixture(%s, %s, %s)",
                         (flashscore_id, home_goals, away_goals),
                     )
+                # This job settles from Flashscore premium JSON snapshots.
+                try:
+                    cur.execute(
+                        """
+                        UPDATE fixture_results
+                        SET result_source = 'flashscore',
+                            settled_at = NOW()
+                        WHERE fixture_id = %s
+                        """,
+                        (fixture_id,),
+                    )
+                except Exception:
+                    # Backward compatibility: older schemas may not have result_source.
+                    pass
         return True
     except Exception as e:
         print(f"  Error settling fixture={fixture_id}: {e}")

@@ -1,0 +1,173 @@
+{
+  "generated_at_utc": "2026-03-05T02:28:50.897244+00:00",
+  "family": "anytime",
+  "baseline": {
+    "markets_scored": 4,
+    "auc_mean": 0.6148237163083133,
+    "brier_mean": 0.20626021841394235
+  },
+  "candidate_count": 20,
+  "results": [
+    {
+      "feature_dropped": "away_season_baseline_xg",
+      "auc_mean": 0.6111799983131089,
+      "auc_delta_vs_baseline": -0.003643717995204465,
+      "brier_mean": 0.2071293533618299,
+      "brier_delta_vs_baseline": 0.0008691349478875399,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "xg_net_diff",
+      "auc_mean": 0.6121900644871626,
+      "auc_delta_vs_baseline": -0.0026336518211507176,
+      "brier_mean": 0.20665996965938147,
+      "brier_delta_vs_baseline": 0.0003997512454391172,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_rolling_xg_p1",
+      "auc_mean": 0.6126110051569386,
+      "auc_delta_vs_baseline": -0.00221271115137478,
+      "brier_mean": 0.2069672047378193,
+      "brier_delta_vs_baseline": 0.0007069863238769458,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "lambda_away_l1",
+      "auc_mean": 0.6128592424128776,
+      "auc_delta_vs_baseline": -0.0019644738954357477,
+      "brier_mean": 0.20657622184374774,
+      "brier_delta_vs_baseline": 0.00031600342980539486,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_rolling_xg_h2_delta",
+      "auc_mean": 0.6132200172223271,
+      "auc_delta_vs_baseline": -0.0016036990859862321,
+      "brier_mean": 0.20644555454702831,
+      "brier_delta_vs_baseline": 0.00018533613308596708,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "adj_lambda_home_resolved",
+      "auc_mean": 0.6132541221553942,
+      "auc_delta_vs_baseline": -0.0015695941529191293,
+      "brier_mean": 0.20665702724494817,
+      "brier_delta_vs_baseline": 0.0003968088310058182,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "lambda_home_l1",
+      "auc_mean": 0.6148344009286696,
+      "auc_delta_vs_baseline": 1.0684620356249397e-05,
+      "brier_mean": 0.20644240152804122,
+      "brier_delta_vs_baseline": 0.00018218311409887167,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_rolling_xg_p1",
+      "auc_mean": 0.6151484173309248,
+      "auc_delta_vs_baseline": 0.0003247010226115066,
+      "brier_mean": 0.20646990462192738,
+      "brier_delta_vs_baseline": 0.00020968620798503257,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "adj_lambda_away_resolved",
+      "auc_mean": 0.6152524094901033,
+      "auc_delta_vs_baseline": 0.00042869318178995197,
+      "brier_mean": 0.20620156297376724,
+      "brier_delta_vs_baseline": -5.8655440175109375e-05,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_recent_xg_mean_5",
+      "auc_mean": 0.6159432795016683,
+      "auc_delta_vs_baseline": 0.0011195631933549333,
+      "brier_mean": 0.20604184583549406,
+      "brier_delta_vs_baseline": -0.00021837257844828373,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_season_baseline_xg",
+      "auc_mean": 0.6164445967830035,
+      "auc_delta_vs_baseline": 0.0016208804746901118,
+      "brier_mean": 0.20593636060466464,
+      "brier_delta_vs_baseline": -0.00032385780927771113,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_rolling_xg",
+      "auc_mean": 0.6181981641613066,
+      "auc_delta_vs_baseline": 0.0033744478529932342,
+      "brier_mean": 0.20562801601210962,
+      "brier_delta_vs_baseline": -0.0006322024018327321,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_rolling_xg_h2_delta",
+      "auc_mean": 0.6189243961206734,
+      "auc_delta_vs_baseline": 0.004100679812360064,
+      "brier_mean": 0.20582333818977633,
+      "brier_delta_vs_baseline": -0.0004368802241660197,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_recent_xg_mean_5",
+      "auc_mean": 0.6290709250172235,
+      "auc_delta_vs_baseline": 0.014247208708910164,
+      "brier_mean": 0.20144855986798132,
+      "brier_delta_vs_baseline": -0.004811658545961023,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_sample_size",
+      "auc_mean": 0.6293294024167144,
+      "auc_delta_vs_baseline": 0.014505686108401084,
+      "brier_mean": 0.20140198393252728,
+      "brier_delta_vs_baseline": -0.0048582344814150635,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_rolling_xg",
+      "auc_mean": 0.6293330879402286,
+      "auc_delta_vs_baseline": 0.014509371631915235,
+      "brier_mean": 0.20143082375459942,
+      "brier_delta_vs_baseline": -0.004829394659342928,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "goal_diff_proxy",
+      "auc_mean": 0.6295518989462445,
+      "auc_delta_vs_baseline": 0.014728182637931186,
+      "brier_mean": 0.20145959706534694,
+      "brier_delta_vs_baseline": -0.0048006213485954075,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_sample_size",
+      "auc_mean": 0.6295860497458361,
+      "auc_delta_vs_baseline": 0.014762333437522757,
+      "brier_mean": 0.2014072233146207,
+      "brier_delta_vs_baseline": -0.004852995099321661,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "away_rolling_sot",
+      "auc_mean": 0.6308117003963927,
+      "auc_delta_vs_baseline": 0.015987984088079332,
+      "brier_mean": 0.20143647723997365,
+      "brier_delta_vs_baseline": -0.004823741173968693,
+      "markets_scored": 4
+    },
+    {
+      "feature_dropped": "home_rolling_sot",
+      "auc_mean": 0.6314284401121709,
+      "auc_delta_vs_baseline": 0.01660472380385758,
+      "brier_mean": 0.20144836196939153,
+      "brier_delta_vs_baseline": -0.004811856444550816,
+      "markets_scored": 4
+    }
+  ],
+  "failures": []
+}

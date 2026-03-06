@@ -1,0 +1,50 @@
+{
+  "markets": {
+    "a_1up": {
+      "baseline_auc": 0.6142558760542527,
+      "improved_auc": 0.6094539037093832,
+      "auc_delta": -0.004801972344869454,
+      "baseline_brier": 0.24106106073514966,
+      "improved_brier": 0.2403167092016497,
+      "brier_delta": -0.0007443515334999706,
+      "n": 1348
+    },
+    "a_2up": {
+      "baseline_auc": 0.6304864253393666,
+      "improved_auc": 0.637611354638009,
+      "auc_delta": 0.007124929298642391,
+      "baseline_brier": 0.1508823484619452,
+      "improved_brier": 0.1503902288807217,
+      "brier_delta": -0.0004921195812234991,
+      "n": 1348
+    },
+    "h_1up": {
+      "baseline_auc": 0.639174167442609,
+      "improved_auc": 0.6440436366980491,
+      "auc_delta": 0.004869469255440073,
+      "baseline_brier": 0.22870990746897316,
+      "improved_brier": 0.22617602496810493,
+      "brier_delta": -0.002533882500868223,
+      "n": 1348
+    },
+    "h_2up": {
+      "baseline_auc": 0.623225857977364,
+      "improved_auc": 0.6348447768346113,
+      "auc_delta": 0.011618918857247307,
+      "baseline_brier": 0.18600747394242914,
+      "improved_brier": 0.18415479363693402,
+      "brier_delta": -0.0018526803054951246,
+      "n": 1348
+    }
+  },
+  "aggregate": {
+    "auc_mean_baseline": 0.626785581703398,
+    "auc_mean_improved": 0.6314884179700131,
+    "auc_mean_delta": 0.004702836266615079,
+    "brier_mean_baseline": 0.2016651976521243,
+    "brier_mean_improved": 0.20025943917185257,
+    "brier_mean_delta": -0.0014057584802717044,
+    "markets_auc_up": 3,
+    "markets_brier_up": 4
+  }
+}

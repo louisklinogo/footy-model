@@ -62,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         default=Path("artifacts/reports/backtests"),
     )
     parser.add_argument("--initial-bankroll", type=float, default=100.0)
+    parser.add_argument(
+        "--policy-path",
+        type=Path,
+        default=Path("model_artifacts/market_models/accumulator_policy.json"),
+        help="Path to accumulator policy JSON.",
+    )
     return parser.parse_args()
 
 
@@ -138,6 +144,33 @@ def _load_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"Expected object JSON at {path}")
     return payload
+
+
+def load_policy_bundle(
+    policy_path: Path,
+) -> tuple[dict[str, Any], Path, dict[str, Any], str, str, set[str], set[str]]:
+    resolved_policy_path = policy_path.expanduser()
+    if not resolved_policy_path.is_absolute():
+        resolved_policy_path = ROOT_DIR / resolved_policy_path
+
+    policy = _load_json(resolved_policy_path)
+
+    gating_path = Path(str(policy.get("market_gating_path") or "")).expanduser()
+    if not gating_path.is_absolute():
+        gating_path = ROOT_DIR / gating_path
+    gating = _load_json(gating_path)
+
+    model_name, model_version = _resolve_model_from_gating(gating)
+    eligible_markets, limited_to_one_leg_markets = _eligible_markets(gating)
+    return (
+        policy,
+        resolved_policy_path,
+        gating,
+        model_name,
+        model_version,
+        eligible_markets,
+        limited_to_one_leg_markets,
+    )
 
 
 def _resolve_model_from_gating(gating: dict[str, Any]) -> tuple[str, str]:
@@ -500,6 +533,9 @@ def build_slips_walk_forward(
     forbid_same_team = bool(correlation.get("forbid_same_team_across_legs", True))
     max_legs_per_league = int(correlation.get("max_legs_per_league", slip_size))
     same_league_haircut = float(correlation.get("same_league_probability_haircut", 1.0))
+    enforce_limited_market_uniqueness = bool(
+        policy.get("enforce_limited_market_uniqueness", True)
+    )
 
     max_tickets_per_day = int(policy.get("max_tickets_per_day", 1))
     stake_fraction = float(policy.get("stake_fraction_per_ticket", 0.01))
@@ -557,7 +593,8 @@ def build_slips_walk_forward(
                 if league_counts[leg.league_code] >= max_legs_per_league:
                     continue
                 if (
-                    leg.market_code in limited_to_one_leg_markets
+                    enforce_limited_market_uniqueness
+                    and leg.market_code in limited_to_one_leg_markets
                     and limited_counts[leg.market_code] >= 1
                 ):
                     continue
@@ -711,16 +748,18 @@ def main() -> int:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
 
-    policy_path = ROOT_DIR / "model_artifacts/market_models/accumulator_policy.json"
-    policy = _load_json(policy_path)
-
+    (
+        policy,
+        policy_path,
+        _gating,
+        model_name,
+        model_version,
+        eligible_markets,
+        limited_to_one_leg_markets,
+    ) = load_policy_bundle(args.policy_path)
     gating_path = Path(str(policy.get("market_gating_path") or "")).expanduser()
     if not gating_path.is_absolute():
         gating_path = ROOT_DIR / gating_path
-    gating = _load_json(gating_path)
-
-    model_name, model_version = _resolve_model_from_gating(gating)
-    eligible_markets, limited_to_one_leg_markets = _eligible_markets(gating)
     if not eligible_markets:
         print("ERROR: no eligible markets in market_gating.json", file=sys.stderr)
         return 1

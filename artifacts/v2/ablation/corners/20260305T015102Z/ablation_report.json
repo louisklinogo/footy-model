@@ -1,0 +1,173 @@
+{
+  "generated_at_utc": "2026-03-05T01:59:19.219245+00:00",
+  "family": "corners",
+  "baseline": {
+    "markets_scored": 12,
+    "auc_mean": 0.6089287188296223,
+    "brier_mean": 0.21475534829895648
+  },
+  "candidate_count": 20,
+  "results": [
+    {
+      "feature_dropped": "home_rolling_corners_against",
+      "auc_mean": 0.5968823286020974,
+      "auc_delta_vs_baseline": -0.01204639022752485,
+      "brier_mean": 0.21575568962040514,
+      "brier_delta_vs_baseline": 0.0010003413214486612,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "home_rolling_box_touches",
+      "auc_mean": 0.598070038093142,
+      "auc_delta_vs_baseline": -0.01085868073648033,
+      "brier_mean": 0.2159896604971265,
+      "brier_delta_vs_baseline": 0.0012343121981700234,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "away_rolling_box_touches",
+      "auc_mean": 0.599197236964336,
+      "auc_delta_vs_baseline": -0.009731481865286273,
+      "brier_mean": 0.2161178728699055,
+      "brier_delta_vs_baseline": 0.0013625245709490141,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "away_rolling_corners",
+      "auc_mean": 0.6082226197649919,
+      "auc_delta_vs_baseline": -0.0007060990646303722,
+      "brier_mean": 0.214791062243222,
+      "brier_delta_vs_baseline": 3.571394426551966e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "away_rolling_corners_against",
+      "auc_mean": 0.6084517670972482,
+      "auc_delta_vs_baseline": -0.00047695173237405353,
+      "brier_mean": 0.214832629229429,
+      "brier_delta_vs_baseline": 7.72809304725175e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "home_rolling_corners",
+      "auc_mean": 0.6086775945671469,
+      "auc_delta_vs_baseline": -0.00025112426247542174,
+      "brier_mean": 0.2148333425627471,
+      "brier_delta_vs_baseline": 7.799426379062613e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c95_over",
+      "auc_mean": 0.6087980023925602,
+      "auc_delta_vs_baseline": -0.0001307164370620839,
+      "brier_mean": 0.21476206491961855,
+      "brier_delta_vs_baseline": 6.716620662067241e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c95_under",
+      "auc_mean": 0.6088208762244448,
+      "auc_delta_vs_baseline": -0.00010784260517748834,
+      "brier_mean": 0.2147638115599468,
+      "brier_delta_vs_baseline": 8.463260990326793e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c105_over",
+      "auc_mean": 0.6088734889472877,
+      "auc_delta_vs_baseline": -5.522988233463977e-05,
+      "brier_mean": 0.21475690154082216,
+      "brier_delta_vs_baseline": 1.5532418656816205e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c105_under",
+      "auc_mean": 0.6088967155521618,
+      "auc_delta_vs_baseline": -3.200327746044618e-05,
+      "brier_mean": 0.21475660934273264,
+      "brier_delta_vs_baseline": 1.2610437761517712e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c85_under",
+      "auc_mean": 0.6089124099679145,
+      "auc_delta_vs_baseline": -1.630886170778112e-05,
+      "brier_mean": 0.21475684446086238,
+      "brier_delta_vs_baseline": 1.496161905895077e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "implied_c75_over",
+      "auc_mean": 0.6089263474766683,
+      "auc_delta_vs_baseline": -2.371352954000372e-06,
+      "brier_mean": 0.2147554662862009,
+      "brier_delta_vs_baseline": 1.1798724441902664e-07,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c85_over",
+      "auc_mean": 0.6089267573284219,
+      "auc_delta_vs_baseline": -1.9615012003537657e-06,
+      "brier_mean": 0.2147558963864087,
+      "brier_delta_vs_baseline": 5.480874522290069e-07,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c75_over",
+      "auc_mean": 0.6089279533217454,
+      "auc_delta_vs_baseline": -7.655078768653567e-07,
+      "brier_mean": 0.21475527316579743,
+      "brier_delta_vs_baseline": -7.513315905538498e-08,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "odds_c75_under",
+      "auc_mean": 0.6089279533217454,
+      "auc_delta_vs_baseline": -7.655078768653567e-07,
+      "brier_mean": 0.21475527316579743,
+      "brier_delta_vs_baseline": -7.513315905538498e-08,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "corners_net_diff",
+      "auc_mean": 0.6091785369226324,
+      "auc_delta_vs_baseline": 0.00024981809301005686,
+      "brier_mean": 0.21474691586044833,
+      "brier_delta_vs_baseline": -8.43243850814912e-06,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "home_rolling_crosses",
+      "auc_mean": 0.61019048563468,
+      "auc_delta_vs_baseline": 0.0012617668050577402,
+      "brier_mean": 0.2147113584906554,
+      "brier_delta_vs_baseline": -4.398980830108701e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "away_rolling_crosses",
+      "auc_mean": 0.6102108203588466,
+      "auc_delta_vs_baseline": 0.0012821015292242555,
+      "brier_mean": 0.21466101327360498,
+      "brier_delta_vs_baseline": -9.433502535149962e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "away_sample_size",
+      "auc_mean": 0.6102364100754029,
+      "auc_delta_vs_baseline": 0.0013076912457805623,
+      "brier_mean": 0.2146981935020934,
+      "brier_delta_vs_baseline": -5.715479686307923e-05,
+      "markets_scored": 12
+    },
+    {
+      "feature_dropped": "home_sample_size",
+      "auc_mean": 0.6104328340356737,
+      "auc_delta_vs_baseline": 0.0015041152060514262,
+      "brier_mean": 0.21470088080935412,
+      "brier_delta_vs_baseline": -5.446748960236114e-05,
+      "markets_scored": 12
+    }
+  ],
+  "failures": []
+}

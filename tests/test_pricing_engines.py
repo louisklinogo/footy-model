@@ -158,6 +158,19 @@ class TestMarkovPricer:
         probs = self.markov.calculate_lead_probs(2.0, 0.01)
         assert probs["h_1up"] > 0.85
 
+    def test_phase_split_matches_constant_when_rates_sum_equally(self):
+        constant = self.markov.calculate_lead_probs(1.3, 1.1)
+        phase_split = self.markov.calculate_lead_probs_phase_split(0.65, 0.55, 0.65, 0.55)
+        for market, value in constant.items():
+            assert phase_split[market] == pytest.approx(value, abs=1e-6)
+
+    def test_phase_split_probs_are_valid_and_monotonic(self):
+        probs = self.markov.calculate_lead_probs_phase_split(0.8, 0.4, 1.1, 0.7)
+        for key, val in probs.items():
+            assert 0.0 <= val <= 1.0, f"{key} = {val} out of range"
+        assert probs["h_1up"] >= probs["h_2up"]
+        assert probs["a_1up"] >= probs["a_2up"]
+
 
 # ---------------------------------------------------------------------------
 # MatchSimulator

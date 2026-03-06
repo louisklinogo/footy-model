@@ -285,6 +285,20 @@ def _settle_fixture(fixture_id: int, home_goals: int, away_goals: int, dry_run: 
                         "SELECT settle_fixture_by_fixture_id(%s, %s, %s)",
                         (fixture_id, home_goals, away_goals),
                     )
+                    # Keep result lineage explicit for Sofa-based settlement.
+                    try:
+                        cur.execute(
+                            """
+                            UPDATE fixture_results
+                            SET result_source = 'sofascore',
+                                settled_at = NOW()
+                            WHERE fixture_id = %s
+                            """,
+                            (fixture_id,),
+                        )
+                    except Exception:
+                        # Backward compatibility: older schemas may not have result_source.
+                        pass
                 except Exception:
                     # Fallback for environments missing migration 011.
                     cur.execute(
@@ -300,13 +314,14 @@ def _settle_fixture(fixture_id: int, home_goals: int, away_goals: int, dry_run: 
                     cur.execute(
                         """
                         INSERT INTO fixture_results (
-                            fixture_id, home_goals, away_goals, result_status, settled_at
+                            fixture_id, home_goals, away_goals, result_status, result_source, settled_at
                         )
-                        VALUES (%s, %s, %s, 'ft', NOW())
+                        VALUES (%s, %s, %s, 'ft', 'sofascore', NOW())
                         ON CONFLICT (fixture_id) DO UPDATE SET
                             home_goals = EXCLUDED.home_goals,
                             away_goals = EXCLUDED.away_goals,
                             result_status = EXCLUDED.result_status,
+                            result_source = EXCLUDED.result_source,
                             settled_at = NOW()
                         """,
                         (fixture_id, home_goals, away_goals),

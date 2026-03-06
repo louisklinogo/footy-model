@@ -1,0 +1,1648 @@
+{
+  "summary": {
+    "rows_total": 8082,
+    "rows_train": 6465,
+    "rows_test": 1617,
+    "feature_count": 108,
+    "weak_markets": [
+      "1x2_d",
+      "c105",
+      "c75",
+      "c85",
+      "c95",
+      "dc_12",
+      "o15",
+      "u35"
+    ]
+  },
+  "weak_market_reports": {
+    "1x2_d": {
+      "target": "target_1x2_d",
+      "n": 8082,
+      "base_rate": 0.25129918337045287,
+      "top_univariate_features": [
+        {
+          "feature": "odds_under_25",
+          "n": 7610,
+          "auc": 0.4350136355670145,
+          "auc_mag": 0.5649863644329856
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7610,
+          "auc": 0.5649863644329856,
+          "auc_mag": 0.5649863644329856
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7610,
+          "auc": 0.5647928669742094,
+          "auc_mag": 0.5647928669742094
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7610,
+          "auc": 0.5642804332729834,
+          "auc_mag": 0.5642804332729834
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7610,
+          "auc": 0.43571956672701667,
+          "auc_mag": 0.5642804332729834
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7609,
+          "auc": 0.5635766566611734,
+          "auc_mag": 0.5635766566611734
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7609,
+          "auc": 0.4364233433388267,
+          "auc_mag": 0.5635766566611733
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7609,
+          "auc": 0.563145439154953,
+          "auc_mag": 0.563145439154953
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7609,
+          "auc": 0.4371340451815433,
+          "auc_mag": 0.5628659548184567
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7609,
+          "auc": 0.5628659548184567,
+          "auc_mag": 0.5628659548184567
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7609,
+          "auc": 0.5625340585711128,
+          "auc_mag": 0.5625340585711128
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7609,
+          "auc": 0.562185929763454,
+          "auc_mag": 0.562185929763454
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7609,
+          "auc": 0.43781407023654595,
+          "auc_mag": 0.562185929763454
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7609,
+          "auc": 0.5620298403981655,
+          "auc_mag": 0.5620298403981655
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7609,
+          "auc": 0.4379701596018345,
+          "auc_mag": 0.5620298403981655
+        },
+        {
+          "feature": "lambda_home_l1",
+          "n": 7385,
+          "auc": 0.4545867453259369,
+          "auc_mag": 0.5454132546740631
+        },
+        {
+          "feature": "away_rolling_sot_p1_against",
+          "n": 2315,
+          "auc": 0.46209323407173747,
+          "auc_mag": 0.5379067659282626
+        },
+        {
+          "feature": "away_rolling_crosses",
+          "n": 7436,
+          "auc": 0.5308466928688559,
+          "auc_mag": 0.5308466928688559
+        },
+        {
+          "feature": "home_rolling_sot_h2_delta_against",
+          "n": 2314,
+          "auc": 0.4693136619109382,
+          "auc_mag": 0.5306863380890618
+        },
+        {
+          "feature": "home_rolling_xa_against",
+          "n": 5481,
+          "auc": 0.5304412005763042,
+          "auc_mag": 0.5304412005763042
+        }
+      ],
+      "median_auc_mag_across_features": 0.5114003393467648,
+      "strong_feature_count_auc_ge_0_56": 15
+    },
+    "c105": {
+      "target": "target_c105",
+      "n": 7618,
+      "base_rate": 0.3749015489629824,
+      "top_univariate_features": [
+        {
+          "feature": "odds_gap_15",
+          "n": 7154,
+          "auc": 0.45441653934736403,
+          "auc_mag": 0.545583460652636
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7155,
+          "auc": 0.45452278872321056,
+          "auc_mag": 0.5454772112767894
+        },
+        {
+          "feature": "odds_under_25",
+          "n": 7155,
+          "auc": 0.5454772112767893,
+          "auc_mag": 0.5454772112767893
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7154,
+          "auc": 0.45457078161491854,
+          "auc_mag": 0.5454292183850815
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7154,
+          "auc": 0.5454292183850814,
+          "auc_mag": 0.5454292183850814
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7154,
+          "auc": 0.4545797766625024,
+          "auc_mag": 0.5454202233374976
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7154,
+          "auc": 0.5454202233374975,
+          "auc_mag": 0.5454202233374975
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7155,
+          "auc": 0.45478172605996076,
+          "auc_mag": 0.5452182739400393
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7154,
+          "auc": 0.45479250746526767,
+          "auc_mag": 0.5452074925347323
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7154,
+          "auc": 0.5452074925347323,
+          "auc_mag": 0.5452074925347323
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7154,
+          "auc": 0.45482363779123747,
+          "auc_mag": 0.5451763622087625
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7154,
+          "auc": 0.5451715537962293,
+          "auc_mag": 0.5451715537962293
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7154,
+          "auc": 0.4548284462037707,
+          "auc_mag": 0.5451715537962293
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7155,
+          "auc": 0.45494022106925336,
+          "auc_mag": 0.5450597789307466
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7155,
+          "auc": 0.5450597789307466,
+          "auc_mag": 0.5450597789307466
+        },
+        {
+          "feature": "odds_c85_over",
+          "n": 841,
+          "auc": 0.4606984722166819,
+          "auc_mag": 0.5393015277833181
+        },
+        {
+          "feature": "corners_gap_85",
+          "n": 841,
+          "auc": 0.4606984722166819,
+          "auc_mag": 0.5393015277833181
+        },
+        {
+          "feature": "odds_c85_under",
+          "n": 841,
+          "auc": 0.539301527783318,
+          "auc_mag": 0.539301527783318
+        },
+        {
+          "feature": "implied_c85_over",
+          "n": 841,
+          "auc": 0.539301527783318,
+          "auc_mag": 0.539301527783318
+        },
+        {
+          "feature": "odds_c95_over",
+          "n": 4752,
+          "auc": 0.4628641093809056,
+          "auc_mag": 0.5371358906190944
+        }
+      ],
+      "median_auc_mag_across_features": 0.5122734946407189,
+      "strong_feature_count_auc_ge_0_56": 0
+    },
+    "c75": {
+      "target": "target_c75",
+      "n": 7618,
+      "base_rate": 0.7206615909687583,
+      "top_univariate_features": [
+        {
+          "feature": "odds_gap_35",
+          "n": 7154,
+          "auc": 0.4542205296758777,
+          "auc_mag": 0.5457794703241223
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7154,
+          "auc": 0.4542540644041576,
+          "auc_mag": 0.5457459355958424
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7154,
+          "auc": 0.5457459355958424,
+          "auc_mag": 0.5457459355958424
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7154,
+          "auc": 0.5456443985269073,
+          "auc_mag": 0.5456443985269073
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7154,
+          "auc": 0.45435560147309273,
+          "auc_mag": 0.5456443985269073
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7155,
+          "auc": 0.45464464253560527,
+          "auc_mag": 0.5453553574643948
+        },
+        {
+          "feature": "odds_under_25",
+          "n": 7155,
+          "auc": 0.5453553574643947,
+          "auc_mag": 0.5453553574643947
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7155,
+          "auc": 0.4547957406625972,
+          "auc_mag": 0.5452042593374028
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7154,
+          "auc": 0.4549865748158806,
+          "auc_mag": 0.5450134251841194
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7155,
+          "auc": 0.45502626594016515,
+          "auc_mag": 0.5449737340598348
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7155,
+          "auc": 0.5449737340598348,
+          "auc_mag": 0.5449737340598348
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7154,
+          "auc": 0.455083840257641,
+          "auc_mag": 0.5449161597423591
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7154,
+          "auc": 0.5449161597423591,
+          "auc_mag": 0.5449161597423591
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7154,
+          "auc": 0.5448976493579354,
+          "auc_mag": 0.5448976493579354
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7154,
+          "auc": 0.45510235064206483,
+          "auc_mag": 0.5448976493579352
+        },
+        {
+          "feature": "odds_c95_over",
+          "n": 4752,
+          "auc": 0.4600211501111091,
+          "auc_mag": 0.5399788498888909
+        },
+        {
+          "feature": "corners_gap_95",
+          "n": 4752,
+          "auc": 0.4600211501111091,
+          "auc_mag": 0.5399788498888909
+        },
+        {
+          "feature": "odds_c95_under",
+          "n": 4752,
+          "auc": 0.5399788498888908,
+          "auc_mag": 0.5399788498888908
+        },
+        {
+          "feature": "implied_c95_over",
+          "n": 4752,
+          "auc": 0.5399788498888908,
+          "auc_mag": 0.5399788498888908
+        },
+        {
+          "feature": "away_rolling_xg_p1_against",
+          "n": 2075,
+          "auc": 0.5359469856887097,
+          "auc_mag": 0.5359469856887097
+        }
+      ],
+      "median_auc_mag_across_features": 0.5136315900567292,
+      "strong_feature_count_auc_ge_0_56": 0
+    },
+    "c85": {
+      "target": "target_c85",
+      "n": 7618,
+      "base_rate": 0.6135468626936204,
+      "top_univariate_features": [
+        {
+          "feature": "odds_under_25",
+          "n": 7155,
+          "auc": 0.5408265164537039,
+          "auc_mag": 0.5408265164537039
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7155,
+          "auc": 0.4591734835462961,
+          "auc_mag": 0.5408265164537038
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7154,
+          "auc": 0.45931034197045756,
+          "auc_mag": 0.5406896580295424
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7154,
+          "auc": 0.5406672452828625,
+          "auc_mag": 0.5406672452828625
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7154,
+          "auc": 0.45933275471713747,
+          "auc_mag": 0.5406672452828625
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7154,
+          "auc": 0.45934191038629885,
+          "auc_mag": 0.5406580896137012
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7154,
+          "auc": 0.5406580896137011,
+          "auc_mag": 0.5406580896137011
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7154,
+          "auc": 0.4593622517146166,
+          "auc_mag": 0.5406377482853835
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7154,
+          "auc": 0.5405932127905941,
+          "auc_mag": 0.5405932127905941
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7154,
+          "auc": 0.4594067872094059,
+          "auc_mag": 0.5405932127905941
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7155,
+          "auc": 0.4594982500465964,
+          "auc_mag": 0.5405017499534036
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7154,
+          "auc": 0.5404912161504347,
+          "auc_mag": 0.5404912161504347
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7154,
+          "auc": 0.4595087838495654,
+          "auc_mag": 0.5404912161504346
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7155,
+          "auc": 0.4597478824528341,
+          "auc_mag": 0.540252117547166
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7155,
+          "auc": 0.540252117547166,
+          "auc_mag": 0.540252117547166
+        },
+        {
+          "feature": "odds_c95_under",
+          "n": 4752,
+          "auc": 0.5389800025493424,
+          "auc_mag": 0.5389800025493424
+        },
+        {
+          "feature": "implied_c95_over",
+          "n": 4752,
+          "auc": 0.5389800025493424,
+          "auc_mag": 0.5389800025493424
+        },
+        {
+          "feature": "odds_c95_over",
+          "n": 4752,
+          "auc": 0.4610199974506577,
+          "auc_mag": 0.5389800025493423
+        },
+        {
+          "feature": "corners_gap_95",
+          "n": 4752,
+          "auc": 0.4610199974506577,
+          "auc_mag": 0.5389800025493423
+        },
+        {
+          "feature": "away_rolling_xg_p1_against",
+          "n": 2075,
+          "auc": 0.5344602319124612,
+          "auc_mag": 0.5344602319124612
+        }
+      ],
+      "median_auc_mag_across_features": 0.5128936309104801,
+      "strong_feature_count_auc_ge_0_56": 0
+    },
+    "c95": {
+      "target": "target_c95",
+      "n": 7618,
+      "base_rate": 0.49435547387765816,
+      "top_univariate_features": [
+        {
+          "feature": "odds_under_15",
+          "n": 7154,
+          "auc": 0.5453799349242137,
+          "auc_mag": 0.5453799349242137
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7154,
+          "auc": 0.4546200650757863,
+          "auc_mag": 0.5453799349242137
+        },
+        {
+          "feature": "odds_under_25",
+          "n": 7155,
+          "auc": 0.5452610320706233,
+          "auc_mag": 0.5452610320706233
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7155,
+          "auc": 0.4547389679293768,
+          "auc_mag": 0.5452610320706233
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7154,
+          "auc": 0.45479099218065167,
+          "auc_mag": 0.5452090078193483
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7154,
+          "auc": 0.5451817704640464,
+          "auc_mag": 0.5451817704640464
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7154,
+          "auc": 0.45481822953595363,
+          "auc_mag": 0.5451817704640464
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7155,
+          "auc": 0.4550388076606453,
+          "auc_mag": 0.5449611923393547
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7154,
+          "auc": 0.4551106110171155,
+          "auc_mag": 0.5448893889828845
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7154,
+          "auc": 0.5447288566219365,
+          "auc_mag": 0.5447288566219365
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7154,
+          "auc": 0.45527114337806357,
+          "auc_mag": 0.5447288566219364
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7155,
+          "auc": 0.5447076861483187,
+          "auc_mag": 0.5447076861483187
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7155,
+          "auc": 0.45529231385168145,
+          "auc_mag": 0.5447076861483185
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7154,
+          "auc": 0.5446844249533879,
+          "auc_mag": 0.5446844249533879
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7154,
+          "auc": 0.4553155750466122,
+          "auc_mag": 0.5446844249533878
+        },
+        {
+          "feature": "away_rolling_xg_p1_against",
+          "n": 2075,
+          "auc": 0.5344572380654855,
+          "auc_mag": 0.5344572380654855
+        },
+        {
+          "feature": "odds_c95_over",
+          "n": 4752,
+          "auc": 0.46831910257539305,
+          "auc_mag": 0.531680897424607
+        },
+        {
+          "feature": "odds_c95_under",
+          "n": 4752,
+          "auc": 0.531680897424607,
+          "auc_mag": 0.531680897424607
+        },
+        {
+          "feature": "implied_c95_over",
+          "n": 4752,
+          "auc": 0.531680897424607,
+          "auc_mag": 0.531680897424607
+        },
+        {
+          "feature": "corners_gap_95",
+          "n": 4752,
+          "auc": 0.46831910257539305,
+          "auc_mag": 0.531680897424607
+        }
+      ],
+      "median_auc_mag_across_features": 0.513342176023845,
+      "strong_feature_count_auc_ge_0_56": 0
+    },
+    "dc_12": {
+      "target": "target_dc_12",
+      "n": 8082,
+      "base_rate": 0.7487008166295471,
+      "top_univariate_features": [
+        {
+          "feature": "odds_under_25",
+          "n": 7610,
+          "auc": 0.5649863644329856,
+          "auc_mag": 0.5649863644329856
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7610,
+          "auc": 0.4350136355670145,
+          "auc_mag": 0.5649863644329856
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7610,
+          "auc": 0.43520713302579067,
+          "auc_mag": 0.5647928669742093
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7610,
+          "auc": 0.5642804332729835,
+          "auc_mag": 0.5642804332729835
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7610,
+          "auc": 0.4357195667270166,
+          "auc_mag": 0.5642804332729834
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7609,
+          "auc": 0.4364233433388267,
+          "auc_mag": 0.5635766566611733
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7609,
+          "auc": 0.5635766566611732,
+          "auc_mag": 0.5635766566611732
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7609,
+          "auc": 0.4368545608450469,
+          "auc_mag": 0.5631454391549531
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7609,
+          "auc": 0.4371340451815433,
+          "auc_mag": 0.5628659548184567
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7609,
+          "auc": 0.5628659548184566,
+          "auc_mag": 0.5628659548184566
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7609,
+          "auc": 0.4374659414288872,
+          "auc_mag": 0.5625340585711128
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7609,
+          "auc": 0.437814070236546,
+          "auc_mag": 0.5621859297634539
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7609,
+          "auc": 0.5621859297634539,
+          "auc_mag": 0.5621859297634539
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7609,
+          "auc": 0.4379701596018346,
+          "auc_mag": 0.5620298403981654
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7609,
+          "auc": 0.5620298403981654,
+          "auc_mag": 0.5620298403981654
+        },
+        {
+          "feature": "lambda_home_l1",
+          "n": 7385,
+          "auc": 0.545413254674063,
+          "auc_mag": 0.545413254674063
+        },
+        {
+          "feature": "away_rolling_sot_p1_against",
+          "n": 2315,
+          "auc": 0.5379067659282626,
+          "auc_mag": 0.5379067659282626
+        },
+        {
+          "feature": "away_rolling_crosses",
+          "n": 7436,
+          "auc": 0.46915330713114406,
+          "auc_mag": 0.530846692868856
+        },
+        {
+          "feature": "home_rolling_sot_h2_delta_against",
+          "n": 2314,
+          "auc": 0.5306863380890617,
+          "auc_mag": 0.5306863380890617
+        },
+        {
+          "feature": "home_rolling_xa_against",
+          "n": 5481,
+          "auc": 0.46955879942369577,
+          "auc_mag": 0.5304412005763042
+        }
+      ],
+      "median_auc_mag_across_features": 0.5114003393467647,
+      "strong_feature_count_auc_ge_0_56": 15
+    },
+    "o15": {
+      "target": "target_o15",
+      "n": 8082,
+      "base_rate": 0.7646622123236823,
+      "top_univariate_features": [
+        {
+          "feature": "odds_gap_15",
+          "n": 7609,
+          "auc": 0.4074341060806029,
+          "auc_mag": 0.5925658939193972
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7609,
+          "auc": 0.5924657141217652,
+          "auc_mag": 0.5924657141217652
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7609,
+          "auc": 0.4075342858782349,
+          "auc_mag": 0.5924657141217651
+        },
+        {
+          "feature": "odds_under_25",
+          "n": 7610,
+          "auc": 0.5923812870529738,
+          "auc_mag": 0.5923812870529738
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7610,
+          "auc": 0.40761871294702623,
+          "auc_mag": 0.5923812870529738
+        },
+        {
+          "feature": "odds_under_15",
+          "n": 7609,
+          "auc": 0.5922259042481973,
+          "auc_mag": 0.5922259042481973
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7609,
+          "auc": 0.40777409575180273,
+          "auc_mag": 0.5922259042481972
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7610,
+          "auc": 0.40778705297379997,
+          "auc_mag": 0.5922129470262001
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7610,
+          "auc": 0.407812870529738,
+          "auc_mag": 0.592187129470262
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7610,
+          "auc": 0.592187129470262,
+          "auc_mag": 0.592187129470262
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7609,
+          "auc": 0.4079518850060251,
+          "auc_mag": 0.5920481149939749
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7609,
+          "auc": 0.5920481149939747,
+          "auc_mag": 0.5920481149939747
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7609,
+          "auc": 0.4081087775673763,
+          "auc_mag": 0.5918912224326237
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7609,
+          "auc": 0.40866959316003904,
+          "auc_mag": 0.591330406839961
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7609,
+          "auc": 0.5913304068399607,
+          "auc_mag": 0.5913304068399607
+        },
+        {
+          "feature": "lambda_home_l1",
+          "n": 7385,
+          "auc": 0.5584518463478193,
+          "auc_mag": 0.5584518463478193
+        },
+        {
+          "feature": "home_rolling_sot",
+          "n": 7427,
+          "auc": 0.5423368653205156,
+          "auc_mag": 0.5423368653205156
+        },
+        {
+          "feature": "away_rolling_sot_p1_against",
+          "n": 2315,
+          "auc": 0.5421018015503675,
+          "auc_mag": 0.5421018015503675
+        },
+        {
+          "feature": "lambda_away_l1",
+          "n": 7385,
+          "auc": 0.5413034838004979,
+          "auc_mag": 0.5413034838004979
+        },
+        {
+          "feature": "home_rolling_box_touches",
+          "n": 7152,
+          "auc": 0.5398919708311573,
+          "auc_mag": 0.5398919708311573
+        }
+      ],
+      "median_auc_mag_across_features": 0.5201491361033215,
+      "strong_feature_count_auc_ge_0_56": 15
+    },
+    "u35": {
+      "target": "target_u35",
+      "n": 8082,
+      "base_rate": 0.700445434298441,
+      "top_univariate_features": [
+        {
+          "feature": "odds_under_15",
+          "n": 7609,
+          "auc": 0.4017252538597343,
+          "auc_mag": 0.5982747461402658
+        },
+        {
+          "feature": "implied_under15",
+          "n": 7609,
+          "auc": 0.5982747461402657,
+          "auc_mag": 0.5982747461402657
+        },
+        {
+          "feature": "odds_under_25",
+          "n": 7610,
+          "auc": 0.40184685896835237,
+          "auc_mag": 0.5981531410316476
+        },
+        {
+          "feature": "implied_under25",
+          "n": 7610,
+          "auc": 0.5981531410316475,
+          "auc_mag": 0.5981531410316475
+        },
+        {
+          "feature": "odds_gap_25",
+          "n": 7610,
+          "auc": 0.5980802107762534,
+          "auc_mag": 0.5980802107762534
+        },
+        {
+          "feature": "implied_over25",
+          "n": 7610,
+          "auc": 0.4019427830267726,
+          "auc_mag": 0.5980572169732274
+        },
+        {
+          "feature": "odds_over_25",
+          "n": 7610,
+          "auc": 0.5980572169732273,
+          "auc_mag": 0.5980572169732273
+        },
+        {
+          "feature": "odds_gap_15",
+          "n": 7609,
+          "auc": 0.5979887713228353,
+          "auc_mag": 0.5979887713228353
+        },
+        {
+          "feature": "odds_gap_35",
+          "n": 7609,
+          "auc": 0.5976844062387684,
+          "auc_mag": 0.5976844062387684
+        },
+        {
+          "feature": "implied_under35",
+          "n": 7609,
+          "auc": 0.5976690193042671,
+          "auc_mag": 0.5976690193042671
+        },
+        {
+          "feature": "odds_under_35",
+          "n": 7609,
+          "auc": 0.40233098069573303,
+          "auc_mag": 0.597669019304267
+        },
+        {
+          "feature": "odds_over_35",
+          "n": 7609,
+          "auc": 0.5975344864812204,
+          "auc_mag": 0.5975344864812204
+        },
+        {
+          "feature": "implied_over35",
+          "n": 7609,
+          "auc": 0.4024655135187797,
+          "auc_mag": 0.5975344864812203
+        },
+        {
+          "feature": "implied_over15",
+          "n": 7609,
+          "auc": 0.40252800751211526,
+          "auc_mag": 0.5974719924878847
+        },
+        {
+          "feature": "odds_over_15",
+          "n": 7609,
+          "auc": 0.5974719924878845,
+          "auc_mag": 0.5974719924878845
+        },
+        {
+          "feature": "lambda_home_l1",
+          "n": 7385,
+          "auc": 0.4304754177792126,
+          "auc_mag": 0.5695245822207874
+        },
+        {
+          "feature": "home_rolling_sot_p1",
+          "n": 2314,
+          "auc": 0.44954535171861465,
+          "auc_mag": 0.5504546482813854
+        },
+        {
+          "feature": "home_rolling_sot",
+          "n": 7427,
+          "auc": 0.4541831727448306,
+          "auc_mag": 0.5458168272551693
+        },
+        {
+          "feature": "home_rolling_box_touches",
+          "n": 7152,
+          "auc": 0.45663892626627306,
+          "auc_mag": 0.5433610737337269
+        },
+        {
+          "feature": "home_rolling_xg",
+          "n": 7427,
+          "auc": 0.4585981058358945,
+          "auc_mag": 0.5414018941641054
+        }
+      ],
+      "median_auc_mag_across_features": 0.5162446026073126,
+      "strong_feature_count_auc_ge_0_56": 16
+    }
+  },
+  "cross_market_feature_rank": [
+    {
+      "feature": "implied_under25",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.562178409277013
+    },
+    {
+      "feature": "odds_under_25",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5621784092770129
+    },
+    {
+      "feature": "odds_gap_25",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5619705459151341
+    },
+    {
+      "feature": "implied_under15",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5617442473960793
+    },
+    {
+      "feature": "odds_under_15",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5617442473960793
+    },
+    {
+      "feature": "odds_over_25",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5617248162094403
+    },
+    {
+      "feature": "implied_over25",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5617248162094403
+    },
+    {
+      "feature": "odds_gap_15",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5616676369047231
+    },
+    {
+      "feature": "odds_under_35",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5614245379813984
+    },
+    {
+      "feature": "implied_under35",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5614245379813984
+    },
+    {
+      "feature": "odds_gap_35",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5613908394518463
+    },
+    {
+      "feature": "odds_over_35",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5612422781211488
+    },
+    {
+      "feature": "implied_over35",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5612422781211486
+    },
+    {
+      "feature": "odds_over_15",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5612332527485981
+    },
+    {
+      "feature": "implied_over15",
+      "top20_hits": 8,
+      "avg_auc_mag_when_top20": 0.5612332527485981
+    },
+    {
+      "feature": "lambda_home_l1",
+      "top20_hits": 4,
+      "avg_auc_mag_when_top20": 0.5547007344791832
+    },
+    {
+      "feature": "odds_c95_over",
+      "top20_hits": 4,
+      "avg_auc_mag_when_top20": 0.5369439101204836
+    },
+    {
+      "feature": "away_rolling_sot_p1_against",
+      "top20_hits": 3,
+      "avg_auc_mag_when_top20": 0.539305111135631
+    },
+    {
+      "feature": "corners_gap_95",
+      "top20_hits": 3,
+      "avg_auc_mag_when_top20": 0.5368799166209467
+    },
+    {
+      "feature": "odds_c95_under",
+      "top20_hits": 3,
+      "avg_auc_mag_when_top20": 0.5368799166209467
+    },
+    {
+      "feature": "implied_c95_over",
+      "top20_hits": 3,
+      "avg_auc_mag_when_top20": 0.5368799166209467
+    },
+    {
+      "feature": "away_rolling_xg_p1_against",
+      "top20_hits": 3,
+      "avg_auc_mag_when_top20": 0.534954818555552
+    },
+    {
+      "feature": "home_rolling_sot",
+      "top20_hits": 2,
+      "avg_auc_mag_when_top20": 0.5440768462878425
+    },
+    {
+      "feature": "home_rolling_box_touches",
+      "top20_hits": 2,
+      "avg_auc_mag_when_top20": 0.5416265222824421
+    },
+    {
+      "feature": "away_rolling_crosses",
+      "top20_hits": 2,
+      "avg_auc_mag_when_top20": 0.530846692868856
+    },
+    {
+      "feature": "home_rolling_sot_h2_delta_against",
+      "top20_hits": 2,
+      "avg_auc_mag_when_top20": 0.5306863380890618
+    },
+    {
+      "feature": "home_rolling_xa_against",
+      "top20_hits": 2,
+      "avg_auc_mag_when_top20": 0.5304412005763042
+    },
+    {
+      "feature": "home_rolling_sot_p1",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.5504546482813854
+    },
+    {
+      "feature": "home_rolling_xg",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.5414018941641054
+    },
+    {
+      "feature": "lambda_away_l1",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.5413034838004979
+    },
+    {
+      "feature": "odds_c85_over",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.5393015277833181
+    },
+    {
+      "feature": "corners_gap_85",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.5393015277833181
+    },
+    {
+      "feature": "odds_c85_under",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.539301527783318
+    },
+    {
+      "feature": "implied_c85_over",
+      "top20_hits": 1,
+      "avg_auc_mag_when_top20": 0.539301527783318
+    }
+  ],
+  "high_missing_features": [
+    {
+      "feature": "odds_c75_over",
+      "missing_rate": 0.9996288047512992,
+      "train_mean": null,
+      "test_mean": 1.8888888888888886,
+      "drift_z": null
+    },
+    {
+      "feature": "odds_c75_under",
+      "missing_rate": 0.9996288047512992,
+      "train_mean": null,
+      "test_mean": 1.8515151515151516,
+      "drift_z": null
+    },
+    {
+      "feature": "implied_c75_over",
+      "missing_rate": 0.9996288047512992,
+      "train_mean": null,
+      "test_mean": 0.5333333333333333,
+      "drift_z": null
+    },
+    {
+      "feature": "corners_gap_75",
+      "missing_rate": 0.9996288047512992,
+      "train_mean": null,
+      "test_mean": 0.03737373737373728,
+      "drift_z": null
+    },
+    {
+      "feature": "adj_lambda_home_final",
+      "missing_rate": 0.9669636228656273,
+      "train_mean": null,
+      "test_mean": 1.5216108702114968,
+      "drift_z": null
+    },
+    {
+      "feature": "adj_lambda_away_final",
+      "missing_rate": 0.9669636228656273,
+      "train_mean": null,
+      "test_mean": 1.2041279181122717,
+      "drift_z": null
+    },
+    {
+      "feature": "odds_c85_over",
+      "missing_rate": 0.8909923286315269,
+      "train_mean": 1.7496897760992716,
+      "test_mean": 1.7518518518518518,
+      "drift_z": 0.02697964462911539
+    },
+    {
+      "feature": "odds_c85_under",
+      "missing_rate": 0.8909923286315269,
+      "train_mean": 1.9757261037676466,
+      "test_mean": 1.9725076855511638,
+      "drift_z": 0.0292532091753247
+    },
+    {
+      "feature": "implied_c85_over",
+      "missing_rate": 0.8909923286315269,
+      "train_mean": 0.57268256064133,
+      "test_mean": 0.5719232204358062,
+      "drift_z": 0.030068702059537475
+    },
+    {
+      "feature": "corners_gap_85",
+      "missing_rate": 0.8909923286315269,
+      "train_mean": -0.22603632766837523,
+      "test_mean": -0.22065583369931205,
+      "drift_z": 0.02844600280291453
+    },
+    {
+      "feature": "odds_c105_over",
+      "missing_rate": 0.8001732244493938,
+      "train_mean": 1.9577437134814184,
+      "test_mean": 1.9678370531663945,
+      "drift_z": 0.09449247150392757
+    },
+    {
+      "feature": "odds_c105_under",
+      "missing_rate": 0.8001732244493938,
+      "train_mean": 1.7630071203841693,
+      "test_mean": 1.755489021956088,
+      "drift_z": 0.09343081780402684
+    },
+    {
+      "feature": "implied_c105_over",
+      "missing_rate": 0.8001732244493938,
+      "train_mean": 0.5123380566003517,
+      "test_mean": 0.5096296356932979,
+      "drift_z": 0.0953576697600273
+    },
+    {
+      "feature": "corners_gap_105",
+      "missing_rate": 0.8001732244493938,
+      "train_mean": 0.19473659309724892,
+      "test_mean": 0.2123480312103067,
+      "drift_z": 0.09460229760192371
+    },
+    {
+      "feature": "home_rolling_xg_p1",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.6288016010312358,
+      "test_mean": 0.6326525337514329,
+      "drift_z": 0.010849965489466559
+    },
+    {
+      "feature": "home_rolling_xg_p1_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.6350029384195848,
+      "test_mean": 0.6472848652479289,
+      "drift_z": 0.03547110910264552
+    },
+    {
+      "feature": "home_rolling_xg_h2_delta",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.14839369178693224,
+      "test_mean": 0.09596509127323731,
+      "drift_z": 0.1122223424342432
+    },
+    {
+      "feature": "home_rolling_xg_h2_delta_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.17283762646948894,
+      "test_mean": 0.13419485381476415,
+      "drift_z": 0.08005819200140321
+    },
+    {
+      "feature": "away_rolling_xg_p1",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.6626337019749589,
+      "test_mean": 0.6616764225522002,
+      "drift_z": 0.0026499781046462065
+    },
+    {
+      "feature": "away_rolling_xg_p1_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.6021472608209977,
+      "test_mean": 0.6420552067870323,
+      "drift_z": 0.1190951876829894
+    },
+    {
+      "feature": "away_rolling_xg_h2_delta",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.15200927063427308,
+      "test_mean": 0.12180789335908046,
+      "drift_z": 0.061134651107408976
+    },
+    {
+      "feature": "away_rolling_xg_h2_delta_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.16136026245804536,
+      "test_mean": 0.10159758269834662,
+      "drift_z": 0.1301953254730945
+    },
+    {
+      "feature": "home_rolling_sot_p1",
+      "missing_rate": 0.7136847315021034,
+      "train_mean": 1.9457930878524285,
+      "test_mean": 1.9755414358404535,
+      "drift_z": 0.027366146173331964
+    },
+    {
+      "feature": "home_rolling_sot_p1_against",
+      "missing_rate": 0.7136847315021034,
+      "train_mean": 2.000380220486171,
+      "test_mean": 1.9765865735646335,
+      "drift_z": 0.02193179172948616
+    },
+    {
+      "feature": "home_rolling_sot_h2_delta",
+      "missing_rate": 0.7136847315021034,
+      "train_mean": 0.5185936329905564,
+      "test_mean": 0.3157979829857717,
+      "drift_z": 0.14196405660130895
+    },
+    {
+      "feature": "home_rolling_sot_h2_delta_against",
+      "missing_rate": 0.7136847315021034,
+      "train_mean": 0.5373816571534982,
+      "test_mean": 0.4089891468589694,
+      "drift_z": 0.08511725749632937
+    },
+    {
+      "feature": "away_rolling_sot_p1",
+      "missing_rate": 0.7135609997525365,
+      "train_mean": 2.061712338250848,
+      "test_mean": 2.00449992979858,
+      "drift_z": 0.05022185664055664
+    },
+    {
+      "feature": "away_rolling_sot_p1_against",
+      "missing_rate": 0.7135609997525365,
+      "train_mean": 1.880499148981412,
+      "test_mean": 1.9682936034159795,
+      "drift_z": 0.08681935260154307
+    },
+    {
+      "feature": "away_rolling_sot_h2_delta",
+      "missing_rate": 0.7135609997525365,
+      "train_mean": 0.49272920006564375,
+      "test_mean": 0.44382995063211533,
+      "drift_z": 0.03299530910839409
+    },
+    {
+      "feature": "away_rolling_sot_h2_delta_against",
+      "missing_rate": 0.7135609997525365,
+      "train_mean": 0.5340333215838088,
+      "test_mean": 0.3531790793208398,
+      "drift_z": 0.1244430857746062
+    }
+  ],
+  "high_drift_features": [
+    {
+      "feature": "away_sample_size",
+      "missing_rate": 0.0,
+      "train_mean": 9.204949729311679,
+      "test_mean": 20.72170686456401,
+      "drift_z": 1.7068022709777468
+    },
+    {
+      "feature": "home_sample_size",
+      "missing_rate": 0.0,
+      "train_mean": 9.205104408352668,
+      "test_mean": 20.727272727272727,
+      "drift_z": 1.7049224231200042
+    },
+    {
+      "feature": "home_rolling_crosses",
+      "missing_rate": 0.08104429596634496,
+      "train_mean": 17.704888106541432,
+      "test_mean": 19.454713487924337,
+      "drift_z": 0.165518933676334
+    },
+    {
+      "feature": "away_rolling_crosses_against",
+      "missing_rate": 0.07993071022024252,
+      "train_mean": 17.68901836851306,
+      "test_mean": 19.449369969900147,
+      "drift_z": 0.16528295915747043
+    },
+    {
+      "feature": "home_rolling_crosses_against",
+      "missing_rate": 0.08104429596634496,
+      "train_mean": 17.753559095089233,
+      "test_mean": 19.455100433634627,
+      "drift_z": 0.16189080447794674
+    },
+    {
+      "feature": "away_rolling_crosses",
+      "missing_rate": 0.07993071022024252,
+      "train_mean": 17.7506296093317,
+      "test_mean": 19.433536600569738,
+      "drift_z": 0.16009589265386315
+    },
+    {
+      "feature": "home_rolling_xa",
+      "missing_rate": 0.321826280623608,
+      "train_mean": 0.9020612120666195,
+      "test_mean": 0.9522219127006087,
+      "drift_z": 0.14947532573525052
+    },
+    {
+      "feature": "home_rolling_sot_h2_delta",
+      "missing_rate": 0.7136847315021034,
+      "train_mean": 0.5185936329905564,
+      "test_mean": 0.3157979829857717,
+      "drift_z": 0.14196405660130895
+    },
+    {
+      "feature": "away_rolling_xa_against",
+      "missing_rate": 0.32133135362534027,
+      "train_mean": 0.9058855429885622,
+      "test_mean": 0.9507045269227812,
+      "drift_z": 0.14018219785138555
+    },
+    {
+      "feature": "away_rolling_goals_prevented",
+      "missing_rate": 0.14785944073249196,
+      "train_mean": -0.0025831518767995337,
+      "test_mean": 0.05343067637796985,
+      "drift_z": 0.139123242903015
+    },
+    {
+      "feature": "odds_over_25",
+      "missing_rate": 0.05840138579559515,
+      "train_mean": 1.868836884059226,
+      "test_mean": 1.9105587178583363,
+      "drift_z": 0.13718778546166482
+    },
+    {
+      "feature": "away_rolling_goals_prevented_against",
+      "missing_rate": 0.14785944073249196,
+      "train_mean": -0.009910263765499324,
+      "test_mean": 0.045716268543497245,
+      "drift_z": 0.1329685383862238
+    },
+    {
+      "feature": "home_rolling_goals_prevented_against",
+      "missing_rate": 0.1492204899777283,
+      "train_mean": -0.005925716128089634,
+      "test_mean": 0.04816767010838791,
+      "drift_z": 0.13257425913770896
+    },
+    {
+      "feature": "implied_under25",
+      "missing_rate": 0.05840138579559515,
+      "train_mean": 0.508964311351043,
+      "test_mean": 0.5204983815682358,
+      "drift_z": 0.13193557577476286
+    },
+    {
+      "feature": "implied_over25",
+      "missing_rate": 0.05840138579559515,
+      "train_mean": 0.5488563972551265,
+      "test_mean": 0.5374196655342106,
+      "drift_z": 0.13156575373937834
+    },
+    {
+      "feature": "away_rolling_xg_h2_delta_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.16136026245804536,
+      "test_mean": 0.10159758269834662,
+      "drift_z": 0.1301953254730945
+    },
+    {
+      "feature": "odds_over_35",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 3.164471250594325,
+      "test_mean": 3.2685106118789324,
+      "drift_z": 0.1297655683747785
+    },
+    {
+      "feature": "odds_gap_35",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 1.7673586389132192,
+      "test_mean": 1.8906507084942201,
+      "drift_z": 0.12795026290416345
+    },
+    {
+      "feature": "odds_over_15",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 1.2667397268772123,
+      "test_mean": 1.279261664967772,
+      "drift_z": 0.12645416610181462
+    },
+    {
+      "feature": "away_rolling_sot_h2_delta_against",
+      "missing_rate": 0.7135609997525365,
+      "train_mean": 0.5340333215838088,
+      "test_mean": 0.3531790793208398,
+      "drift_z": 0.1244430857746062
+    },
+    {
+      "feature": "implied_over15",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 0.7940983559378573,
+      "test_mean": 0.786626040229151,
+      "drift_z": 0.12429133822788961
+    },
+    {
+      "feature": "odds_gap_25",
+      "missing_rate": 0.05840138579559515,
+      "train_mean": -0.16554964233624386,
+      "test_mean": -0.0774334250002189,
+      "drift_z": 0.1242005686641516
+    },
+    {
+      "feature": "implied_under15",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 0.2660932095808829,
+      "test_mean": 0.27382627327444947,
+      "drift_z": 0.12364040444466744
+    },
+    {
+      "feature": "home_rolling_goals_prevented",
+      "missing_rate": 0.1492204899777283,
+      "train_mean": -0.0026416675450637262,
+      "test_mean": 0.04852647273436159,
+      "drift_z": 0.12245649512514324
+    },
+    {
+      "feature": "implied_under35",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 0.7263251368693343,
+      "test_mean": 0.736317189493939,
+      "drift_z": 0.12189909307769746
+    },
+    {
+      "feature": "implied_over35",
+      "missing_rate": 0.05852511754516209,
+      "train_mean": 0.3361607910224168,
+      "test_mean": 0.32598019671504896,
+      "drift_z": 0.12040527374503585
+    },
+    {
+      "feature": "away_rolling_xg_p1_against",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.6021472608209977,
+      "test_mean": 0.6420552067870323,
+      "drift_z": 0.1190951876829894
+    },
+    {
+      "feature": "away_rolling_xgot_against",
+      "missing_rate": 0.32133135362534027,
+      "train_mean": 1.3024916512766818,
+      "test_mean": 1.3617713869369912,
+      "drift_z": 0.11352749098943021
+    },
+    {
+      "feature": "home_rolling_xg_h2_delta",
+      "missing_rate": 0.7279138827023014,
+      "train_mean": 0.14839369178693224,
+      "test_mean": 0.09596509127323731,
+      "drift_z": 0.1122223424342432
+    },
+    {
+      "feature": "away_rolling_big_chances_against",
+      "missing_rate": 0.14488987874288542,
+      "train_mean": 2.1536222075832185,
+      "test_mean": 2.259553767529572,
+      "drift_z": 0.11220001491190257
+    }
+  ]
+}

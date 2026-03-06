@@ -44,6 +44,23 @@
   "calibration_min_samples": 80,
   "calibration_poor_brier": 0.22,
   "calibration_very_poor_brier": 0.24,
+  "edge_bucket_min_samples": 60,
+  "edge_bucket_min_precision": 0.54,
+  "edge_bucket_loss_streak_pause": 3,
+  "hard_edge_bucket_precision_gate": true,
+  "hard_edge_bucket_loss_streak_pause": true,
+  "edge_bucket_report_dir": "artifacts/reports/risk_edge_buckets",
+  "edge_bucket_overrides": {
+    "o15": {
+      "4-6%": {
+        "min_samples": 60,
+        "min_precision": 0.72,
+        "loss_streak_pause": 2,
+        "hard_precision_gate": true,
+        "hard_loss_streak_pause": true
+      }
+    }
+  },
   "penalties": {
     "missing_odds": 12.0,
     "fallback_used": 18.0,
@@ -56,6 +73,8 @@
     "calibration_poor": 10.0,
     "calibration_very_poor": 16.0,
     "precision_gate_fail": 25.0,
-    "loss_streak_pause": 30.0
+    "loss_streak_pause": 30.0,
+    "edge_bucket_precision_gate_fail": 20.0,
+    "edge_bucket_loss_streak_pause": 24.0
   }
 }

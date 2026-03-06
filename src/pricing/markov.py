@@ -17,6 +17,36 @@ class MarkovPricer:
     def _get_state_idx(self, h: int, a: int) -> int:
         return h * (self.max_goals + 1) + a
 
+    def _is_absorbing_state(self, market: str, h: int, a: int) -> bool:
+        if market == "h_1up":
+            return h > a
+        if market == "h_2up":
+            return h - a >= 2
+        if market == "a_1up":
+            return a > h
+        if market == "a_2up":
+            return a - h >= 2
+        return False
+
+    def _build_generator(self, market: str, lambda_h: float, lambda_a: float) -> np.ndarray:
+        Q = np.zeros((self.num_states, self.num_states))
+        for h in range(self.max_goals + 1):
+            for a in range(self.max_goals + 1):
+                idx = self._get_state_idx(h, a)
+                if self._is_absorbing_state(market, h, a):
+                    continue
+
+                if h + 1 <= self.max_goals:
+                    next_idx = self._get_state_idx(h + 1, a)
+                    Q[idx, next_idx] = lambda_h
+
+                if a + 1 <= self.max_goals:
+                    next_idx = self._get_state_idx(h, a + 1)
+                    Q[idx, next_idx] = lambda_a
+
+                Q[idx, idx] = -(lambda_h + lambda_a)
+        return Q
+
     def calculate_lead_probs(self, lambda_h: float, lambda_a: float) -> Dict[str, float]:
         """
         Calculates the probability of a team leading by N goals at ANY point 
@@ -28,37 +58,7 @@ class MarkovPricer:
         results = {}
         
         for market in ["h_1up", "h_2up", "a_1up", "a_2up"]:
-            # Q is the Generator Matrix: Q_ij is the transition rate from state i to j
-            Q = np.zeros((self.num_states, self.num_states))
-            
-            for h in range(self.max_goals + 1):
-                for a in range(self.max_goals + 1):
-                    idx = self._get_state_idx(h, a)
-                    
-                    # Define Absorption Condition (Once you hit 1UP/2UP, you stay there)
-                    is_absorbing = False
-                    if market == "h_1up" and h > a: is_absorbing = True
-                    elif market == "h_2up" and h - a >= 2: is_absorbing = True
-                    elif market == "a_1up" and a > h: is_absorbing = True
-                    elif market == "a_2up" and a - h >= 2: is_absorbing = True
-                    
-                    if is_absorbing:
-                        # Absorbing state: no transitions OUT
-                        continue
-                    
-                    # Rates of scoring
-                    # Transition to (h+1, a)
-                    if h + 1 <= self.max_goals:
-                        next_idx = self._get_state_idx(h + 1, a)
-                        Q[idx, next_idx] = lambda_h
-                    
-                    # Transition to (h, a+1)
-                    if a + 1 <= self.max_goals:
-                        next_idx = self._get_state_idx(h, a + 1)
-                        Q[idx, next_idx] = lambda_a
-                        
-                    # Diagonal: Sum of out-rates (with negative sign)
-                    Q[idx, idx] = - (lambda_h + lambda_a)
+            Q = self._build_generator(market, lambda_h, lambda_a)
 
             # Solve the Kolmogorov Forward Equation: P(t) = exp(Q*t)
             # t=1 represents the full match (lambda is per-match intensity)
@@ -72,17 +72,46 @@ class MarkovPricer:
             for h in range(self.max_goals + 1):
                 for a in range(self.max_goals + 1):
                     idx = self._get_state_idx(h, a)
-                    success = False
-                    if market == "h_1up" and h > a: success = True
-                    elif market == "h_2up" and h - a >= 2: success = True
-                    elif market == "a_1up" and a > h: success = True
-                    elif market == "a_2up" and a - h >= 2: success = True
-                    
-                    if success:
+                    if self._is_absorbing_state(market, h, a):
                         prob_hit += P_matrix[start_idx, idx]
             
             results[market] = float(prob_hit)
             
+        return results
+
+    def calculate_lead_probs_phase_split(
+        self,
+        lambda_h_p1: float,
+        lambda_a_p1: float,
+        lambda_h_p2: float,
+        lambda_a_p2: float,
+    ) -> Dict[str, float]:
+        """
+        Calculates anytime lead probabilities under a 2-phase match process.
+
+        Each phase uses its own constant rates. Absorbing lead states persist
+        across both phases, so a lead achieved in phase 1 remains a success in
+        phase 2.
+        """
+        results: Dict[str, float] = {}
+        start_idx = self._get_state_idx(0, 0)
+        start_state = np.zeros(self.num_states)
+        start_state[start_idx] = 1.0
+
+        for market in ["h_1up", "h_2up", "a_1up", "a_2up"]:
+            q_p1 = self._build_generator(market, lambda_h_p1, lambda_a_p1)
+            q_p2 = self._build_generator(market, lambda_h_p2, lambda_a_p2)
+            phase1 = start_state @ expm(q_p1 * 1.0)
+            final_state = phase1 @ expm(q_p2 * 1.0)
+
+            prob_hit = 0.0
+            for h in range(self.max_goals + 1):
+                for a in range(self.max_goals + 1):
+                    idx = self._get_state_idx(h, a)
+                    if self._is_absorbing_state(market, h, a):
+                        prob_hit += final_state[idx]
+            results[market] = float(prob_hit)
+
         return results
 
 if __name__ == "__main__":

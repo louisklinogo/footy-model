@@ -1,0 +1,96 @@
+{
+  "generated_at_utc": "2026-03-05T02:57:30.839200+00:00",
+  "family": "anytime",
+  "experiment": "anytime_momentum_path_block",
+  "summary": {
+    "markets_compared": 4,
+    "auc_delta_mean": 8.246474019082961e-05,
+    "brier_delta_mean": -8.816399062895608e-06,
+    "auc_up_markets": 2,
+    "brier_down_markets": 3,
+    "focus_markets": [
+      "h_1up",
+      "a_1up",
+      "h_2up",
+      "a_2up"
+    ],
+    "focus_auc_delta_mean": 8.246474019082961e-05,
+    "focus_brier_delta_mean": -8.816399062895608e-06
+  },
+  "focus_rows": [
+    {
+      "market": "a_1up",
+      "auc_before": 0.6147338768940056,
+      "auc_after": 0.6154752948175106,
+      "auc_delta": 0.0007414179235050167,
+      "brier_before": 0.24094383978839057,
+      "brier_after": 0.24089827311559026,
+      "brier_delta": -4.556667280031235e-05
+    },
+    {
+      "market": "a_2up",
+      "auc_before": 0.6288858012995944,
+      "auc_after": 0.6289524651593618,
+      "auc_delta": 6.666385976739075e-05,
+      "brier_before": 0.15096563805968677,
+      "brier_after": 0.15095027250416151,
+      "brier_delta": -1.5365555525254093e-05
+    },
+    {
+      "market": "h_1up",
+      "auc_before": 0.6394808399789776,
+      "auc_after": 0.6394259991316866,
+      "auc_delta": -5.484084729101557e-05,
+      "brier_before": 0.2283629934576139,
+      "brier_after": 0.22839132621072833,
+      "brier_delta": 2.833275311442396e-05
+    },
+    {
+      "market": "h_2up",
+      "auc_before": 0.6263004883005447,
+      "auc_after": 0.6258771063253267,
+      "auc_delta": -0.0004233819752180734,
+      "brier_before": 0.18612517271085185,
+      "brier_after": 0.18612250658981142,
+      "brier_delta": -2.6661210404399505e-06
+    }
+  ],
+  "rows": [
+    {
+      "market": "a_1up",
+      "auc_before": 0.6147338768940056,
+      "auc_after": 0.6154752948175106,
+      "auc_delta": 0.0007414179235050167,
+      "brier_before": 0.24094383978839057,
+      "brier_after": 0.24089827311559026,
+      "brier_delta": -4.556667280031235e-05
+    },
+    {
+      "market": "a_2up",
+      "auc_before": 0.6288858012995944,
+      "auc_after": 0.6289524651593618,
+      "auc_delta": 6.666385976739075e-05,
+      "brier_before": 0.15096563805968677,
+      "brier_after": 0.15095027250416151,
+      "brier_delta": -1.5365555525254093e-05
+    },
+    {
+      "market": "h_1up",
+      "auc_before": 0.6394808399789776,
+      "auc_after": 0.6394259991316866,
+      "auc_delta": -5.484084729101557e-05,
+      "brier_before": 0.2283629934576139,
+      "brier_after": 0.22839132621072833,
+      "brier_delta": 2.833275311442396e-05
+    },
+    {
+      "market": "h_2up",
+      "auc_before": 0.6263004883005447,
+      "auc_after": 0.6258771063253267,
+      "auc_delta": -0.0004233819752180734,
+      "brier_before": 0.18612517271085185,
+      "brier_after": 0.18612250658981142,
+      "brier_delta": -2.6661210404399505e-06
+    }
+  ]
+}

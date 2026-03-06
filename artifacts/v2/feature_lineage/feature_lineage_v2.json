@@ -1,0 +1,684 @@
+{
+  "generated_at_utc": "2026-03-03T23:32:09.846188+00:00",
+  "contracts_dir": "C:\\Developer\\soccer\\footy-model\\model_v2\\feature_contracts",
+  "families": {
+    "anytime": [
+      {
+        "feature": "adj_lambda_away_final",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "adj_lambda_away_final_is_missing",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "adj_lambda_home_final",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "adj_lambda_home_final_is_missing",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "away_rolling_big_chances",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_sot_h2_delta",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_sot_p1",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg_h2_delta",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg_p1",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg_p1_is_missing",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "away_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_big_chances",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_sot_h2_delta",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_sot_p1",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg_h2_delta",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg_p1",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg_p1_is_missing",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "home_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "lambda_away_l1",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "lambda_home_l1",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "rule_fired_away",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "rule_fired_home",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      }
+    ],
+    "corners": [
+      {
+        "feature": "away_rolling_box_touches",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_corners",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_corners_against",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_crosses",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "corners_gap_105",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "corners_gap_75",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "corners_gap_85",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "corners_gap_95",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "corners_net_diff",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_box_touches",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_corners",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_corners_against",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_crosses",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "implied_c105_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "implied_c75_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "implied_c85_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "implied_c95_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c105_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c105_over_is_missing",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "odds_c105_under",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c75_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c75_over_is_missing",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "odds_c75_under",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c85_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c85_over_is_missing",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "odds_c85_under",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c95_over",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "odds_c95_over_is_missing",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "odds_c95_under",
+        "source": "fixture_odds_markets",
+        "freshness_sla_hours": 24,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      }
+    ],
+    "scoreline": [
+      {
+        "feature": "away_defenders",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_forwards",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_midfielders",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_big_chances",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_possession",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_sot",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xg_against",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_rolling_xgot",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "away_sample_size_is_missing",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "goal_diff_proxy",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_defenders",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_forwards",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_midfielders",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_big_chances",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_possession",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_sot",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xg_against",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_rolling_xgot",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_sample_size",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "home_sample_size_is_missing",
+        "source": "team_premium_snapshots",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "lambda_away_l1",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "lambda_away_l1_is_missing",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "lambda_home_l1",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "lambda_home_l1_is_missing",
+        "source": "predictions(lambda/situational)",
+        "freshness_sla_hours": 48,
+        "required": false,
+        "optional": false,
+        "missingness_indicator": true
+      },
+      {
+        "feature": "style_delta",
+        "source": "fixture_formations",
+        "freshness_sla_hours": 168,
+        "required": false,
+        "optional": true,
+        "missingness_indicator": false
+      },
+      {
+        "feature": "xg_net_diff",
+        "source": "derived",
+        "freshness_sla_hours": 168,
+        "required": true,
+        "optional": false,
+        "missingness_indicator": false
+      }
+    ]
+  }
+}

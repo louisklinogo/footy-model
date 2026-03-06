@@ -1,0 +1,62 @@
+version: 1
+family: scoreline
+description: Feature contract for scoreline-driven markets (1X2/DC/AH/EH/Goals lines).
+
+required_features:
+  - home_sample_size
+  - away_sample_size
+  - home_rolling_xg
+  - home_rolling_xg_against
+  - away_rolling_xg
+  - away_rolling_xg_against
+  - home_rolling_sot
+  - away_rolling_sot
+  - lambda_home_l1
+  - lambda_away_l1
+  - xg_net_diff
+  - goal_diff_proxy
+
+optional_features:
+  - home_rolling_big_chances
+  - away_rolling_big_chances
+  - home_rolling_xgot
+  - away_rolling_xgot
+  - home_season_baseline_xg
+  - away_season_baseline_xg
+  - home_recent_xg_mean_5
+  - away_recent_xg_mean_5
+  - home_recent_vs_baseline_zscore
+  - away_recent_vs_baseline_zscore
+  - home_regressed_recent_xg
+  - away_regressed_recent_xg
+  - regressed_xg_diff
+  - recent_vs_baseline_gap
+  - home_rolling_possession
+  - away_rolling_possession
+  - home_defenders
+  - home_midfielders
+  - home_forwards
+  - away_defenders
+  - away_midfielders
+  - away_forwards
+  - style_delta
+
+missingness_indicators:
+  - lambda_home_l1_is_missing
+  - lambda_away_l1_is_missing
+  - home_sample_size_is_missing
+  - away_sample_size_is_missing
+  - home_season_baseline_xg_is_missing
+  - away_season_baseline_xg_is_missing
+  - home_recent_xg_mean_5_is_missing
+  - away_recent_xg_mean_5_is_missing
+
+forbidden_cross_family_features:
+  - odds_c75_over
+  - odds_c85_over
+  - odds_c95_over
+  - odds_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105

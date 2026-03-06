@@ -24,6 +24,26 @@ from src.db.db_utils import connect_db
 
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
+CORNERS_MARKETS = (
+    "c75",
+    "c85",
+    "c95",
+    "c105",
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
+)
+ANYTIME_MARKETS = (
+    "h_1up",
+    "a_1up",
+    "h_2up",
+    "a_2up",
+)
 MARKETS = (
     # Goals
     "o15",
@@ -178,13 +198,45 @@ def fetch_unscored_predictions(
       AND p.market_code = ANY(%s)
       AND f.status = 'ft'
       AND f.status NOT IN ('postponed', 'cancelled', 'abandoned')
-      AND ps.prediction_id IS NULL
+      AND (
+          ps.prediction_id IS NULL
+          OR (
+              ps.odds_used IS NULL
+              AND od.odds_rows <> '[]'::jsonb
+          )
+      )
+      AND (
+          (
+              p.market_code = ANY(%s)
+              AND fs.h_corners IS NOT NULL
+              AND fs.a_corners IS NOT NULL
+          )
+          OR (
+              p.market_code = ANY(%s)
+              AND (
+                  ils.home_led_by_1_any IS NOT NULL
+                  OR ils.away_led_by_1_any IS NOT NULL
+                  OR ils.home_led_by_2_any IS NOT NULL
+                  OR ils.away_led_by_2_any IS NOT NULL
+              )
+          )
+          OR (
+              p.market_code <> ALL(%s)
+              AND p.market_code <> ALL(%s)
+              AND fr.home_goals IS NOT NULL
+              AND fr.away_goals IS NOT NULL
+          )
+      )
     """
     params: list[object] = [
         list(ODDS_MARKET_CODES),
         MODEL_NAME,
         MODEL_VERSION,
         list(MARKETS),
+        list(CORNERS_MARKETS),
+        list(ANYTIME_MARKETS),
+        list(CORNERS_MARKETS),
+        list(ANYTIME_MARKETS),
     ]
 
     if since_days is not None:
@@ -195,7 +247,15 @@ def fetch_unscored_predictions(
         query += " AND f.league_code = %s"
         params.append(league)
 
-    query += " ORDER BY f.match_datetime_utc DESC, p.prediction_id ASC"
+    query += """
+     ORDER BY
+        CASE
+            WHEN ps.prediction_id IS NOT NULL AND ps.odds_used IS NULL THEN 0
+            ELSE 1
+        END ASC,
+        f.match_datetime_utc DESC,
+        p.prediction_id ASC
+    """
 
     if limit is not None:
         query += " LIMIT %s"

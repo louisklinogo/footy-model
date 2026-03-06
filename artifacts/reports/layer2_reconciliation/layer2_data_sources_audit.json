@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated_at": "2026-02-26T17:17:12.481661+00:00",
-    "ft_fixture_count": 7824,
+    "generated_at": "2026-03-04T00:25:06.845489+00:00",
+    "ft_fixture_count": 8082,
     "fixtures_time_min_utc": "2023-09-19 16:45:00+00:00",
     "fixtures_time_max_utc": "2026-12-03 00:00:00+00:00",
     "critical_sources": [
@@ -15,13 +15,13 @@
     {
       "source_name": "fixtures+fixture_results",
       "role_in_layer2": "ground-truth target and chronology anchor",
-      "row_count": 7824,
+      "row_count": 8082,
       "fixture_coverage_pct": 100.0,
       "timing_integrity_pct": 100.0,
       "key_risks": [],
       "risk_level": "low",
       "evidence": {
-        "ft_fixture_count": 7824,
+        "ft_fixture_count": 8082,
         "time_min_utc": "2023-09-19 16:45:00+00:00",
         "time_max_utc": "2026-12-03 00:00:00+00:00"
       }
@@ -30,13 +30,13 @@
       "source_name": "predictions(lambda_xgb)",
       "role_in_layer2": "Layer 1 baseline lambdas for residual target",
       "row_count": 20594,
-      "fixture_coverage_pct": 91.21932515337423,
+      "fixture_coverage_pct": 91.37589705518437,
       "timing_integrity_pct": 100.0,
       "key_risks": [],
       "risk_level": "low",
       "evidence": {
-        "latest_pair_fixtures": 7137,
-        "pre_kickoff_latest_pairs": 7137,
+        "latest_pair_fixtures": 7385,
+        "pre_kickoff_latest_pairs": 7385,
         "post_kickoff_latest_pairs": 0,
         "lineage_anchor": "feature_asof_utc"
       }
@@ -50,7 +50,7 @@
       "key_risks": [],
       "risk_level": "low",
       "evidence": {
-        "ft_fixtures_with_home_away_snapshot_pair": 7824,
+        "ft_fixtures_with_home_away_snapshot_pair": 8082,
         "sample_size_p50": 13.0,
         "sample_size_p10": 1.0,
         "sample_size_p90": 27.0
@@ -59,29 +59,29 @@
     {
       "source_name": "fixture_odds_markets(sofascore_1x2)",
       "role_in_layer2": "market-implied probabilities for odds-model gap features",
-      "row_count": 8947,
-      "fixture_coverage_pct": 97.82719836400818,
+      "row_count": 13664,
+      "fixture_coverage_pct": 97.82232120762188,
       "timing_integrity_pct": 100.0,
       "key_risks": [],
       "risk_level": "low",
       "evidence": {
-        "ft_fixtures_with_pre_kickoff_1x2": 7654,
+        "ft_fixtures_with_pre_kickoff_1x2": 7906,
         "ft_fixtures_with_post_kickoff_1x2_in_pre_types": 0
       }
     },
     {
       "source_name": "player_availability",
       "role_in_layer2": "injury/absence impact features",
-      "row_count": 338699,
-      "fixture_coverage_pct": 99.85940695296523,
+      "row_count": 341259,
+      "fixture_coverage_pct": 97.38926008413759,
       "timing_integrity_pct": 100.0,
       "key_risks": [],
       "risk_level": "low",
       "evidence": {
-        "ft_fixtures_with_availability": 7813,
+        "ft_fixtures_with_availability": 7871,
         "timing_anchor": "event_recorded_at",
         "rows_with_timing_after_kickoff": 0,
-        "rows_with_known_timing": 338699,
+        "rows_with_known_timing": 341259,
         "rows_with_unknown_timing": 0
       }
     },
@@ -89,21 +89,21 @@
       "source_name": "team_rivalries",
       "role_in_layer2": "derby context features",
       "row_count": 35,
-      "fixture_coverage_pct": 0.4729038854805726,
+      "fixture_coverage_pct": 0.48255382331106156,
       "timing_integrity_pct": 100.0,
       "key_risks": [
         "very_low_derby_prevalence"
       ],
       "risk_level": "critical",
       "evidence": {
-        "ft_derby_fixture_count": 37
+        "ft_derby_fixture_count": 39
       }
     },
     {
       "source_name": "fixture_player_stats",
       "role_in_layer2": "historical player impact prior strength estimation",
       "row_count": 319999,
-      "fixture_coverage_pct": 99.82106339468302,
+      "fixture_coverage_pct": 96.63449641177925,
       "timing_integrity_pct": 100.0,
       "key_risks": [
         "expected_goals_missingness_high"

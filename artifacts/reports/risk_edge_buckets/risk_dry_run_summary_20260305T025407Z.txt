@@ -1,0 +1,2 @@
+Resolved tradable markets: 5 (required=11, gating=27, coverage_applied=True)
+[DRY RUN] Assessed 2283 rows: pass=2222 watch=7 bet_small=18 bet=36

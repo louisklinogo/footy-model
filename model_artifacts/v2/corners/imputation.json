@@ -1,0 +1,28 @@
+{
+  "global_medians": {
+    "home_sample_size": 8.0,
+    "away_sample_size": 8.0,
+    "home_rolling_corners": 4.642596091840104,
+    "home_rolling_corners_against": 4.770783683597838,
+    "away_rolling_corners": 4.779409745184206,
+    "away_rolling_corners_against": 4.6429100271334205,
+    "home_rolling_box_touches": 21.091974654623492,
+    "away_rolling_box_touches": 21.576976331872324,
+    "odds_c75_over": 0.0,
+    "odds_c75_under": 0.0,
+    "odds_c85_over": 1.7272727272727273,
+    "odds_c85_under": 2.0,
+    "odds_c95_over": 1.8333333333333335,
+    "odds_c95_under": 1.8333333333333335,
+    "odds_c105_over": 2.0,
+    "odds_c105_under": 1.7272727272727273,
+    "implied_c75_over": 0.0,
+    "implied_c85_over": 0.5789473684210527,
+    "implied_c95_over": 0.5454545454545454,
+    "implied_c105_over": 0.5,
+    "corners_gap_75": 0.0,
+    "corners_gap_85": -0.2727272727272727,
+    "corners_gap_95": 0.0,
+    "corners_gap_105": 0.2727272727272727
+  }
+}

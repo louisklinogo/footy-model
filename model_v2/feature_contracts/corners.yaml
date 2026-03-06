@@ -1,0 +1,56 @@
+version: 1
+family: corners
+description: Feature contract for corners totals and team-corners distributions.
+
+required_features:
+  - home_sample_size
+  - away_sample_size
+  - home_rolling_corners
+  - home_rolling_corners_against
+  - away_rolling_corners
+  - away_rolling_corners_against
+  - corners_net_diff
+  - home_rolling_crosses
+  - away_rolling_crosses
+  - home_rolling_box_touches
+  - away_rolling_box_touches
+
+optional_features:
+  - odds_c75_over
+  - odds_c75_under
+  - odds_c85_over
+  - odds_c85_under
+  - odds_c95_over
+  - odds_c95_under
+  - odds_c105_over
+  - odds_c105_under
+  - implied_c75_over
+  - implied_c85_over
+  - implied_c95_over
+  - implied_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105
+
+missingness_indicators:
+  - odds_c75_over_is_missing
+  - odds_c85_over_is_missing
+  - odds_c95_over_is_missing
+  - odds_c105_over_is_missing
+
+forbidden_cross_family_features:
+  - odds_over_15
+  - odds_under_15
+  - odds_over_25
+  - odds_under_25
+  - odds_over_35
+  - odds_under_35
+  - odds_gap_15
+  - odds_gap_25
+  - odds_gap_35
+
+disabled_features:
+  - home_rolling_crosses
+  - away_rolling_crosses
+  - corners_net_diff

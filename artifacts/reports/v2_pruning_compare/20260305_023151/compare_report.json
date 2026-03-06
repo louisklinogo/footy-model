@@ -1,0 +1,707 @@
+{
+  "run_dir": "artifacts\\reports\\v2_pruning_compare\\20260305_023151",
+  "families": {
+    "scoreline": {
+      "markets_compared": 52,
+      "auc_delta_mean": 0.0,
+      "brier_delta_mean": 0.0,
+      "auc_up_markets": 0,
+      "brier_down_markets": 0,
+      "rows": [
+        {
+          "market": "1x2_a",
+          "auc_before": 0.6338987947681738,
+          "auc_after": 0.6338987947681738,
+          "auc_delta": 0.0,
+          "brier_before": 0.2052142058816452,
+          "brier_after": 0.2052142058816452,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "1x2_d",
+          "auc_before": 0.5152763902763902,
+          "auc_after": 0.5152763902763902,
+          "auc_delta": 0.0,
+          "brier_before": 0.19549258911559908,
+          "brier_after": 0.19549258911559908,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "1x2_h",
+          "auc_before": 0.6361676016830295,
+          "auc_after": 0.6361676016830295,
+          "auc_delta": 0.0,
+          "brier_before": 0.23504751329360635,
+          "brier_after": 0.23504751329360635,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ah_a05",
+          "auc_before": 0.6338987947681738,
+          "auc_after": 0.6338987947681738,
+          "auc_delta": 0.0,
+          "brier_before": 0.2052142058816452,
+          "brier_after": 0.2052142058816452,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ah_a15",
+          "auc_before": 0.6444417651314205,
+          "auc_after": 0.6444417651314205,
+          "auc_delta": 0.0,
+          "brier_before": 0.11044337848223082,
+          "brier_after": 0.11044337848223082,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ah_h05",
+          "auc_before": 0.6361676016830295,
+          "auc_after": 0.6361676016830295,
+          "auc_delta": 0.0,
+          "brier_before": 0.23504751329360635,
+          "brier_after": 0.23504751329360635,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ah_h15",
+          "auc_before": 0.6525840528092193,
+          "auc_after": 0.6525840528092193,
+          "auc_delta": 0.0,
+          "brier_before": 0.15713235670631714,
+          "brier_after": 0.15713235670631714,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "amg_0",
+          "auc_before": 0.571551171056901,
+          "auc_after": 0.571551171056901,
+          "auc_delta": 0.0,
+          "brier_before": 0.21153194139201922,
+          "brier_after": 0.21153194139201922,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "amg_1_2",
+          "auc_before": 0.5144600636403915,
+          "auc_after": 0.5144600636403915,
+          "auc_delta": 0.0,
+          "brier_before": 0.2490922736019149,
+          "brier_after": 0.2490922736019149,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "amg_1_3",
+          "auc_before": 0.5431609179578605,
+          "auc_after": 0.5431609179578605,
+          "auc_delta": 0.0,
+          "brier_before": 0.22491637903725353,
+          "brier_after": 0.22491637903725353,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "amg_2_3",
+          "auc_before": 0.5555946347505927,
+          "auc_after": 0.5555946347505927,
+          "auc_delta": 0.0,
+          "brier_before": 0.22222775537944134,
+          "brier_after": 0.22222775537944134,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "amg_4p",
+          "auc_before": 0.6091279932189023,
+          "auc_after": 0.6091279932189023,
+          "auc_delta": 0.0,
+          "brier_before": 0.03713728231031446,
+          "brier_after": 0.03713728231031446,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "dc_12",
+          "auc_before": 0.5152763902763903,
+          "auc_after": 0.5152763902763903,
+          "auc_delta": 0.0,
+          "brier_before": 0.19549258911559908,
+          "brier_after": 0.19549258911559908,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "dc_1x",
+          "auc_before": 0.6338987947681739,
+          "auc_after": 0.6338987947681739,
+          "auc_delta": 0.0,
+          "brier_before": 0.2052142058816452,
+          "brier_after": 0.2052142058816452,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "dc_x2",
+          "auc_before": 0.6361676016830294,
+          "auc_after": 0.6361676016830294,
+          "auc_delta": 0.0,
+          "brier_before": 0.23504751329360635,
+          "brier_after": 0.23504751329360635,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "eh_a1",
+          "auc_before": 0.6444417651314205,
+          "auc_after": 0.6444417651314205,
+          "auc_delta": 0.0,
+          "brier_before": 0.11044337848223082,
+          "brier_after": 0.11044337848223082,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "eh_h1",
+          "auc_before": 0.6525840528092193,
+          "auc_after": 0.6525840528092193,
+          "auc_delta": 0.0,
+          "brier_before": 0.15713235670631714,
+          "brier_after": 0.15713235670631714,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "hmg_0",
+          "auc_before": 0.6310246352420457,
+          "auc_after": 0.6310246352420457,
+          "auc_delta": 0.0,
+          "brier_before": 0.16652525218656494,
+          "brier_after": 0.16652525218656494,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "hmg_1_2",
+          "auc_before": 0.557538164095541,
+          "auc_after": 0.557538164095541,
+          "auc_delta": 0.0,
+          "brier_before": 0.2413842691516557,
+          "brier_after": 0.2413842691516557,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "hmg_1_3",
+          "auc_before": 0.5663479962193512,
+          "auc_after": 0.5663479962193512,
+          "auc_delta": 0.0,
+          "brier_before": 0.2041062504183972,
+          "brier_after": 0.2041062504183972,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "hmg_2_3",
+          "auc_before": 0.5724126984126984,
+          "auc_after": 0.5724126984126984,
+          "auc_delta": 0.0,
+          "brier_before": 0.2358716483500741,
+          "brier_after": 0.2358716483500741,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "hmg_4p",
+          "auc_before": 0.6675912228796844,
+          "auc_after": 0.6675912228796844,
+          "auc_delta": 0.0,
+          "brier_before": 0.0635722249174964,
+          "brier_after": 0.0635722249174964,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_0",
+          "auc_before": 0.5627845835431,
+          "auc_after": 0.5627845835431,
+          "auc_delta": 0.0,
+          "brier_before": 0.0678983261399036,
+          "brier_after": 0.0678983261399036,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_1_2",
+          "auc_before": 0.52943143122157,
+          "auc_after": 0.52943143122157,
+          "auc_delta": 0.0,
+          "brier_before": 0.24177230500778604,
+          "brier_after": 0.24177230500778604,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_1_3",
+          "auc_before": 0.5158552631578948,
+          "auc_after": 0.5158552631578948,
+          "auc_delta": 0.0,
+          "brier_before": 0.23855239250457252,
+          "brier_after": 0.23855239250457252,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_1_4",
+          "auc_before": 0.5104427350877655,
+          "auc_after": 0.5104427350877655,
+          "auc_delta": 0.0,
+          "brier_before": 0.17321364906517075,
+          "brier_after": 0.17321364906517075,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_1_5",
+          "auc_before": 0.5009202556637553,
+          "auc_after": 0.5009202556637553,
+          "auc_delta": 0.0,
+          "brier_before": 0.11398897125118829,
+          "brier_after": 0.11398897125118829,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_1_6",
+          "auc_before": 0.4957525707525708,
+          "auc_after": 0.4957525707525708,
+          "auc_delta": 0.0,
+          "brier_before": 0.08380843323124137,
+          "brier_after": 0.08380843323124137,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_2_3",
+          "auc_before": 0.4942162886660041,
+          "auc_after": 0.4942162886660041,
+          "auc_delta": 0.0,
+          "brier_before": 0.2506542497637857,
+          "brier_after": 0.2506542497637857,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_2_4",
+          "auc_before": 0.5274816868515423,
+          "auc_after": 0.5274816868515423,
+          "auc_delta": 0.0,
+          "brier_before": 0.23737709917033553,
+          "brier_after": 0.23737709917033553,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_2_5",
+          "auc_before": 0.5477259837910027,
+          "auc_after": 0.5477259837910027,
+          "auc_delta": 0.0,
+          "brier_before": 0.20828157951764528,
+          "brier_after": 0.20828157951764528,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_2_6",
+          "auc_before": 0.5595618247298919,
+          "auc_after": 0.5595618247298919,
+          "auc_delta": 0.0,
+          "brier_before": 0.19091586759470788,
+          "brier_after": 0.19091586759470788,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_3_4",
+          "auc_before": 0.5133573166232028,
+          "auc_after": 0.5133573166232028,
+          "auc_delta": 0.0,
+          "brier_before": 0.24603495565787684,
+          "brier_after": 0.24603495565787684,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_3_5",
+          "auc_before": 0.5295430739263408,
+          "auc_after": 0.5295430739263408,
+          "auc_delta": 0.0,
+          "brier_before": 0.25861547674427077,
+          "brier_after": 0.25861547674427077,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_3_6",
+          "auc_before": 0.5385381500003009,
+          "auc_after": 0.5385381500003009,
+          "auc_delta": 0.0,
+          "brier_before": 0.25876839103363136,
+          "brier_after": 0.25876839103363136,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_4_5",
+          "auc_before": 0.5231196468170813,
+          "auc_after": 0.5231196468170813,
+          "auc_delta": 0.0,
+          "brier_before": 0.187790631848947,
+          "brier_after": 0.187790631848947,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_4_6",
+          "auc_before": 0.5314161014122096,
+          "auc_after": 0.5314161014122096,
+          "auc_delta": 0.0,
+          "brier_before": 0.20722216877719318,
+          "brier_after": 0.20722216877719318,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_5_6",
+          "auc_before": 0.5517126095371216,
+          "auc_after": 0.5517126095371216,
+          "auc_delta": 0.0,
+          "brier_before": 0.1124119242497117,
+          "brier_after": 0.1124119242497117,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "mg_7p",
+          "auc_before": 0.5870971095861925,
+          "auc_after": 0.5870971095861925,
+          "auc_delta": 0.0,
+          "brier_before": 0.019325789867970747,
+          "brier_after": 0.019325789867970747,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_a_0_1_0_2_0_3",
+          "auc_before": 0.6278179644005332,
+          "auc_after": 0.6278179644005332,
+          "auc_delta": 0.0,
+          "brier_before": 0.11435900215748636,
+          "brier_after": 0.11435900215748636,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_a_0_4_0_5_0_6",
+          "auc_before": 0.7098574085554867,
+          "auc_after": 0.7098574085554867,
+          "auc_delta": 0.0,
+          "brier_before": 0.012080336612891445,
+          "brier_after": 0.012080336612891445,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_a_2_3_2_4_1_5",
+          "auc_before": 0.5591677808270589,
+          "auc_after": 0.5591677808270589,
+          "auc_delta": 0.0,
+          "brier_before": 0.03214778704535875,
+          "brier_after": 0.03214778704535875,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_draw",
+          "auc_before": 0.5152763902763902,
+          "auc_after": 0.5152763902763902,
+          "auc_delta": 0.0,
+          "brier_before": 0.19549258911559908,
+          "brier_after": 0.19549258911559908,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_h_1_0_2_0_3_0",
+          "auc_before": 0.5899524829143813,
+          "auc_after": 0.5899524829143813,
+          "auc_delta": 0.0,
+          "brier_before": 0.1553008543984934,
+          "brier_after": 0.1553008543984934,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_h_1_2_1_3_1_4",
+          "auc_before": 0.5860633913265492,
+          "auc_after": 0.5860633913265492,
+          "auc_delta": 0.0,
+          "brier_before": 0.10217799456898474,
+          "brier_after": 0.10217799456898474,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_h_2_1_3_1_4_1",
+          "auc_before": 0.549251968290608,
+          "auc_after": 0.549251968290608,
+          "auc_delta": 0.0,
+          "brier_before": 0.13942542110738673,
+          "brier_after": 0.13942542110738673,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_h_3_2_4_2_5_1",
+          "auc_before": 0.5649600131915244,
+          "auc_after": 0.5649600131915244,
+          "auc_delta": 0.0,
+          "brier_before": 0.0454608179532391,
+          "brier_after": 0.0454608179532391,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_h_4_0_5_0_6_0",
+          "auc_before": 0.7097727426674796,
+          "auc_after": 0.7097727426674796,
+          "auc_delta": 0.0,
+          "brier_before": 0.022259979954482065,
+          "brier_after": 0.022259979954482065,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_other_awaywin",
+          "auc_before": 0.6929436161865262,
+          "auc_after": 0.6929436161865262,
+          "auc_delta": 0.0,
+          "brier_before": 0.006888549886412485,
+          "brier_after": 0.006888549886412485,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "ms_other_homewin",
+          "auc_before": 0.5659442724458205,
+          "auc_after": 0.5659442724458205,
+          "auc_delta": 0.0,
+          "brier_before": 0.01148999452118292,
+          "brier_after": 0.01148999452118292,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "o15",
+          "auc_before": 0.5697896245705011,
+          "auc_after": 0.5697896245705011,
+          "auc_delta": 0.0,
+          "brier_before": 0.1823144501962782,
+          "brier_after": 0.1823144501962782,
+          "brier_delta": 0.0
+        },
+        {
+          "market": "u35",
+          "auc_before": 0.5376542217937044,
+          "auc_after": 0.5376542217937044,
+          "auc_delta": 0.0,
+          "brier_before": 0.21849353607119984,
+          "brier_after": 0.21849353607119984,
+          "brier_delta": 0.0
+        }
+      ]
+    },
+    "corners": {
+      "markets_compared": 12,
+      "auc_delta_mean": 0.0025592128235668588,
+      "brier_delta_mean": -0.0001451248947928104,
+      "auc_up_markets": 10,
+      "brier_down_markets": 11,
+      "rows": [
+        {
+          "market": "ac25",
+          "auc_before": 0.6194431596258607,
+          "auc_after": 0.6213297015794703,
+          "auc_delta": 0.0018865419536095995,
+          "brier_before": 0.1949862897993133,
+          "brier_after": 0.19491495320107996,
+          "brier_delta": -7.133659823332916e-05
+        },
+        {
+          "market": "ac35",
+          "auc_before": 0.627229375879215,
+          "auc_after": 0.6272015195620987,
+          "auc_delta": -2.7856317116325968e-05,
+          "brier_before": 0.2368791602022063,
+          "brier_after": 0.2368528314706395,
+          "brier_delta": -2.6328731566799268e-05
+        },
+        {
+          "market": "ac45",
+          "auc_before": 0.6133369455152688,
+          "auc_after": 0.6131308734966513,
+          "auc_delta": -0.00020607201861755353,
+          "brier_before": 0.23385966396713093,
+          "brier_after": 0.2339016060718954,
+          "brier_delta": 4.194210476446414e-05
+        },
+        {
+          "market": "ac55",
+          "auc_before": 0.6332626540423656,
+          "auc_after": 0.6359708605378623,
+          "auc_delta": 0.0027082064954967455,
+          "brier_before": 0.19625166882448608,
+          "brier_after": 0.19610269434670338,
+          "brier_delta": -0.00014897447778269846
+        },
+        {
+          "market": "c105",
+          "auc_before": 0.5844823626166009,
+          "auc_after": 0.5899762167608859,
+          "auc_delta": 0.005493854144284938,
+          "brier_before": 0.22878022797497097,
+          "brier_after": 0.22860901332505343,
+          "brier_delta": -0.00017121464991753932
+        },
+        {
+          "market": "c75",
+          "auc_before": 0.5688921537080631,
+          "auc_after": 0.5722941046962589,
+          "auc_delta": 0.0034019509881957344,
+          "brier_before": 0.20082316774342057,
+          "brier_after": 0.2007013195454839,
+          "brier_delta": -0.00012184819793667478
+        },
+        {
+          "market": "c85",
+          "auc_before": 0.5706723727071992,
+          "auc_after": 0.5751559505330739,
+          "auc_delta": 0.004483577825874718,
+          "brier_before": 0.23241298371445596,
+          "brier_after": 0.23220796951377298,
+          "brier_delta": -0.0002050142006829736
+        },
+        {
+          "market": "c95",
+          "auc_before": 0.5740272106509282,
+          "auc_after": 0.5793012044058607,
+          "auc_delta": 0.005273993754932538,
+          "brier_before": 0.24684898783959958,
+          "brier_after": 0.2466042085742435,
+          "brier_delta": -0.000244779265356071
+        },
+        {
+          "market": "hc25",
+          "auc_before": 0.6191176470588236,
+          "auc_after": 0.6212973239610309,
+          "auc_delta": 0.002179676902207328,
+          "brier_before": 0.1359244382463347,
+          "brier_after": 0.13580634858333684,
+          "brier_delta": -0.00011808966299786672
+        },
+        {
+          "market": "hc35",
+          "auc_before": 0.6330813161799077,
+          "auc_after": 0.6356888807593033,
+          "auc_delta": 0.0026075645793955937,
+          "brier_before": 0.20229062017269786,
+          "brier_after": 0.20206482013162463,
+          "brier_delta": -0.00022580004107322638
+        },
+        {
+          "market": "hc45",
+          "auc_before": 0.6285254184318355,
+          "auc_after": 0.6294404125286479,
+          "auc_delta": 0.0009149940968123937,
+          "brier_before": 0.23606872612416582,
+          "brier_after": 0.2359061932513749,
+          "brier_delta": -0.00016253287279091588
+        },
+        {
+          "market": "hc55",
+          "auc_before": 0.6350740095393985,
+          "auc_after": 0.6370681310171251,
+          "auc_delta": 0.001994121477726596,
+          "brier_before": 0.23193824497869578,
+          "brier_after": 0.23165072283475568,
+          "brier_delta": -0.00028752214394009434
+        }
+      ]
+    },
+    "anytime": {
+      "markets_compared": 4,
+      "auc_delta_mean": 0.012526535309967252,
+      "brier_delta_mean": -0.0046608074098065805,
+      "auc_up_markets": 4,
+      "brier_down_markets": 4,
+      "rows": [
+        {
+          "market": "a_1up",
+          "auc_before": 0.5925766350561641,
+          "auc_after": 0.6147338768940056,
+          "auc_delta": 0.022157241837841513,
+          "brier_before": 0.24887333849444382,
+          "brier_after": 0.24094383978839057,
+          "brier_delta": -0.00792949870605325
+        },
+        {
+          "market": "a_2up",
+          "auc_before": 0.6054832778970709,
+          "auc_after": 0.6288858012995944,
+          "auc_delta": 0.023402523402523467,
+          "brier_before": 0.1564225765775598,
+          "brier_after": 0.15096563805968677,
+          "brier_delta": -0.0054569385178730445
+        },
+        {
+          "market": "h_1up",
+          "auc_before": 0.6356739711628545,
+          "auc_after": 0.6394808399789776,
+          "auc_delta": 0.0038068688161231323,
+          "brier_before": 0.2284573055090835,
+          "brier_after": 0.2283629934576139,
+          "brier_delta": -9.431205146959165e-05
+        },
+        {
+          "market": "h_2up",
+          "auc_before": 0.6255609811171639,
+          "auc_after": 0.6263004883005447,
+          "auc_delta": 0.0007395071833808942,
+          "brier_before": 0.1912876530746823,
+          "brier_after": 0.18612517271085185,
+          "brier_delta": -0.005162480363830435
+        }
+      ]
+    }
+  },
+  "overall": {
+    "markets_compared": 68,
+    "auc_delta_mean": 0.0011884808106275193,
+    "brier_delta_mean": -0.0002997754173050007,
+    "auc_up_markets": 14,
+    "brier_down_markets": 15
+  },
+  "model_types": {
+    "scoreline": {
+      "before": "histgb_poisson",
+      "after": "histgb_poisson",
+      "selection_summary_after": {
+        "histgb_poisson": {
+          "markets_used": 52,
+          "auc_mean": 0.5960913831451033,
+          "brier_mean": 0.1601937191303589,
+          "n_total": 363844
+        },
+        "poisson_glm": {
+          "markets_used": 52,
+          "auc_mean": 0.5919108684476545,
+          "brier_mean": 0.15875750752643578,
+          "n_total": 363844
+        }
+      }
+    },
+    "corners": {
+      "before": "poisson_glm",
+      "after": "poisson_glm",
+      "selection_summary_after": {
+        "histgb_poisson": {
+          "markets_used": 12,
+          "auc_mean": 0.5586204115977952,
+          "brier_mean": 0.22431844288562572,
+          "n_total": 78504
+        },
+        "poisson_glm": {
+          "markets_used": 12,
+          "auc_mean": 0.591074585521163,
+          "brier_mean": 0.21593737161846618,
+          "n_total": 78504
+        }
+      }
+    },
+    "anytime": {
+      "before": "histgb_poisson",
+      "after": "poisson_glm",
+      "selection_summary_after": {
+        "histgb_poisson": {
+          "markets_used": 4,
+          "auc_mean": 0.6353863750928386,
+          "brier_mean": 0.20260455857335136,
+          "n_total": 26868
+        },
+        "poisson_glm": {
+          "markets_used": 4,
+          "auc_mean": 0.635861646962311,
+          "brier_mean": 0.20277480277744028,
+          "n_total": 26868
+        }
+      }
+    }
+  }
+}

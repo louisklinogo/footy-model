@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-02-28T17:56:52.103829+00:00",
+  "created_at": "2026-03-04T00:52:28.889160+00:00",
   "model_version": "v2",
   "defaults": {
     "enabled": false,
@@ -206,9 +206,9 @@
       }
     },
     "E3": {
-      "enabled": true,
-      "alpha": 0.5,
-      "reason": "enabled",
+      "enabled": false,
+      "alpha": 0.0,
+      "reason": "manual_runtime_disable_adj_coverage_below_95pct_2026-03-04",
       "gate": {
         "cv_positive_folds": 2,
         "cv_total_folds": 3,
@@ -216,8 +216,10 @@
         "recent_lift_away": 0.004258921103989025,
         "recent_lift_mean": 0.0022321095615949233,
         "recent_n": 94,
-        "pass": true,
-        "fail_reasons": []
+        "pass": false,
+        "fail_reasons": [
+          "runtime_adj_coverage_below_95pct"
+        ]
       }
     },
     "EC": {

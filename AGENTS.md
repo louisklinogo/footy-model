@@ -1,157 +1,114 @@
-# AGENTS.md (Draft for repo root)
+# AGENTS.md
 
-This repository is a fixtures-first, DB-first football modeling + scraping pipeline.
-Primary runtime is Python; JS is used for Flashscore discovery/enrichment.
-
-If you need this at repo root, copy this file to `AGENTS.md`.
+This repository is a fixtures-first, DB-first football modeling and ingestion pipeline.
+Production runtime is Python. JS Flashscore scrapers still exist but are legacy and not in the active scheduler chain.
 
 ## Quick Orientation
 
-- Python entrypoints: `daily_pipeline.py`, `jobs/`, `scrapers/*.py`, `models/*.py`, `webapp/main.py`
-- JS entrypoints (CommonJS): `scrapers/*.js` (notably `scrapers/run_seed_all.js`, `scrapers/premium_enricher_v4.js`)
-- Tests: `tests/` (pytest; DB-backed integration/regression style)
-- Data outputs: `data/v1/` (discovery, ids, premium payloads, daily exports)
+- Main phaseable job: `src/jobs/tick_due_fixtures_v1.py`
+- Scheduler scripts (active):
+  - `scripts/run_settle_scheduler.sh`
+  - `scripts/run_predict_scheduler.sh`
+  - `scripts/run_score_scheduler.sh`
+  - `scripts/run_availability_scheduler.sh`
+  - `scripts/run_odds_polling_scheduler.sh`
+  - `scripts/run_validation_loop_scheduler.sh`
+- DB run logging: `src/common/pipeline_logging.py` (`pipeline_runs` table)
+- Tests: `tests/` (pytest; many are DB-backed)
+
+## Source-of-Truth Policy
+
+- Active enrichment and settlement path is SofaScore-first.
+- Active schedulers should not call Flashscore scripts.
+- `fixture_results.result_source` for active settlement flow should be `sofascore`.
+- Flashscore code under `src/ingest/scrapers/*` is legacy/backfill unless explicitly scheduled.
 
 ## Setup
 
 ### Environment variables
 
-- `DATABASE_URL` is required for most DB-backed scripts/tests.
-  - Fallbacks: `DEV_DATABASE_URL`, `PROD_DATABASE_URL` (see `db_utils.py`).
+- `DATABASE_URL` is required for most scripts.
+- Fallbacks used in code: `DEV_DATABASE_URL`, `PROD_DATABASE_URL`.
 
-### Python env (recommended)
+### Python environment
 
-- Create a venv and install dev deps:
+- Create venv:
   - `python -m venv .venv`
-  - `./.venv/Scripts/activate` (Windows) or `source .venv/bin/activate` (bash)
-  - `pip install -r requirements-dev.txt`
-- Note: runtime deps are not fully pinned in a root `requirements.txt`.
-  - If a script fails with `ModuleNotFoundError`, add the missing package to your env.
+  - `source .venv/bin/activate` (bash) or `./.venv/Scripts/activate` (Windows)
+- Install deps:
+  - `pip install -r requirements.txt`
+- Note:
+  - `pyarrow` is required for validation/monitoring parquet reads.
 
-### JS env (README says Bun)
+## Operational Runs
 
-- Install JS deps:
-  - `bun install`
-- `package.json` is CommonJS (`"type": "commonjs"`). Keep new JS in CJS unless you migrate intentionally.
+### Manual phase runs (single command)
 
-## Build / Run Commands
+- Settle only:
+  - `python src/jobs/tick_due_fixtures_v1.py --skip-predict --skip-score --max-settle 100`
+- Predict only:
+  - `python src/jobs/tick_due_fixtures_v1.py --skip-settle --skip-score --max-predict 100 --predict-days 3`
+- Score only:
+  - `python src/jobs/tick_due_fixtures_v1.py --skip-settle --skip-predict --max-score 300 --score-since-days 30`
+- Full legacy tick (manual only if needed):
+  - `python src/jobs/tick_due_fixtures_v1.py`
 
-### DB bootstrap
+### Scheduler scripts (recommended)
 
-- Bootstrap v1 schema (README):
-  - `python scrapers/bootstrap_fixtures_schema_v1.py`
+- `scripts/run_settle_scheduler.sh`
+- `scripts/run_predict_scheduler.sh`
+- `scripts/run_score_scheduler.sh`
+- `scripts/run_availability_scheduler.sh`
+- `scripts/run_odds_polling_scheduler.sh`
+- `scripts/run_validation_loop_scheduler.sh`
 
-### Daily pipeline
+All scheduler scripts:
+- Use atomic `flock` lock files in `artifacts/locks/`
+- Write stdout logs to `artifacts/logs/*_scheduler.stdout.log`
+- Support optional `MAX_RUNTIME_MINUTES`
 
-- Run the full daily pipeline:
-  - `python daily_pipeline.py`
-- Incremental mode (example from README):
-  - `python daily_pipeline.py --mode incremental --days 3`
-- Dry-run (logs commands without executing):
-  - `python daily_pipeline.py --dry-run`
+### Current cron shape (reference)
 
-### Tick job
+- `*/20 * * * *` settle
+- `5,35 * * * *` predict
+- `15 * * * *` score
+- `0 * * * *` availability
+- `*/20 * * * *` odds polling
+- `30 5 * * *` validation loop
 
-- Frequent tick (example from README):
-  - `python jobs/tick_due_fixtures_v1.py --leagues E0`
+## Expected Runtime Behavior
 
-### Web app (FastAPI)
+- Settle can legitimately process `targets=0` during quiet windows.
+- Score can legitimately report many `skipped` rows when fixtures are not yet fully settled/scorable.
+- Availability can return lineup `404` before lineups are published; cooldown defers re-tries.
+- Occasional upstream API timeout is expected; scheduler should continue and next cycle retries.
 
-- Run dev server:
-  - `python -m uvicorn webapp.main:app --reload`
+## Logs and Debugging
 
-### Scrapers / discovery / enrichment
+- Check scheduler logs first:
+  - `artifacts/logs/settle_scheduler.stdout.log`
+  - `artifacts/logs/predict_scheduler.stdout.log`
+  - `artifacts/logs/score_scheduler.stdout.log`
+  - `artifacts/logs/availability_scheduler.stdout.log`
+  - `artifacts/logs/odds_polling_scheduler.stdout.log`
+  - `artifacts/logs/validation_loop_scheduler.stdout.log`
+- Check run-state in DB:
+  - `pipeline_runs` for `tick_due_fixtures_v1`, `tick_due_fixtures_v1.settle`, `tick_due_fixtures_v1.predict`, `tick_due_fixtures_v1.score`, `sofascore_odds_polling`
 
-- Discover/seed fixture IDs (node):
-  - `node scrapers/run_seed_all.js --mode seed`
-  - `node scrapers/run_seed_all.js --mode incremental --leagues E0,E1`
-- Enrich premium payloads (Playwright via Crawlee):
-  - `node scrapers/premium_enricher_v4.js E0 --ids-root data/v1/ids --out-root data/v1/premium`
-- If Playwright browsers are missing:
-  - `bunx playwright install` (or equivalent for your environment)
+## Testing
 
-## Test Commands (pytest)
+- Run all tests:
+  - `pytest -q`
+- Run focused tests:
+  - `pytest -q tests/test_smoke_minipipeline.py`
+  - `pytest -q -k leakage_guard`
 
-pytest config lives in `pytest.ini`:
-- `testpaths = tests`
-- `pythonpath = .`
+DB-backed tests will skip when DB env vars are missing.
 
-Run all tests:
-- `pytest -q`
+## Coding Guardrails
 
-Run one test file:
-- `pytest -q tests/test_smoke_minipipeline.py`
-
-Run one test function:
-- `pytest -q tests/test_smoke_minipipeline.py::test_smoke_minipipeline_snapshot_predict_export`
-
-Run by substring match:
-- `pytest -q -k leakage_guard`
-
-DB note:
-- Tests use a DB fixture (`tests/conftest.py`) and will `pytest.skip(...)` if `DATABASE_URL` (or fallbacks)
-  are not set. Expect many tests to be skipped without DB access.
-
-## Lint / Format / Type Checking
-
-- No repo-level formatter/linter configs were found (.editorconfig/ruff/black/isort/mypy/eslint/prettier).
-- Python files commonly include inline Pyright suppression headers (e.g. `# pyright: ...`).
-  - Treat these headers as the project’s current “type checking policy”.
-  - If you introduce new Pyright errors, prefer fixing types; only relax rules narrowly.
-
-Pragmatic checks you can run if you have tools installed:
-- Syntax sanity: `python -m compileall .`
-- Type check (if you use pyright locally): `pyright` (expect existing suppressions).
-
-If you decide to add lint/format tooling, do it explicitly and repo-wide (avoid partial enforcement).
-
-## Code Style Guidelines (follow existing patterns)
-
-### Python
-
-- Prefer `from __future__ import annotations` in new/edited modules (common across repo).
-- Imports:
-  - Standard library first, then third-party, then local imports.
-  - Use explicit imports (avoid wildcard imports).
-- Types:
-  - Use modern typing (`list[str]`, `dict[str, object]`, unions with `|`).
-  - Keep types honest; don’t add `Any` unless the boundary truly is untyped.
-- Paths and IO:
-  - Prefer `pathlib.Path` (see `daily_pipeline.py`).
-  - Read/write text with explicit encoding (`utf-8`).
-- Error handling:
-  - Use `ValueError` for invalid CLI args / inputs (see `daily_pipeline.py:parse_league_list`).
-  - Use `RuntimeError` for pipeline abort / impossible states.
-  - When running subprocesses, capture stdout/stderr and surface failures with context (see `daily_pipeline.py:run_step`).
-- Database:
-  - Use parameterized SQL (`%s`) with psycopg2; never format SQL with f-strings.
-  - Close connections in `finally` (see `pipeline_logging.py`).
-  - Prefer idempotent upserts with `ON CONFLICT ... DO UPDATE` when appropriate (see `tests/conftest.py`).
-
-### Tests
-
-- Tests are integration-ish and DB-backed; keep them deterministic and self-cleaning.
-- Follow existing patterns:
-  - Use `db_case` fixture from `tests/conftest.py`.
-  - Use helper inserters (`insert_league`, `insert_team`, `insert_fixture`, etc.).
-  - Use `run_script([...])` to exercise CLI scripts end-to-end.
-
-### JavaScript (scrapers)
-
-- CommonJS only (package.json: `"type": "commonjs"`). Use `require(...)` not ESM imports.
-- Keep scripts idempotent:
-  - Skip work when output files already exist (see `scrapers/premium_enricher_v4.js`).
-- Be explicit about CLI args parsing and defaults (see `scrapers/run_seed_all.js`).
-- Avoid unnecessary abstraction; prioritize robustness (timeouts, retries, clear error messages).
-
-## Repo Guardrails
-
-- Don’t commit secrets (.env, DB URLs, auth cookies). Use environment variables.
-- Prefer writing new outputs under `data/v1/` and keep paths consistent with README.
-- Keep long-running steps observable:
-  - Print step headers and commands (see `daily_pipeline.py`).
-  - Persist pipeline run metadata to DB when possible (see `pipeline_logging.py`).
-
-## Cursor / Copilot Rules
-
-- No `.cursor/rules/`, `.cursorrules`, or `.github/copilot-instructions.md` were found in this checkout.
+- Use parameterized SQL (`%s`) with psycopg2.
+- Close DB connections in `finally`.
+- Keep scheduler scripts idempotent and lock-protected.
+- Do not reintroduce Flashscore calls into active scheduler chain unless explicitly requested.
+- Keep outputs and reports under existing `artifacts/` and `storage/` structure.

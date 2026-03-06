@@ -103,6 +103,98 @@ def map_choice_name(raw_name: str) -> str | None:
     return None
 
 
+def _normalize_label(raw_text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", raw_text.strip().lower())
+
+
+def _market_team_names(market: dict[str, Any], side: str) -> list[str]:
+    if side == "home":
+        keys = (
+            "homeTeamName",
+            "homeTeam",
+            "home",
+            "homeCompetitor",
+            "homeParticipant",
+            "home_name",
+        )
+    else:
+        keys = (
+            "awayTeamName",
+            "awayTeam",
+            "away",
+            "awayCompetitor",
+            "awayParticipant",
+            "away_name",
+        )
+    names: list[str] = []
+    for key in keys:
+        value = market.get(key)
+        if isinstance(value, str) and value.strip():
+            names.append(value.strip())
+            continue
+        if isinstance(value, dict):
+            for nested in ("name", "shortName", "displayName"):
+                nested_value = value.get(nested)
+                if isinstance(nested_value, str) and nested_value.strip():
+                    names.append(nested_value.strip())
+    return names
+
+
+def _infer_ah_side_from_choice_name(
+    choice_name: str, market: dict[str, Any]
+) -> str | None:
+    label = choice_name.strip().lower()
+    if re.search(r"\b(home|home team|team 1|team1)\b", label):
+        return "home"
+    if re.search(r"\b(away|away team|team 2|team2)\b", label):
+        return "away"
+
+    normalized = _normalize_label(choice_name)
+    if not normalized:
+        return None
+
+    for side in ("home", "away"):
+        for team_name in _market_team_names(market, side):
+            team_norm = _normalize_label(team_name)
+            if team_norm and team_norm in normalized:
+                return side
+    return None
+
+
+def _apply_ah_fallback_mapping(
+    *,
+    mapped: dict[str, dict[str, Any]],
+    choices_filtered: list[dict[str, Any]],
+    market: dict[str, Any],
+) -> None:
+    if {"home", "away"}.issubset(mapped.keys()):
+        return
+
+    for choice in choices_filtered:
+        if choice in mapped.values():
+            continue
+        raw_name = str(choice.get("name", "")).strip()
+        side = _infer_ah_side_from_choice_name(raw_name, market)
+        if side and side not in mapped:
+            mapped[side] = choice
+
+    if {"home", "away"}.issubset(mapped.keys()):
+        return
+
+    if len(choices_filtered) != 2:
+        return
+
+    remaining = [choice for choice in choices_filtered if choice not in mapped.values()]
+    if not remaining:
+        return
+
+    if "home" not in mapped:
+        mapped["home"] = remaining[0]
+        remaining = remaining[1:]
+    if "away" not in mapped and remaining:
+        mapped["away"] = remaining[0]
+
+
 def extract_line(raw_text: str) -> float | None:
     if not raw_text:
         return None
@@ -250,9 +342,16 @@ def extract_markets(
         for choice in choices_filtered:
             name_raw = str(choice.get("name", "")).strip()
             key = map_choice_name(name_raw)
+            if key is None and market_code == "ah":
+                key = _infer_ah_side_from_choice_name(name_raw, market)
             if not key:
                 continue
             mapped[key] = choice
+
+        if market_code == "ah":
+            _apply_ah_fallback_mapping(
+                mapped=mapped, choices_filtered=choices_filtered, market=market
+            )
 
         if market_code == "1x2" and not {"home", "draw", "away"}.issubset(
             mapped.keys()

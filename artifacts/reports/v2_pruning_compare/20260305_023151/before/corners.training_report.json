@@ -1,0 +1,60 @@
+{
+  "train_rows": 6105,
+  "test_rows": 1527,
+  "features": [
+    "home_sample_size",
+    "away_sample_size",
+    "home_rolling_corners",
+    "home_rolling_corners_against",
+    "away_rolling_corners",
+    "away_rolling_corners_against",
+    "corners_net_diff",
+    "home_rolling_crosses",
+    "away_rolling_crosses",
+    "home_rolling_box_touches",
+    "away_rolling_box_touches",
+    "odds_c75_over",
+    "odds_c75_under",
+    "odds_c85_over",
+    "odds_c85_under",
+    "odds_c95_over",
+    "odds_c95_under",
+    "odds_c105_over",
+    "odds_c105_under",
+    "implied_c75_over",
+    "implied_c85_over",
+    "implied_c95_over",
+    "implied_c105_over",
+    "corners_gap_75",
+    "corners_gap_85",
+    "corners_gap_95",
+    "corners_gap_105"
+  ],
+  "model_type_requested": "auto",
+  "model_type_selected": "poisson_glm",
+  "model_selection_summary": {
+    "histgb_poisson": {
+      "markets_used": 12,
+      "auc_mean": 0.558555575637634,
+      "brier_mean": 0.22426988458243802,
+      "n_total": 78504
+    },
+    "poisson_glm": {
+      "markets_used": 12,
+      "auc_mean": 0.5877543358889822,
+      "brier_mean": 0.21615605409083838,
+      "n_total": 78504
+    }
+  },
+  "dispersion": {
+    "total_r": 53.83725367937051,
+    "home_r": 8.836220390779218,
+    "away_r": 7.727227679393919
+  },
+  "home_corners_mae": 2.2483270031179754,
+  "away_corners_mae": 2.0714801280355206,
+  "walkforward_folds": 6,
+  "walkforward_min_fold_test_n": 60,
+  "walkforward_markets_scored": 12,
+  "trained_at_utc": "2026-03-05T01:29:35.694724+00:00"
+}
