@@ -19,11 +19,26 @@ class BaselineMetric:
     market_code: str
     auc: float | None
     brier: float | None
+    pr_auc: float | None = None
+    accuracy: float | None = None
+    log_loss: float | None = None
+    ece: float | None = None
+    n: int | None = None
 
 
 def _to_float_or_none(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
+    return None
+
+
+def _to_int_or_none(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
     return None
 
 
@@ -93,6 +108,11 @@ def load_baseline_metrics(
             market_code=market_code,
             auc=_to_float_or_none(row.get("auc")),
             brier=_to_float_or_none(row.get("brier")),
+            pr_auc=_to_float_or_none(row.get("pr_auc")),
+            accuracy=_to_float_or_none(row.get("accuracy")),
+            log_loss=_to_float_or_none(row.get("log_loss")),
+            ece=_to_float_or_none(row.get("ece")),
+            n=_to_int_or_none(row.get("n")),
         )
     return out
 

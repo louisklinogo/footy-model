@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.linear_model import PoissonRegressor
-from sklearn.metrics import accuracy_score, brier_score_loss, mean_absolute_error, roc_auc_score
+from sklearn.metrics import mean_absolute_error
 
 
 ROOT_DIR = Path(__file__).resolve().parents[5]
@@ -20,11 +20,18 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.modeling.layer2_markets import market_outcome_calibrator as legacy_calibrator
+from src.modeling.v2.eval.metrics import (
+    aggregate_market_summary,
+    binary_classification_row,
+    group_binary_classification_rows,
+    summarize_binary_metric_rows,
+)
 from src.modeling.v2.families.anytime.derive_markets import (
     derive_and_validate_anytime,
     derive_and_validate_anytime_phase_split,
 )
 from src.modeling.v2.families.anytime.features import build_anytime_features
+from src.modeling.v2.io.artifact_identity import build_artifact_metadata, write_artifact_metadata
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 from src.modeling.v2.io.contracts import load_feature_contract
 
@@ -32,6 +39,8 @@ from src.modeling.v2.io.contracts import load_feature_contract
 DEFAULT_CONTRACT = ROOT_DIR / "model_v2" / "feature_contracts" / "anytime.yaml"
 DEFAULT_SCOPE = ROOT_DIR / "model_v2" / "market_scope.yaml"
 DEFAULT_OUT_DIR = ROOT_DIR / "model_artifacts" / "v2" / "anytime"
+MODEL_NAME = "anytime_v2"
+MODEL_VERSION = "markov_head_v1"
 
 
 def parse_args() -> argparse.Namespace:
@@ -53,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=DEFAULT_OUT_DIR,
         help="Output directory for anytime artifacts.",
+    )
+    parser.add_argument(
+        "--model-version",
+        type=str,
+        default=MODEL_VERSION,
+        help="Persisted model_version to attach to this artifact set.",
     )
     parser.add_argument(
         "--model-type",
@@ -265,20 +280,7 @@ def _derive_anytime_frame(
 
 
 def _market_metrics(market: str, y_true: np.ndarray, p_true: np.ndarray) -> dict[str, Any]:
-    pred = (p_true >= 0.5).astype(int)
-    auc: float | None
-    try:
-        auc = float(roc_auc_score(y_true, p_true))
-    except ValueError:
-        auc = None
-    return {
-        "market": market,
-        "n": int(len(y_true)),
-        "base_rate": float(np.mean(y_true)),
-        "auc": auc,
-        "accuracy": float(accuracy_score(y_true, pred)),
-        "brier": float(brier_score_loss(y_true, p_true)),
-    }
+    return binary_classification_row(market=market, y_true=y_true, p_true=p_true)
 
 
 def _walkforward_ranges(total_rows: int, folds: int) -> list[tuple[int, int]]:
@@ -308,9 +310,14 @@ def _evaluate_walkforward(
     away_poisson_alpha: float,
     folds: int,
     min_fold_test_n: int,
-) -> tuple[list[dict[str, Any]], dict[str, dict[str, float | int | None]]]:
+) -> tuple[
+    list[dict[str, Any]],
+    dict[str, dict[str, float | int | None]],
+    list[dict[str, Any]],
+]:
     ordered = frame.sort_values(["match_datetime_utc", "fixture_id"]).reset_index(drop=True)
     fold_rows: list[dict[str, Any]] = []
+    fold_league_rows: list[dict[str, Any]] = []
     for fold_idx, (train_end, test_end) in enumerate(
         _walkforward_ranges(len(ordered), folds), start=1
     ):
@@ -355,76 +362,40 @@ def _evaluate_walkforward(
                 continue
             y_true = test_df[target_col].to_numpy(dtype=float)[valid].astype(int)
             p_true = np.clip(pred_frame[market].to_numpy(dtype=float)[valid], 0.001, 0.999)
-            auc: float | None
-            try:
-                auc = float(roc_auc_score(y_true, p_true))
-            except ValueError:
-                auc = None
+            base_fields = {
+                "fold": int(fold_idx),
+                "train_rows": int(len(train_df)),
+                "test_rows": int(len(test_df)),
+            }
             fold_rows.append(
-                {
-                    "market": market,
-                    "fold": int(fold_idx),
-                    "train_rows": int(len(train_df)),
-                    "test_rows": int(len(test_df)),
-                    "n": valid_n,
-                    "auc": auc,
-                    "brier": float(brier_score_loss(y_true, p_true)),
-                }
+                binary_classification_row(
+                    market=market,
+                    y_true=y_true,
+                    p_true=p_true,
+                    extra_fields=base_fields,
+                )
             )
+            if "league_code" in test_df.columns:
+                fold_league_rows.extend(
+                    group_binary_classification_rows(
+                        market=market,
+                        group_values=test_df.loc[valid, "league_code"],
+                        y_true=y_true,
+                        p_true=p_true,
+                        extra_fields=base_fields,
+                    )
+                )
 
-    summary: dict[str, dict[str, float | int | None]] = {}
     if not fold_rows:
-        return fold_rows, summary
-
-    fold_df = pd.DataFrame(fold_rows)
-    for market, group in fold_df.groupby("market", sort=True):
-        auc_series = pd.to_numeric(group["auc"], errors="coerce")
-        brier_series = pd.to_numeric(group["brier"], errors="coerce")
-        summary[str(market)] = {
-            "auc_mean": float(auc_series.mean()) if auc_series.notna().any() else None,
-            "auc_std": (
-                float(auc_series.std(ddof=0)) if int(auc_series.notna().sum()) > 1 else 0.0
-            )
-            if auc_series.notna().any()
-            else None,
-            "brier_mean": (
-                float(brier_series.mean()) if brier_series.notna().any() else None
-            ),
-            "brier_std": (
-                float(brier_series.std(ddof=0))
-                if int(brier_series.notna().sum()) > 1
-                else 0.0
-            )
-            if brier_series.notna().any()
-            else None,
-            "folds_used": int(len(group)),
-            "n_total": int(pd.to_numeric(group["n"], errors="coerce").fillna(0).sum()),
-        }
-    return fold_rows, summary
+        return fold_rows, {}, fold_league_rows
+    summary = summarize_binary_metric_rows(fold_rows)
+    return fold_rows, summary, fold_league_rows
 
 
 def _aggregate_walkforward_quality(
     summary: dict[str, dict[str, float | int | None]],
 ) -> dict[str, float | int | None]:
-    aucs: list[float] = []
-    briers: list[float] = []
-    total_n = 0
-    for row in summary.values():
-        auc = row.get("auc_mean")
-        brier = row.get("brier_mean")
-        n_total = row.get("n_total")
-        if isinstance(auc, (int, float)):
-            aucs.append(float(auc))
-        if isinstance(brier, (int, float)):
-            briers.append(float(brier))
-        if isinstance(n_total, (int, float)):
-            total_n += int(n_total)
-    return {
-        "markets_used": int(len(aucs)),
-        "auc_mean": (float(np.mean(aucs)) if aucs else None),
-        "brier_mean": (float(np.mean(briers)) if briers else None),
-        "n_total": int(total_n),
-    }
+    return aggregate_market_summary(summary)
 
 
 def _select_model_type(
@@ -443,14 +414,20 @@ def _select_model_type(
     list[dict[str, Any]],
     dict[str, dict[str, float | int | None]],
     dict[str, dict[str, float | int | None]],
+    list[dict[str, Any]],
 ]:
     candidates = ("histgb_poisson", "poisson_glm")
     collected: dict[
         str,
-        tuple[list[dict[str, Any]], dict[str, dict[str, float | int | None]], dict[str, float | int | None]],
+        tuple[
+            list[dict[str, Any]],
+            dict[str, dict[str, float | int | None]],
+            dict[str, float | int | None],
+            list[dict[str, Any]],
+        ],
     ] = {}
     for model_type in candidates:
-        folds_rows, summary = _evaluate_walkforward(
+        folds_rows, summary, league_rows = _evaluate_walkforward(
             frame=frame,
             features=features,
             anytime_markets=anytime_markets,
@@ -466,6 +443,7 @@ def _select_model_type(
             folds_rows,
             summary,
             _aggregate_walkforward_quality(summary),
+            league_rows,
         )
 
     def _rank(model_type: str) -> tuple[float, float, int]:
@@ -478,11 +456,11 @@ def _select_model_type(
         return auc_rank, brier_rank, markets_used
 
     selected = max(candidates, key=_rank)
-    selected_rows, selected_summary, _selected_agg = collected[selected]
+    selected_rows, selected_summary, _selected_agg, selected_league_rows = collected[selected]
     model_selection_summary = {
         model_type: collected[model_type][2] for model_type in candidates
     }
-    return selected, selected_rows, selected_summary, model_selection_summary
+    return selected, selected_rows, selected_summary, model_selection_summary, selected_league_rows
 
 
 def main() -> None:
@@ -514,8 +492,9 @@ def main() -> None:
     anytime_markets = {"h_1up", "a_1up", "h_2up", "a_2up"} & scope_markets
     model_type_requested = str(args.model_type)
     model_selection_summary: dict[str, dict[str, float | int | None]]
+    walkforward_league_rows: list[dict[str, Any]]
     if model_type_requested == "auto":
-        model_type_selected, walkforward_rows, walkforward_summary, model_selection_summary = (
+        model_type_selected, walkforward_rows, walkforward_summary, model_selection_summary, walkforward_league_rows = (
             _select_model_type(
                 frame=df,
                 features=features,
@@ -530,7 +509,7 @@ def main() -> None:
         )
     else:
         model_type_selected = model_type_requested
-        walkforward_rows, walkforward_summary = _evaluate_walkforward(
+        walkforward_rows, walkforward_summary, walkforward_league_rows = _evaluate_walkforward(
             frame=df,
             features=features,
             anytime_markets=anytime_markets,
@@ -572,6 +551,7 @@ def main() -> None:
     )
 
     market_metrics: list[dict[str, Any]] = []
+    holdout_league_rows: list[dict[str, Any]] = []
     for market in sorted(anytime_markets):
         if market not in pred_frame.columns:
             continue
@@ -584,11 +564,22 @@ def main() -> None:
         y_true = test_df[target_col].to_numpy(dtype=float)[valid].astype(int)
         p_true = np.clip(pred_frame[market].to_numpy(dtype=float)[valid], 0.001, 0.999)
         market_metrics.append(_market_metrics(market, y_true, p_true))
+        if "league_code" in test_df.columns:
+            holdout_league_rows.extend(
+                group_binary_classification_rows(
+                    market=market,
+                    group_values=test_df.loc[valid, "league_code"],
+                    y_true=y_true,
+                    p_true=p_true,
+                )
+            )
 
     diagnostics = {
         "train_rows": int(len(train_df)),
         "test_rows": int(len(test_df)),
         "features": features,
+        "model_name": MODEL_NAME,
+        "model_version": str(args.model_version),
         "model_type_requested": model_type_requested,
         "model_type_selected": model_type_selected,
         "path_version": path_version,
@@ -599,6 +590,8 @@ def main() -> None:
         "walkforward_folds": int(args.folds),
         "walkforward_min_fold_test_n": int(args.min_fold_test_n),
         "walkforward_markets_scored": int(len(walkforward_summary)),
+        "walkforward_league_rows": int(len(walkforward_league_rows)),
+        "holdout_league_rows": int(len(holdout_league_rows)),
         "trained_at_utc": datetime.now(tz=UTC).isoformat(),
     }
     if path_version == "phase_split":
@@ -623,6 +616,17 @@ def main() -> None:
         )
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    write_artifact_metadata(
+        args.output_dir,
+        build_artifact_metadata(
+            family="anytime",
+            model_name=MODEL_NAME,
+            model_version=str(args.model_version),
+            artifact_dir=args.output_dir,
+            trained_at_utc=str(diagnostics["trained_at_utc"]),
+            extra={"model_type_selected": model_type_selected, "path_version": path_version},
+        ),
+    )
     if path_version == "phase_split":
         joblib.dump(models["home_p1"], args.output_dir / "home_goals_p1_model.pkl")
         joblib.dump(models["away_p1"], args.output_dir / "away_goals_p1_model.pkl")
@@ -647,8 +651,14 @@ def main() -> None:
     (args.output_dir / "metrics_holdout.json").write_text(
         json.dumps(market_metrics, indent=2), encoding="utf-8"
     )
+    (args.output_dir / "metrics_holdout_by_league.json").write_text(
+        json.dumps(holdout_league_rows, indent=2), encoding="utf-8"
+    )
     (args.output_dir / "metrics_walkforward_folds.json").write_text(
         json.dumps(walkforward_rows, indent=2), encoding="utf-8"
+    )
+    (args.output_dir / "metrics_walkforward_folds_by_league.json").write_text(
+        json.dumps(walkforward_league_rows, indent=2), encoding="utf-8"
     )
     (args.output_dir / "metrics_walkforward.json").write_text(
         json.dumps(walkforward_summary, indent=2), encoding="utf-8"

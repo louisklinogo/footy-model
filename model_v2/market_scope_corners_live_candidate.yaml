@@ -1,0 +1,131 @@
+version: 1
+name: linchpin_scope_v2_corners_live_candidate
+description: Candidate v2 scope keeping scoreline/anytime stable while narrowing corners to live-supported totals.
+
+families:
+  scoreline:
+    markets:
+      - 1x2_h
+      - 1x2_d
+      - 1x2_a
+      - dc_1x
+      - dc_x2
+      - dc_12
+      - ah_h05
+      - ah_a05
+      - ah_h15
+      - ah_a15
+      - eh_h1
+      - eh_a1
+      - o15
+      - u35
+      - mg_0
+      - mg_1_2
+      - mg_1_3
+      - mg_1_4
+      - mg_1_5
+      - mg_1_6
+      - mg_2_3
+      - mg_2_4
+      - mg_2_5
+      - mg_2_6
+      - mg_3_4
+      - mg_3_5
+      - mg_3_6
+      - mg_4_5
+      - mg_4_6
+      - mg_5_6
+      - mg_7p
+      - hmg_0
+      - hmg_1_2
+      - hmg_1_3
+      - hmg_2_3
+      - hmg_4p
+      - amg_0
+      - amg_1_2
+      - amg_1_3
+      - amg_2_3
+      - amg_4p
+      - ms_h_1_0_2_0_3_0
+      - ms_a_0_1_0_2_0_3
+      - ms_h_4_0_5_0_6_0
+      - ms_a_0_4_0_5_0_6
+      - ms_h_2_1_3_1_4_1
+      - ms_h_1_2_1_3_1_4
+      - ms_h_3_2_4_2_5_1
+      - ms_a_2_3_2_4_1_5
+      - ms_other_homewin
+      - ms_other_awaywin
+      - ms_draw
+  corners:
+    markets:
+      - c85
+      - c95
+      - c105
+  anytime:
+    markets:
+      - h_1up
+      - a_1up
+      - h_2up
+      - a_2up
+
+markets:
+  - 1x2_h
+  - 1x2_d
+  - 1x2_a
+  - dc_1x
+  - dc_x2
+  - dc_12
+  - ah_h05
+  - ah_a05
+  - ah_h15
+  - ah_a15
+  - eh_h1
+  - eh_a1
+  - o15
+  - u35
+  - mg_0
+  - mg_1_2
+  - mg_1_3
+  - mg_1_4
+  - mg_1_5
+  - mg_1_6
+  - mg_2_3
+  - mg_2_4
+  - mg_2_5
+  - mg_2_6
+  - mg_3_4
+  - mg_3_5
+  - mg_3_6
+  - mg_4_5
+  - mg_4_6
+  - mg_5_6
+  - mg_7p
+  - hmg_0
+  - hmg_1_2
+  - hmg_1_3
+  - hmg_2_3
+  - hmg_4p
+  - amg_0
+  - amg_1_2
+  - amg_1_3
+  - amg_2_3
+  - amg_4p
+  - ms_h_1_0_2_0_3_0
+  - ms_a_0_1_0_2_0_3
+  - ms_h_4_0_5_0_6_0
+  - ms_a_0_4_0_5_0_6
+  - ms_h_2_1_3_1_4_1
+  - ms_h_1_2_1_3_1_4
+  - ms_h_3_2_4_2_5_1
+  - ms_a_2_3_2_4_1_5
+  - ms_other_homewin
+  - ms_other_awaywin
+  - ms_draw
+  - c85
+  - c95
+  - c105
+  - h_1up
+  - a_1up
+  - h_2up
+  - a_2up

@@ -41,6 +41,16 @@ def _to_float_or_none(value: Any) -> float | None:
     return None
 
 
+def _to_int_or_none(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    return None
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Rebuild v2 baseline metrics from latest family holdout artifacts."
@@ -91,7 +101,12 @@ def main() -> None:
             {
                 "market_code": market,
                 "auc": _to_float_or_none(row.get("auc")),
+                "pr_auc": _to_float_or_none(row.get("pr_auc")),
+                "accuracy": _to_float_or_none(row.get("accuracy")),
                 "brier": _to_float_or_none(row.get("brier")),
+                "log_loss": _to_float_or_none(row.get("log_loss")),
+                "ece": _to_float_or_none(row.get("ece")),
+                "n": _to_int_or_none(row.get("n")),
             }
         )
 

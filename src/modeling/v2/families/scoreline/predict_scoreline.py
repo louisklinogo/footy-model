@@ -23,6 +23,7 @@ from src.modeling.evaluation.predict_market_outcomes_fixtures_first import (
     fetch_candidate_fixtures,
 )
 from src.modeling.v2.families.scoreline.derive_markets import derive_and_validate
+from src.modeling.v2.io.artifact_identity import resolve_model_identity
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 
 
@@ -66,6 +67,12 @@ def parse_args() -> argparse.Namespace:
         "--write-db",
         action="store_true",
         help="Upsert predictions into predictions table.",
+    )
+    parser.add_argument(
+        "--model-version",
+        type=str,
+        default=None,
+        help="Optional override for model_version. Defaults to artifact metadata when present.",
     )
     return parser.parse_args()
 
@@ -141,6 +148,12 @@ def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int
 def main() -> None:
     args = parse_args()
     home_model, away_model, features, medians = load_artifacts(args.artifact_dir)
+    model_name, model_version = resolve_model_identity(
+        args.artifact_dir,
+        default_model_name=MODEL_NAME,
+        default_model_version=MODEL_VERSION,
+        override_model_version=args.model_version,
+    )
     scope_markets = set(load_scope_markets(args.scope))
 
     fixtures = fetch_candidate_fixtures(
@@ -196,8 +209,8 @@ def main() -> None:
                 {
                     "fixture_id": fixture_id,
                     "market_code": market_code,
-                    "model_name": MODEL_NAME,
-                    "model_version": MODEL_VERSION,
+                    "model_name": model_name,
+                    "model_version": model_version,
                     "p_model": p_model,
                     "lambda_home_pred": lh,
                     "lambda_away_pred": la,
@@ -207,8 +220,8 @@ def main() -> None:
                 (
                     fixture_id,
                     market_code,
-                    MODEL_NAME,
-                    MODEL_VERSION,
+                    model_name,
+                    model_version,
                     p_model,
                     json.dumps(metadata),
                 )
