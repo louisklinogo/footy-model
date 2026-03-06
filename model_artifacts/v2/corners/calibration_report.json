@@ -1,0 +1,13 @@
+{
+  "generated_at_utc": "2026-03-06T12:39:24.064926+00:00",
+  "family": "corners",
+  "artifact_dir": "model_artifacts\\v2\\corners",
+  "holdout_predictions_path": "model_artifacts\\v2\\corners\\holdout_predictions.csv",
+  "rules": {
+    "fit_fraction": 0.5,
+    "min_fit_rows": 80,
+    "min_eval_rows": 80,
+    "max_auc_drop": 0.01
+  },
+  "markets": {}
+}

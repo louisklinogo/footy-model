@@ -116,6 +116,36 @@ def binary_classification_row(
     return row
 
 
+def build_prediction_frame(
+    *,
+    label_key: str,
+    label_value: str,
+    fixture_ids: Sequence[Any] | np.ndarray,
+    y_true: Sequence[int] | np.ndarray,
+    p_true: Sequence[float] | np.ndarray,
+    extra_columns: dict[str, Sequence[Any] | np.ndarray] | None = None,
+    clip_eps: float = 0.001,
+) -> pd.DataFrame:
+    fixture_array = np.asarray(fixture_ids)
+    y_array = np.asarray(y_true, dtype=int)
+    p_array = _clip_probabilities(p_true, clip_eps)
+    if not (len(fixture_array) == len(y_array) == len(p_array)):
+        raise ValueError("fixture_ids, y_true, and p_true must have the same length")
+
+    payload: dict[str, Any] = {
+        label_key: np.full(len(y_array), str(label_value), dtype=object),
+        "fixture_id": fixture_array,
+        "y_true": y_array,
+        "p_model": p_array,
+    }
+    for column, values in (extra_columns or {}).items():
+        value_array = np.asarray(values)
+        if len(value_array) != len(y_array):
+            raise ValueError(f"Column '{column}' length does not match prediction rows")
+        payload[column] = value_array
+    return pd.DataFrame(payload)
+
+
 def group_binary_classification_rows(
     *,
     market: str,

@@ -1,0 +1,60 @@
+{
+  "status": "fail",
+  "args": {
+    "days": 3,
+    "league": "SC2",
+    "min_l1_coverage": 0.98,
+    "max_l1_late": 0,
+    "max_l1_unknown_asof": 0,
+    "enforce_adj_enabled_league": true,
+    "min_adj_enabled_coverage": 0.95,
+    "layer2_model_dir": "/mnt/c/Developer/soccer/footy-model/model_artifacts/situational_model"
+  },
+  "summary": {
+    "fixtures_total": 5,
+    "l1_pair_count": 0,
+    "adj_pair_count": 0,
+    "l1_late_count": 0,
+    "l1_unknown_asof_count": 0,
+    "adj_late_count": 0,
+    "adj_unknown_asof_count": 0,
+    "l1_pair_coverage": 0.0,
+    "adj_pair_coverage": 0.0,
+    "layer2_enabled_for_league": false,
+    "layer2_reason_for_league": "default_disabled"
+  },
+  "failures": [
+    "l1_coverage_below_threshold(actual=0.0000, threshold=0.9800)"
+  ],
+  "examples_missing_l1_pair": [
+    {
+      "fixture_id": 3416,
+      "league_code": "SC2",
+      "match_datetime_utc": "2026-03-07T15:00:00+00:00"
+    },
+    {
+      "fixture_id": 3417,
+      "league_code": "SC2",
+      "match_datetime_utc": "2026-03-07T15:00:00+00:00"
+    },
+    {
+      "fixture_id": 3418,
+      "league_code": "SC2",
+      "match_datetime_utc": "2026-03-07T15:00:00+00:00"
+    },
+    {
+      "fixture_id": 3419,
+      "league_code": "SC2",
+      "match_datetime_utc": "2026-03-07T15:00:00+00:00"
+    },
+    {
+      "fixture_id": 3420,
+      "league_code": "SC2",
+      "match_datetime_utc": "2026-03-07T15:00:00+00:00"
+    }
+  ],
+  "notes": [
+    "Layer-1 coverage/timing is enforced.",
+    "Adjusted-lambda coverage is gated only when enforcement is active and league policy is enabled."
+  ]
+}

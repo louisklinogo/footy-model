@@ -37,6 +37,14 @@ def _read_rows(path: Path) -> list[dict[str, Any]]:
     return []
 
 
+def _count_csv_rows(path: Path) -> int:
+    if not path.exists():
+        return 0
+    with path.open("r", encoding="utf-8") as handle:
+        next(handle, None)
+        return sum(1 for _ in handle)
+
+
 def _load_family_bundle(name: str, artifact_dir: Path) -> dict[str, Any]:
     holdout_rows = _read_rows(artifact_dir / "metrics_holdout.json")
     walkforward_rows = _read_rows(artifact_dir / "metrics_walkforward_folds.json")
@@ -55,6 +63,7 @@ def _load_family_bundle(name: str, artifact_dir: Path) -> dict[str, Any]:
         for row in holdout_rows
         if isinstance(row.get("market"), str)
     }
+    holdout_predictions_path = artifact_dir / "holdout_predictions.csv"
     return {
         "family": name,
         "artifact_dir": str(artifact_dir),
@@ -66,6 +75,10 @@ def _load_family_bundle(name: str, artifact_dir: Path) -> dict[str, Any]:
         "walkforward_summary": walkforward_summary,
         "walkforward_aggregate": aggregate_market_summary(walkforward_summary),
         "walkforward_by_league_rows": walkforward_by_league_rows,
+        "holdout_prediction_rows": _count_csv_rows(holdout_predictions_path),
+        "holdout_predictions_path": str(holdout_predictions_path) if holdout_predictions_path.exists() else None,
+        "scoreline_slice_summary": _read_json(artifact_dir / "scoreline_slice_summary.json") if name == "scoreline" else {},
+        "scoreline_slice_summary_by_league": _read_json(artifact_dir / "scoreline_slice_summary_by_league.json") if name == "scoreline" else {},
     }
 
 
@@ -93,20 +106,30 @@ def build_evaluation_report(
         combined_walkforward_by_league_rows.extend(bundle["walkforward_by_league_rows"])
         combined_holdout_by_league_rows.extend(bundle["holdout_by_league_rows"])
 
+    family_report: dict[str, dict[str, Any]] = {}
+    for name, bundle in families.items():
+        entry: dict[str, Any] = {
+            "artifact_dir": bundle["artifact_dir"],
+            "walkforward_aggregate": bundle["walkforward_aggregate"],
+            "holdout_markets": int(len(bundle["holdout_rows"])),
+            "walkforward_markets": int(len(bundle["walkforward_summary"])),
+            "holdout_prediction_rows": int(bundle.get("holdout_prediction_rows") or 0),
+            "training_report": bundle["training_report"],
+        }
+        if bundle.get("holdout_predictions_path"):
+            entry["holdout_predictions_path"] = bundle["holdout_predictions_path"]
+        if name == "scoreline":
+            entry["scoreline_slice_summary"] = bundle.get("scoreline_slice_summary") or {}
+            entry["scoreline_slice_summary_by_league"] = (
+                bundle.get("scoreline_slice_summary_by_league") or {}
+            )
+        family_report[name] = entry
+
     return {
         "generated_at_utc": datetime.now(tz=UTC).isoformat(),
         "scope_path": str(scope_path),
         "scope_markets": scope_markets,
-        "families": {
-            name: {
-                "artifact_dir": bundle["artifact_dir"],
-                "walkforward_aggregate": bundle["walkforward_aggregate"],
-                "holdout_markets": int(len(bundle["holdout_rows"])),
-                "walkforward_markets": int(len(bundle["walkforward_summary"])),
-                "training_report": bundle["training_report"],
-            }
-            for name, bundle in families.items()
-        },
+        "families": family_report,
         "holdout_by_market": holdout_by_market,
         "walkforward_by_market": walkforward_by_market,
         "holdout_by_league": summarize_binary_metric_rows(
@@ -121,6 +144,10 @@ def build_evaluation_report(
         "missing_walkforward_markets": [
             market for market in scope_markets if market not in walkforward_by_market
         ],
+        "scoreline_slice_summary": families.get("scoreline", {}).get("scoreline_slice_summary", {}),
+        "scoreline_slice_summary_by_league": families.get("scoreline", {}).get(
+            "scoreline_slice_summary_by_league", {}
+        ),
     }
 
 

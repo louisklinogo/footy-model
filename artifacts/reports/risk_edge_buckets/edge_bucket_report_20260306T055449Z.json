@@ -1,0 +1,248 @@
+{
+  "generated_at_utc": "2026-03-06T05:54:49.793284+00:00",
+  "model_name": "market_outcome_gbm",
+  "model_version": "fixtures_first_prematch_v1",
+  "history_days": 180,
+  "window": 60,
+  "edge_bucket_by_market": [
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.8166666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.15233333333333335
+    },
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.2036666666666667
+    },
+    {
+      "market_code": "1x2_a",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.2136111111111111
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.7833333333333333,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.031944444444444414
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.7833333333333333,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.07166666666666667
+    },
+    {
+      "market_code": "1x2_d",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.85,
+      "loss_streak": 1,
+      "mean_roi_unit": -0.32283333333333336
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.7166666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.128
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.6,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.015944444444444417
+    },
+    {
+      "market_code": "1x2_h",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.55,
+      "loss_streak": 1,
+      "mean_roi_unit": 0.19216666666666665
+    },
+    {
+      "market_code": "c85",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.45,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.2205050505050505
+    },
+    {
+      "market_code": "c85",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.5833333333333334,
+      "loss_streak": 2,
+      "mean_roi_unit": 0.03964646464646468
+    },
+    {
+      "market_code": "c85",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.5166666666666667,
+      "loss_streak": 2,
+      "mean_roi_unit": -0.058888888888888845
+    },
+    {
+      "market_code": "dc_12",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.6333333333333333,
+      "loss_streak": 3,
+      "mean_roi_unit": -0.13955627705627707
+    },
+    {
+      "market_code": "dc_12",
+      "edge_bucket": "4-6%",
+      "n": 43,
+      "precision": 0.8372093023255814,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.1253179636900567
+    },
+    {
+      "market_code": "dc_12",
+      "edge_bucket": "6%+",
+      "n": 16,
+      "precision": 0.9375,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.22234397546897544
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.6666666666666666,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.08358328708328706
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.5833333333333334,
+      "loss_streak": 1,
+      "mean_roi_unit": -0.23158794908794908
+    },
+    {
+      "market_code": "dc_1x",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.4666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.16957311207311207
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.6666666666666666,
+      "loss_streak": 2,
+      "mean_roi_unit": 0.0866533929033929
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.5833333333333334,
+      "loss_streak": 1,
+      "mean_roi_unit": -0.36867484367484366
+    },
+    {
+      "market_code": "dc_x2",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.4166666666666667,
+      "loss_streak": 3,
+      "mean_roi_unit": -0.40282407407407406
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.0009603174603174651
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.7,
+      "loss_streak": 1,
+      "mean_roi_unit": -0.0457897657897658
+    },
+    {
+      "market_code": "o15",
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.7333333333333333,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.0634225959225959
+    },
+    {
+      "market_code": "u35",
+      "edge_bucket": "2-4%",
+      "n": 6,
+      "precision": 0.5,
+      "loss_streak": 2,
+      "mean_roi_unit": -0.3338383838383838
+    },
+    {
+      "market_code": "u35",
+      "edge_bucket": "4-6%",
+      "n": 5,
+      "precision": 0.8,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.18529914529914526
+    },
+    {
+      "market_code": "u35",
+      "edge_bucket": "6%+",
+      "n": 5,
+      "precision": 0.8,
+      "loss_streak": 0,
+      "mean_roi_unit": 0.25811965811965815
+    }
+  ],
+  "edge_bucket_global": [
+    {
+      "edge_bucket": "2-4%",
+      "n": 60,
+      "precision": 0.8166666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.15233333333333335
+    },
+    {
+      "edge_bucket": "4-6%",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.2036666666666667
+    },
+    {
+      "edge_bucket": "6%+",
+      "n": 60,
+      "precision": 0.7666666666666667,
+      "loss_streak": 0,
+      "mean_roi_unit": -0.2136111111111111
+    }
+  ]
+}

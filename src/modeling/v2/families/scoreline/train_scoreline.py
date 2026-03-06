@@ -24,10 +24,15 @@ from src.modeling.layer2_markets import market_outcome_calibrator as legacy_cali
 from src.modeling.v2.eval.metrics import (
     aggregate_market_summary,
     binary_classification_row,
+    build_prediction_frame,
     group_binary_classification_rows,
     summarize_binary_metric_rows,
 )
 from src.modeling.v2.families.scoreline.derive_markets import derive_and_validate
+from src.modeling.v2.families.scoreline.holdout_diagnostics import (
+    build_scoreline_slice_prediction_rows,
+    summarize_scoreline_slice_prediction_rows,
+)
 from src.modeling.v2.io.artifact_identity import build_artifact_metadata, write_artifact_metadata
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 from src.modeling.v2.io.contracts import load_feature_contract
@@ -59,6 +64,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=DEFAULT_OUT_DIR,
         help="Output directory for scoreline artifacts.",
+    )
+    parser.add_argument(
+        "--dataset-path",
+        type=Path,
+        default=None,
+        help="Optional PIT dataset artifact (.parquet or .csv) to train from instead of the default PIT builder path.",
     )
     parser.add_argument(
         "--model-version",
@@ -128,6 +139,38 @@ def _score_matrix_independent_poisson(
     if total <= 0.0:
         return np.full((max_goals + 1, max_goals + 1), 1.0 / ((max_goals + 1) ** 2))
     return mat / total
+
+
+def _load_training_frame(dataset_path: Path | None) -> tuple[pd.DataFrame, str]:
+    if dataset_path is None:
+        return legacy_calibrator.fetch_dataset(), "legacy_fetch_dataset"
+
+    if not dataset_path.exists():
+        raise RuntimeError(f"Dataset path does not exist: {dataset_path}")
+    validation_path = dataset_path.parent / "pit_validation_report.json"
+    if validation_path.exists():
+        try:
+            validation_report = json.loads(validation_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"Unable to read PIT validation report: {validation_path}") from exc
+        if validation_report.get("status") == "failed":
+            raise RuntimeError(f"PIT dataset failed validation: {validation_path}")
+    suffix = dataset_path.suffix.lower()
+    if suffix == ".parquet":
+        frame = pd.read_parquet(dataset_path)
+    elif suffix == ".csv":
+        frame = pd.read_csv(dataset_path)
+    else:
+        raise RuntimeError(f"Unsupported dataset path format: {dataset_path}")
+    return frame, str(dataset_path)
+
+
+def _json_default(value: object) -> object:
+    if isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, (pd.Timestamp, datetime)):
+        return value.isoformat()
+    raise TypeError(f"Object of type {value.__class__.__name__} is not JSON serializable")
 
 
 def _select_features(df: pd.DataFrame, contract_path: Path) -> list[str]:
@@ -356,7 +399,7 @@ def _select_model_type(
 
 def main() -> None:
     args = parse_args()
-    df = legacy_calibrator.fetch_dataset()
+    df, data_source = _load_training_frame(args.dataset_path)
     if df.empty:
         raise RuntimeError("No rows available for scoreline training.")
     if args.max_rows is not None and args.max_rows > 0 and len(df) > args.max_rows:
@@ -366,7 +409,8 @@ def main() -> None:
             .reset_index(drop=True)
         )
 
-    df = legacy_calibrator.add_targets_and_derived(df)
+    if "prediction_time_utc" not in df.columns:
+        df = legacy_calibrator.add_targets_and_derived(df)
     df["match_datetime_utc"] = pd.to_datetime(
         df["match_datetime_utc"], utc=True, errors="coerce"
     )
@@ -423,16 +467,19 @@ def main() -> None:
     pred_away = np.clip(away_model.predict(x_test), 0.05, 8.0)
 
     derived_rows: list[dict[str, float]] = []
+    score_matrices: list[np.ndarray] = []
     for lh, la in zip(pred_home, pred_away):
         mat = _score_matrix_independent_poisson(
             lambda_home=float(lh), lambda_away=float(la), max_goals=max(1, int(args.max_goals))
         )
+        score_matrices.append(mat)
         markets = derive_and_validate(mat)
         derived_rows.append(markets)
     pred_frame = pd.DataFrame(derived_rows)
 
     market_metrics: list[dict[str, Any]] = []
     holdout_league_rows: list[dict[str, Any]] = []
+    holdout_prediction_frames: list[pd.DataFrame] = []
     for market in sorted(pred_frame.columns):
         if market not in scope_markets:
             continue
@@ -441,6 +488,25 @@ def main() -> None:
             continue
         y_true = test_df[target_col].astype(int).to_numpy()
         p_true = np.clip(pred_frame[market].to_numpy(dtype=float), 0.001, 0.999)
+        extra_columns: dict[str, Any] = {}
+        if "league_code" in test_df.columns:
+            extra_columns["league_code"] = test_df["league_code"].fillna("__missing__").astype(str).to_numpy()
+        if "match_datetime_utc" in test_df.columns:
+            extra_columns["match_datetime_utc"] = (
+                test_df["match_datetime_utc"].astype(str).to_numpy()
+            )
+        holdout_prediction_frames.append(
+            build_prediction_frame(
+                label_key="market",
+                label_value=market,
+                fixture_ids=(
+                    test_df["fixture_id"].to_numpy() if "fixture_id" in test_df.columns else test_df.index.to_numpy()
+                ),
+                y_true=y_true,
+                p_true=p_true,
+                extra_columns=extra_columns,
+            )
+        )
         market_metrics.append(
             _scoreline_market_metrics(
                 market_code=market,
@@ -458,12 +524,31 @@ def main() -> None:
                 )
             )
 
+    scoreline_slice_rows = build_scoreline_slice_prediction_rows(
+        fixture_ids=(
+            test_df["fixture_id"].to_numpy() if "fixture_id" in test_df.columns else test_df.index.to_numpy()
+        ),
+        league_codes=test_df["league_code"] if "league_code" in test_df.columns else None,
+        home_goals=test_df["home_goals"].astype(int).to_numpy(),
+        away_goals=test_df["away_goals"].astype(int).to_numpy(),
+        score_matrices=score_matrices,
+    )
+    scoreline_slice_summary, scoreline_slice_summary_by_league = (
+        summarize_scoreline_slice_prediction_rows(scoreline_slice_rows)
+    )
+    holdout_prediction_frame = (
+        pd.concat(holdout_prediction_frames, ignore_index=True)
+        if holdout_prediction_frames
+        else pd.DataFrame(columns=["market", "fixture_id", "y_true", "p_model"])
+    )
+
     diagnostics = {
         "train_rows": int(len(train_df)),
         "test_rows": int(len(test_df)),
         "features": features,
         "model_name": MODEL_NAME,
         "model_version": str(args.model_version),
+        "data_source": data_source,
         "model_type_requested": model_type_requested,
         "model_type_selected": model_type_selected,
         "model_selection_summary": model_selection_summary,
@@ -475,6 +560,8 @@ def main() -> None:
         "walkforward_markets_scored": int(len(walkforward_summary)),
         "walkforward_league_rows": int(len(walkforward_league_rows)),
         "holdout_league_rows": int(len(holdout_league_rows)),
+        "holdout_prediction_rows": int(len(holdout_prediction_frame)),
+        "scoreline_slice_rows": int(len(scoreline_slice_rows)),
         "trained_at_utc": datetime.now(tz=UTC).isoformat(),
     }
 
@@ -487,7 +574,7 @@ def main() -> None:
             model_version=str(args.model_version),
             artifact_dir=args.output_dir,
             trained_at_utc=str(diagnostics["trained_at_utc"]),
-            extra={"model_type_selected": model_type_selected},
+            extra={"model_type_selected": model_type_selected, "data_source": data_source},
         ),
     )
     joblib.dump(home_model, args.output_dir / "home_goals_model.pkl")
@@ -504,6 +591,7 @@ def main() -> None:
     (args.output_dir / "metrics_holdout_by_league.json").write_text(
         json.dumps(holdout_league_rows, indent=2), encoding="utf-8"
     )
+    holdout_prediction_frame.to_csv(args.output_dir / "holdout_predictions.csv", index=False)
     (args.output_dir / "metrics_walkforward_folds.json").write_text(
         json.dumps(walkforward_rows, indent=2), encoding="utf-8"
     )
@@ -512,6 +600,15 @@ def main() -> None:
     )
     (args.output_dir / "metrics_walkforward.json").write_text(
         json.dumps(walkforward_summary, indent=2), encoding="utf-8"
+    )
+    (args.output_dir / "scoreline_slice_predictions.json").write_text(
+        json.dumps(scoreline_slice_rows, indent=2, default=_json_default), encoding="utf-8"
+    )
+    (args.output_dir / "scoreline_slice_summary.json").write_text(
+        json.dumps(scoreline_slice_summary, indent=2, default=_json_default), encoding="utf-8"
+    )
+    (args.output_dir / "scoreline_slice_summary_by_league.json").write_text(
+        json.dumps(scoreline_slice_summary_by_league, indent=2, default=_json_default), encoding="utf-8"
     )
     (args.output_dir / "training_report.json").write_text(
         json.dumps(diagnostics, indent=2), encoding="utf-8"

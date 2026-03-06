@@ -23,6 +23,7 @@ from src.modeling.layer2_markets import market_outcome_calibrator as legacy_cali
 from src.modeling.v2.eval.metrics import (
     aggregate_market_summary,
     binary_classification_row,
+    build_prediction_frame,
     group_binary_classification_rows,
     summarize_binary_metric_rows,
 )
@@ -552,6 +553,7 @@ def main() -> None:
 
     market_metrics: list[dict[str, Any]] = []
     holdout_league_rows: list[dict[str, Any]] = []
+    holdout_prediction_frames: list[pd.DataFrame] = []
     for market in sorted(anytime_markets):
         if market not in pred_frame.columns:
             continue
@@ -563,6 +565,29 @@ def main() -> None:
             continue
         y_true = test_df[target_col].to_numpy(dtype=float)[valid].astype(int)
         p_true = np.clip(pred_frame[market].to_numpy(dtype=float)[valid], 0.001, 0.999)
+        extra_columns: dict[str, Any] = {}
+        if "league_code" in test_df.columns:
+            extra_columns["league_code"] = (
+                test_df.loc[valid, "league_code"].fillna("__missing__").astype(str).to_numpy()
+            )
+        if "match_datetime_utc" in test_df.columns:
+            extra_columns["match_datetime_utc"] = (
+                test_df.loc[valid, "match_datetime_utc"].astype(str).to_numpy()
+            )
+        holdout_prediction_frames.append(
+            build_prediction_frame(
+                label_key="market",
+                label_value=market,
+                fixture_ids=(
+                    test_df.loc[valid, "fixture_id"].to_numpy()
+                    if "fixture_id" in test_df.columns
+                    else test_df.index.to_numpy()[valid]
+                ),
+                y_true=y_true,
+                p_true=p_true,
+                extra_columns=extra_columns,
+            )
+        )
         market_metrics.append(_market_metrics(market, y_true, p_true))
         if "league_code" in test_df.columns:
             holdout_league_rows.extend(
@@ -573,6 +598,12 @@ def main() -> None:
                     p_true=p_true,
                 )
             )
+
+    holdout_prediction_frame = (
+        pd.concat(holdout_prediction_frames, ignore_index=True)
+        if holdout_prediction_frames
+        else pd.DataFrame(columns=["market", "fixture_id", "y_true", "p_model"])
+    )
 
     diagnostics = {
         "train_rows": int(len(train_df)),
@@ -592,6 +623,7 @@ def main() -> None:
         "walkforward_markets_scored": int(len(walkforward_summary)),
         "walkforward_league_rows": int(len(walkforward_league_rows)),
         "holdout_league_rows": int(len(holdout_league_rows)),
+        "holdout_prediction_rows": int(len(holdout_prediction_frame)),
         "trained_at_utc": datetime.now(tz=UTC).isoformat(),
     }
     if path_version == "phase_split":
@@ -654,6 +686,7 @@ def main() -> None:
     (args.output_dir / "metrics_holdout_by_league.json").write_text(
         json.dumps(holdout_league_rows, indent=2), encoding="utf-8"
     )
+    holdout_prediction_frame.to_csv(args.output_dir / "holdout_predictions.csv", index=False)
     (args.output_dir / "metrics_walkforward_folds.json").write_text(
         json.dumps(walkforward_rows, indent=2), encoding="utf-8"
     )

@@ -152,3 +152,234 @@ Scanned 109 predictions, scored 109, skipped 0 (missing required settlement inpu
 COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 300
 Scanned 107 predictions, scored 107, skipped 0 (missing required settlement inputs).
 [2026-03-06T02:15:37+00:00] Score scheduler end rc=0.
+[2026-03-06T03:15:06+00:00] Score scheduler start.
+Log file: artifacts/logs/score_scheduler.log
+Skipping settle phase (--skip-settle).
+Skipping predict phase (--skip-predict).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E0 --since-days 30 --limit 300
+Scanned 293 predictions, scored 293, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E1 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E3 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EC --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC0 --since-days 30 --limit 300
+Scanned 212 predictions, scored 212, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC1 --since-days 30 --limit 300
+Scanned 111 predictions, scored 111, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC2 --since-days 30 --limit 300
+Scanned 126 predictions, scored 126, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC3 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D2 --since-days 30 --limit 300
+Scanned 207 predictions, scored 207, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I1 --since-days 30 --limit 300
+Scanned 216 predictions, scored 216, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP1 --since-days 30 --limit 300
+Scanned 247 predictions, scored 247, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP2 --since-days 30 --limit 300
+Scanned 256 predictions, scored 256, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F2 --since-days 30 --limit 300
+Scanned 194 predictions, scored 194, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league N1 --since-days 30 --limit 300
+Scanned 225 predictions, scored 225, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league B1 --since-days 30 --limit 300
+Scanned 188 predictions, scored 188, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league P1 --since-days 30 --limit 300
+Scanned 205 predictions, scored 205, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league T1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league G1 --since-days 30 --limit 300
+Scanned 193 predictions, scored 193, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league AT1 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league BR1 --since-days 30 --limit 300
+Scanned 180 predictions, scored 180, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league DK1 --since-days 30 --limit 300
+Scanned 138 predictions, scored 138, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league IE1 --since-days 30 --limit 300
+Scanned 104 predictions, scored 104, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league JP1 --since-days 30 --limit 300
+Scanned 238 predictions, scored 238, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league MX1 --since-days 30 --limit 300
+Scanned 264 predictions, scored 264, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league PL1 --since-days 30 --limit 300
+Scanned 211 predictions, scored 211, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RO1 --since-days 30 --limit 300
+Scanned 219 predictions, scored 219, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RU1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH2 --since-days 30 --limit 300
+Scanned 199 predictions, scored 199, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CL --since-days 30 --limit 300
+Scanned 112 predictions, scored 112, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EL --since-days 30 --limit 300
+Scanned 109 predictions, scored 109, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 300
+Scanned 107 predictions, scored 107, skipped 0 (missing required settlement inputs).
+[2026-03-06T03:15:41+00:00] Score scheduler end rc=0.
+[2026-03-06T04:15:07+00:00] Score scheduler start.
+Log file: artifacts/logs/score_scheduler.log
+Skipping settle phase (--skip-settle).
+Skipping predict phase (--skip-predict).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E0 --since-days 30 --limit 300
+Scanned 293 predictions, scored 293, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E1 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E3 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EC --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC0 --since-days 30 --limit 300
+Scanned 212 predictions, scored 212, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC1 --since-days 30 --limit 300
+Scanned 111 predictions, scored 111, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC2 --since-days 30 --limit 300
+Scanned 126 predictions, scored 126, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC3 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D2 --since-days 30 --limit 300
+Scanned 207 predictions, scored 207, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I1 --since-days 30 --limit 300
+Scanned 216 predictions, scored 216, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP1 --since-days 30 --limit 300
+Scanned 247 predictions, scored 247, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP2 --since-days 30 --limit 300
+Scanned 256 predictions, scored 256, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F2 --since-days 30 --limit 300
+Scanned 194 predictions, scored 194, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league N1 --since-days 30 --limit 300
+Scanned 225 predictions, scored 225, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league B1 --since-days 30 --limit 300
+Scanned 188 predictions, scored 188, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league P1 --since-days 30 --limit 300
+Scanned 205 predictions, scored 205, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league T1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league G1 --since-days 30 --limit 300
+Scanned 193 predictions, scored 193, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league AT1 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league BR1 --since-days 30 --limit 300
+Scanned 180 predictions, scored 180, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league DK1 --since-days 30 --limit 300
+Scanned 138 predictions, scored 138, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league IE1 --since-days 30 --limit 300
+Scanned 104 predictions, scored 104, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league JP1 --since-days 30 --limit 300
+Scanned 238 predictions, scored 238, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league MX1 --since-days 30 --limit 300
+Scanned 264 predictions, scored 264, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league PL1 --since-days 30 --limit 300
+Scanned 211 predictions, scored 211, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RO1 --since-days 30 --limit 300
+Scanned 219 predictions, scored 219, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RU1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH2 --since-days 30 --limit 300
+Scanned 199 predictions, scored 199, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CL --since-days 30 --limit 300
+Scanned 112 predictions, scored 112, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EL --since-days 30 --limit 300
+Scanned 109 predictions, scored 109, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 300
+Scanned 107 predictions, scored 107, skipped 0 (missing required settlement inputs).
+[2026-03-06T04:15:39+00:00] Score scheduler end rc=0.
+[2026-03-06T05:15:07+00:00] Score scheduler start.
+Log file: artifacts/logs/score_scheduler.log
+Skipping settle phase (--skip-settle).
+Skipping predict phase (--skip-predict).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E0 --since-days 30 --limit 300
+Scanned 293 predictions, scored 293, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E1 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league E3 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EC --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC0 --since-days 30 --limit 300
+Scanned 212 predictions, scored 212, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC1 --since-days 30 --limit 300
+Scanned 111 predictions, scored 111, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC2 --since-days 30 --limit 300
+Scanned 126 predictions, scored 126, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SC3 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league D2 --since-days 30 --limit 300
+Scanned 207 predictions, scored 207, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I1 --since-days 30 --limit 300
+Scanned 216 predictions, scored 216, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league I2 --since-days 30 --limit 300
+Scanned 300 predictions, scored 300, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP1 --since-days 30 --limit 300
+Scanned 247 predictions, scored 247, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league SP2 --since-days 30 --limit 300
+Scanned 256 predictions, scored 256, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league F2 --since-days 30 --limit 300
+Scanned 194 predictions, scored 194, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league N1 --since-days 30 --limit 300
+Scanned 225 predictions, scored 225, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league B1 --since-days 30 --limit 300
+Scanned 188 predictions, scored 188, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league P1 --since-days 30 --limit 300
+Scanned 205 predictions, scored 205, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league T1 --since-days 30 --limit 300
+Scanned 206 predictions, scored 206, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league G1 --since-days 30 --limit 300
+Scanned 193 predictions, scored 193, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league AT1 --since-days 30 --limit 300
+Scanned 135 predictions, scored 135, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league BR1 --since-days 30 --limit 300
+Scanned 180 predictions, scored 180, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league DK1 --since-days 30 --limit 300
+Scanned 138 predictions, scored 138, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league IE1 --since-days 30 --limit 300
+Scanned 104 predictions, scored 104, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league JP1 --since-days 30 --limit 300
+Scanned 238 predictions, scored 238, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league MX1 --since-days 30 --limit 300
+Scanned 264 predictions, scored 264, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league PL1 --since-days 30 --limit 300
+Scanned 211 predictions, scored 211, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RO1 --since-days 30 --limit 300
+Scanned 219 predictions, scored 219, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league RU1 --since-days 30 --limit 300
+No eligible unscored predictions found.
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH1 --since-days 30 --limit 300
+Scanned 230 predictions, scored 230, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CH2 --since-days 30 --limit 300
+Scanned 199 predictions, scored 199, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league CL --since-days 30 --limit 300
+Scanned 112 predictions, scored 112, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league EL --since-days 30 --limit 300
+Scanned 109 predictions, scored 109, skipped 0 (missing required settlement inputs).
+COMMAND: /home/louis/developer/footy-model/.venv/bin/python /mnt/c/Developer/soccer/footy-model/src/modeling/evaluation/score_market_outcomes_fixtures_first.py --league ECL --since-days 30 --limit 300
+Scanned 107 predictions, scored 107, skipped 0 (missing required settlement inputs).
+[2026-03-06T05:15:39+00:00] Score scheduler end rc=0.

@@ -1,0 +1,79 @@
+{
+  "generated_at_utc": "2026-03-06T07:49:10.228962+00:00",
+  "dry_run": false,
+  "rebuild_baseline": false,
+  "scope": "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+  "baseline_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\baselines\\metrics_baseline_v2.json",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1",
+  "steps": [
+    {
+      "name": "eval.walkforward",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\run_walkforward.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--scoreline-dir",
+        "model_artifacts\\v2\\scoreline_pit_candidate_v1",
+        "--corners-dir",
+        "model_artifacts\\v2\\corners",
+        "--anytime-dir",
+        "model_artifacts\\v2\\anytime",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1"
+      ],
+      "returncode": 0,
+      "stdout": "Saved evaluation report to model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\nMissing holdout markets: 0\nMissing walk-forward markets: 0\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.calibration",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\calibration\\run_calibration.py",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\evaluation_report.json",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1"
+      ],
+      "returncode": 0,
+      "stdout": "Saved calibration report to model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\calibration_report.json\nMarkets calibrated: 42\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.promotion_registry",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\promotion_registry.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--baseline",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\baselines\\metrics_baseline_v2.json",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\evaluation_report.json",
+        "--calibration-report",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\calibration_report.json",
+        "--output",
+        "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\promotion_registry.json",
+        "--min-support",
+        "200",
+        "--min-folds",
+        "3",
+        "--max-ece",
+        "0.05",
+        "--auc-tolerance",
+        "0.0",
+        "--brier-tolerance",
+        "0.0",
+        "--log-loss-tolerance",
+        "0.0"
+      ],
+      "returncode": 0,
+      "stdout": "Saved promotion registry to model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v1\\promotion_registry.json\nMarkets passed: 20\nMarkets failed: 48\n",
+      "stderr": "",
+      "dry_run": false
+    }
+  ]
+}

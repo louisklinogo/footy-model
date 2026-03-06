@@ -6,6 +6,7 @@ import pytest
 from src.modeling.v2.eval.metrics import (
     aggregate_market_summary,
     binary_classification_row,
+    build_prediction_frame,
     group_binary_classification_rows,
     summarize_binary_metric_rows,
 )
@@ -69,3 +70,18 @@ def test_aggregate_market_summary_combines_auc_and_brier() -> None:
     assert agg["auc_mean"] == pytest.approx(0.59)
     assert agg["brier_mean"] == pytest.approx(0.21)
     assert agg["n_total"] == 220
+
+
+def test_build_prediction_frame_preserves_row_columns() -> None:
+    frame = build_prediction_frame(
+        label_key="market",
+        label_value="o15",
+        fixture_ids=[101, 102],
+        y_true=np.array([0, 1]),
+        p_true=np.array([0.0, 1.0]),
+        extra_columns={"league_code": ["EPL", "SA"]},
+    )
+    assert list(frame.columns) == ["market", "fixture_id", "y_true", "p_model", "league_code"]
+    assert frame.loc[0, "p_model"] == pytest.approx(0.001)
+    assert frame.loc[1, "p_model"] == pytest.approx(0.999)
+    assert frame.loc[1, "league_code"] == "SA"

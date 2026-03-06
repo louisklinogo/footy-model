@@ -8,14 +8,53 @@ import subprocess
 import sys
 from typing import Any
 
-
 ROOT_DIR = Path(__file__).resolve().parents[3]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
+from src.modeling.v2.eval.promotion_recommendation import write_promotion_recommendation_artifacts
 DEFAULT_SCOPE = ROOT_DIR / "model_v2" / "market_scope.yaml"
 DEFAULT_SCORELINE_DIR = ROOT_DIR / "model_artifacts" / "v2" / "scoreline"
 DEFAULT_CORNERS_DIR = ROOT_DIR / "model_artifacts" / "v2" / "corners"
 DEFAULT_ANYTIME_DIR = ROOT_DIR / "model_artifacts" / "v2" / "anytime"
 DEFAULT_EVAL_DIR = ROOT_DIR / "model_artifacts" / "v2" / "evaluation"
 DEFAULT_BASELINE = ROOT_DIR / "model_artifacts" / "v2" / "baselines" / "metrics_baseline_v2.json"
+
+
+def _read_json_object(path: Path) -> dict[str, Any] | None:
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def build_promotion_summary(evaluation_dir: Path) -> dict[str, Any] | None:
+    registry_path = Path(evaluation_dir) / "promotion_registry.json"
+    registry = _read_json_object(registry_path)
+    if registry is None:
+        return None
+    rules = registry.get("rules") if isinstance(registry.get("rules"), dict) else {}
+    summary = registry.get("summary") if isinstance(registry.get("summary"), dict) else {}
+    decision = registry.get("decision") if isinstance(registry.get("decision"), dict) else {}
+    return {
+        "promotion_registry_path": str(registry_path),
+        "decision": decision,
+        "summary": {
+            "markets_total": summary.get("markets_total"),
+            "markets_passed": summary.get("markets_passed"),
+            "markets_failed": summary.get("markets_failed"),
+            "required_markets_total": summary.get("required_markets_total"),
+            "required_markets_passed": summary.get("required_markets_passed"),
+            "required_markets_failed": summary.get("required_markets_failed"),
+            "required_markets_missing": summary.get("required_markets_missing"),
+        },
+        "rules": {
+            "promotion_policy_name": rules.get("promotion_policy_name"),
+            "promotion_policy_path": rules.get("promotion_policy_path"),
+            "required_markets": rules.get("required_markets"),
+        },
+    }
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +81,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-ece", type=float, default=0.05)
     parser.add_argument("--auc-tolerance", type=float, default=0.0)
     parser.add_argument("--brier-tolerance", type=float, default=0.0)
+    parser.add_argument("--log-loss-tolerance", type=float, default=0.0)
+    parser.add_argument(
+        "--promotion-policy",
+        type=Path,
+        default=None,
+        help="Optional YAML policy file whose required_markets become the top-level promotion gate.",
+    )
+    parser.add_argument(
+        "--required-market",
+        action="append",
+        default=[],
+        help="Optional market code that must pass in the promotion registry decision. May be repeated.",
+    )
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args()
 
@@ -95,6 +147,19 @@ def build_run_plan(args: argparse.Namespace) -> list[tuple[str, list[str]]]:
             ],
         )
     )
+    plan.append(
+        (
+            "eval.calibration",
+            [
+                python_bin,
+                str(ROOT_DIR / "src" / "modeling" / "v2" / "calibration" / "run_calibration.py"),
+                "--evaluation-report",
+                str(Path(args.evaluation_dir) / "evaluation_report.json"),
+                "--output-dir",
+                str(args.evaluation_dir),
+            ],
+        )
+    )
 
     if rebuild_baseline:
         rebuild_cmd = [
@@ -116,33 +181,37 @@ def build_run_plan(args: argparse.Namespace) -> list[tuple[str, list[str]]]:
         plan.append(("baseline.rebuild", rebuild_cmd))
 
     if not bool(args.skip_promotion):
-        plan.append(
-            (
-                "eval.promotion_registry",
-                [
-                    python_bin,
-                    str(ROOT_DIR / "src" / "modeling" / "v2" / "eval" / "promotion_registry.py"),
-                    "--scope",
-                    str(args.scope),
-                    "--baseline",
-                    str(args.baseline_path),
-                    "--evaluation-report",
-                    str(Path(args.evaluation_dir) / "evaluation_report.json"),
-                    "--output",
-                    str(Path(args.evaluation_dir) / "promotion_registry.json"),
-                    "--min-support",
-                    str(int(args.min_support)),
-                    "--min-folds",
-                    str(int(args.min_folds)),
-                    "--max-ece",
-                    str(float(args.max_ece)),
-                    "--auc-tolerance",
-                    str(float(args.auc_tolerance)),
-                    "--brier-tolerance",
-                    str(float(args.brier_tolerance)),
-                ],
-            )
-        )
+        promotion_cmd = [
+            python_bin,
+            str(ROOT_DIR / "src" / "modeling" / "v2" / "eval" / "promotion_registry.py"),
+            "--scope",
+            str(args.scope),
+            "--baseline",
+            str(args.baseline_path),
+            "--evaluation-report",
+            str(Path(args.evaluation_dir) / "evaluation_report.json"),
+            "--calibration-report",
+            str(Path(args.evaluation_dir) / "calibration_report.json"),
+            "--output",
+            str(Path(args.evaluation_dir) / "promotion_registry.json"),
+            "--min-support",
+            str(int(args.min_support)),
+            "--min-folds",
+            str(int(args.min_folds)),
+            "--max-ece",
+            str(float(args.max_ece)),
+            "--auc-tolerance",
+            str(float(args.auc_tolerance)),
+            "--brier-tolerance",
+            str(float(args.brier_tolerance)),
+            "--log-loss-tolerance",
+            str(float(args.log_loss_tolerance)),
+        ]
+        if getattr(args, "promotion_policy", None) is not None:
+            promotion_cmd.extend(["--promotion-policy", str(args.promotion_policy)])
+        for market in list(getattr(args, "required_market", []) or []):
+            promotion_cmd.extend(["--required-market", str(market)])
+        plan.append(("eval.promotion_registry", promotion_cmd))
     return plan
 
 
@@ -169,6 +238,7 @@ def main() -> None:
     plan = build_run_plan(args)
     Path(args.evaluation_dir).mkdir(parents=True, exist_ok=True)
     results = [_run_step(name, command, dry_run=bool(args.dry_run)) for name, command in plan]
+    promotion_summary = build_promotion_summary(Path(args.evaluation_dir))
     report = {
         "generated_at_utc": datetime.now(tz=UTC).isoformat(),
         "dry_run": bool(args.dry_run),
@@ -178,9 +248,24 @@ def main() -> None:
         "scope": str(args.scope),
         "baseline_path": str(args.baseline_path),
         "evaluation_dir": str(args.evaluation_dir),
+        "evaluation_flow_report_path": str(Path(args.evaluation_dir) / "evaluation_flow_report.json"),
+        "promotion_summary": promotion_summary,
         "steps": results,
     }
     out_path = Path(args.evaluation_dir) / "evaluation_flow_report.json"
+    recommendation_artifacts = write_promotion_recommendation_artifacts(
+        flow_report=report,
+        evaluation_dir=Path(args.evaluation_dir),
+    )
+    if recommendation_artifacts is not None:
+        recommendation_json_path, recommendation_md_path, recommendation = recommendation_artifacts
+        report["promotion_recommendation"] = {
+            "status": recommendation.get("recommendation_status"),
+            "scope": recommendation.get("recommended_scope"),
+            "headline": recommendation.get("headline"),
+            "json_path": str(recommendation_json_path),
+            "markdown_path": str(recommendation_md_path),
+        }
     out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(f"Saved evaluation flow report to {out_path}")
 

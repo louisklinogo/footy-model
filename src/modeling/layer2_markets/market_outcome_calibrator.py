@@ -218,7 +218,13 @@ def _json_number_expr(json_col: str, key: str) -> str:
     )
 
 
-def fetch_dataset() -> pd.DataFrame:
+def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
+    odds_cutoff_expr = "f.match_datetime_utc"
+    prediction_cutoff_clause = ""
+    if prediction_lead_hours is not None:
+        lead_hours = max(0, int(prediction_lead_hours))
+        odds_cutoff_expr = f"(f.match_datetime_utc - INTERVAL '{lead_hours} hours')"
+        prediction_cutoff_clause = f"\n          AND p.created_at <= {odds_cutoff_expr}"
     query = f"""
     SELECT
         f.fixture_id,
@@ -398,7 +404,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'ou'
           AND fom.line_num = 1.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) od15 ON true
@@ -410,7 +416,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'ou'
           AND fom.line_num = 2.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) od25 ON true
@@ -422,7 +428,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'ou'
           AND fom.line_num = 3.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) od35 ON true
@@ -434,7 +440,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'corners_ou'
           AND fom.line_num = 7.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) odc75 ON true
@@ -446,7 +452,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'corners_ou'
           AND fom.line_num = 8.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) odc85 ON true
@@ -458,7 +464,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'corners_ou'
           AND fom.line_num = 9.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) odc95 ON true
@@ -470,7 +476,7 @@ def fetch_dataset() -> pd.DataFrame:
           AND fom.market_code = 'corners_ou'
           AND fom.line_num = 10.5
           AND fom.snapshot_type IN ('latest_pre_match', 'closing')
-          AND fom.snapshot_time_utc <= f.match_datetime_utc
+          AND fom.snapshot_time_utc <= {odds_cutoff_expr}
         ORDER BY (fom.snapshot_type = 'latest_pre_match') DESC, fom.snapshot_time_utc DESC
         LIMIT 1
     ) odc105 ON true
@@ -480,6 +486,7 @@ def fetch_dataset() -> pd.DataFrame:
         WHERE p.fixture_id = f.fixture_id
           AND p.model_name = 'lambda_xgb'
           AND p.market_code = 'lambda_home'
+          {prediction_cutoff_clause}
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l1h ON true
@@ -489,6 +496,7 @@ def fetch_dataset() -> pd.DataFrame:
         WHERE p.fixture_id = f.fixture_id
           AND p.model_name = 'lambda_xgb'
           AND p.market_code = 'lambda_away'
+          {prediction_cutoff_clause}
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l1a ON true
@@ -498,6 +506,7 @@ def fetch_dataset() -> pd.DataFrame:
         WHERE p.fixture_id = f.fixture_id
           AND p.model_name = 'situational_xgb'
           AND p.market_code = 'adj_lambda_home'
+          {prediction_cutoff_clause}
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l2h ON true
@@ -507,6 +516,7 @@ def fetch_dataset() -> pd.DataFrame:
         WHERE p.fixture_id = f.fixture_id
           AND p.model_name = 'situational_xgb'
           AND p.market_code = 'adj_lambda_away'
+          {prediction_cutoff_clause}
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l2a ON true

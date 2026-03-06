@@ -1,0 +1,17 @@
+name: scoreline_core_v1
+description: Core scoreline-derived markets that must pass before scoreline promotion.
+required_markets:
+  - 1x2_h
+  - 1x2_d
+  - 1x2_a
+  - dc_1x
+  - dc_x2
+  - dc_12
+  - ah_h05
+  - ah_a05
+  - ah_h15
+  - ah_a15
+  - eh_h1
+  - eh_a1
+  - o15
+  - u35

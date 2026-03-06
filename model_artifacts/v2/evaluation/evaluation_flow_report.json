@@ -1,0 +1,60 @@
+{
+  "generated_at_utc": "2026-03-06T06:43:55.969942+00:00",
+  "dry_run": false,
+  "rebuild_baseline": false,
+  "scope": "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+  "baseline_path": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\baselines\\metrics_baseline_v2.json",
+  "evaluation_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation",
+  "steps": [
+    {
+      "name": "eval.walkforward",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\run_walkforward.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--scoreline-dir",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\scoreline",
+        "--corners-dir",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\corners",
+        "--anytime-dir",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\anytime",
+        "--output-dir",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation"
+      ],
+      "returncode": 0,
+      "stdout": "Saved evaluation report to C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation\nMissing holdout markets: 0\nMissing walk-forward markets: 0\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.promotion_registry",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\promotion_registry.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--baseline",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\baselines\\metrics_baseline_v2.json",
+        "--evaluation-report",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation\\evaluation_report.json",
+        "--output",
+        "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation\\promotion_registry.json",
+        "--min-support",
+        "200",
+        "--min-folds",
+        "3",
+        "--max-ece",
+        "0.05",
+        "--auc-tolerance",
+        "0.0",
+        "--brier-tolerance",
+        "0.0"
+      ],
+      "returncode": 0,
+      "stdout": "Saved promotion registry to C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\evaluation\\promotion_registry.json\nMarkets passed: 48\nMarkets failed: 20\n",
+      "stderr": "",
+      "dry_run": false
+    }
+  ]
+}

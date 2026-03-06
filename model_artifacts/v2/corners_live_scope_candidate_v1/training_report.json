@@ -1,0 +1,70 @@
+{
+  "train_rows": 6105,
+  "test_rows": 1527,
+  "features": [
+    "home_sample_size",
+    "away_sample_size",
+    "home_rolling_corners",
+    "home_rolling_corners_against",
+    "away_rolling_corners",
+    "away_rolling_corners_against",
+    "home_rolling_box_touches",
+    "away_rolling_box_touches",
+    "odds_c75_over",
+    "odds_c75_under",
+    "odds_c85_over",
+    "odds_c85_under",
+    "odds_c95_over",
+    "odds_c95_under",
+    "odds_c105_over",
+    "odds_c105_under",
+    "implied_c75_over",
+    "implied_c85_over",
+    "implied_c95_over",
+    "implied_c105_over",
+    "corners_gap_75",
+    "corners_gap_85",
+    "corners_gap_95",
+    "corners_gap_105"
+  ],
+  "model_name": "corners_v2",
+  "model_version": "corners_live_scope_candidate_v1",
+  "model_type_requested": "auto",
+  "model_type_selected": "poisson_glm",
+  "model_selection_summary": {
+    "histgb_poisson": {
+      "markets_used": 3,
+      "n_total": 19626,
+      "auc_mean": 0.5204681657629674,
+      "pr_auc_mean": 0.5169421577802278,
+      "accuracy_mean": 0.5631772700559017,
+      "brier_mean": 0.2512023414264763,
+      "log_loss_mean": 0.6988799075935387,
+      "ece_mean": 0.0819508907581905
+    },
+    "poisson_glm": {
+      "markets_used": 3,
+      "n_total": 19626,
+      "auc_mean": 0.5424569510010043,
+      "pr_auc_mean": 0.5277289018369126,
+      "accuracy_mean": 0.5882990382809586,
+      "brier_mean": 0.2395181871339784,
+      "log_loss_mean": 0.6719333619245718,
+      "ece_mean": 0.023939395747615968
+    }
+  },
+  "dispersion": {
+    "total_r": 53.83725367937051,
+    "home_r": 8.836220390779218,
+    "away_r": 7.727227679393919
+  },
+  "home_corners_mae": 2.2460336319813656,
+  "away_corners_mae": 2.071540084842262,
+  "walkforward_folds": 6,
+  "walkforward_min_fold_test_n": 60,
+  "walkforward_markets_scored": 3,
+  "walkforward_league_rows": 561,
+  "holdout_league_rows": 117,
+  "holdout_prediction_rows": 4581,
+  "trained_at_utc": "2026-03-06T07:33:30.570010+00:00"
+}

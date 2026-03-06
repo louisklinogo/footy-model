@@ -1,0 +1,84 @@
+{
+  "generated_at_utc": "2026-03-06T12:39:24.551666+00:00",
+  "evaluation_flow_report_path": "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v2_policyflow\\evaluation_flow_report.json",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v2_policyflow",
+  "promotion_registry_path": "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v2_policyflow\\promotion_registry.json",
+  "promotion_policy_name": "scoreline_core_v1",
+  "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+  "decision": {
+    "status": "passed",
+    "basis": "required_markets",
+    "passed_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah_h05",
+      "ah_a05",
+      "ah_h15",
+      "ah_a15",
+      "eh_h1",
+      "eh_a1",
+      "o15",
+      "u35"
+    ],
+    "failed_markets": [],
+    "missing_required_markets": []
+  },
+  "summary": {
+    "markets_total": 68,
+    "markets_passed": 59,
+    "markets_failed": 9,
+    "required_markets_total": 14,
+    "required_markets_passed": 14,
+    "required_markets_failed": 0,
+    "required_markets_missing": []
+  },
+  "recommendation_status": "promote",
+  "recommended_scope": "required_markets_only",
+  "headline": "Promote for required/core markets only; keep tail markets on a follow-up track.",
+  "rationale": [
+    "Required promotion gate passed (14/14).",
+    "Overall scoped evaluation still has 9 non-required failed markets."
+  ],
+  "follow_up_markets": [
+    "mg_1_5",
+    "mg_2_4",
+    "mg_2_5",
+    "mg_2_6",
+    "hmg_0",
+    "hmg_1_2",
+    "hmg_1_3",
+    "hmg_2_3",
+    "ms_other_awaywin"
+  ],
+  "checklist": [
+    {
+      "item": "promotion_registry_generated",
+      "ok": true,
+      "detail": "model_artifacts\\v2\\evaluation_scoreline_pit_candidate_v2_policyflow\\promotion_registry.json"
+    },
+    {
+      "item": "top_level_decision_passed",
+      "ok": true,
+      "detail": "passed"
+    },
+    {
+      "item": "required_markets_complete",
+      "ok": true,
+      "detail": "missing=0"
+    },
+    {
+      "item": "required_markets_passed",
+      "ok": true,
+      "detail": "passed=14/14"
+    },
+    {
+      "item": "full_scope_markets_passed",
+      "ok": false,
+      "detail": "passed=59/68"
+    }
+  ]
+}

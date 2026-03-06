@@ -32,15 +32,23 @@
   "model_selection_summary": {
     "histgb_poisson": {
       "markets_used": 12,
+      "n_total": 78504,
       "auc_mean": 0.5586204115977952,
+      "pr_auc_mean": 0.6091201788049841,
+      "accuracy_mean": 0.6370609056024129,
       "brier_mean": 0.22431844288562572,
-      "n_total": 78504
+      "log_loss_mean": 0.6406549998337177,
+      "ece_mean": 0.0629092745656516
     },
     "poisson_glm": {
       "markets_used": 12,
+      "n_total": 78504,
       "auc_mean": 0.591074585521163,
+      "pr_auc_mean": 0.6309267746281655,
+      "accuracy_mean": 0.6560550552149876,
       "brier_mean": 0.21593737161846618,
-      "n_total": 78504
+      "log_loss_mean": 0.6209813822934358,
+      "ece_mean": 0.030853715688475114
     }
   },
   "dispersion": {
@@ -53,5 +61,7 @@
   "walkforward_folds": 6,
   "walkforward_min_fold_test_n": 60,
   "walkforward_markets_scored": 12,
-  "trained_at_utc": "2026-03-05T02:32:36.928475+00:00"
+  "walkforward_league_rows": 2244,
+  "holdout_league_rows": 468,
+  "trained_at_utc": "2026-03-06T06:26:01.537199+00:00"
 }

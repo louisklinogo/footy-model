@@ -1,6 +1,6 @@
 {
-  "train_rows": 6530,
-  "test_rows": 1633,
+  "train_rows": 6536,
+  "test_rows": 1634,
   "features": [
     "home_sample_size",
     "away_sample_size",
@@ -47,22 +47,32 @@
   "model_selection_summary": {
     "histgb_poisson": {
       "markets_used": 52,
-      "auc_mean": 0.5960913831451033,
-      "brier_mean": 0.1601937191303589,
-      "n_total": 363844
+      "n_total": 364156,
+      "auc_mean": 0.5959415359540988,
+      "pr_auc_mean": 0.4211901333199817,
+      "accuracy_mean": 0.7620664944744072,
+      "brier_mean": 0.1602868792406751,
+      "log_loss_mean": 0.48210477247207434,
+      "ece_mean": 0.035753482611910546
     },
     "poisson_glm": {
       "markets_used": 52,
-      "auc_mean": 0.5919108684476545,
-      "brier_mean": 0.15875750752643578,
-      "n_total": 363844
+      "n_total": 364156,
+      "auc_mean": 0.5919209975206661,
+      "pr_auc_mean": 0.4209985461367423,
+      "accuracy_mean": 0.7651060539228742,
+      "brier_mean": 0.1587745948114231,
+      "log_loss_mean": 0.47787087562096825,
+      "ece_mean": 0.021201611655225026
     }
   },
   "max_goals": 10,
-  "home_goals_mae": 0.9547015375834136,
-  "away_goals_mae": 0.9028206613811863,
+  "home_goals_mae": 0.9522324881775062,
+  "away_goals_mae": 0.9037880523279664,
   "walkforward_folds": 6,
   "walkforward_min_fold_test_n": 80,
   "walkforward_markets_scored": 52,
-  "trained_at_utc": "2026-03-05T02:32:20.393845+00:00"
+  "walkforward_league_rows": 10348,
+  "holdout_league_rows": 2028,
+  "trained_at_utc": "2026-03-06T06:25:04.430967+00:00"
 }
