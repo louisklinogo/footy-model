@@ -61,3 +61,7 @@ skills/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local pytest temp roots
+.pytest_tmp/
+artifacts/pytest_tmp/
