@@ -52,10 +52,12 @@ def resolve_model_identity(
     *,
     default_model_name: str,
     default_model_version: str,
+    override_model_name: str | None = None,
     override_model_version: str | None = None,
 ) -> tuple[str, str]:
     metadata = load_artifact_metadata(artifact_dir)
-    model_name = str(metadata.get("model_name") or default_model_name).strip() or str(default_model_name)
+    name_value = override_model_name or metadata.get("model_name") or default_model_name
+    model_name = str(name_value).strip() or str(default_model_name)
     version_value = override_model_version or metadata.get("model_version") or default_model_version
     model_version = str(version_value).strip() or str(default_model_version)
     return model_name, model_version

@@ -1,0 +1,10 @@
+{
+  "family": "anytime",
+  "model_name": "anytime_v2",
+  "model_version": "markov_head_v1",
+  "artifact_dir": "model_artifacts\\v2\\audit_anytime_20260308",
+  "trained_at_utc": "2026-03-08T08:42:23.963862+00:00",
+  "model_type_selected": "poisson_glm",
+  "path_version": "constant",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv"
+}

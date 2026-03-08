@@ -1,5 +1,8 @@
 # V2 Evaluation Workflow
 
+> Canonical for the v2 evaluation/challenger workflow.
+> This workflow is not currently the active scheduled prediction path; see `docs/current_state.md`.
+
 ## Current entrypoint
 
 Use the single runner:
@@ -18,6 +21,18 @@ This currently orchestrates the v2 steps that exist in the repo today:
 By default, promotion compares the evaluated artifacts against the supplied baseline file as a frozen champion registry.
 
 `io/rebuild_baseline_metrics.py` is available, but only when you opt in with `--rebuild-baseline`.
+
+The evaluation runner now preflight-validates frozen baselines before promotion runs:
+
+- every scoped market must have a baseline row present
+- every effective required market (CLI + promotion policy) must be inside scope
+- every effective required market must also have a baseline row present
+
+Important:
+
+- this is a **presence** check, not a metric-completeness check
+- explicit baseline rows with `null` metrics are still allowed for markets that intentionally use absolute gates
+- if you run with `--rebuild-baseline`, the runner defers this validation until after the rebuild step
 
 ## Common variants
 
@@ -44,6 +59,20 @@ By default, promotion compares the evaluated artifacts against the supplied base
   - `--scoreline-dir`
   - `--corners-dir`
   - `--anytime-dir`
+
+Recommended practice after the 2026-03-08 stale-baseline incident:
+
+- treat generic baseline files as mutable registries, not as unquestioned truth
+- prefer explicit named frozen baseline snapshots for important promotion decisions
+- if preflight validation fails, refresh the frozen baseline intentionally or fix the required-market/policy list before trusting any promotion result
+
+Current repo-backed scoreline challenger reference:
+
+- scoreline artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
+- passing evaluation: `model_artifacts/v2/evaluation_scoreline_v21_total_intensity_snap_20260308_eps/`
+- pinned named baseline snapshot: `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`
+
+Use `--baseline-path model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json` when you want future scoreline comparisons to anchor to this passing named snapshot instead of the mutable generic baseline registry.
 
 Do not rebuild the champion baseline as part of a challenger evaluation run unless you are intentionally refreshing the frozen baseline itself.
 

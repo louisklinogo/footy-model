@@ -1,0 +1,7 @@
+{
+  "method": "global_total_multiplier_v1",
+  "multiplier": 0.9998470609917407,
+  "train_pred_total_mean": 2.763121487468806,
+  "train_actual_total_mean": 2.7626988984088126,
+  "n_rows": 6536
+}

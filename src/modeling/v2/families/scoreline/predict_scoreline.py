@@ -22,7 +22,17 @@ from src.modeling.evaluation.predict_market_outcomes_fixtures_first import (
     add_derived_features,
     fetch_candidate_fixtures,
 )
+from src.modeling.v2.calibration.methods import apply_binary_calibrator
 from src.modeling.v2.families.scoreline.derive_markets import derive_and_validate
+from src.modeling.v2.families.scoreline.residual_utils import (
+    apply_residual_bundle,
+    build_residual_source_frame,
+    prepare_residual_feature_frame,
+)
+from src.modeling.v2.families.scoreline.total_intensity import (
+    apply_total_intensity_correction,
+    build_identity_total_intensity_correction,
+)
 from src.modeling.v2.io.artifact_identity import resolve_model_identity
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 
@@ -69,10 +79,22 @@ def parse_args() -> argparse.Namespace:
         help="Upsert predictions into predictions table.",
     )
     parser.add_argument(
+        "--model-name",
+        type=str,
+        default=None,
+        help="Optional override for model_name. Use to bundle multiple v2 families under one runtime identity.",
+    )
+    parser.add_argument(
         "--model-version",
         type=str,
         default=None,
         help="Optional override for model_version. Defaults to artifact metadata when present.",
+    )
+    parser.add_argument(
+        "--apply-calibration",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Apply scoreline family calibrators.joblib when present.",
     )
     return parser.parse_args()
 
@@ -101,7 +123,17 @@ def _apply_imputation(df: pd.DataFrame, medians: dict[str, float]) -> pd.DataFra
     return out
 
 
-def load_artifacts(artifact_dir: Path) -> tuple[object, object, list[str], dict[str, float]]:
+def load_artifacts(
+    artifact_dir: Path,
+) -> tuple[
+    object,
+    object,
+    list[str],
+    dict[str, float],
+    dict[str, Any],
+    dict[str, Any] | None,
+    dict[str, Any],
+]:
     home_model = joblib.load(artifact_dir / "home_goals_model.pkl")
     away_model = joblib.load(artifact_dir / "away_goals_model.pkl")
     features = json.loads((artifact_dir / "features.json").read_text(encoding="utf-8"))
@@ -113,7 +145,76 @@ def load_artifacts(artifact_dir: Path) -> tuple[object, object, list[str], dict[
         for k, v in (imputation_payload.get("global_medians") or {}).items()
         if isinstance(v, (int, float))
     }
-    return home_model, away_model, list(features), medians
+    total_intensity_correction = build_identity_total_intensity_correction()
+    correction_path = artifact_dir / "total_intensity_correction.json"
+    if correction_path.exists():
+        payload = json.loads(correction_path.read_text(encoding="utf-8"))
+        if isinstance(payload, dict):
+            total_intensity_correction.update(payload)
+    residual_bundle: dict[str, Any] | None = None
+    residual_path = artifact_dir / "residual_models.joblib"
+    if residual_path.exists():
+        payload = joblib.load(residual_path)
+        residual_bundle = payload if isinstance(payload, dict) else None
+    calibrators: dict[str, Any] = {}
+    calibrator_path = artifact_dir / "calibrators.joblib"
+    if calibrator_path.exists():
+        payload = joblib.load(calibrator_path)
+        calibrators = payload if isinstance(payload, dict) else {}
+    return (
+        home_model,
+        away_model,
+        list(features),
+        medians,
+        total_intensity_correction,
+        residual_bundle,
+        calibrators,
+    )
+
+
+def _apply_market_calibrators(
+    market_frame: pd.DataFrame,
+    calibrators: dict[str, Any],
+) -> tuple[pd.DataFrame, dict[str, str]]:
+    out = market_frame.copy()
+    applied: dict[str, str] = {}
+    for market, calibrator in calibrators.items():
+        if market not in out.columns or not isinstance(calibrator, dict):
+            continue
+        out[market] = apply_binary_calibrator(calibrator, out[market].to_numpy(dtype=float))
+        applied[str(market)] = str(calibrator.get("method") or "identity")
+    return out, applied
+
+
+def _presence_mask(frame: pd.DataFrame, columns: tuple[str, ...]) -> np.ndarray:
+    existing = [column for column in columns if column in frame.columns]
+    if not existing:
+        return np.zeros(len(frame), dtype=bool)
+    mask = np.ones(len(frame), dtype=bool)
+    for column in existing:
+        mask &= frame[column].notna().to_numpy(dtype=bool)
+    return mask
+
+
+def _scoreline_feature_tiers(frame: pd.DataFrame) -> np.ndarray:
+    direct_odds = _presence_mask(
+        frame,
+        ("odds_over_15", "odds_under_15", "odds_over_35", "odds_under_35"),
+    )
+    refinement = _presence_mask(frame, ("adj_lambda_home_final", "adj_lambda_away_final"))
+    availability = _presence_mask(
+        frame,
+        ("home_availability_known", "away_availability_known", "home_lineup_known", "away_lineup_known"),
+    )
+    structural = _presence_mask(
+        frame,
+        ("lambda_home_l1", "lambda_away_l1", "home_rolling_xg", "away_rolling_xg"),
+    )
+    tiers = np.full(len(frame), "D", dtype=object)
+    tiers[structural] = "C"
+    tiers[direct_odds] = "B"
+    tiers[direct_odds & refinement & availability] = "A"
+    return tiers
 
 
 def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int:
@@ -147,11 +248,20 @@ def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int
 
 def main() -> None:
     args = parse_args()
-    home_model, away_model, features, medians = load_artifacts(args.artifact_dir)
+    (
+        home_model,
+        away_model,
+        features,
+        medians,
+        total_intensity_correction,
+        residual_bundle,
+        calibrators,
+    ) = load_artifacts(args.artifact_dir)
     model_name, model_version = resolve_model_identity(
         args.artifact_dir,
         default_model_name=MODEL_NAME,
         default_model_version=MODEL_VERSION,
+        override_model_name=args.model_name,
         override_model_version=args.model_version,
     )
     scope_markets = set(load_scope_markets(args.scope))
@@ -173,27 +283,65 @@ def main() -> None:
     for feat in features:
         if feat not in featured.columns:
             featured[feat] = np.nan
+    feature_tiers = _scoreline_feature_tiers(featured)
     scored = _apply_imputation(featured, medians)
 
     x = scored[features]
-    lambda_home = np.clip(home_model.predict(x), 0.05, 8.0)
-    lambda_away = np.clip(away_model.predict(x), 0.05, 8.0)
+    lambda_home_raw = np.clip(home_model.predict(x), 0.05, 8.0)
+    lambda_away_raw = np.clip(away_model.predict(x), 0.05, 8.0)
+    lambda_home, lambda_away = apply_total_intensity_correction(
+        lambda_home=lambda_home_raw,
+        lambda_away=lambda_away_raw,
+        correction=total_intensity_correction,
+    )
+
+    base_market_rows: list[dict[str, float]] = []
+    for lh, la in zip(lambda_home, lambda_away, strict=True):
+        matrix = _score_matrix_independent_poisson(
+            lambda_home=float(lh), lambda_away=float(la), max_goals=max(1, int(args.max_goals))
+        )
+        base_market_rows.append(derive_and_validate(matrix))
+    base_market_frame = pd.DataFrame(base_market_rows)
+    final_market_frame = base_market_frame.copy()
+    publish_residual_overlay = bool(residual_bundle and residual_bundle.get("publish_to_canonical_surface"))
+    if publish_residual_overlay:
+        residual_source = build_residual_source_frame(
+            raw_frame=featured,
+            base_market_frame=base_market_frame,
+            lambda_home=np.asarray(lambda_home, dtype=float),
+            lambda_away=np.asarray(lambda_away, dtype=float),
+        )
+        residual_features, _, _ = prepare_residual_feature_frame(
+            residual_source,
+            feature_columns=list(residual_bundle.get("feature_columns") or []),
+            imputation=dict(residual_bundle.get("imputation") or {}),
+        )
+        final_market_frame = apply_residual_bundle(
+            base_market_frame=base_market_frame,
+            residual_features=residual_features,
+            residual_bundle=residual_bundle,
+            direct_market_overrides=True,
+        )
+    calibration_methods: dict[str, str] = {}
+    if bool(args.apply_calibration) and calibrators:
+        final_market_frame, calibration_methods = _apply_market_calibrators(
+            final_market_frame,
+            calibrators,
+        )
 
     rows_csv: list[dict[str, Any]] = []
     rows_db: list[tuple[int, str, str, str, float, str]] = []
-    for fixture, lh, la in zip(
+    for row_idx, (fixture, lh, la) in enumerate(zip(
         scored.itertuples(index=False),
         lambda_home,
         lambda_away,
         strict=True,
-    ):
+    )):
         fixture_id = int(fixture.fixture_id)
         lh = float(lh)
         la = float(la)
-        matrix = _score_matrix_independent_poisson(
-            lambda_home=lh, lambda_away=la, max_goals=max(1, int(args.max_goals))
-        )
-        markets = derive_and_validate(matrix)
+        markets = final_market_frame.iloc[row_idx].to_dict()
+        base_markets = base_market_frame.iloc[row_idx].to_dict()
         for market_code, prob in markets.items():
             if market_code not in scope_markets:
                 continue
@@ -202,7 +350,17 @@ def main() -> None:
                 "model_family": "scoreline_v2",
                 "lambda_home_pred": lh,
                 "lambda_away_pred": la,
+                "lambda_home_raw": float(lambda_home_raw[row_idx]),
+                "lambda_away_raw": float(lambda_away_raw[row_idx]),
+                "total_lambda_raw": float(lambda_home_raw[row_idx] + lambda_away_raw[row_idx]),
+                "total_lambda_corrected": float(lh + la),
+                "total_intensity_multiplier": float(total_intensity_correction.get("multiplier") or 1.0),
                 "max_goals": int(args.max_goals),
+                "residual_overlay_applied": publish_residual_overlay,
+                "calibration_applied": market_code in calibration_methods,
+                "calibration_method": calibration_methods.get(market_code),
+                "feature_tier": str(feature_tiers[row_idx]),
+                "p_model_base": float(np.clip(base_markets.get(market_code, p_model), 0.001, 0.999)),
                 "generated_at_utc": datetime.now(tz=UTC).isoformat(),
             }
             rows_csv.append(
@@ -212,8 +370,17 @@ def main() -> None:
                     "model_name": model_name,
                     "model_version": model_version,
                     "p_model": p_model,
+                    "p_model_base": float(np.clip(base_markets.get(market_code, p_model), 0.001, 0.999)),
                     "lambda_home_pred": lh,
                     "lambda_away_pred": la,
+                    "lambda_home_raw": float(lambda_home_raw[row_idx]),
+                    "lambda_away_raw": float(lambda_away_raw[row_idx]),
+                    "total_lambda_raw": float(lambda_home_raw[row_idx] + lambda_away_raw[row_idx]),
+                    "total_lambda_corrected": float(lh + la),
+                    "total_intensity_multiplier": float(total_intensity_correction.get("multiplier") or 1.0),
+                    "feature_tier": str(feature_tiers[row_idx]),
+                    "residual_overlay_applied": publish_residual_overlay,
+                    "calibration_method": calibration_methods.get(market_code),
                 }
             )
             rows_db.append(

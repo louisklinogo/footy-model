@@ -1,0 +1,9 @@
+{
+  "family": "anytime",
+  "model_name": "anytime_v2",
+  "model_version": "live_verification_anytime_20260306",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_anytime_20260306",
+  "trained_at_utc": "2026-03-06T17:03:42.362963+00:00",
+  "model_type_selected": "poisson_glm",
+  "path_version": "constant"
+}

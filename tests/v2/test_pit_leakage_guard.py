@@ -3,6 +3,7 @@ from __future__ import annotations
 import pandas as pd
 import pytest
 
+from src.modeling.availability_features import AvailabilityFeatureConfig
 from src.modeling.layer2_markets import market_outcome_calibrator as legacy_calibrator
 from src.modeling.v2.data.build_pit_dataset import build_pit_frame, validate_pit_leakage
 
@@ -57,6 +58,23 @@ def test_validate_pit_leakage_flags_prediction_after_match() -> None:
     assert "prediction_time_after_match_time" in codes
 
 
+def test_validate_pit_leakage_flags_post_prediction_availability_snapshot() -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "fixture_id": 4,
+                "match_datetime_utc": "2026-03-10T18:00:00Z",
+                "prediction_time_utc": "2026-03-10T12:00:00Z",
+                "home_availability_last_seen_utc": "2026-03-10T12:30:00Z",
+            }
+        ]
+    )
+    report = validate_pit_leakage(frame)
+    assert report["status"] == "failed"
+    codes = {row["code"] for row in report["violations"]}
+    assert "availability_snapshot_after_prediction_time" in codes
+
+
 def test_build_pit_frame_requests_asof_dataset(monkeypatch: pytest.MonkeyPatch) -> None:
     captured: dict[str, int | None] = {"prediction_lead_hours": None}
 
@@ -102,6 +120,11 @@ def test_fetch_dataset_caps_lambda_predictions_by_prediction_time(
         return pd.DataFrame()
 
     monkeypatch.setattr(legacy_calibrator, "connect_db", lambda: DummyConn())
+    monkeypatch.setattr(
+        legacy_calibrator,
+        "resolve_availability_feature_config",
+        lambda conn: AvailabilityFeatureConfig(False, None, False),
+    )
     monkeypatch.setattr(legacy_calibrator.pd, "read_sql", fake_read_sql)
 
     legacy_calibrator.fetch_dataset(prediction_lead_hours=6)
@@ -127,6 +150,11 @@ def test_fetch_dataset_leaves_lambda_predictions_uncapped_without_prediction_tim
         return pd.DataFrame()
 
     monkeypatch.setattr(legacy_calibrator, "connect_db", lambda: DummyConn())
+    monkeypatch.setattr(
+        legacy_calibrator,
+        "resolve_availability_feature_config",
+        lambda conn: AvailabilityFeatureConfig(False, None, False),
+    )
     monkeypatch.setattr(legacy_calibrator.pd, "read_sql", fake_read_sql)
 
     legacy_calibrator.fetch_dataset()

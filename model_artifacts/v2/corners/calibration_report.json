@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-03-06T12:39:24.064926+00:00",
+  "generated_at_utc": "2026-03-08T18:55:42.085248+00:00",
   "family": "corners",
   "artifact_dir": "model_artifacts\\v2\\corners",
   "holdout_predictions_path": "model_artifacts\\v2\\corners\\holdout_predictions.csv",

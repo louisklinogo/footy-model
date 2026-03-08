@@ -6,15 +6,33 @@ Production runtime is Python. JS Flashscore scrapers still exist but are legacy 
 ## Quick Orientation
 
 - Main phaseable job: `src/jobs/tick_due_fixtures_v1.py`
-- Scheduler scripts (active):
-  - `scripts/run_settle_scheduler.sh`
-  - `scripts/run_predict_scheduler.sh`
-  - `scripts/run_score_scheduler.sh`
-  - `scripts/run_availability_scheduler.sh`
-  - `scripts/run_odds_polling_scheduler.sh`
-  - `scripts/run_validation_loop_scheduler.sh`
+- Canonical current-state doc: `docs/current_state.md`
+- Canonical live runtime runbook: `docs/ops_due_fixtures_job_v1.md`
+- Canonical v2 challenger docs:
+  - `docs/v2_upgrade_tracker.md`
+  - `docs/v2_evaluation_workflow.md`
+- Archived historical/planning docs: `docs/archive/`
+- Scheduler scripts (active in this workspace):
+  - `scripts/run_tick_scheduler.cmd`
+  - `scripts/run_availability_scheduler.cmd`
+  - `scripts/run_odds_polling_scheduler.cmd`
+  - `scripts/run_validation_loop_scheduler.cmd`
 - DB run logging: `src/common/pipeline_logging.py` (`pipeline_runs` table)
 - Tests: `tests/` (pytest; many are DB-backed)
+
+## Documentation Policy
+
+- Treat live DB tables plus active entrypoint code as the highest source of truth.
+- Use `docs/current_state.md` for the current runtime/model summary.
+- Use `docs/v2_upgrade_tracker.md` and `docs/v2_evaluation_workflow.md` for v2 challenger work only.
+- Treat files under `docs/archive/` as historical context, not current truth.
+
+## V2 Evaluation / Promotion Guardrails
+
+- Treat `model_artifacts/v2/baselines/metrics_baseline_v2.json` as a mutable registry, not unquestioned frozen truth.
+- Before interpreting a v2 promotion failure, validate that the baseline registry covers all scoped markets and all required markets for the active promotion policy.
+- Prefer explicit named frozen baseline snapshots for important promotion decisions; generic baseline files can drift after scope/contract changes.
+- If baseline coverage is incomplete, rebuild or replace the baseline intentionally before doing any further model diagnosis.
 
 ## Source-of-Truth Policy
 
@@ -29,6 +47,8 @@ Production runtime is Python. JS Flashscore scrapers still exist but are legacy 
 
 - `DATABASE_URL` is required for most scripts.
 - Fallbacks used in code: `DEV_DATABASE_URL`, `PROD_DATABASE_URL`.
+- `src/db/db_utils.py` calls `load_dotenv()` on import, so DB access can still work from `.env` even when the interactive shell appears to have no DB env vars set.
+- DB resolution order in code is: `DATABASE_URL` -> `DEV_DATABASE_URL` -> `PROD_DATABASE_URL`.
 
 ### Python environment
 
@@ -55,15 +75,13 @@ Production runtime is Python. JS Flashscore scrapers still exist but are legacy 
 
 ### Scheduler scripts (recommended)
 
-- `scripts/run_settle_scheduler.sh`
-- `scripts/run_predict_scheduler.sh`
-- `scripts/run_score_scheduler.sh`
-- `scripts/run_availability_scheduler.sh`
-- `scripts/run_odds_polling_scheduler.sh`
-- `scripts/run_validation_loop_scheduler.sh`
+- `scripts/run_tick_scheduler.cmd`
+- `scripts/run_availability_scheduler.cmd`
+- `scripts/run_odds_polling_scheduler.cmd`
+- `scripts/run_validation_loop_scheduler.cmd`
 
 All scheduler scripts:
-- Use atomic `flock` lock files in `artifacts/locks/`
+- Use lock files in `artifacts/locks/`
 - Write stdout logs to `artifacts/logs/*_scheduler.stdout.log`
 - Support optional `MAX_RUNTIME_MINUTES`
 
@@ -86,9 +104,7 @@ All scheduler scripts:
 ## Logs and Debugging
 
 - Check scheduler logs first:
-  - `artifacts/logs/settle_scheduler.stdout.log`
-  - `artifacts/logs/predict_scheduler.stdout.log`
-  - `artifacts/logs/score_scheduler.stdout.log`
+  - `artifacts/logs/tick_scheduler.stdout.log`
   - `artifacts/logs/availability_scheduler.stdout.log`
   - `artifacts/logs/odds_polling_scheduler.stdout.log`
   - `artifacts/logs/validation_loop_scheduler.stdout.log`

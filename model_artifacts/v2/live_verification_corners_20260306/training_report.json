@@ -1,0 +1,70 @@
+{
+  "train_rows": 6105,
+  "test_rows": 1527,
+  "features": [
+    "home_sample_size",
+    "away_sample_size",
+    "home_rolling_corners",
+    "home_rolling_corners_against",
+    "away_rolling_corners",
+    "away_rolling_corners_against",
+    "home_rolling_box_touches",
+    "away_rolling_box_touches",
+    "odds_c75_over",
+    "odds_c75_under",
+    "odds_c85_over",
+    "odds_c85_under",
+    "odds_c95_over",
+    "odds_c95_under",
+    "odds_c105_over",
+    "odds_c105_under",
+    "implied_c75_over",
+    "implied_c85_over",
+    "implied_c95_over",
+    "implied_c105_over",
+    "corners_gap_75",
+    "corners_gap_85",
+    "corners_gap_95",
+    "corners_gap_105"
+  ],
+  "model_name": "corners_v2",
+  "model_version": "live_verification_corners_20260306",
+  "model_type_requested": "auto",
+  "model_type_selected": "poisson_glm",
+  "model_selection_summary": {
+    "histgb_poisson": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.5586204115977952,
+      "pr_auc_mean": 0.6091201788049841,
+      "accuracy_mean": 0.6370609056024129,
+      "brier_mean": 0.22431844288562572,
+      "log_loss_mean": 0.6406549998337177,
+      "ece_mean": 0.0629092745656516
+    },
+    "poisson_glm": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.591074585521163,
+      "pr_auc_mean": 0.6309267746281655,
+      "accuracy_mean": 0.6560550552149876,
+      "brier_mean": 0.21593737161846618,
+      "log_loss_mean": 0.6209813822934358,
+      "ece_mean": 0.030853715688475114
+    }
+  },
+  "dispersion": {
+    "total_r": 53.83725367937051,
+    "home_r": 8.836220390779218,
+    "away_r": 7.727227679393919
+  },
+  "home_corners_mae": 2.2460336319813656,
+  "away_corners_mae": 2.071540084842262,
+  "walkforward_folds": 6,
+  "walkforward_min_fold_test_n": 60,
+  "walkforward_markets_scored": 12,
+  "walkforward_league_rows": 2244,
+  "holdout_league_rows": 468,
+  "holdout_prediction_rows": 18324,
+  "trained_at_utc": "2026-03-06T17:02:11.733473+00:00"
+}

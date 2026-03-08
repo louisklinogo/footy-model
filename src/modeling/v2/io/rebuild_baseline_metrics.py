@@ -14,6 +14,7 @@ if str(ROOT_DIR) not in sys.path:
 from src.modeling.v2.io.baseline_registry import (
     DEFAULT_BASELINE_PATH,
     DEFAULT_SCOPE_PATH,
+    expand_baseline_market_rows,
     load_scope_markets,
 )
 
@@ -79,12 +80,7 @@ def main() -> None:
     combined_rows.extend(_read_rows(args.corners))
     combined_rows.extend(_read_rows(args.anytime))
 
-    by_market: dict[str, dict[str, Any]] = {}
-    for row in combined_rows:
-        market = str(row.get("market") or row.get("market_code") or "").strip()
-        if not market:
-            continue
-        by_market[market] = row
+    by_market = expand_baseline_market_rows(combined_rows)
 
     missing = [market for market in scope_markets if market not in by_market]
     if missing and not args.allow_missing:
@@ -97,18 +93,23 @@ def main() -> None:
     metrics = []
     for market in scope_markets:
         row = by_market.get(market, {})
-        metrics.append(
-            {
-                "market_code": market,
-                "auc": _to_float_or_none(row.get("auc")),
-                "pr_auc": _to_float_or_none(row.get("pr_auc")),
-                "accuracy": _to_float_or_none(row.get("accuracy")),
-                "brier": _to_float_or_none(row.get("brier")),
-                "log_loss": _to_float_or_none(row.get("log_loss")),
-                "ece": _to_float_or_none(row.get("ece")),
-                "n": _to_int_or_none(row.get("n")),
-            }
-        )
+        metric_row = {
+            "market_code": market,
+            "auc": _to_float_or_none(row.get("auc")),
+            "pr_auc": _to_float_or_none(row.get("pr_auc")),
+            "accuracy": _to_float_or_none(row.get("accuracy")),
+            "brier": _to_float_or_none(row.get("brier")),
+            "log_loss": _to_float_or_none(row.get("log_loss")),
+            "ece": _to_float_or_none(row.get("ece")),
+            "n": _to_int_or_none(row.get("n")),
+        }
+        source_market = str(row.get("source_market_code") or "").strip()
+        mapping_note = str(row.get("mapping_note") or "").strip()
+        if source_market and source_market != market:
+            metric_row["source_market_code"] = source_market
+        if mapping_note and mapping_note != "source":
+            metric_row["mapping_note"] = mapping_note
+        metrics.append(metric_row)
 
     payload = {
         "version": 2,
@@ -116,8 +117,11 @@ def main() -> None:
         "updated_at_utc": datetime.now(tz=UTC).isoformat(),
         "sources": {
             "scoreline_holdout": str(args.scoreline),
+            "scoreline_holdout_path": str(args.scoreline),
             "corners_holdout": str(args.corners),
+            "corners_holdout_path": str(args.corners),
             "anytime_holdout": str(args.anytime),
+            "anytime_holdout_path": str(args.anytime),
             "scope": str(args.scope),
         },
         "metrics": metrics,

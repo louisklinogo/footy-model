@@ -62,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         help="Upsert predictions into predictions table.",
     )
     parser.add_argument(
+        "--model-name",
+        type=str,
+        default=None,
+        help="Optional override for model_name. Use to bundle multiple v2 families under one runtime identity.",
+    )
+    parser.add_argument(
         "--model-version",
         type=str,
         default=None,
@@ -131,6 +137,7 @@ def main() -> None:
         args.artifact_dir,
         default_model_name=MODEL_NAME,
         default_model_version=MODEL_VERSION,
+        override_model_name=args.model_name,
         override_model_version=args.model_version,
     )
     scope_markets = set(load_scope_markets(args.scope))

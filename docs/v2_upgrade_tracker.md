@@ -1,6 +1,13 @@
 # V2 Upgrade Tracker
 
-Updated: 2026-03-06 (post scoreline PIT v2 rerun)
+> Canonical for the active v2 challenger backlog.
+> This is **not** the current live runtime source of truth; see `docs/current_state.md` for that.
+
+Canonical strategy doc for the family replacement program: `docs/plans/2026-03-08-v2-production-standard-plan.md`.
+
+Current implementation spec for Phase 1 scoreline work: `docs/plans/2026-03-08-scoreline-v21-implementation-spec.md`.
+
+Updated: 2026-03-08 (production-standard planning + scoreline v2.1 spec + baseline hardening)
 Owner: Augment Agent
 Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
 
@@ -9,6 +16,31 @@ Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
 - DONE: `pytest -q tests/test_sofascore_odds_parse.py tests/test_score_market_outcomes_corners.py tests/test_snapshot_leakage_guard.py`
 - DONE: Live DB audit of coverage, dispersion, and odds-line support
 - DONE: Live SofaScore path audit for stats, incidents, lineups, odds, and missing players
+
+## Family replacement program baseline
+- DONE: canonical strategy doc established at `docs/plans/2026-03-08-v2-production-standard-plan.md`
+- DONE: Phase 1 implementation spec established at `docs/plans/2026-03-08-scoreline-v21-implementation-spec.md`
+- DONE: reusable matched-cohort harness added at `src/modeling/v2/eval/live_replacement_compare.py`
+- DONE: canonical baseline artifacts written to `artifacts/v2/family_replacement/live_replacement_20260306_phase1_baseline/`
+- Latest benchmark truth is now `artifacts/v2/family_replacement/live_replacement_20260307_schema_aligned/summary.json`, not the earlier pre-fix reruns.
+- Post-fix benchmark reread: the runtime binary-schema alignment fix materially strengthened the live benchmark path while leaving challenger outputs effectively unchanged. Matched fallback fell from `72.5%` to `19.9%` overall (`33,272 -> 9,132` rows), and `full_overlap_nonfallback` expanded from `12,644` to `36,784` rows.
+- Learned conclusion: earlier broad challenger-positive claims were partly confounded by live runtime inference failures. The main benchmark flip is best understood as a corrected live baseline, not a challenger regression.
+- Current matched verdict on the corrected benchmark: `full_overlap` now slightly favors live (`delta_auc -0.00149`, `delta_brier +0.00049`, `delta_log_loss +0.00099`), and `full_overlap_nonfallback` also slightly favors live.
+- Scoreline governance update: scoreline is now split for scope/evaluation/promotion into `scoreline_directional`, `scoreline_totals_core`, `scoreline_multigoals`, and `scoreline_multiscore` while still sharing one underlying scoreline artifact/trainer.
+- Scoreline promotion/baseline hardening update: `run_evaluation_flow.py` now preflight-validates baseline coverage for scoped and required markets before trusting promotion output, after a stale baseline registry briefly created misleading `missing_baseline` failures on canonical EH3 draw markets.
+- Current passing scoreline artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/` with evaluation `model_artifacts/v2/evaluation_scoreline_v21_total_intensity_snap_20260308_eps/`.
+- Current pinned named baseline snapshot for future comparisons: `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`.
+- Self-check using the pinned named baseline also passes cleanly: `artifacts/tmp/evaluation_scoreline_v21_total_intensity_snap_selfcheck_named_baseline/` records `22/22` required markets passed and `76/76` scoped markets passed.
+- `scoreline_directional` is now slightly positive on pooled overlap after the fix (`delta_auc +0.00014`, `delta_brier -0.00024`, `delta_log_loss -0.00050`), with a clearer true non-fallback edge (`delta_auc +0.00181`, `delta_brier -0.00103`, `delta_log_loss -0.00231`). Remaining fallback is concentrated in unsupported `ah_*` / `eh_*` markets; among true non-fallback directional markets, `1x2_a`, `1x2_d`, `dc_12`, and `dc_1x` lead, while `1x2_h` and `dc_x2` still slightly trail live.
+- `scoreline_totals_core` remains blocked by `o15`: `u35` is mildly positive, but `o15` is materially negative, leaving the pooled two-market slice negative overall.
+- `scoreline_multigoals` and `scoreline_multiscore` still have no matched live-overlap basis in this cohort, so there is no promotion evidence yet.
+- Corners is no longer replacement-ready on the corrected benchmark. The pre-fix positive result was heavily confounded by live fallback (`66.7%` fallback pre-fix, `0.0%` post-fix). On the corrected overlap, corners turns negative (`delta_auc -0.00446`, `delta_brier +0.00116`, `delta_log_loss +0.00265`); only `c105` and `c95` are clearly positive across the main metrics, while most `ac_*` / `hc_*` markets and `c85` trail live. This weakness is broad rather than single-league noise.
+- Anytime bounded rerun update (2026-03-08): replayed `anytime_rich_snapshot_v1` and a simple home-alpha retune under the current PIT dataset / pinned baseline. The alpha retune was discarded quickly. The rich snapshot candidate (`model_artifacts/v2/anytime_rich_snapshot_v1_candidate_20260308/`) is the only anytime path with real signal: versus the previous anytime challenger baseline it improves mean AUC by `+0.00237`, mean Brier by `-0.00080`, and mean log-loss by `-0.00227` across the four anytime markets.
+- Live-overlap result for the rich anytime candidate: `artifacts/v2/family_replacement/live_replacement_20260308_anytime_rich_snapshot_v1/` turns the family from slightly negative to slightly positive on the non-fallback overlap (`delta_auc +0.00056`, `delta_brier -0.00013`, `delta_log_loss -0.00195`). `a_1up` and `a_2up` stay positive, `h_2up` improves materially, and `h_1up` remains the main residual weak point.
+- Follow-up `h_1up` pass (2026-03-08): a `phase_split` challenger (`model_artifacts/v2/anytime_h1up_phase_split_candidate_20260308/`) improved promotion-holdout `h_1up`/`a_1up`, but materially worsened the live-overlap home ladders. That path is recorded as a useful no-go, not the next reference.
+- Better bounded result: a contract-only challenger (`model_v2/feature_contracts/experiments/anytime_h1up_rich_snapshot_v1.yaml`) added a very small home-start-fast / lead-rate unblock on top of the rich snapshot artifact. The resulting artifact `model_artifacts/v2/anytime_h1up_rich_snapshot_v1_candidate_20260308/` improves all four anytime holdout markets versus `anytime_rich_snapshot_v1_candidate_20260308`, including `h_1up` (`ΔAUC +0.00086`, `ΔBrier -0.00024`, `Δlog-loss -0.00057`) while also improving the other three ladders.
+- Live-overlap read for the contract-only challenger: `artifacts/v2/family_replacement/live_replacement_20260308_anytime_h1up_rich_snapshot_v1/` improves all four anytime per-market live deltas versus the prior rich challenger. Mean anytime live deltas move from `ΔAUC +0.00666`, `ΔBrier -0.00013`, `Δlog-loss -0.00195` to `ΔAUC +0.00741`, `ΔBrier -0.00029`, `Δlog-loss -0.00234`. `h_1up` and `h_2up` still trail live slightly, but both are less negative than before.
+- Practical sequencing decision: `anytime_h1up_rich_snapshot_v1_candidate_20260308` is now the current leading anytime challenger reference. Anytime has improved further, but the home ladders remain a later follow-up problem; corners stays deferred to a later structural sprint focused on totals-first scope and dispersion/model-shape questions rather than more small feature-block tweaks.
 
 ## Execution board
 1. [DONE] Build evaluation and promotion harness
@@ -35,6 +67,8 @@ Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
    - Acceptance: improvement on promotion-critical markets without stability regressions
    - Current result: live-scope candidate matched champion metrics on `c85`, `c95`, `c105` (no uplift yet)
    - Calibration rerun result: `c105` improved on the calibration eval split under sigmoid, but promotion correctly stays on raw holdout because calibrated metrics were computed on a smaller eval-only subset (`n=764` vs raw holdout `n=1527`)
+   - Fresh bounded rerun result (2026-03-08): `corners_attack_block_candidate_20260308` was trained and evaluated with the current PIT dataset / harness against pinned baseline `metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`. It improved some team-corners markets (`hc25`, `hc35`, `ac25`, `ac35`) but **worsened all four totals** (`c75`, `c85`, `c95`, `c105`) on AUC, Brier, and log-loss versus the current corners baseline. Evaluation artifact: `model_artifacts/v2/evaluation_corners_attack_block_candidate_20260308/`.
+   - Practical conclusion: stop the attack-block path here. Team-corners remain research-only until market support improves, and a candidate that loses on the totals surface is not the right next production challenger. Revisit corners later as a dedicated structural sprint, not as another small bounded feature tweak.
 
 5. [DONE] Make calibration a first-class v2 stage
    - Added row-level holdout prediction artifacts across families
@@ -49,11 +83,18 @@ Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
    - Real result: `scoreline_pit_candidate_v2` now passes promotion on 59 / 68 scoped markets and all core scoreline markets (`1x2_*`, `dc_*`, `ah_*`, `eh_*`, `o15`, `u35`)
    - Remaining failures are concentrated in 9 tail scoreline bucket markets (`mg_*`, `hmg_*`, `ms_other_awaywin`) and currently fail on AUC only while Brier / log-loss / ECE improved
 
-7. [TODO] Add PIT-safe availability features
+7. [DONE] Add PIT-safe availability features
    - Missing-player counts / lineup-known flags / freshness
    - Acceptance: leakage-safe feature generation and stable fallback behavior
+   - Implementation update: added shared availability SQL helpers in `src/modeling/availability_features.py` and wired them into both PIT training extraction (`market_outcome_calibrator.fetch_dataset()`) and fixtures-first prematch scoring (`predict_market_outcomes_fixtures_first.py`).
+   - Leakage/fallback update: availability snapshots are now capped at the PIT prediction cutoff, scoreline contracts include the new availability fields plus missingness indicators, and PIT validation now explicitly fails if availability or lineup timestamps appear after `prediction_time_utc`.
+   - Verification: `pytest -q tests/v2/test_availability_features.py tests/v2/test_pit_leakage_guard.py tests/v2/test_shadow_compare.py tests/v2/test_evaluation_flow_runner.py tests/v2/test_scoreline_train_utils.py` → 28 passed.
+   - Live rerun update: built `artifacts/v2/datasets/scoreline_availability_candidate_v1/pit_dataset_20260306T132736Z.csv` and trained `model_artifacts/v2/scoreline_availability_candidate_v1` from it. PIT leakage validation passed on 8,170 rows with zero violations.
+   - Coverage note: prematch availability coverage in this PIT slice is still very sparse (60 rows with non-null home/away availability freshness; ~0.73% availability-known rate for each side), so the feature family is now safely available but not yet broadly informative across the historical sample.
+   - Operational audit closeout: historical `player_availability` coverage is dense ex post (~96.6% of real fixtures eventually have rows), but true observed pre-kickoff capture is only ~1.0% of fixture sides overall and ~0.76% by `T-6h`, so this is not a meaningful signal for the current single-pass prematch horizon.
+   - Source comparison closeout: Flashscore lineups pages do show pre-kickoff `Predicted lineups` for some larger fixtures, but the current legacy parser does not extract them and the sample did not show reliable structured missing-player sections. Decision: do not spend more modeling/scraper effort here unless product scope changes to include a near-kickoff refresh (`T-90m`/`T-60m`).
 
-8. [IN_PROGRESS] Shadow-mode compare and decide promotion
+8. [DONE] Shadow-mode compare and decide promotion
    - Side-by-side predictions under distinct versions
    - Explicit registry verdict
    - Acceptance: rollout decision is reversible and evidence-based
@@ -68,6 +109,11 @@ Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
    - End-to-end flow rerun: `model_artifacts/v2/evaluation_scoreline_pit_candidate_v2_policyflow/evaluation_flow_report.json` now contains the compact `promotion_summary` block for the repo-backed policy path, again showing decision `passed`, 59 / 68 markets passed overall, and 14 / 14 required scoreline core markets passed.
    - Recommendation artifact update: added `src/modeling/v2/eval/promotion_recommendation.py` and wired `run_evaluation_flow.py` to emit `promotion_recommendation.json` and `promotion_recommendation.md`. The recommendation layer is deliberately derived-only: it turns the policy-backed decision into an explicit recommendation (`full_scope`, `required_markets_only`, or hold) plus a checklist and follow-up market list.
    - Real recommendation artifacts: `model_artifacts/v2/evaluation_scoreline_pit_candidate_v2_policyflow/promotion_recommendation.json` and `.md` now recommend `required_markets_only` promotion for the PIT scoreline candidate, with 14 / 14 core markets passed and follow-up tail markets explicitly listed (`mg_1_5`, `mg_2_4`, `mg_2_5`, `mg_2_6`, `hmg_0`, `hmg_1_2`, `hmg_1_3`, `hmg_2_3`, `ms_other_awaywin`).
+   - Shadow compare artifact update: added `src/modeling/v2/eval/shadow_compare.py` and wired `src/modeling/v2/run_evaluation_flow.py` to emit derived `shadow_comparison.json` and `shadow_comparison.md` artifacts that pair challenger/champion versions per family and include per-market metric deltas from the promotion registry.
+   - Practical result: future evaluation-flow reruns now automatically leave behind a concise baseline-vs-challenger comparison artifact alongside the promotion recommendation, without changing the existing promotion decision semantics.
+   - Live availability challenger rerun: evaluated `model_artifacts/v2/scoreline_availability_candidate_v1` via `model_artifacts/v2/evaluation_scoreline_availability_candidate_v1_policyflow`. Result stayed policy-positive: top-level decision `passed`, 59 / 68 markets passed overall, and 14 / 14 required scoreline core markets passed.
+   - Live shadow result: `shadow_comparison.md` now shows the availability challenger against baseline `poisson_head_v1`, with all 14 required/core markets improving on the tracked deltas (positive ΔAUC and lower Brier / log-loss / ECE in the emitted comparison table).
+   - Artifact polish fix: after the first live rerun exposed misleading shadow-report fallback text, updated `shadow_compare.py` so the report now carries the real recommendation scope (`required_markets_only`) and family-default version labels for unchanged corners/anytime artifacts.
 
 ## Required tests as work lands
 - `pytest -q tests/v2`
@@ -89,7 +135,11 @@ Status legend: TODO / IN_PROGRESS / DONE / BLOCKED
 - Prefer temp Python scripts for DB probes and structured diagnostics.
 - Do not promote team-corners just because model math improves; wait for market support.
 - Do not claim scoreline dependence improvements without slice-level evidence.
+- Do not treat pre-fix live-replacement benchmarks as current truth after a runtime fallback/inference-path fix; re-read the corrected artifacts first.
+- When a benchmark flips after a runtime fix, check whether the challenger changed or whether the live/champion path simply stopped failing at inference time.
 - Do not substitute calibrated holdout metrics into promotion unless the calibrated sample matches the raw holdout comparison set.
 - Do not label a challenger as PIT-safe while the dataset artifact fails its own PIT validation report.
 - Do not let secondary overlapping scoreline bucket markets block a clearly better core scoreline challenger without an explicit business reason.
+- Do not trust a generic frozen baseline registry blindly; validate that required/scope markets are present before interpreting promotion failures, especially after contract/scope changes.
+- When a scoreline artifact clears the gate, pin a named baseline snapshot for future comparisons instead of relying only on the mutable generic `metrics_baseline_v2.json` file.
 

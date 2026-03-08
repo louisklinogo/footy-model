@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import tempfile
 
@@ -7,6 +8,7 @@ import pandas as pd
 import pytest
 from sklearn.linear_model import PoissonRegressor
 
+from src.modeling.v2.families.anytime import train_anytime
 from src.modeling.v2.families.anytime.train_anytime import (
     _aggregate_walkforward_quality,
     _build_regressor,
@@ -130,3 +132,33 @@ def test_anytime_build_regressor_uses_custom_poisson_alpha() -> None:
     model = _build_regressor("poisson_glm", poisson_alpha=0.3)
     assert isinstance(model, PoissonRegressor)
     assert model.alpha == pytest.approx(0.3)
+
+
+def test_load_training_frame_reads_pit_dataset_and_enforces_validation() -> None:
+    with tempfile.TemporaryDirectory(prefix="anytime_pit_dataset_") as td:
+        root = Path(td)
+        dataset_path = root / "dataset.csv"
+        pd.DataFrame(
+            [{"fixture_id": 2, "prediction_time_utc": "2026-03-01T00:00:00+00:00"}]
+        ).to_csv(dataset_path, index=False)
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "passed"}), encoding="utf-8"
+        )
+
+        frame, source = train_anytime._load_training_frame(dataset_path)
+
+        assert source == str(dataset_path)
+        assert list(frame["fixture_id"]) == [2]
+
+
+def test_load_training_frame_raises_when_validation_failed() -> None:
+    with tempfile.TemporaryDirectory(prefix="anytime_pit_invalid_") as td:
+        root = Path(td)
+        dataset_path = root / "dataset.csv"
+        pd.DataFrame([{"fixture_id": 2}]).to_csv(dataset_path, index=False)
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "failed"}), encoding="utf-8"
+        )
+
+        with pytest.raises(RuntimeError, match="PIT dataset failed validation"):
+            train_anytime._load_training_frame(dataset_path)

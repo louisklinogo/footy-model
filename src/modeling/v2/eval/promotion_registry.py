@@ -25,6 +25,7 @@ from src.modeling.v2.io.promotion_policy import load_promotion_policy
 
 DEFAULT_EVALUATION_REPORT = ROOT_DIR / "model_artifacts" / "v2" / "evaluation" / "evaluation_report.json"
 DEFAULT_OUTPUT_PATH = ROOT_DIR / "model_artifacts" / "v2" / "evaluation" / "promotion_registry.json"
+METRIC_COMPARISON_EPSILON = 1e-12
 
 
 def _read_report(path: Path) -> dict[str, Any]:
@@ -70,6 +71,14 @@ def _normalize_market_list(markets: list[str] | None) -> list[str]:
     return out
 
 
+def _meaningfully_less_than(left: float, right: float, *, eps: float = METRIC_COMPARISON_EPSILON) -> bool:
+    return (float(right) - float(left)) > float(eps)
+
+
+def _meaningfully_greater_than(left: float, right: float, *, eps: float = METRIC_COMPARISON_EPSILON) -> bool:
+    return (float(left) - float(right)) > float(eps)
+
+
 def evaluate_market(
     *,
     market: str,
@@ -102,13 +111,16 @@ def evaluate_market(
     walk_folds = int((walkforward_row or {}).get("folds_used") or 0)
 
     if baseline is not None and holdout_auc is not None and baseline.auc is not None:
-        if holdout_auc + float(auc_tolerance) < float(baseline.auc):
+        if _meaningfully_less_than(holdout_auc + float(auc_tolerance), float(baseline.auc)):
             reasons.append("auc_failed")
     if baseline is not None and holdout_brier is not None and baseline.brier is not None:
-        if holdout_brier > float(baseline.brier) + float(brier_tolerance):
+        if _meaningfully_greater_than(holdout_brier, float(baseline.brier) + float(brier_tolerance)):
             reasons.append("brier_failed")
     if baseline is not None and holdout_log_loss is not None and baseline.log_loss is not None:
-        if holdout_log_loss > float(baseline.log_loss) + float(log_loss_tolerance):
+        if _meaningfully_greater_than(
+            holdout_log_loss,
+            float(baseline.log_loss) + float(log_loss_tolerance),
+        ):
             reasons.append("log_loss_failed")
     if max_ece is not None and holdout_ece is not None and holdout_ece > float(max_ece):
         reasons.append("ece_failed")

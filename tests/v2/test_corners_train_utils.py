@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import tempfile
 
 import pandas as pd
 import pytest
 
+from src.modeling.v2.families.corners import train_corners
 from src.modeling.v2.families.corners.train_corners import (
     _aggregate_walkforward_quality,
     _select_features,
@@ -111,3 +113,33 @@ def test_corners_select_features_excludes_disabled_entries() -> None:
         )
         selected = _select_features(frame, contract)
         assert selected == ["home_rolling_corners", "away_rolling_corners"]
+
+
+def test_load_training_frame_reads_pit_dataset_and_enforces_validation() -> None:
+    with tempfile.TemporaryDirectory(prefix="corners_pit_dataset_") as td:
+        root = Path(td)
+        dataset_path = root / "dataset.csv"
+        pd.DataFrame(
+            [{"fixture_id": 1, "prediction_time_utc": "2026-03-01T00:00:00+00:00"}]
+        ).to_csv(dataset_path, index=False)
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "passed"}), encoding="utf-8"
+        )
+
+        frame, source = train_corners._load_training_frame(dataset_path)
+
+        assert source == str(dataset_path)
+        assert list(frame["fixture_id"]) == [1]
+
+
+def test_load_training_frame_raises_when_validation_failed() -> None:
+    with tempfile.TemporaryDirectory(prefix="corners_pit_invalid_") as td:
+        root = Path(td)
+        dataset_path = root / "dataset.csv"
+        pd.DataFrame([{"fixture_id": 1}]).to_csv(dataset_path, index=False)
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "failed"}), encoding="utf-8"
+        )
+
+        with pytest.raises(RuntimeError, match="PIT dataset failed validation"):
+            train_corners._load_training_frame(dataset_path)

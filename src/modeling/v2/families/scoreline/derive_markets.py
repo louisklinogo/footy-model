@@ -109,9 +109,25 @@ def derive_markets_from_score_matrix(score_matrix: np.ndarray) -> dict[str, floa
     p_ah_h15 = float(mat[goal_diff >= 2].sum())
     p_ah_a15 = float(mat[goal_diff <= -2].sum())
 
-    # v1 target convention treats eh_h1/eh_a1 same as +/-1.5 cover
-    p_eh_h1 = p_ah_h15
-    p_eh_a1 = p_ah_a15
+    p_ah2_home_m05 = p_ah_h05
+    p_ah2_away_p05 = float(mat[goal_diff <= 0].sum())
+    p_ah2_away_m05 = p_ah_a05
+    p_ah2_home_p05 = float(mat[goal_diff >= 0].sum())
+    p_ah2_home_m15 = p_ah_h15
+    p_ah2_away_p15 = float(mat[goal_diff <= 1].sum())
+    p_ah2_away_m15 = p_ah_a15
+    p_ah2_home_p15 = float(mat[goal_diff >= -1].sum())
+
+    p_eh3_0_1_home = float(mat[goal_diff >= 2].sum())
+    p_eh3_0_1_draw = float(mat[goal_diff == 1].sum())
+    p_eh3_0_1_away = float(mat[goal_diff <= 0].sum())
+    p_eh3_1_0_home = float(mat[goal_diff >= 0].sum())
+    p_eh3_1_0_draw = float(mat[goal_diff == -1].sum())
+    p_eh3_1_0_away = float(mat[goal_diff <= -2].sum())
+
+    # Legacy repo EH aliases remain binary proxies for the home/away win branches.
+    p_eh_h1 = p_eh3_0_1_home
+    p_eh_a1 = p_eh3_1_0_away
 
     out = {
         "1x2_h": p_home,
@@ -122,12 +138,29 @@ def derive_markets_from_score_matrix(score_matrix: np.ndarray) -> dict[str, floa
         "dc_12": p_dc_12,
         "o15": p_o15,
         "u35": p_u35,
+        # Legacy runtime handicap aliases.
         "ah_h05": p_ah_h05,
         "ah_a05": p_ah_a05,
         "ah_h15": p_ah_h15,
         "ah_a15": p_ah_a15,
         "eh_h1": p_eh_h1,
         "eh_a1": p_eh_a1,
+        # Canonical AH current-line selections.
+        "ah2_home_m05": p_ah2_home_m05,
+        "ah2_away_p05": p_ah2_away_p05,
+        "ah2_away_m05": p_ah2_away_m05,
+        "ah2_home_p05": p_ah2_home_p05,
+        "ah2_home_m15": p_ah2_home_m15,
+        "ah2_away_p15": p_ah2_away_p15,
+        "ah2_away_m15": p_ah2_away_m15,
+        "ah2_home_p15": p_ah2_home_p15,
+        # Canonical EH 3-way selections for the current one-goal displayed lines.
+        "eh3_0_1_home": p_eh3_0_1_home,
+        "eh3_0_1_draw": p_eh3_0_1_draw,
+        "eh3_0_1_away": p_eh3_0_1_away,
+        "eh3_1_0_home": p_eh3_1_0_home,
+        "eh3_1_0_draw": p_eh3_1_0_draw,
+        "eh3_1_0_away": p_eh3_1_0_away,
     }
 
     # Multigoals totals (range bins)
@@ -182,6 +215,23 @@ def assert_probability_identities(probs: dict[str, float], tol: float = 1e-9) ->
         raise ValueError("o15 complement identity failed.")
     if not _close(probs["u35"] + (1.0 - probs["u35"]), 1.0):
         raise ValueError("u35 complement identity failed.")
+    canonical_ah_pairs = (
+        ("ah2_home_m05", "ah2_away_p05"),
+        ("ah2_away_m05", "ah2_home_p05"),
+        ("ah2_home_m15", "ah2_away_p15"),
+        ("ah2_away_m15", "ah2_home_p15"),
+    )
+    for left, right in canonical_ah_pairs:
+        if left in probs and right in probs and not _close(probs[left] + probs[right], 1.0):
+            raise ValueError(f"{left}/{right} complement identity failed.")
+    canonical_eh_lines = (
+        ("eh3_0_1_home", "eh3_0_1_draw", "eh3_0_1_away"),
+        ("eh3_1_0_home", "eh3_1_0_draw", "eh3_1_0_away"),
+    )
+    for home_key, draw_key, away_key in canonical_eh_lines:
+        if {home_key, draw_key, away_key}.issubset(probs.keys()):
+            if not _close(probs[home_key] + probs[draw_key] + probs[away_key], 1.0):
+                raise ValueError(f"{home_key}/{draw_key}/{away_key} partition identity failed.")
     if "mg_0" in probs and "mg_7p" in probs:
         if not (
             probs["mg_0"] <= probs["mg_1_2"] + tol

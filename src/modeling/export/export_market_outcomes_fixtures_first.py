@@ -23,6 +23,30 @@ from src.db.db_utils import connect_db
 DEFAULT_OUT_PATH = Path("storage/reports/market_predictions.csv")
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
+LEGACY_HANDICAP_MARKETS = (
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
+)
+CANONICAL_HANDICAP_MARKETS = (
+    "ah2_home_m05",
+    "ah2_away_p05",
+    "ah2_away_m05",
+    "ah2_home_p05",
+    "ah2_home_m15",
+    "ah2_away_p15",
+    "ah2_away_m15",
+    "ah2_home_p15",
+    "eh3_0_1_home",
+    "eh3_0_1_draw",
+    "eh3_0_1_away",
+    "eh3_1_0_home",
+    "eh3_1_0_draw",
+    "eh3_1_0_away",
+)
 MARKETS = (
     # Goals
     "o15", "u35",
@@ -38,6 +62,10 @@ MARKETS = (
     "dc_1x", "dc_x2", "dc_12",
     # Team Totals
     "ho15", "ao15",
+    # Legacy Handicap Markets
+    *LEGACY_HANDICAP_MARKETS,
+    # Canonical Handicap Markets
+    *CANONICAL_HANDICAP_MARKETS,
     # Anytime Lead Markets
     "h_1up", "a_1up", "h_2up", "a_2up",
 )
@@ -68,6 +96,13 @@ OUT_COLUMNS = [
     "p_dc_1x", "p_dc_x2", "p_dc_12",
     # Team Totals
     "p_ho15", "p_ao15",
+    # Legacy Handicap Markets
+    "p_ah_h05", "p_ah_a05", "p_ah_h15", "p_ah_a15", "p_eh_h1", "p_eh_a1",
+    # Canonical Handicap Markets
+    "p_ah2_home_m05", "p_ah2_away_p05", "p_ah2_away_m05", "p_ah2_home_p05",
+    "p_ah2_home_m15", "p_ah2_away_p15", "p_ah2_away_m15", "p_ah2_home_p15",
+    "p_eh3_0_1_home", "p_eh3_0_1_draw", "p_eh3_0_1_away",
+    "p_eh3_1_0_home", "p_eh3_1_0_draw", "p_eh3_1_0_away",
     # Anytime Lead Markets
     "p_h_1up", "p_a_1up", "p_h_2up", "p_a_2up",
 ]
@@ -77,6 +112,8 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export market outcome predictions to CSV")
     parser.add_argument("--league", type=str, default=None, help="Optional league_code filter")
     parser.add_argument("--days", type=int, default=3, help="Future horizon in days")
+    parser.add_argument("--model", type=str, default=MODEL_NAME, help="Model name")
+    parser.add_argument("--version", type=str, default=MODEL_VERSION, help="Model version")
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT_PATH, help="Output CSV path")
     return parser.parse_args()
 
@@ -88,7 +125,13 @@ def _has_risk_table(conn: object) -> bool:
     return bool(row and row[0] is not None)
 
 
-def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
+def fetch_export_rows(
+    days: int,
+    league: str | None,
+    *,
+    model: str = MODEL_NAME,
+    version: str = MODEL_VERSION,
+) -> pd.DataFrame:
     conn = connect_db()
     try:
         has_risk_table = _has_risk_table(conn)
@@ -187,6 +230,28 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
         -- Team Totals
         MAX(CASE WHEN p.market_code = 'ho15' THEN p.p_model END) AS p_ho15,
         MAX(CASE WHEN p.market_code = 'ao15' THEN p.p_model END) AS p_ao15,
+        -- Legacy Handicap Markets
+        MAX(CASE WHEN p.market_code = 'ah_h05' THEN p.p_model END) AS p_ah_h05,
+        MAX(CASE WHEN p.market_code = 'ah_a05' THEN p.p_model END) AS p_ah_a05,
+        MAX(CASE WHEN p.market_code = 'ah_h15' THEN p.p_model END) AS p_ah_h15,
+        MAX(CASE WHEN p.market_code = 'ah_a15' THEN p.p_model END) AS p_ah_a15,
+        MAX(CASE WHEN p.market_code = 'eh_h1' THEN p.p_model END) AS p_eh_h1,
+        MAX(CASE WHEN p.market_code = 'eh_a1' THEN p.p_model END) AS p_eh_a1,
+        -- Canonical Handicap Markets
+        MAX(CASE WHEN p.market_code = 'ah2_home_m05' THEN p.p_model END) AS p_ah2_home_m05,
+        MAX(CASE WHEN p.market_code = 'ah2_away_p05' THEN p.p_model END) AS p_ah2_away_p05,
+        MAX(CASE WHEN p.market_code = 'ah2_away_m05' THEN p.p_model END) AS p_ah2_away_m05,
+        MAX(CASE WHEN p.market_code = 'ah2_home_p05' THEN p.p_model END) AS p_ah2_home_p05,
+        MAX(CASE WHEN p.market_code = 'ah2_home_m15' THEN p.p_model END) AS p_ah2_home_m15,
+        MAX(CASE WHEN p.market_code = 'ah2_away_p15' THEN p.p_model END) AS p_ah2_away_p15,
+        MAX(CASE WHEN p.market_code = 'ah2_away_m15' THEN p.p_model END) AS p_ah2_away_m15,
+        MAX(CASE WHEN p.market_code = 'ah2_home_p15' THEN p.p_model END) AS p_ah2_home_p15,
+        MAX(CASE WHEN p.market_code = 'eh3_0_1_home' THEN p.p_model END) AS p_eh3_0_1_home,
+        MAX(CASE WHEN p.market_code = 'eh3_0_1_draw' THEN p.p_model END) AS p_eh3_0_1_draw,
+        MAX(CASE WHEN p.market_code = 'eh3_0_1_away' THEN p.p_model END) AS p_eh3_0_1_away,
+        MAX(CASE WHEN p.market_code = 'eh3_1_0_home' THEN p.p_model END) AS p_eh3_1_0_home,
+        MAX(CASE WHEN p.market_code = 'eh3_1_0_draw' THEN p.p_model END) AS p_eh3_1_0_draw,
+        MAX(CASE WHEN p.market_code = 'eh3_1_0_away' THEN p.p_model END) AS p_eh3_1_0_away,
         -- Anytime Lead Markets
         MAX(CASE WHEN p.market_code = 'h_1up' THEN p.p_model END) AS p_h_1up,
         MAX(CASE WHEN p.market_code = 'a_1up' THEN p.p_model END) AS p_a_1up,
@@ -199,7 +264,7 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
        ON p.fixture_id = f.fixture_id
        AND p.model_name = %s
        AND p.model_version = %s
-       AND p.market_code IN ('o15', 'u35', 'c75', 'c85', 'c95', 'c105', 'hc25', 'hc35', 'hc45', 'hc55', 'ac25', 'ac35', 'ac45', 'ac55', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'h_1up', 'a_1up', 'h_2up', 'a_2up')
+       AND p.market_code IN ('o15', 'u35', 'c75', 'c85', 'c95', 'c105', 'hc25', 'hc35', 'hc45', 'hc55', 'ac25', 'ac35', 'ac45', 'ac55', '1x2_h', '1x2_d', '1x2_a', 'dc_1x', 'dc_x2', 'dc_12', 'ho15', 'ao15', 'ah_h05', 'ah_a05', 'ah_h15', 'ah_a15', 'eh_h1', 'eh_a1', 'ah2_home_m05', 'ah2_away_p05', 'ah2_away_m05', 'ah2_home_p05', 'ah2_home_m15', 'ah2_away_p15', 'ah2_away_m15', 'ah2_home_p15', 'eh3_0_1_home', 'eh3_0_1_draw', 'eh3_0_1_away', 'eh3_1_0_home', 'eh3_1_0_draw', 'eh3_1_0_away', 'h_1up', 'a_1up', 'h_2up', 'a_2up')
     """
     query += risk_join
     query += """
@@ -208,9 +273,9 @@ def fetch_export_rows(days: int, league: str | None) -> pd.DataFrame:
       AND f.match_datetime_utc > NOW()
       AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
     """
-    params: list[object] = [MODEL_NAME, MODEL_VERSION]
+    params: list[object] = [model, version]
     if has_risk_table:
-        params.extend([MODEL_NAME, MODEL_VERSION])
+        params.extend([model, version])
     params.append(days)
 
     if league:
@@ -248,7 +313,12 @@ def export_csv(df: pd.DataFrame, out_path: Path) -> None:
 
 def main() -> None:
     args = parse_args()
-    rows = fetch_export_rows(days=args.days, league=args.league)
+    rows = fetch_export_rows(
+        days=args.days,
+        league=args.league,
+        model=args.model,
+        version=args.version,
+    )
     export_csv(rows, args.out)
     print(f"Saved {len(rows)} fixtures to {args.out}")
 

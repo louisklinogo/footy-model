@@ -1,9 +1,20 @@
 version: 1
 name: linchpin_scope_v2
-description: Core market scope for v2 re-architecture.
+description: Core runtime market scope for v2 re-architecture.
+
+contracts:
+  handicap: handicap_contract.yaml
+
+notes:
+  - The flat markets list below remains the current runtime-enabled scope for v2 tooling.
+  - Canonical sportsbook handicap semantics live in model_v2/handicap_contract.yaml.
+  - Current EH repo codes are legacy binary proxies and not full European handicap 3-way markets.
 
 families:
-  scoreline:
+  scoreline_directional:
+    contract_references:
+      - feature_contracts/scoreline.yaml
+      - handicap_contract.yaml
     markets:
       - 1x2_h
       - 1x2_d
@@ -11,14 +22,32 @@ families:
       - dc_1x
       - dc_x2
       - dc_12
-      - ah_h05
-      - ah_a05
-      - ah_h15
-      - ah_a15
-      - eh_h1
-      - eh_a1
+      # Canonical Asian handicap selections for the current displayed lines.
+      - ah2_home_m05
+      - ah2_away_p05
+      - ah2_away_m05
+      - ah2_home_p05
+      - ah2_home_m15
+      - ah2_away_p15
+      - ah2_away_m15
+      - ah2_home_p15
+      # Canonical European handicap 3-way selections for the current displayed lines.
+      - eh3_0_1_home
+      - eh3_0_1_draw
+      - eh3_0_1_away
+      - eh3_1_0_home
+      - eh3_1_0_draw
+      - eh3_1_0_away
+  scoreline_totals_core:
+    contract_references:
+      - feature_contracts/scoreline.yaml
+    markets:
       - o15
       - u35
+  scoreline_multigoals:
+    contract_references:
+      - feature_contracts/scoreline.yaml
+    markets:
       # Total multigoals
       - mg_0
       - mg_1_2
@@ -49,6 +78,10 @@ families:
       - amg_1_3
       - amg_2_3
       - amg_4p
+  scoreline_multiscore:
+    contract_references:
+      - feature_contracts/scoreline.yaml
+    markets:
       # Multiscores
       - ms_h_1_0_2_0_3_0
       - ms_a_0_1_0_2_0_3
@@ -90,12 +123,20 @@ markets:
   - dc_1x
   - dc_x2
   - dc_12
-  - ah_h05
-  - ah_a05
-  - ah_h15
-  - ah_a15
-  - eh_h1
-  - eh_a1
+  - ah2_home_m05
+  - ah2_away_p05
+  - ah2_away_m05
+  - ah2_home_p05
+  - ah2_home_m15
+  - ah2_away_p15
+  - ah2_away_m15
+  - ah2_home_p15
+  - eh3_0_1_home
+  - eh3_0_1_draw
+  - eh3_0_1_away
+  - eh3_1_0_home
+  - eh3_1_0_draw
+  - eh3_1_0_away
   - o15
   - u35
   - mg_0

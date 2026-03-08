@@ -76,3 +76,24 @@ def test_identity_validator_rejects_broken_payload() -> None:
     }
     with pytest.raises(ValueError):
         assert_probability_identities(bad)
+
+
+def test_derive_scoreline_includes_canonical_handicap_probabilities() -> None:
+    mat = np.array(
+        [
+            [0.05, 0.03, 0.02],
+            [0.10, 0.12, 0.08],
+            [0.18, 0.20, 0.22],
+        ],
+        dtype=float,
+    )
+
+    probs = derive_and_validate(mat)
+
+    assert probs["eh_h1"] == pytest.approx(probs["eh3_0_1_home"])
+    assert probs["eh_a1"] == pytest.approx(probs["eh3_1_0_away"])
+    assert probs["ah2_home_m05"] == pytest.approx(probs["ah_h05"])
+    assert probs["ah2_away_m15"] == pytest.approx(probs["ah_a15"])
+    assert probs["ah2_home_m05"] + probs["ah2_away_p05"] == pytest.approx(1.0)
+    assert probs["eh3_0_1_home"] + probs["eh3_0_1_draw"] + probs["eh3_0_1_away"] == pytest.approx(1.0)
+    assert probs["eh3_1_0_home"] + probs["eh3_1_0_draw"] + probs["eh3_1_0_away"] == pytest.approx(1.0)

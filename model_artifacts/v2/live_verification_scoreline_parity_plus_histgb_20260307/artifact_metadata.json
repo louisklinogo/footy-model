@@ -1,0 +1,9 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "live_verification_scoreline_parity_plus_histgb_20260307",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_scoreline_parity_plus_histgb_20260307",
+  "trained_at_utc": "2026-03-07T15:08:15.620319+00:00",
+  "model_type_selected": "histgb_poisson",
+  "data_source": "artifacts\\v2\\datasets\\live_verification_scoreline_20260306\\pit_dataset_20260306T170125Z.csv"
+}

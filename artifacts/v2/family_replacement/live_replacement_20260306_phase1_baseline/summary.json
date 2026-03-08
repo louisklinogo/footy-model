@@ -1,0 +1,600 @@
+{
+  "generated_at_utc": "2026-03-06T18:52:16.509390+00:00",
+  "cohort_summary": {
+    "challenger_rows_loaded": 46588,
+    "challenger_fixtures_loaded": 1859,
+    "live_prediction_rows_loaded": 55770,
+    "live_prediction_fixtures_loaded": 1859,
+    "matched_rows_before_actual_filter": 46588,
+    "matched_rows_scored": 45916,
+    "matched_fixtures_scored": 1859,
+    "fallback_rows_matched": 33272,
+    "nonfallback_rows_matched": 12644,
+    "holdout_vs_actual": {
+      "rows_with_actual": 45916,
+      "rows_matching_actual": 45916,
+      "rows_mismatching_actual": 0,
+      "rows_without_actual": 672
+    },
+    "date_min": null,
+    "date_max": null
+  },
+  "segment_definitions": {
+    "scoreline_core_markets": [
+      "1x2_a",
+      "1x2_d",
+      "1x2_h",
+      "ah_a05",
+      "ah_a15",
+      "ah_h05",
+      "ah_h15",
+      "dc_12",
+      "dc_1x",
+      "dc_x2",
+      "eh_a1",
+      "eh_h1",
+      "o15",
+      "u35"
+    ]
+  },
+  "segment_summaries": [
+    {
+      "segment": "full_overlap",
+      "rows": 45916,
+      "fixtures": 1859,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "a_1up",
+        "a_2up",
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "h_1up",
+        "h_2up",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 45916,
+        "base_rate": 0.4758254203327816,
+        "auc": 0.740983305638601,
+        "pr_auc": 0.69193349495854,
+        "accuracy": 0.6841841623834829,
+        "brier": 0.2073206005177737,
+        "log_loss": 0.6070235034755493,
+        "ece": 0.02325455934499384
+      },
+      "challenger": {
+        "n": 45916,
+        "base_rate": 0.4758254203327816,
+        "auc": 0.7562012379927201,
+        "pr_auc": 0.7192153647745892,
+        "accuracy": 0.6939193309521735,
+        "brier": 0.20038461715411668,
+        "log_loss": 0.5860293692952117,
+        "ece": 0.009549828306050664
+      },
+      "delta": {
+        "auc": 0.015217932354119057,
+        "brier": -0.006935983363657028,
+        "log_loss": -0.020994134180337687,
+        "ece": -0.013704731038943176
+      },
+      "fallback_rows": 33272,
+      "fallback_rate": 0.7246275807997212,
+      "market_win_counts": {
+        "auc": 25,
+        "brier": 20,
+        "log_loss": 21,
+        "markets_total": 30
+      }
+    },
+    {
+      "segment": "full_overlap_nonfallback",
+      "rows": 12644,
+      "fixtures": 1859,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "a_1up",
+        "a_2up",
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "h_1up",
+        "h_2up",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 12644,
+        "base_rate": 0.5843878519455868,
+        "auc": 0.7097359345204042,
+        "pr_auc": 0.7419072031854109,
+        "accuracy": 0.6847516608668143,
+        "brier": 0.20995798046669042,
+        "log_loss": 0.6100051497922582,
+        "ece": 0.02165300142720808
+      },
+      "challenger": {
+        "n": 12644,
+        "base_rate": 0.5843878519455868,
+        "auc": 0.7102526462369358,
+        "pr_auc": 0.742765506640571,
+        "accuracy": 0.6864916165770326,
+        "brier": 0.2093569305357313,
+        "log_loss": 0.6083443806391959,
+        "ece": 0.012324578812277855
+      },
+      "delta": {
+        "auc": 0.0005167117165316704,
+        "brier": -0.0006010499309591355,
+        "log_loss": -0.001660769153062236,
+        "ece": -0.009328422614930224
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 5,
+        "brier": 7,
+        "log_loss": 7,
+        "markets_total": 8
+      }
+    },
+    {
+      "segment": "anytime_overlap",
+      "rows": 5388,
+      "fixtures": 1347,
+      "markets": [
+        "a_1up",
+        "a_2up",
+        "h_1up",
+        "h_2up"
+      ],
+      "live": {
+        "n": 5388,
+        "base_rate": 0.3856718634001485,
+        "auc": 0.7300601321861308,
+        "pr_auc": 0.6178397628814981,
+        "accuracy": 0.6909799554565702,
+        "brier": 0.2007079726973186,
+        "log_loss": 0.586899325235465,
+        "ece": 0.011587963662704764
+      },
+      "challenger": {
+        "n": 5388,
+        "base_rate": 0.3856718634001485,
+        "auc": 0.7282539857927532,
+        "pr_auc": 0.6166867501992608,
+        "accuracy": 0.6859688195991092,
+        "brier": 0.20169517718759578,
+        "log_loss": 0.5892024074837574,
+        "ece": 0.015061267480918341
+      },
+      "delta": {
+        "auc": -0.0018061463933775057,
+        "brier": 0.0009872044902771715,
+        "log_loss": 0.002303082248292454,
+        "ece": 0.0034733038182135773
+      },
+      "fallback_rows": 5388,
+      "fallback_rate": 1.0,
+      "market_win_counts": {
+        "auc": 2,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 4
+      }
+    },
+    {
+      "segment": "anytime_overlap_nonfallback",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "a_1up",
+        "a_2up",
+        "h_1up",
+        "h_2up"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "corners_overlap",
+      "rows": 18324,
+      "fixtures": 1527,
+      "markets": [
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55"
+      ],
+      "live": {
+        "n": 18324,
+        "base_rate": 0.5566470203012442,
+        "auc": 0.6679903167569341,
+        "pr_auc": 0.6966966876789886,
+        "accuracy": 0.6341955904824275,
+        "brier": 0.23272776587802843,
+        "log_loss": 0.672275916987248,
+        "ece": 0.05693824855428986
+      },
+      "challenger": {
+        "n": 18324,
+        "base_rate": 0.5566470203012442,
+        "auc": 0.7108305637616936,
+        "pr_auc": 0.7443484132426974,
+        "accuracy": 0.6607727570399476,
+        "brier": 0.2146102234041637,
+        "log_loss": 0.6179982901860985,
+        "ece": 0.019976626723854016
+      },
+      "delta": {
+        "auc": 0.042840247004759524,
+        "brier": -0.01811754247386474,
+        "log_loss": -0.05427762680114945,
+        "ece": -0.036961621830435845
+      },
+      "fallback_rows": 12216,
+      "fallback_rate": 0.6666666666666666,
+      "market_win_counts": {
+        "auc": 10,
+        "brier": 12,
+        "log_loss": 12,
+        "markets_total": 12
+      }
+    },
+    {
+      "segment": "corners_overlap_nonfallback",
+      "rows": 6108,
+      "fixtures": 1527,
+      "markets": [
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55"
+      ],
+      "live": {
+        "n": 6108,
+        "base_rate": 0.5492796332678455,
+        "auc": 0.6698918887023666,
+        "pr_auc": 0.692489070846837,
+        "accuracy": 0.6314669286182056,
+        "brier": 0.2276759107206068,
+        "log_loss": 0.6471373531933116,
+        "ece": 0.016904181982337722
+      },
+      "challenger": {
+        "n": 6108,
+        "base_rate": 0.5492796332678455,
+        "auc": 0.6699946894405399,
+        "pr_auc": 0.6896743634745318,
+        "accuracy": 0.6339227242960053,
+        "brier": 0.22703062773963847,
+        "log_loss": 0.6458033456044423,
+        "ece": 0.020365180097128507
+      },
+      "delta": {
+        "auc": 0.00010280073817325874,
+        "brier": -0.0006452829809683314,
+        "log_loss": -0.001334007588869257,
+        "ece": 0.0034609981147907844
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 2,
+        "brier": 4,
+        "log_loss": 4,
+        "markets_total": 4
+      }
+    },
+    {
+      "segment": "scoreline_overlap",
+      "rows": 22204,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 22204,
+        "base_rate": 0.4310034228067015,
+        "auc": 0.7792528669465834,
+        "pr_auc": 0.7072777234482494,
+        "accuracy": 0.7237885065753918,
+        "brier": 0.18795778033381164,
+        "log_loss": 0.5580568239209287,
+        "ece": 0.008142771671258384
+      },
+      "challenger": {
+        "n": 22204,
+        "base_rate": 0.4310034228067015,
+        "auc": 0.7780684024416045,
+        "pr_auc": 0.7055924450650308,
+        "accuracy": 0.723203026481715,
+        "brier": 0.18832682097386783,
+        "log_loss": 0.5588768365909919,
+        "ece": 0.009797004177290096
+      },
+      "delta": {
+        "auc": -0.0011844645049788882,
+        "brier": 0.00036904064005618964,
+        "log_loss": 0.0008200126700631527,
+        "ece": 0.0016542325060317116
+      },
+      "fallback_rows": 15668,
+      "fallback_rate": 0.7056386236714105,
+      "market_win_counts": {
+        "auc": 13,
+        "brier": 8,
+        "log_loss": 9,
+        "markets_total": 14
+      }
+    },
+    {
+      "segment": "scoreline_overlap_nonfallback",
+      "rows": 6536,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 6536,
+        "base_rate": 0.6171970624235006,
+        "auc": 0.7206497073040625,
+        "pr_auc": 0.7684573215200168,
+        "accuracy": 0.734547123623011,
+        "brier": 0.19340028187566813,
+        "log_loss": 0.5753044921463535,
+        "ece": 0.0282567973660372
+      },
+      "challenger": {
+        "n": 6536,
+        "base_rate": 0.6171970624235006,
+        "auc": 0.7212388245080683,
+        "pr_auc": 0.7697681423803453,
+        "accuracy": 0.7356181150550796,
+        "brier": 0.19284056846084377,
+        "log_loss": 0.573338358912188,
+        "ece": 0.006947254203898603
+      },
+      "delta": {
+        "auc": 0.0005891172040057846,
+        "brier": -0.0005597134148243588,
+        "log_loss": -0.0019661332341655013,
+        "ece": -0.021309543162138598
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 3,
+        "brier": 3,
+        "log_loss": 3,
+        "markets_total": 4
+      }
+    },
+    {
+      "segment": "scoreline_core_overlap",
+      "rows": 22204,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 22204,
+        "base_rate": 0.4310034228067015,
+        "auc": 0.7792528669465834,
+        "pr_auc": 0.7072777234482494,
+        "accuracy": 0.7237885065753918,
+        "brier": 0.18795778033381164,
+        "log_loss": 0.5580568239209287,
+        "ece": 0.008142771671258384
+      },
+      "challenger": {
+        "n": 22204,
+        "base_rate": 0.4310034228067015,
+        "auc": 0.7780684024416045,
+        "pr_auc": 0.7055924450650308,
+        "accuracy": 0.723203026481715,
+        "brier": 0.18832682097386783,
+        "log_loss": 0.5588768365909919,
+        "ece": 0.009797004177290096
+      },
+      "delta": {
+        "auc": -0.0011844645049788882,
+        "brier": 0.00036904064005618964,
+        "log_loss": 0.0008200126700631527,
+        "ece": 0.0016542325060317116
+      },
+      "fallback_rows": 15668,
+      "fallback_rate": 0.7056386236714105,
+      "market_win_counts": {
+        "auc": 13,
+        "brier": 8,
+        "log_loss": 9,
+        "markets_total": 14
+      }
+    },
+    {
+      "segment": "scoreline_core_overlap_nonfallback",
+      "rows": 6536,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 6536,
+        "base_rate": 0.6171970624235006,
+        "auc": 0.7206497073040625,
+        "pr_auc": 0.7684573215200168,
+        "accuracy": 0.734547123623011,
+        "brier": 0.19340028187566813,
+        "log_loss": 0.5753044921463535,
+        "ece": 0.0282567973660372
+      },
+      "challenger": {
+        "n": 6536,
+        "base_rate": 0.6171970624235006,
+        "auc": 0.7212388245080683,
+        "pr_auc": 0.7697681423803453,
+        "accuracy": 0.7356181150550796,
+        "brier": 0.19284056846084377,
+        "log_loss": 0.573338358912188,
+        "ece": 0.006947254203898603
+      },
+      "delta": {
+        "auc": 0.0005891172040057846,
+        "brier": -0.0005597134148243588,
+        "log_loss": -0.0019661332341655013,
+        "ece": -0.021309543162138598
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 3,
+        "brier": 3,
+        "log_loss": 3,
+        "markets_total": 4
+      }
+    }
+  ]
+}

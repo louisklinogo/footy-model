@@ -1,0 +1,12 @@
+{
+  "method": "mean_total_ratio_v1",
+  "multiplier": 0.9999989566030619,
+  "fit_rows": 6536,
+  "raw_total_goals_mean_pred": 2.7627017810033916,
+  "corrected_total_goals_mean_pred": 2.7626988984088126,
+  "actual_total_goals_mean": 2.7626988984088126,
+  "raw_total_goals_mae": 1.3074484809253941,
+  "corrected_total_goals_mae": 1.307448510221721,
+  "clamp_min": 0.9,
+  "clamp_max": 1.1
+}

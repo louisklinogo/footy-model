@@ -23,12 +23,40 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.db.db_utils import connect_db
+from src.modeling.availability_features import (
+    availability_feature_select_and_join,
+    resolve_availability_feature_config,
+)
 from src.pricing.markov import MarkovPricer
 
 
 MODEL_DIR = Path("model_artifacts/market_models")
 MODEL_NAME = "market_outcome_gbm"
 MODEL_VERSION = "fixtures_first_prematch_v1"
+LEGACY_HANDICAP_MARKETS = (
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
+)
+CANONICAL_HANDICAP_MARKETS = (
+    "ah2_home_m05",
+    "ah2_away_p05",
+    "ah2_away_m05",
+    "ah2_home_p05",
+    "ah2_home_m15",
+    "ah2_away_p15",
+    "ah2_away_m15",
+    "ah2_home_p15",
+    "eh3_0_1_home",
+    "eh3_0_1_draw",
+    "eh3_0_1_away",
+    "eh3_1_0_home",
+    "eh3_1_0_draw",
+    "eh3_1_0_away",
+)
 MARKETS = (
     # Goals
     "o15",
@@ -59,13 +87,10 @@ MARKETS = (
     # Team Totals
     "ho15",
     "ao15",
-    # Handicap Markets
-    "ah_h05",
-    "ah_a05",
-    "ah_h15",
-    "ah_a15",
-    "eh_h1",
-    "eh_a1",
+    # Legacy Handicap Markets
+    *LEGACY_HANDICAP_MARKETS,
+    # Canonical Handicap Markets
+    *CANONICAL_HANDICAP_MARKETS,
     # Anytime Lead Markets
     "h_1up",
     "a_1up",
@@ -187,10 +212,21 @@ def fetch_candidate_fixtures(
     limit: int | None,
     backfill_days: int | None,
 ) -> pd.DataFrame:
-    base_query = f"""
+    conn = connect_db()
+    try:
+        availability_config = resolve_availability_feature_config(conn)
+        availability_select, availability_join = availability_feature_select_and_join(
+            fixture_alias="f",
+            match_time_expr="f.match_datetime_utc",
+            cutoff_expr="f.match_datetime_utc",
+            config=availability_config,
+        )
+        base_query = f"""
     SELECT
         f.fixture_id,
         f.league_code,
+        f.home_team_id,
+        f.away_team_id,
         f.match_datetime_utc,
         {_latest_odds_expr("od15", "over")} AS odds_over_15,
         {_latest_odds_expr("od15", "under")} AS odds_under_15,
@@ -284,7 +320,8 @@ def fetch_candidate_fixtures(
         CASE
             WHEN lower(COALESCE(l2a.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
             THEN 1 ELSE 0
-        END AS rule_fired_away
+        END AS rule_fired_away,
+        {availability_select}
     FROM fixtures f
     LEFT JOIN team_premium_snapshots tph
         ON tph.fixture_id = f.fixture_id
@@ -412,33 +449,32 @@ def fetch_candidate_fixtures(
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l2a ON true
+    {availability_join}
     WHERE f.match_datetime_utc IS NOT NULL
     """
-    params: list[object] = []
-    if backfill_days is None:
-        base_query += """
+        params: list[object] = []
+        if backfill_days is None:
+            base_query += """
           AND f.status = 'scheduled'
           AND f.match_datetime_utc > NOW()
           AND f.match_datetime_utc <= NOW() + (%s || ' days')::interval
         """
-        params.append(days)
-    else:
-        base_query += """
+            params.append(days)
+        else:
+            base_query += """
           AND f.status = 'ft'
           AND f.match_datetime_utc >= NOW() - (%s || ' days')::interval
           AND f.match_datetime_utc <= NOW()
         """
-        params.append(backfill_days)
-    if league:
-        base_query += " AND f.league_code = %s"
-        params.append(league)
-    base_query += " ORDER BY f.match_datetime_utc ASC, f.fixture_id ASC"
-    if limit is not None:
-        base_query += " LIMIT %s"
-        params.append(limit)
+            params.append(backfill_days)
+        if league:
+            base_query += " AND f.league_code = %s"
+            params.append(league)
+        base_query += " ORDER BY f.match_datetime_utc ASC, f.fixture_id ASC"
+        if limit is not None:
+            base_query += " LIMIT %s"
+            params.append(limit)
 
-    conn = connect_db()
-    try:
         df = pd.read_sql(base_query, conn, params=tuple(params))
     finally:
         conn.close()
@@ -588,6 +624,7 @@ def _fallback_market_probabilities(
     lambda_home, lambda_away, lambda_source = _resolve_backbone_lambdas(fixture)
     score = _score_matrix(lambda_home, lambda_away, max_goals=10)
     home_idx, away_idx = np.indices(score.shape)
+    goal_diff = home_idx - away_idx
 
     p_home = float(score[home_idx > away_idx].sum())
     p_draw = float(score[home_idx == away_idx].sum())
@@ -602,8 +639,14 @@ def _fallback_market_probabilities(
 
     p_home_ge2 = float(score[home_idx >= 2].sum())
     p_away_ge2 = float(score[away_idx >= 2].sum())
-    p_home_by2_final = float(score[(home_idx - away_idx) >= 2].sum())
-    p_away_by2_final = float(score[(away_idx - home_idx) >= 2].sum())
+    p_home_by2_final = float(score[goal_diff >= 2].sum())
+    p_home_by1_final = float(score[goal_diff == 1].sum())
+    p_away_by2_final = float(score[goal_diff <= -2].sum())
+    p_away_by1_final = float(score[goal_diff == -1].sum())
+    p_home_not_lose = float(score[goal_diff >= 0].sum())
+    p_away_not_lose = float(score[goal_diff <= 0].sum())
+    p_home_plus15_cover = float(score[goal_diff >= -1].sum())
+    p_away_plus15_cover = float(score[goal_diff <= 1].sum())
     p_btts = float(score[(home_idx >= 1) & (away_idx >= 1)].sum())
 
     markov = _markov_anytime_probs(
@@ -676,12 +719,29 @@ def _fallback_market_probabilities(
         "dc_12": p_home + p_away,
         "ho15": p_home_ge2,
         "ao15": p_away_ge2,
+        # Legacy runtime handicap aliases.
         "ah_h05": p_home,
         "ah_a05": p_away,
         "ah_h15": p_home_by2_final,
         "ah_a15": p_away_by2_final,
         "eh_h1": p_home_by2_final,
         "eh_a1": p_away_by2_final,
+        # Canonical AH selections.
+        "ah2_home_m05": p_home,
+        "ah2_away_p05": p_away_not_lose,
+        "ah2_away_m05": p_away,
+        "ah2_home_p05": p_home_not_lose,
+        "ah2_home_m15": p_home_by2_final,
+        "ah2_away_p15": p_away_plus15_cover,
+        "ah2_away_m15": p_away_by2_final,
+        "ah2_home_p15": p_home_plus15_cover,
+        # Canonical EH 3-way selections.
+        "eh3_0_1_home": p_home_by2_final,
+        "eh3_0_1_draw": p_home_by1_final,
+        "eh3_0_1_away": p_away_not_lose,
+        "eh3_1_0_home": p_home_not_lose,
+        "eh3_1_0_draw": p_away_by1_final,
+        "eh3_1_0_away": p_away_by2_final,
         "h_1up": p_h_1up,
         "a_1up": p_a_1up,
         "h_2up": p_h_2up,
@@ -830,7 +890,15 @@ def build_prediction_rows(
     return rows, fallback_rows
 
 
+def _align_x_row_to_model_features(model: object, x_row: pd.DataFrame) -> pd.DataFrame:
+    feature_names = getattr(model, "feature_names_in_", None)
+    if feature_names is None:
+        return x_row
+    return x_row.reindex(columns=list(feature_names))
+
+
 def positive_class_probability(model: object, x_row: pd.DataFrame) -> float:
+    x_row = _align_x_row_to_model_features(model, x_row)
     probs = model.predict_proba(x_row)
     classes = getattr(model, "classes_", None)
 

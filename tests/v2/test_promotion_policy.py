@@ -50,3 +50,14 @@ def test_resolve_required_markets_merges_cli_and_policy_markets() -> None:
         assert markets == ["o15", "1x2_h", "1x2_d"]
         assert metadata["promotion_policy_path"] == str(path)
         assert metadata["promotion_policy_name"] == "scoreline_core_v1"
+
+
+def test_active_scoreline_core_policy_uses_canonical_handicap_markets() -> None:
+    policy = load_promotion_policy(Path("model_v2/promotion_policies/scoreline_core.yaml"))
+
+    assert "ah2_home_m05" in policy.required_markets
+    assert "ah2_away_p15" in policy.required_markets
+    assert "eh3_0_1_draw" in policy.required_markets
+    assert "eh3_1_0_away" in policy.required_markets
+    assert "ah_h05" not in policy.required_markets
+    assert "eh_h1" not in policy.required_markets

@@ -18,6 +18,7 @@ ROOT_DIR = Path(__file__).resolve().parents[3]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from src.betting.settlement import settle_market
 from src.betting.odds_resolver import OddsResolution, resolve_odds_for_market
 from src.db.db_utils import connect_db
 
@@ -43,6 +44,30 @@ ANYTIME_MARKETS = (
     "a_1up",
     "h_2up",
     "a_2up",
+)
+LEGACY_HANDICAP_MARKETS = (
+    "ah_h05",
+    "ah_a05",
+    "ah_h15",
+    "ah_a15",
+    "eh_h1",
+    "eh_a1",
+)
+CANONICAL_HANDICAP_MARKETS = (
+    "ah2_home_m05",
+    "ah2_away_p05",
+    "ah2_away_m05",
+    "ah2_home_p05",
+    "ah2_home_m15",
+    "ah2_away_p15",
+    "ah2_away_m15",
+    "ah2_home_p15",
+    "eh3_0_1_home",
+    "eh3_0_1_draw",
+    "eh3_0_1_away",
+    "eh3_1_0_home",
+    "eh3_1_0_draw",
+    "eh3_1_0_away",
 )
 MARKETS = (
     # Goals
@@ -74,13 +99,10 @@ MARKETS = (
     # Team Totals
     "ho15",
     "ao15",
-    # Linchpin Handicap Markets
-    "ah_h05",
-    "ah_a05",
-    "ah_h15",
-    "ah_a15",
-    "eh_h1",
-    "eh_a1",
+    # Legacy Handicap Markets
+    *LEGACY_HANDICAP_MARKETS,
+    # Canonical Handicap Markets
+    *CANONICAL_HANDICAP_MARKETS,
     # Anytime Lead Markets
     "h_1up",
     "a_1up",
@@ -104,6 +126,19 @@ ODDS_MARKET_CODES = (
     "eh",
 )
 EPS = 1e-6
+
+
+def _is_handicap_market_code(market: str) -> bool:
+    return market.startswith(("ah_", "eh_", "ah2_", "eh3_"))
+
+
+def _settle_handicap_for_scoring(market: str, home_goals: int, away_goals: int):
+    return settle_market(
+        market,
+        odds=2.0,
+        home_goals=home_goals,
+        away_goals=away_goals,
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -369,27 +404,11 @@ def compute_actual(row: dict[str, object]) -> float | None:
         return 1.0 if a >= 2 else 0.0
 
     # === HANDICAP MARKETS ===
-    goal_diff = h - a
-    if market == "ah_h05":
-        return 1.0 if goal_diff > 0 else 0.0
-    if market == "ah_a05":
-        return 1.0 if goal_diff < 0 else 0.0
-    if market == "ah_h15":
-        return 1.0 if goal_diff >= 2 else 0.0
-    if market == "ah_a15":
-        return 1.0 if goal_diff <= -2 else 0.0
-    if market == "eh_h1":
-        if goal_diff >= 2:
-            return 1.0
-        if goal_diff == 1:
-            return None
-        return 0.0
-    if market == "eh_a1":
-        if goal_diff <= -2:
-            return 1.0
-        if goal_diff == -1:
-            return None
-        return 0.0
+    if _is_handicap_market_code(market):
+        try:
+            return _settle_handicap_for_scoring(market, h, a).actual
+        except ValueError:
+            pass
 
     # === ANYTIME LEAD MARKETS (incident timeline derived) ===
     if market == "h_1up":
@@ -440,7 +459,7 @@ def compute_return_factor(
 
 def is_push_outcome(row: dict[str, object]) -> bool:
     market = str(row["market_code"])
-    if market not in {"eh_h1", "eh_a1"}:
+    if not _is_handicap_market_code(market):
         return False
 
     home_goals = row.get("home_goals")
@@ -448,10 +467,11 @@ def is_push_outcome(row: dict[str, object]) -> bool:
     if home_goals is None or away_goals is None:
         return False
 
-    goal_diff = int(home_goals) - int(away_goals)
-    if market == "eh_h1":
-        return goal_diff == 1
-    return goal_diff == -1
+    try:
+        result = _settle_handicap_for_scoring(market, int(home_goals), int(away_goals))
+    except ValueError:
+        return False
+    return result.outcome == "push"
 
 
 def _isoformat_or_none(value: object) -> str | None:

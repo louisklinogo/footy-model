@@ -1,5 +1,8 @@
 # Ops Runbook: due fixtures tick job v1
 
+> Canonical for the current live/runtime prediction path as of 2026-03-06.
+> For the repo-wide current-state summary, see `docs/current_state.md`.
+
 `src/jobs/tick_due_fixtures_v1.py` runs the v1 fixtures-first operational tick in three phases:
 
 1. settle: refresh due fixtures, enrich premium payloads, and ingest v1 fixture rows

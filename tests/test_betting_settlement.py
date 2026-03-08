@@ -48,6 +48,27 @@ def test_eh_h1_push_case() -> None:
     assert result.outcome == "push"
 
 
+def test_canonical_eh3_draw_is_true_win_not_push() -> None:
+    result = settle_market("eh3_0_1_draw", odds=3.8, home_goals=2, away_goals=1)
+    assert result.actual == 1.0
+    assert result.return_factor == 3.8
+    assert result.outcome == "full_win"
+
+
+def test_canonical_ah2_whole_line_push_is_supported() -> None:
+    result = settle_market("ah2_home_p10", odds=1.9, home_goals=1, away_goals=2)
+    assert result.actual is None
+    assert result.return_factor == 1.0
+    assert result.outcome == "push"
+
+
+def test_canonical_ah2_away_minus_half_win_is_supported() -> None:
+    result = settle_market("ah2_away_m05", odds=3.6, home_goals=1, away_goals=2)
+    assert result.actual == 1.0
+    assert result.return_factor == 3.6
+    assert result.outcome == "full_win"
+
+
 def test_non_handicap_binary_markets() -> None:
     dc_result = settle_market("dc_x2", odds=1.6, home_goals=1, away_goals=2)
     o15_result = settle_market("o15", odds=1.7, home_goals=1, away_goals=1)

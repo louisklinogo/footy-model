@@ -1,0 +1,189 @@
+{
+  "generated_at_utc": "2026-03-08T12:56:11.732969+00:00",
+  "dry_run": false,
+  "rebuild_baseline": true,
+  "scope": "model_v2\\market_scope.yaml",
+  "baseline_path": "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_contract_20260308.json",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308",
+  "scoreline_dir": "model_artifacts\\v2\\scoreline_v21_contract_20260308",
+  "corners_dir": "model_artifacts\\v2\\audit_corners_20260308",
+  "anytime_dir": "model_artifacts\\v2\\audit_anytime_20260308",
+  "evaluation_flow_report_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\evaluation_flow_report.json",
+  "promotion_summary": {
+    "promotion_registry_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\promotion_registry.json",
+    "decision": {
+      "status": "failed",
+      "basis": "required_markets",
+      "passed_markets": [
+        "ah2_home_m05",
+        "ah2_away_p05",
+        "ah2_away_m05",
+        "ah2_home_p05",
+        "ah2_home_m15",
+        "ah2_away_p15",
+        "ah2_away_m15",
+        "ah2_home_p15",
+        "eh3_0_1_home",
+        "eh3_0_1_draw",
+        "eh3_0_1_away",
+        "eh3_1_0_home",
+        "eh3_1_0_draw",
+        "eh3_1_0_away"
+      ],
+      "failed_markets": [
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "o15",
+        "u35"
+      ],
+      "missing_required_markets": []
+    },
+    "summary": {
+      "markets_total": 76,
+      "markets_passed": 67,
+      "markets_failed": 9,
+      "required_markets_total": 22,
+      "required_markets_passed": 14,
+      "required_markets_failed": 8,
+      "required_markets_missing": []
+    },
+    "rules": {
+      "promotion_policy_name": "scoreline_core_v1",
+      "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+      "required_markets": [
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "ah2_home_m05",
+        "ah2_away_p05",
+        "ah2_away_m05",
+        "ah2_home_p05",
+        "ah2_home_m15",
+        "ah2_away_p15",
+        "ah2_away_m15",
+        "ah2_home_p15",
+        "eh3_0_1_home",
+        "eh3_0_1_draw",
+        "eh3_0_1_away",
+        "eh3_1_0_home",
+        "eh3_1_0_draw",
+        "eh3_1_0_away",
+        "o15",
+        "u35"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "name": "eval.walkforward",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\run_walkforward.py",
+        "--scope",
+        "model_v2\\market_scope.yaml",
+        "--scoreline-dir",
+        "model_artifacts\\v2\\scoreline_v21_contract_20260308",
+        "--corners-dir",
+        "model_artifacts\\v2\\audit_corners_20260308",
+        "--anytime-dir",
+        "model_artifacts\\v2\\audit_anytime_20260308",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308"
+      ],
+      "returncode": 0,
+      "stdout": "Saved evaluation report to model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\nMissing holdout markets: 0\nMissing walk-forward markets: 0\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.calibration",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\calibration\\run_calibration.py",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\evaluation_report.json",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308"
+      ],
+      "returncode": 0,
+      "stdout": "Saved calibration report to model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\calibration_report.json\nMarkets calibrated: 47\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "baseline.rebuild",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\io\\rebuild_baseline_metrics.py",
+        "--scope",
+        "model_v2\\market_scope.yaml",
+        "--baseline",
+        "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_contract_20260308.json",
+        "--scoreline",
+        "model_artifacts\\v2\\scoreline_v21_contract_20260308\\metrics_holdout.json",
+        "--corners",
+        "model_artifacts\\v2\\audit_corners_20260308\\metrics_holdout.json",
+        "--anytime",
+        "model_artifacts\\v2\\audit_anytime_20260308\\metrics_holdout.json"
+      ],
+      "returncode": 0,
+      "stdout": "Saved baseline metrics: model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_contract_20260308.json\nScoped markets: 76\nMissing in artifacts: 0\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.promotion_registry",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\promotion_registry.py",
+        "--scope",
+        "model_v2\\market_scope.yaml",
+        "--baseline",
+        "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_contract_20260308.json",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\evaluation_report.json",
+        "--calibration-report",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\calibration_report.json",
+        "--output",
+        "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\promotion_registry.json",
+        "--min-support",
+        "200",
+        "--min-folds",
+        "3",
+        "--max-ece",
+        "0.05",
+        "--auc-tolerance",
+        "0.0",
+        "--brier-tolerance",
+        "0.0",
+        "--log-loss-tolerance",
+        "0.0",
+        "--promotion-policy",
+        "model_v2\\promotion_policies\\scoreline_core.yaml"
+      ],
+      "returncode": 0,
+      "stdout": "Saved promotion registry to model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\promotion_registry.json\nMarkets passed: 67\nMarkets failed: 9\n",
+      "stderr": "",
+      "dry_run": false
+    }
+  ],
+  "promotion_recommendation": {
+    "status": "hold",
+    "scope": "none",
+    "headline": "Hold promotion until the recorded gate passes.",
+    "json_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\promotion_recommendation.json",
+    "markdown_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\promotion_recommendation.md"
+  },
+  "shadow_comparison": {
+    "json_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\shadow_comparison.json",
+    "markdown_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308\\shadow_comparison.md",
+    "market_count": 76
+  }
+}

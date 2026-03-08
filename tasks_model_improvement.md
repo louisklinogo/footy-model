@@ -1,4 +1,8 @@
 # Model Improvement Sprint Tasks
+
+> Active modeling backlog.
+> Not canonical for the live runtime state; see `docs/current_state.md`.
+
 Date: 2026-03-05
 Owner: Modeling
 Goal: Improve predictive quality (AUC/Brier) before betting-policy changes.

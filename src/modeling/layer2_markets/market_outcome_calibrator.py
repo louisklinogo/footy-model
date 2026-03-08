@@ -42,6 +42,10 @@ if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
 from src.db.db_utils import connect_db
+from src.modeling.availability_features import (
+    availability_feature_select_and_join,
+    resolve_availability_feature_config,
+)
 
 
 OUT_DIR = ROOT_DIR / "model_artifacts" / "market_models"
@@ -132,6 +136,37 @@ FAMILY_TO_MARKETS: dict[str, set[str]] = {
     "goals_totals": {"o15", "u35"},
     "corners_totals": {"c75", "c85", "c95", "c105"},
 }
+
+
+def _add_handicap_target_columns(out: pd.DataFrame) -> pd.DataFrame:
+    goal_diff = out["home_goals"] - out["away_goals"]
+
+    # Legacy runtime handicap aliases.
+    out["target_ah_h05"] = (goal_diff > 0).astype(int)
+    out["target_ah_a05"] = (goal_diff < 0).astype(int)
+    out["target_ah_h15"] = (goal_diff >= 2).astype(int)
+    out["target_ah_a15"] = (goal_diff <= -2).astype(int)
+    out["target_eh_h1"] = (goal_diff >= 2).astype(int)
+    out["target_eh_a1"] = (goal_diff <= -2).astype(int)
+
+    # Canonical EH 3-way selections for current one-goal displayed lines.
+    out["target_eh3_0_1_home"] = (goal_diff >= 2).astype(int)
+    out["target_eh3_0_1_draw"] = (goal_diff == 1).astype(int)
+    out["target_eh3_0_1_away"] = (goal_diff <= 0).astype(int)
+    out["target_eh3_1_0_home"] = (goal_diff >= 0).astype(int)
+    out["target_eh3_1_0_draw"] = (goal_diff == -1).astype(int)
+    out["target_eh3_1_0_away"] = (goal_diff <= -2).astype(int)
+
+    # Canonical AH selections for current half-line scope.
+    out["target_ah2_home_m05"] = (goal_diff > 0).astype(int)
+    out["target_ah2_away_p05"] = (goal_diff <= 0).astype(int)
+    out["target_ah2_away_m05"] = (goal_diff < 0).astype(int)
+    out["target_ah2_home_p05"] = (goal_diff >= 0).astype(int)
+    out["target_ah2_home_m15"] = (goal_diff >= 2).astype(int)
+    out["target_ah2_away_p15"] = (goal_diff <= 1).astype(int)
+    out["target_ah2_away_m15"] = (goal_diff <= -2).astype(int)
+    out["target_ah2_home_p15"] = (goal_diff >= -1).astype(int)
+    return out
 
 
 def parse_args() -> argparse.Namespace:
@@ -225,7 +260,17 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         lead_hours = max(0, int(prediction_lead_hours))
         odds_cutoff_expr = f"(f.match_datetime_utc - INTERVAL '{lead_hours} hours')"
         prediction_cutoff_clause = f"\n          AND p.created_at <= {odds_cutoff_expr}"
-    query = f"""
+
+    conn = connect_db()
+    try:
+        availability_config = resolve_availability_feature_config(conn)
+        availability_select, availability_join = availability_feature_select_and_join(
+            fixture_alias="f",
+            match_time_expr="f.match_datetime_utc",
+            cutoff_expr=odds_cutoff_expr,
+            config=availability_config,
+        )
+        query = f"""
     SELECT
         f.fixture_id,
         f.league_code,
@@ -359,7 +404,8 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         CASE
             WHEN lower(COALESCE(l2a.metadata_json ->> 'rule_layer_applied', 'false')) IN ('true', 't', '1')
             THEN 1 ELSE 0
-        END AS rule_fired_away
+        END AS rule_fired_away,
+        {availability_select}
     FROM fixtures f
     JOIN fixture_results fr ON fr.fixture_id = f.fixture_id
     LEFT JOIN fixture_stats_premium sp ON sp.fixture_id = f.fixture_id
@@ -520,15 +566,13 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         ORDER BY p.created_at DESC
         LIMIT 1
     ) l2a ON true
+    {availability_join}
     WHERE f.status = 'ft'
       AND f.match_datetime_utc IS NOT NULL
       AND fr.home_goals IS NOT NULL
       AND fr.away_goals IS NOT NULL
     ORDER BY f.match_datetime_utc ASC, f.fixture_id ASC;
     """
-
-    conn = connect_db()
-    try:
         df = pd.read_sql(query, conn)
     finally:
         conn.close()
@@ -606,13 +650,8 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
         int
     )  # Home win or Away win
 
-    # === HANDICAP (BINARY, SETTLEMENT PUSH IGNORED) ===
-    out["target_ah_h05"] = (out["home_goals"] > out["away_goals"]).astype(int)
-    out["target_ah_a05"] = (out["away_goals"] > out["home_goals"]).astype(int)
-    out["target_ah_h15"] = ((out["home_goals"] - out["away_goals"]) >= 2).astype(int)
-    out["target_ah_a15"] = ((out["away_goals"] - out["home_goals"]) >= 2).astype(int)
-    out["target_eh_h1"] = ((out["home_goals"] - out["away_goals"]) >= 2).astype(int)
-    out["target_eh_a1"] = ((out["away_goals"] - out["home_goals"]) >= 2).astype(int)
+    # === HANDICAP ===
+    out = _add_handicap_target_columns(out)
 
     # === TEAM TOTALS ===
     out["target_ho15"] = (out["home_goals"] >= 2).astype(int)  # Home team over 1.5

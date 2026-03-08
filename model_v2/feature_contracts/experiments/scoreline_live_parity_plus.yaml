@@ -1,0 +1,103 @@
+version: 1
+family: scoreline
+description: Experimental scoreline contract adding live-side lambda, rule, and goal-odds parity signals while retaining scoreline-only extras.
+
+required_features:
+  - home_sample_size
+  - away_sample_size
+  - home_rolling_xg
+  - home_rolling_xg_against
+  - away_rolling_xg
+  - away_rolling_xg_against
+  - home_rolling_sot
+  - away_rolling_sot
+  - lambda_home_l1
+  - lambda_away_l1
+  - adj_lambda_home_final
+  - adj_lambda_away_final
+  - xg_net_diff
+  - goal_diff_proxy
+
+optional_features:
+  - home_rolling_big_chances
+  - away_rolling_big_chances
+  - home_rolling_xgot
+  - away_rolling_xgot
+  - home_season_baseline_xg
+  - away_season_baseline_xg
+  - home_recent_xg_mean_5
+  - away_recent_xg_mean_5
+  - home_recent_vs_baseline_zscore
+  - away_recent_vs_baseline_zscore
+  - home_regressed_recent_xg
+  - away_regressed_recent_xg
+  - regressed_xg_diff
+  - recent_vs_baseline_gap
+  - home_rolling_possession
+  - away_rolling_possession
+  - home_defenders
+  - home_midfielders
+  - home_forwards
+  - away_defenders
+  - away_midfielders
+  - away_forwards
+  - style_delta
+  - home_availability_known
+  - away_availability_known
+  - home_lineup_known
+  - away_lineup_known
+  - home_missing_players
+  - away_missing_players
+  - home_missing_defenders
+  - home_missing_midfielders
+  - home_missing_forwards
+  - away_missing_defenders
+  - away_missing_midfielders
+  - away_missing_forwards
+  - home_availability_freshness_hours
+  - away_availability_freshness_hours
+  - home_lineup_freshness_hours
+  - away_lineup_freshness_hours
+  - rule_fired_home
+  - rule_fired_away
+  - odds_over_15
+  - odds_under_15
+  - odds_over_25
+  - odds_under_25
+  - odds_over_35
+  - odds_under_35
+  - implied_over15
+  - implied_under15
+  - implied_over25
+  - implied_under25
+  - implied_over35
+  - implied_under35
+  - odds_gap_15
+  - odds_gap_25
+  - odds_gap_35
+
+missingness_indicators:
+  - lambda_home_l1_is_missing
+  - lambda_away_l1_is_missing
+  - home_sample_size_is_missing
+  - away_sample_size_is_missing
+  - home_season_baseline_xg_is_missing
+  - away_season_baseline_xg_is_missing
+  - home_recent_xg_mean_5_is_missing
+  - away_recent_xg_mean_5_is_missing
+  - home_availability_freshness_hours_is_missing
+  - away_availability_freshness_hours_is_missing
+  - home_lineup_freshness_hours_is_missing
+  - away_lineup_freshness_hours_is_missing
+  - adj_lambda_home_final_is_missing
+  - adj_lambda_away_final_is_missing
+
+forbidden_cross_family_features:
+  - odds_c75_over
+  - odds_c85_over
+  - odds_c95_over
+  - odds_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105

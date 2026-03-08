@@ -280,6 +280,74 @@ def test_build_promotion_registry_can_decide_on_required_markets_only() -> None:
         assert registry["summary"]["required_markets_failed"] == 0
 
 
+def test_build_promotion_registry_allows_absolute_gate_when_baseline_metrics_are_null() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_harness_null_baseline_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "market_scope.yaml"
+        scope_path.write_text("markets:\n  - eh3_0_1_draw\n", encoding="utf-8")
+
+        baseline_path = tmp_path / "baseline.json"
+        _write_json(
+            baseline_path,
+            {
+                "metrics": [
+                    {
+                        "market_code": "eh3_0_1_draw",
+                        "auc": None,
+                        "brier": None,
+                        "log_loss": None,
+                        "ece": None,
+                        "n": None,
+                    }
+                ]
+            },
+        )
+        eval_path = tmp_path / "evaluation_report.json"
+        _write_json(
+            eval_path,
+            {
+                "holdout_by_market": {
+                    "eh3_0_1_draw": {
+                        "market": "eh3_0_1_draw",
+                        "family": "scoreline",
+                        "auc": 0.61,
+                        "brier": 0.19,
+                        "log_loss": 0.55,
+                        "ece": 0.03,
+                        "n": 260,
+                    }
+                },
+                "walkforward_by_market": {
+                    "eh3_0_1_draw": {
+                        "market": "eh3_0_1_draw",
+                        "family": "scoreline",
+                        "folds_used": 4,
+                        "n_total": 320,
+                    }
+                },
+            },
+        )
+
+        registry = build_promotion_registry(
+            scope_path=scope_path,
+            baseline_path=baseline_path,
+            evaluation_report_path=eval_path,
+            calibration_report_path=None,
+            required_markets=["eh3_0_1_draw"],
+            min_support=100,
+            min_folds=3,
+            max_ece=0.05,
+            auc_tolerance=0.0,
+            brier_tolerance=0.0,
+            log_loss_tolerance=0.0,
+        )
+
+        market_row = registry["markets"][0]
+        assert market_row["status"] == "passed"
+        assert market_row["reasons"] == []
+        assert registry["decision"]["status"] == "passed"
+
+
 def test_build_promotion_registry_fails_when_required_market_is_missing_from_scope() -> None:
     with tempfile.TemporaryDirectory(prefix="v2_eval_harness_required_missing_") as td:
         tmp_path = Path(td)
@@ -321,3 +389,127 @@ def test_build_promotion_registry_fails_when_required_market_is_missing_from_sco
         assert registry["decision"]["status"] == "failed"
         assert registry["decision"]["missing_required_markets"] == ["1x2_h"]
         assert registry["summary"]["required_markets_missing"] == ["1x2_h"]
+
+
+def test_build_promotion_registry_ignores_float_noise_scale_metric_regressions() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_harness_float_noise_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "market_scope.yaml"
+        scope_path.write_text("markets:\n  - o15\n", encoding="utf-8")
+
+        baseline_path = tmp_path / "baseline.json"
+        _write_json(
+            baseline_path,
+            {
+                "metrics": [
+                    {
+                        "market_code": "o15",
+                        "auc": 0.60,
+                        "brier": 0.20,
+                        "log_loss": 0.55,
+                        "ece": 0.03,
+                        "n": 250,
+                    }
+                ]
+            },
+        )
+        eval_path = tmp_path / "evaluation_report.json"
+        _write_json(
+            eval_path,
+            {
+                "holdout_by_market": {
+                    "o15": {
+                        "market": "o15",
+                        "family": "scoreline",
+                        "auc": 0.60,
+                        "brier": 0.20000000000000004,
+                        "log_loss": 0.5500000000000002,
+                        "ece": 0.03,
+                        "n": 250,
+                    }
+                },
+                "walkforward_by_market": {
+                    "o15": {"market": "o15", "family": "scoreline", "folds_used": 3, "n_total": 260}
+                },
+            },
+        )
+
+        registry = build_promotion_registry(
+            scope_path=scope_path,
+            baseline_path=baseline_path,
+            evaluation_report_path=eval_path,
+            calibration_report_path=None,
+            required_markets=["o15"],
+            min_support=100,
+            min_folds=3,
+            max_ece=0.05,
+            auc_tolerance=0.0,
+            brier_tolerance=0.0,
+            log_loss_tolerance=0.0,
+        )
+
+        market_row = registry["markets"][0]
+        assert market_row["status"] == "passed"
+        assert market_row["reasons"] == []
+
+
+def test_build_promotion_registry_still_fails_meaningful_small_metric_regressions() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_harness_meaningful_small_delta_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "market_scope.yaml"
+        scope_path.write_text("markets:\n  - o15\n", encoding="utf-8")
+
+        baseline_path = tmp_path / "baseline.json"
+        _write_json(
+            baseline_path,
+            {
+                "metrics": [
+                    {
+                        "market_code": "o15",
+                        "auc": 0.60,
+                        "brier": 0.20,
+                        "log_loss": 0.55,
+                        "ece": 0.03,
+                        "n": 250,
+                    }
+                ]
+            },
+        )
+        eval_path = tmp_path / "evaluation_report.json"
+        _write_json(
+            eval_path,
+            {
+                "holdout_by_market": {
+                    "o15": {
+                        "market": "o15",
+                        "family": "scoreline",
+                        "auc": 0.60,
+                        "brier": 0.200001,
+                        "log_loss": 0.550001,
+                        "ece": 0.03,
+                        "n": 250,
+                    }
+                },
+                "walkforward_by_market": {
+                    "o15": {"market": "o15", "family": "scoreline", "folds_used": 3, "n_total": 260}
+                },
+            },
+        )
+
+        registry = build_promotion_registry(
+            scope_path=scope_path,
+            baseline_path=baseline_path,
+            evaluation_report_path=eval_path,
+            calibration_report_path=None,
+            required_markets=["o15"],
+            min_support=100,
+            min_folds=3,
+            max_ece=0.05,
+            auc_tolerance=0.0,
+            brier_tolerance=0.0,
+            log_loss_tolerance=0.0,
+        )
+
+        market_row = registry["markets"][0]
+        assert market_row["status"] == "failed"
+        assert set(market_row["reasons"]) >= {"brier_failed", "log_loss_failed"}

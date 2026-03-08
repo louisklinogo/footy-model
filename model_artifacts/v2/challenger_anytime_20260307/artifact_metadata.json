@@ -1,0 +1,10 @@
+{
+  "family": "anytime",
+  "model_name": "anytime_v2",
+  "model_version": "anytime_challenger_20260307",
+  "artifact_dir": "model_artifacts\\v2\\challenger_anytime_20260307",
+  "trained_at_utc": "2026-03-07T22:15:32.130203+00:00",
+  "model_type_selected": "poisson_glm",
+  "path_version": "constant",
+  "data_source": "artifacts\\v2\\datasets\\scoreline_pit_candidate_v2\\pit_dataset_20260306T080633Z.csv"
+}

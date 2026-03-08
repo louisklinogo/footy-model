@@ -70,6 +70,35 @@ def settle_market(
     if odds <= 0.0:
         raise ValueError("odds must be positive")
 
+    canonical_ah = _try_parse_ah2_market_code(market_code)
+    if canonical_ah is not None:
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        side, handicap = canonical_ah
+        selected, opponent = (
+            (home_goals, away_goals) if side == "home" else (away_goals, home_goals)
+        )
+        return settle_asian_handicap(
+            market_code=market_code,
+            selected_goals=selected,
+            opponent_goals=opponent,
+            handicap=handicap,
+            odds=odds,
+        )
+
+    canonical_eh = _try_parse_eh3_market_code(market_code)
+    if canonical_eh is not None:
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        home_headstart, away_headstart, selection = canonical_eh
+        threshold = away_headstart - home_headstart
+        goal_diff = home_goals - away_goals
+        if selection == "home":
+            return _binary(market_code, goal_diff > threshold, odds)
+        if selection == "draw":
+            return _binary(market_code, goal_diff == threshold, odds)
+        return _binary(market_code, goal_diff < threshold, odds)
+
     if market_code.startswith("ah_"):
         if home_goals is None or away_goals is None:
             return _void(market_code)
@@ -244,6 +273,46 @@ def _parse_eh_market_code(market_code: str) -> tuple[str, int]:
     if side not in {"h", "a"} or not raw or not raw.isdigit():
         raise ValueError(f"invalid EH market_code: {market_code}")
     return ("home" if side == "h" else "away", int(raw))
+
+
+def _try_parse_ah2_market_code(market_code: str) -> tuple[str, float] | None:
+    parts = market_code.split("_")
+    if len(parts) != 3 or parts[0] != "ah2":
+        return None
+    side = parts[1]
+    if side not in {"home", "away"}:
+        raise ValueError(f"invalid AH2 side in market_code: {market_code}")
+    return side, _parse_signed_line_token(parts[2], market_code)
+
+
+def _try_parse_eh3_market_code(market_code: str) -> tuple[int, int, str] | None:
+    parts = market_code.split("_")
+    if len(parts) != 4 or parts[0] != "eh3":
+        return None
+    try:
+        home_headstart = int(parts[1])
+        away_headstart = int(parts[2])
+    except ValueError as exc:
+        raise ValueError(f"invalid EH3 line in market_code: {market_code}") from exc
+    selection = parts[3]
+    if selection not in {"home", "draw", "away"}:
+        raise ValueError(f"invalid EH3 selection in market_code: {market_code}")
+    return home_headstart, away_headstart, selection
+
+
+def _parse_signed_line_token(token: str, market_code: str) -> float:
+    if len(token) < 2:
+        raise ValueError(f"invalid signed line token in market_code: {market_code}")
+    sign = token[0]
+    raw = token[1:]
+    if sign not in {"m", "p"} or not raw.isdigit():
+        raise ValueError(f"invalid signed line token in market_code: {market_code}")
+    if raw.endswith(("25", "75")):
+        magnitude = Decimal(raw) / Decimal("100")
+    else:
+        magnitude = Decimal(raw) / Decimal("10")
+    signed = magnitude if sign == "p" else -magnitude
+    return float(signed)
 
 
 def _split_quarter_line(handicap: Decimal) -> list[Decimal]:

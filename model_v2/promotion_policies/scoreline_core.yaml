@@ -7,11 +7,19 @@ required_markets:
   - dc_1x
   - dc_x2
   - dc_12
-  - ah_h05
-  - ah_a05
-  - ah_h15
-  - ah_a15
-  - eh_h1
-  - eh_a1
+  - ah2_home_m05
+  - ah2_away_p05
+  - ah2_away_m05
+  - ah2_home_p05
+  - ah2_home_m15
+  - ah2_away_p15
+  - ah2_away_m15
+  - ah2_home_p15
+  - eh3_0_1_home
+  - eh3_0_1_draw
+  - eh3_0_1_away
+  - eh3_1_0_home
+  - eh3_1_0_draw
+  - eh3_1_0_away
   - o15
   - u35

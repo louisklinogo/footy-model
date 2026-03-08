@@ -207,16 +207,16 @@ _MARKET_MAP: dict[str, tuple[tuple[_Selection, ...], tuple[_Selection, ...]]] = 
         (_Selection(("ah",), "home", 0.5),),
     ),
     "ah_a05": (
-        (_Selection(("ah",), "away", 0.5),),
         (_Selection(("ah",), "away", -0.5),),
+        (_Selection(("ah",), "away", 0.5),),
     ),
     "ah_h15": (
         (_Selection(("ah",), "home", -1.5),),
         (_Selection(("ah",), "home", 1.5),),
     ),
     "ah_a15": (
-        (_Selection(("ah",), "away", 1.5),),
         (_Selection(("ah",), "away", -1.5),),
+        (_Selection(("ah",), "away", 1.5),),
     ),
     "eh_h1": (
         (_Selection(("eh",), "home", -1.0),),
@@ -224,9 +224,59 @@ _MARKET_MAP: dict[str, tuple[tuple[_Selection, ...], tuple[_Selection, ...]]] = 
     ),
     "eh_a1": (
         (_Selection(("eh",), "away", 1.0),),
-        (_Selection(("ah",), "away", 1.5), _Selection(("ah",), "away", -1.5)),
+        (_Selection(("ah",), "away", -1.5), _Selection(("ah",), "away", 1.5)),
     ),
 }
+
+
+def _parse_signed_line_token(token: str) -> float | None:
+    if len(token) < 2:
+        return None
+    sign = token[0]
+    raw = token[1:]
+    if sign not in {"m", "p"} or not raw.isdigit():
+        return None
+    magnitude = float(int(raw)) / (100.0 if raw.endswith(("25", "75")) else 10.0)
+    return magnitude if sign == "p" else -magnitude
+
+
+def _canonical_market_config(market_code: str) -> tuple[tuple[_Selection, ...], tuple[_Selection, ...]] | None:
+    ah_parts = market_code.split("_")
+    if len(ah_parts) == 3 and ah_parts[0] == "ah2":
+        side = ah_parts[1]
+        handicap = _parse_signed_line_token(ah_parts[2])
+        if side in {"home", "away"} and handicap is not None:
+            return (
+                (_Selection(("ah",), side, handicap),),
+                (_Selection(("ah",), side, -handicap),),
+            )
+        return None
+
+    eh_parts = market_code.split("_")
+    if len(eh_parts) == 4 and eh_parts[0] == "eh3":
+        try:
+            home_headstart = int(eh_parts[1])
+            away_headstart = int(eh_parts[2])
+        except ValueError:
+            return None
+        selection = eh_parts[3]
+        if selection not in {"home", "draw", "away"}:
+            return None
+        line_num = float(home_headstart - away_headstart)
+        fallback: tuple[_Selection, ...] = ()
+        if selection == "home" and line_num == -1.0:
+            fallback = (
+                _Selection(("ah",), "home", -1.5),
+                _Selection(("ah",), "home", 1.5),
+            )
+        elif selection == "away" and line_num == 1.0:
+            fallback = (
+                _Selection(("ah",), "away", -1.5),
+                _Selection(("ah",), "away", 1.5),
+            )
+        return ((_Selection(("eh",), selection, line_num),), fallback)
+
+    return None
 
 
 def _normalize_row(row: dict[str, Any]) -> _OddsRow:
@@ -312,7 +362,7 @@ def resolve_odds_for_market(
     market_code: str,
 ) -> OddsResolution:
     normalized_code = market_code[2:] if market_code.startswith("p_") else market_code
-    config = _MARKET_MAP.get(normalized_code)
+    config = _MARKET_MAP.get(normalized_code) or _canonical_market_config(normalized_code)
     kickoff_dt = _parse_datetime(fixture_kickoff_utc)
     if config is None or kickoff_dt is None:
         return OddsResolution(None, None, None, None, None, None, False)

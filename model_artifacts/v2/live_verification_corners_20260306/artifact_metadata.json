@@ -1,0 +1,8 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "live_verification_corners_20260306",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+  "trained_at_utc": "2026-03-06T17:02:11.733473+00:00",
+  "model_type_selected": "poisson_glm"
+}

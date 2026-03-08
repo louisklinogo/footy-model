@@ -68,3 +68,13 @@ def test_resolve_model_identity_falls_back_and_override_wins() -> None:
             override_model_version="corners_live_scope_candidate_shadow_v2",
         )
         assert overridden == "corners_live_scope_candidate_shadow_v2"
+
+        overridden_name, overridden_version = resolve_model_identity(
+            artifact_dir,
+            default_model_name="corners_v2",
+            default_model_version="distribution_head_v1",
+            override_model_name="market_outcome_v2",
+            override_model_version="challenger_bundle_v1",
+        )
+        assert overridden_name == "market_outcome_v2"
+        assert overridden_version == "challenger_bundle_v1"

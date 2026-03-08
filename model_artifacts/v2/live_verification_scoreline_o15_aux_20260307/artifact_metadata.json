@@ -1,0 +1,10 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_o15_aux_v1",
+  "model_version": "direct_o15_head_v1_20260307",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_scoreline_o15_aux_20260307",
+  "trained_at_utc": "2026-03-07T00:16:04.300430+00:00",
+  "market": "o15",
+  "model_kind_selected": "gbm",
+  "data_source": "legacy_fetch_dataset"
+}

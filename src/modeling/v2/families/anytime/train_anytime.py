@@ -47,6 +47,12 @@ MODEL_VERSION = "markov_head_v1"
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train v2 anytime family head.")
     parser.add_argument(
+        "--dataset-path",
+        type=Path,
+        default=None,
+        help="Optional PIT dataset artifact (.parquet or .csv). Falls back to legacy fetch_dataset() when omitted.",
+    )
+    parser.add_argument(
         "--contract",
         type=Path,
         default=DEFAULT_CONTRACT,
@@ -134,6 +140,30 @@ def _build_regressor(model_type: str, *, poisson_alpha: float = 1.0) -> Any:
         min_samples_leaf=40,
         random_state=42,
     )
+
+
+def _load_training_frame(dataset_path: Path | None) -> tuple[pd.DataFrame, str]:
+    if dataset_path is None:
+        return legacy_calibrator.fetch_dataset(), "legacy_fetch_dataset"
+
+    if not dataset_path.exists():
+        raise RuntimeError(f"Dataset path does not exist: {dataset_path}")
+    validation_path = dataset_path.parent / "pit_validation_report.json"
+    if validation_path.exists():
+        try:
+            validation_report = json.loads(validation_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise RuntimeError(f"Unable to read PIT validation report: {validation_path}") from exc
+        if validation_report.get("status") == "failed":
+            raise RuntimeError(f"PIT dataset failed validation: {validation_path}")
+    suffix = dataset_path.suffix.lower()
+    if suffix == ".parquet":
+        frame = pd.read_parquet(dataset_path)
+    elif suffix == ".csv":
+        frame = pd.read_csv(dataset_path)
+    else:
+        raise RuntimeError(f"Unsupported dataset path format: {dataset_path}")
+    return frame, str(dataset_path)
 
 
 def _select_features(df: pd.DataFrame, contract_path: Path) -> list[str]:
@@ -466,7 +496,7 @@ def _select_model_type(
 
 def main() -> None:
     args = parse_args()
-    df = legacy_calibrator.fetch_dataset()
+    df, data_source = _load_training_frame(args.dataset_path)
     if df.empty:
         raise RuntimeError("No rows available for anytime training.")
     if args.max_rows is not None and args.max_rows > 0 and len(df) > args.max_rows:
@@ -476,11 +506,13 @@ def main() -> None:
             .reset_index(drop=True)
         )
 
-    df = legacy_calibrator.add_targets_and_derived(df)
+    if "prediction_time_utc" not in df.columns:
+        df = legacy_calibrator.add_targets_and_derived(df)
     df["match_datetime_utc"] = pd.to_datetime(
         df["match_datetime_utc"], utc=True, errors="coerce"
     )
-    df = build_anytime_features(df)
+    if "home_goal_share" not in df.columns:
+        df = build_anytime_features(df)
     path_version = str(args.path_version)
     if path_version == "phase_split":
         df = _prepare_phase_targets(df)
@@ -611,6 +643,7 @@ def main() -> None:
         "features": features,
         "model_name": MODEL_NAME,
         "model_version": str(args.model_version),
+        "data_source": data_source,
         "model_type_requested": model_type_requested,
         "model_type_selected": model_type_selected,
         "path_version": path_version,
@@ -656,7 +689,11 @@ def main() -> None:
             model_version=str(args.model_version),
             artifact_dir=args.output_dir,
             trained_at_utc=str(diagnostics["trained_at_utc"]),
-            extra={"model_type_selected": model_type_selected, "path_version": path_version},
+            extra={
+                "model_type_selected": model_type_selected,
+                "path_version": path_version,
+                "data_source": data_source,
+            },
         ),
     )
     if path_version == "phase_split":

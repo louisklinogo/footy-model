@@ -1,0 +1,9 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_attack_block_candidate_20260308",
+  "artifact_dir": "model_artifacts\\v2\\corners_attack_block_candidate_20260308",
+  "trained_at_utc": "2026-03-08T16:57:31.599027+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv"
+}

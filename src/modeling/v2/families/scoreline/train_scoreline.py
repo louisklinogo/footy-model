@@ -33,6 +33,10 @@ from src.modeling.v2.families.scoreline.holdout_diagnostics import (
     build_scoreline_slice_prediction_rows,
     summarize_scoreline_slice_prediction_rows,
 )
+from src.modeling.v2.families.scoreline.total_intensity import (
+    apply_total_intensity_correction,
+    fit_total_intensity_correction,
+)
 from src.modeling.v2.io.artifact_identity import build_artifact_metadata, write_artifact_metadata
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 from src.modeling.v2.io.contracts import load_feature_contract
@@ -276,8 +280,20 @@ def _evaluate_walkforward(
         home_model.fit(x_train, y_home_train)
         away_model.fit(x_train, y_away_train)
 
+        train_pred_home = np.clip(home_model.predict(x_train), 0.05, 8.0)
+        train_pred_away = np.clip(away_model.predict(x_train), 0.05, 8.0)
+        total_intensity_correction = fit_total_intensity_correction(
+            actual_totals=(y_home_train + y_away_train).to_numpy(dtype=float),
+            pred_home=train_pred_home,
+            pred_away=train_pred_away,
+        )
         pred_home = np.clip(home_model.predict(x_test), 0.05, 8.0)
         pred_away = np.clip(away_model.predict(x_test), 0.05, 8.0)
+        pred_home, pred_away = apply_total_intensity_correction(
+            lambda_home=pred_home,
+            lambda_away=pred_away,
+            correction=total_intensity_correction,
+        )
         derived_rows: list[dict[str, float]] = []
         for lh, la in zip(pred_home, pred_away):
             mat = _score_matrix_independent_poisson(
@@ -463,8 +479,20 @@ def main() -> None:
     home_model.fit(x_train, y_home_train)
     away_model.fit(x_train, y_away_train)
 
-    pred_home = np.clip(home_model.predict(x_test), 0.05, 8.0)
-    pred_away = np.clip(away_model.predict(x_test), 0.05, 8.0)
+    train_pred_home = np.clip(home_model.predict(x_train), 0.05, 8.0)
+    train_pred_away = np.clip(away_model.predict(x_train), 0.05, 8.0)
+    total_intensity_correction = fit_total_intensity_correction(
+        actual_totals=(y_home_train + y_away_train).to_numpy(dtype=float),
+        pred_home=train_pred_home,
+        pred_away=train_pred_away,
+    )
+    pred_home_raw = np.clip(home_model.predict(x_test), 0.05, 8.0)
+    pred_away_raw = np.clip(away_model.predict(x_test), 0.05, 8.0)
+    pred_home, pred_away = apply_total_intensity_correction(
+        lambda_home=pred_home_raw,
+        lambda_away=pred_away_raw,
+        correction=total_intensity_correction,
+    )
 
     derived_rows: list[dict[str, float]] = []
     score_matrices: list[np.ndarray] = []
@@ -555,6 +583,7 @@ def main() -> None:
         "max_goals": int(args.max_goals),
         "home_goals_mae": float(mean_absolute_error(y_home_test, pred_home)),
         "away_goals_mae": float(mean_absolute_error(y_away_test, pred_away)),
+        "total_intensity_correction": total_intensity_correction,
         "walkforward_folds": int(args.folds),
         "walkforward_min_fold_test_n": int(args.min_fold_test_n),
         "walkforward_markets_scored": int(len(walkforward_summary)),
@@ -584,6 +613,9 @@ def main() -> None:
     )
     (args.output_dir / "imputation.json").write_text(
         json.dumps({"global_medians": imputation}, indent=2), encoding="utf-8"
+    )
+    (args.output_dir / "total_intensity_correction.json").write_text(
+        json.dumps(total_intensity_correction, indent=2), encoding="utf-8"
     )
     (args.output_dir / "metrics_holdout.json").write_text(
         json.dumps(market_metrics, indent=2), encoding="utf-8"
@@ -617,6 +649,10 @@ def main() -> None:
     print(
         "Goal MAE "
         f"home={diagnostics['home_goals_mae']:.3f} away={diagnostics['away_goals_mae']:.3f}"
+    )
+    print(
+        "Total-intensity correction "
+        f"method={total_intensity_correction['method']} multiplier={total_intensity_correction['multiplier']:.4f}"
     )
     if model_type_requested == "auto":
         print(f"Auto-selected model_type={model_type_selected}")

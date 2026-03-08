@@ -1,0 +1,11 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_o15_stacked_v1",
+  "model_version": "stacked_o15_head_v1_20260307",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_scoreline_o15_stacked_20260307",
+  "trained_at_utc": "2026-03-07T01:02:03.647954+00:00",
+  "market": "o15",
+  "model_kind_selected": "gbm",
+  "data_source": "legacy_fetch_dataset",
+  "scoreline_model_type": "histgb_poisson"
+}

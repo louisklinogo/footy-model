@@ -1,0 +1,323 @@
+{
+  "generated_at": "2026-03-06T13:54:33.358841+00:00",
+  "season_start": 2024,
+  "season_end": 2026,
+  "leagues": [
+    {
+      "league_code": "AT1",
+      "fixtures_total": 126,
+      "fixtures_with_availability": 120,
+      "availability_pct": 0.9523809523809523,
+      "fixtures_with_player_stats": 120,
+      "player_stats_pct": 0.9523809523809523
+    },
+    {
+      "league_code": "B1",
+      "fixtures_total": 208,
+      "fixtures_with_availability": 200,
+      "availability_pct": 0.9615384615384616,
+      "fixtures_with_player_stats": 200,
+      "player_stats_pct": 0.9615384615384616
+    },
+    {
+      "league_code": "BR1",
+      "fixtures_total": 37,
+      "fixtures_with_availability": 36,
+      "availability_pct": 0.972972972972973,
+      "fixtures_with_player_stats": 32,
+      "player_stats_pct": 0.8648648648648649
+    },
+    {
+      "league_code": "CH1",
+      "fixtures_total": 167,
+      "fixtures_with_availability": 155,
+      "availability_pct": 0.9281437125748503,
+      "fixtures_with_player_stats": 155,
+      "player_stats_pct": 0.9281437125748503
+    },
+    {
+      "league_code": "CH2",
+      "fixtures_total": 120,
+      "fixtures_with_availability": 115,
+      "availability_pct": 0.9583333333333334,
+      "fixtures_with_player_stats": 115,
+      "player_stats_pct": 0.9583333333333334
+    },
+    {
+      "league_code": "CL",
+      "fixtures_total": 346,
+      "fixtures_with_availability": 346,
+      "availability_pct": 1.0,
+      "fixtures_with_player_stats": 346,
+      "player_stats_pct": 1.0
+    },
+    {
+      "league_code": "D1",
+      "fixtures_total": 216,
+      "fixtures_with_availability": 216,
+      "availability_pct": 1.0,
+      "fixtures_with_player_stats": 206,
+      "player_stats_pct": 0.9537037037037037
+    },
+    {
+      "league_code": "D2",
+      "fixtures_total": 216,
+      "fixtures_with_availability": 207,
+      "availability_pct": 0.9583333333333334,
+      "fixtures_with_player_stats": 207,
+      "player_stats_pct": 0.9583333333333334
+    },
+    {
+      "league_code": "DK1",
+      "fixtures_total": 132,
+      "fixtures_with_availability": 126,
+      "availability_pct": 0.9545454545454546,
+      "fixtures_with_player_stats": 126,
+      "player_stats_pct": 0.9545454545454546
+    },
+    {
+      "league_code": "E0",
+      "fixtures_total": 291,
+      "fixtures_with_availability": 290,
+      "availability_pct": 0.9965635738831615,
+      "fixtures_with_player_stats": 271,
+      "player_stats_pct": 0.9312714776632303
+    },
+    {
+      "league_code": "E1",
+      "fixtures_total": 419,
+      "fixtures_with_availability": 408,
+      "availability_pct": 0.9737470167064439,
+      "fixtures_with_player_stats": 406,
+      "player_stats_pct": 0.9689737470167065
+    },
+    {
+      "league_code": "E2",
+      "fixtures_total": 406,
+      "fixtures_with_availability": 391,
+      "availability_pct": 0.9630541871921182,
+      "fixtures_with_player_stats": 391,
+      "player_stats_pct": 0.9630541871921182
+    },
+    {
+      "league_code": "E3",
+      "fixtures_total": 410,
+      "fixtures_with_availability": 394,
+      "availability_pct": 0.9609756097560975,
+      "fixtures_with_player_stats": 394,
+      "player_stats_pct": 0.9609756097560975
+    },
+    {
+      "league_code": "EC",
+      "fixtures_total": 414,
+      "fixtures_with_availability": 399,
+      "availability_pct": 0.9637681159420289,
+      "fixtures_with_player_stats": 398,
+      "player_stats_pct": 0.961352657004831
+    },
+    {
+      "league_code": "ECL",
+      "fixtures_total": 290,
+      "fixtures_with_availability": 282,
+      "availability_pct": 0.9724137931034482,
+      "fixtures_with_player_stats": 282,
+      "player_stats_pct": 0.9724137931034482
+    },
+    {
+      "league_code": "EL",
+      "fixtures_total": 362,
+      "fixtures_with_availability": 354,
+      "availability_pct": 0.9779005524861878,
+      "fixtures_with_player_stats": 354,
+      "player_stats_pct": 0.9779005524861878
+    },
+    {
+      "league_code": "F1",
+      "fixtures_total": 216,
+      "fixtures_with_availability": 216,
+      "availability_pct": 1.0,
+      "fixtures_with_player_stats": 207,
+      "player_stats_pct": 0.9583333333333334
+    },
+    {
+      "league_code": "F2",
+      "fixtures_total": 225,
+      "fixtures_with_availability": 215,
+      "availability_pct": 0.9555555555555556,
+      "fixtures_with_player_stats": 215,
+      "player_stats_pct": 0.9555555555555556
+    },
+    {
+      "league_code": "G1",
+      "fixtures_total": 161,
+      "fixtures_with_availability": 152,
+      "availability_pct": 0.9440993788819876,
+      "fixtures_with_player_stats": 152,
+      "player_stats_pct": 0.9440993788819876
+    },
+    {
+      "league_code": "I1",
+      "fixtures_total": 270,
+      "fixtures_with_availability": 270,
+      "availability_pct": 1.0,
+      "fixtures_with_player_stats": 260,
+      "player_stats_pct": 0.9629629629629629
+    },
+    {
+      "league_code": "I2",
+      "fixtures_total": 280,
+      "fixtures_with_availability": 260,
+      "availability_pct": 0.9285714285714286,
+      "fixtures_with_player_stats": 260,
+      "player_stats_pct": 0.9285714285714286
+    },
+    {
+      "league_code": "IE1",
+      "fixtures_total": 19,
+      "fixtures_with_availability": 13,
+      "availability_pct": 0.6842105263157895,
+      "fixtures_with_player_stats": 13,
+      "player_stats_pct": 0.6842105263157895
+    },
+    {
+      "league_code": "JP1",
+      "fixtures_total": 40,
+      "fixtures_with_availability": 30,
+      "availability_pct": 0.75,
+      "fixtures_with_player_stats": 30,
+      "player_stats_pct": 0.75
+    },
+    {
+      "league_code": "MX1",
+      "fixtures_total": 249,
+      "fixtures_with_availability": 245,
+      "availability_pct": 0.9839357429718876,
+      "fixtures_with_player_stats": 232,
+      "player_stats_pct": 0.9317269076305221
+    },
+    {
+      "league_code": "N1",
+      "fixtures_total": 225,
+      "fixtures_with_availability": 216,
+      "availability_pct": 0.96,
+      "fixtures_with_player_stats": 216,
+      "player_stats_pct": 0.96
+    },
+    {
+      "league_code": "P1",
+      "fixtures_total": 216,
+      "fixtures_with_availability": 207,
+      "availability_pct": 0.9583333333333334,
+      "fixtures_with_player_stats": 207,
+      "player_stats_pct": 0.9583333333333334
+    },
+    {
+      "league_code": "PL1",
+      "fixtures_total": 205,
+      "fixtures_with_availability": 196,
+      "availability_pct": 0.9560975609756097,
+      "fixtures_with_player_stats": 196,
+      "player_stats_pct": 0.9560975609756097
+    },
+    {
+      "league_code": "RO1",
+      "fixtures_total": 232,
+      "fixtures_with_availability": 224,
+      "availability_pct": 0.9655172413793104,
+      "fixtures_with_player_stats": 224,
+      "player_stats_pct": 0.9655172413793104
+    },
+    {
+      "league_code": "RU1",
+      "fixtures_total": 152,
+      "fixtures_with_availability": 144,
+      "availability_pct": 0.9473684210526315,
+      "fixtures_with_player_stats": 144,
+      "player_stats_pct": 0.9473684210526315
+    },
+    {
+      "league_code": "SC0",
+      "fixtures_total": 173,
+      "fixtures_with_availability": 166,
+      "availability_pct": 0.9595375722543352,
+      "fixtures_with_player_stats": 165,
+      "player_stats_pct": 0.953757225433526
+    },
+    {
+      "league_code": "SC1",
+      "fixtures_total": 134,
+      "fixtures_with_availability": 130,
+      "availability_pct": 0.9701492537313433,
+      "fixtures_with_player_stats": 127,
+      "player_stats_pct": 0.9477611940298507
+    },
+    {
+      "league_code": "SC2",
+      "fixtures_total": 133,
+      "fixtures_with_availability": 126,
+      "availability_pct": 0.9473684210526315,
+      "fixtures_with_player_stats": 125,
+      "player_stats_pct": 0.9398496240601504
+    },
+    {
+      "league_code": "SC3",
+      "fixtures_total": 130,
+      "fixtures_with_availability": 124,
+      "availability_pct": 0.9538461538461539,
+      "fixtures_with_player_stats": 124,
+      "player_stats_pct": 0.9538461538461539
+    },
+    {
+      "league_code": "SP1",
+      "fixtures_total": 129,
+      "fixtures_with_availability": 129,
+      "availability_pct": 1.0,
+      "fixtures_with_player_stats": 118,
+      "player_stats_pct": 0.9147286821705426
+    },
+    {
+      "league_code": "SP2",
+      "fixtures_total": 308,
+      "fixtures_with_availability": 297,
+      "availability_pct": 0.9642857142857143,
+      "fixtures_with_player_stats": 297,
+      "player_stats_pct": 0.9642857142857143
+    },
+    {
+      "league_code": "T1",
+      "fixtures_total": 216,
+      "fixtures_with_availability": 207,
+      "availability_pct": 0.9583333333333334,
+      "fixtures_with_player_stats": 207,
+      "player_stats_pct": 0.9583333333333334
+    },
+    {
+      "league_code": "TST_b593f7",
+      "fixtures_total": 3,
+      "fixtures_with_availability": 0,
+      "availability_pct": 0.0,
+      "fixtures_with_player_stats": 0,
+      "player_stats_pct": 0.0
+    },
+    {
+      "league_code": "TST_f6c25e",
+      "fixtures_total": 3,
+      "fixtures_with_availability": 0,
+      "availability_pct": 0.0,
+      "fixtures_with_player_stats": 0,
+      "player_stats_pct": 0.0
+    },
+    {
+      "league_code": "TST_f83272",
+      "fixtures_total": 3,
+      "fixtures_with_availability": 0,
+      "availability_pct": 0.0,
+      "fixtures_with_player_stats": 0,
+      "player_stats_pct": 0.0
+    }
+  ],
+  "playbook": [
+    "python src/ingest/ingest_sofascore_availability.py --status ft --league <CODE> --limit <N>",
+    "python src/db/audit_layer2_situational_leakage.py --limit 50"
+  ]
+}

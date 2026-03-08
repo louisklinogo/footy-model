@@ -1,0 +1,939 @@
+{
+  "generated_at_utc": "2026-03-07T01:52:14.028748+00:00",
+  "cohort_summary": {
+    "challenger_rows_loaded": 108680,
+    "challenger_fixtures_loaded": 1859,
+    "live_prediction_rows_loaded": 55770,
+    "live_prediction_fixtures_loaded": 1859,
+    "matched_rows_before_actual_filter": 46588,
+    "matched_rows_scored": 45916,
+    "matched_fixtures_scored": 1859,
+    "fallback_rows_matched": 33272,
+    "nonfallback_rows_matched": 12644,
+    "holdout_vs_actual": {
+      "rows_with_actual": 45916,
+      "rows_matching_actual": 45916,
+      "rows_mismatching_actual": 0,
+      "rows_without_actual": 672
+    },
+    "challenger_calibration": {
+      "rows_calibrated": 0,
+      "rows_identity": 45916,
+      "markets_calibrated": []
+    },
+    "date_min": null,
+    "date_max": null
+  },
+  "segment_definitions": {
+    "scoreline_subfamily_markets": {
+      "scoreline_directional": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1"
+      ],
+      "scoreline_totals_core": [
+        "o15",
+        "u35"
+      ],
+      "scoreline_multigoals": [
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p"
+      ],
+      "scoreline_multiscore": [
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin"
+      ]
+    }
+  },
+  "segment_summaries": [
+    {
+      "segment": "full_overlap",
+      "rows": 45916,
+      "fixtures": 1859,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "a_1up",
+        "a_2up",
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "h_1up",
+        "h_2up",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p",
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 45916,
+        "base_rate": 0.4758254203327816,
+        "auc": 0.740983305638601,
+        "pr_auc": 0.69193349495854,
+        "accuracy": 0.6841841623834829,
+        "brier": 0.2073206005177737,
+        "log_loss": 0.6070235034755493,
+        "ece": 0.02325455934499384
+      },
+      "challenger": {
+        "n": 45916,
+        "base_rate": 0.4758254203327816,
+        "auc": 0.7562012379927201,
+        "pr_auc": 0.7192153647745892,
+        "accuracy": 0.6939193309521735,
+        "brier": 0.20038461715411668,
+        "log_loss": 0.5860293692952117,
+        "ece": 0.009549828306050664
+      },
+      "delta": {
+        "auc": 0.015217932354119057,
+        "brier": -0.006935983363657028,
+        "log_loss": -0.020994134180337687,
+        "ece": -0.013704731038943176
+      },
+      "fallback_rows": 33272,
+      "fallback_rate": 0.7246275807997212,
+      "market_win_counts": {
+        "auc": 25,
+        "brier": 20,
+        "log_loss": 21,
+        "markets_total": 30
+      }
+    },
+    {
+      "segment": "full_overlap_nonfallback",
+      "rows": 12644,
+      "fixtures": 1859,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "a_1up",
+        "a_2up",
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1",
+        "h_1up",
+        "h_2up",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p",
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin",
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 12644,
+        "base_rate": 0.5843878519455868,
+        "auc": 0.7097359345204042,
+        "pr_auc": 0.7419072031854109,
+        "accuracy": 0.6847516608668143,
+        "brier": 0.20995798046669042,
+        "log_loss": 0.6100051497922582,
+        "ece": 0.02165300142720808
+      },
+      "challenger": {
+        "n": 12644,
+        "base_rate": 0.5843878519455868,
+        "auc": 0.7102526462369358,
+        "pr_auc": 0.742765506640571,
+        "accuracy": 0.6864916165770326,
+        "brier": 0.2093569305357313,
+        "log_loss": 0.6083443806391959,
+        "ece": 0.012324578812277855
+      },
+      "delta": {
+        "auc": 0.0005167117165316704,
+        "brier": -0.0006010499309591355,
+        "log_loss": -0.001660769153062236,
+        "ece": -0.009328422614930224
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 5,
+        "brier": 7,
+        "log_loss": 7,
+        "markets_total": 8
+      }
+    },
+    {
+      "segment": "anytime_overlap",
+      "rows": 5388,
+      "fixtures": 1347,
+      "markets": [
+        "a_1up",
+        "a_2up",
+        "h_1up",
+        "h_2up"
+      ],
+      "live": {
+        "n": 5388,
+        "base_rate": 0.3856718634001485,
+        "auc": 0.7300601321861308,
+        "pr_auc": 0.6178397628814981,
+        "accuracy": 0.6909799554565702,
+        "brier": 0.2007079726973186,
+        "log_loss": 0.586899325235465,
+        "ece": 0.011587963662704764
+      },
+      "challenger": {
+        "n": 5388,
+        "base_rate": 0.3856718634001485,
+        "auc": 0.7282539857927532,
+        "pr_auc": 0.6166867501992608,
+        "accuracy": 0.6859688195991092,
+        "brier": 0.20169517718759578,
+        "log_loss": 0.5892024074837574,
+        "ece": 0.015061267480918341
+      },
+      "delta": {
+        "auc": -0.0018061463933775057,
+        "brier": 0.0009872044902771715,
+        "log_loss": 0.002303082248292454,
+        "ece": 0.0034733038182135773
+      },
+      "fallback_rows": 5388,
+      "fallback_rate": 1.0,
+      "market_win_counts": {
+        "auc": 2,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 4
+      }
+    },
+    {
+      "segment": "anytime_overlap_nonfallback",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "a_1up",
+        "a_2up",
+        "h_1up",
+        "h_2up"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "corners_overlap",
+      "rows": 18324,
+      "fixtures": 1527,
+      "markets": [
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55"
+      ],
+      "live": {
+        "n": 18324,
+        "base_rate": 0.5566470203012442,
+        "auc": 0.6679903167569341,
+        "pr_auc": 0.6966966876789886,
+        "accuracy": 0.6341955904824275,
+        "brier": 0.23272776587802843,
+        "log_loss": 0.672275916987248,
+        "ece": 0.05693824855428986
+      },
+      "challenger": {
+        "n": 18324,
+        "base_rate": 0.5566470203012442,
+        "auc": 0.7108305637616936,
+        "pr_auc": 0.7443484132426974,
+        "accuracy": 0.6607727570399476,
+        "brier": 0.2146102234041637,
+        "log_loss": 0.6179982901860985,
+        "ece": 0.019976626723854016
+      },
+      "delta": {
+        "auc": 0.042840247004759524,
+        "brier": -0.01811754247386474,
+        "log_loss": -0.05427762680114945,
+        "ece": -0.036961621830435845
+      },
+      "fallback_rows": 12216,
+      "fallback_rate": 0.6666666666666666,
+      "market_win_counts": {
+        "auc": 10,
+        "brier": 12,
+        "log_loss": 12,
+        "markets_total": 12
+      }
+    },
+    {
+      "segment": "corners_overlap_nonfallback",
+      "rows": 6108,
+      "fixtures": 1527,
+      "markets": [
+        "ac25",
+        "ac35",
+        "ac45",
+        "ac55",
+        "c105",
+        "c75",
+        "c85",
+        "c95",
+        "hc25",
+        "hc35",
+        "hc45",
+        "hc55"
+      ],
+      "live": {
+        "n": 6108,
+        "base_rate": 0.5492796332678455,
+        "auc": 0.6698918887023666,
+        "pr_auc": 0.692489070846837,
+        "accuracy": 0.6314669286182056,
+        "brier": 0.2276759107206068,
+        "log_loss": 0.6471373531933116,
+        "ece": 0.016904181982337722
+      },
+      "challenger": {
+        "n": 6108,
+        "base_rate": 0.5492796332678455,
+        "auc": 0.6699946894405399,
+        "pr_auc": 0.6896743634745318,
+        "accuracy": 0.6339227242960053,
+        "brier": 0.22703062773963847,
+        "log_loss": 0.6458033456044423,
+        "ece": 0.020365180097128507
+      },
+      "delta": {
+        "auc": 0.00010280073817325874,
+        "brier": -0.0006452829809683314,
+        "log_loss": -0.001334007588869257,
+        "ece": 0.0034609981147907844
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 2,
+        "brier": 4,
+        "log_loss": 4,
+        "markets_total": 4
+      }
+    },
+    {
+      "segment": "scoreline_directional_overlap",
+      "rows": 18936,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1"
+      ],
+      "live": {
+        "n": 18936,
+        "base_rate": 0.37864385297845377,
+        "auc": 0.7633123452654518,
+        "pr_auc": 0.6576571222775518,
+        "accuracy": 0.7220109843683988,
+        "brier": 0.18733348253676696,
+        "log_loss": 0.5559758386603925,
+        "ece": 0.008239768904673279
+      },
+      "challenger": {
+        "n": 18936,
+        "base_rate": 0.37864385297845377,
+        "auc": 0.7621000786845107,
+        "pr_auc": 0.6551134637747774,
+        "accuracy": 0.7212716518800169,
+        "brier": 0.18766217188931958,
+        "log_loss": 0.5567109378836086,
+        "ece": 0.011271771492036937
+      },
+      "delta": {
+        "auc": -0.0012122665809410904,
+        "brier": 0.0003286893525526191,
+        "log_loss": 0.0007350992232161291,
+        "ece": 0.0030320025873636584
+      },
+      "fallback_rows": 15668,
+      "fallback_rate": 0.827418673426278,
+      "market_win_counts": {
+        "auc": 12,
+        "brier": 7,
+        "log_loss": 8,
+        "markets_total": 12
+      }
+    },
+    {
+      "segment": "scoreline_directional_overlap_nonfallback",
+      "rows": 3268,
+      "fixtures": 1634,
+      "markets": [
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
+        "ah_a05",
+        "ah_a15",
+        "ah_h05",
+        "ah_h15",
+        "dc_12",
+        "dc_1x",
+        "dc_x2",
+        "eh_a1",
+        "eh_h1"
+      ],
+      "live": {
+        "n": 3268,
+        "base_rate": 0.5,
+        "auc": 0.7475213074672391,
+        "pr_auc": 0.7196968604793599,
+        "accuracy": 0.7350061199510404,
+        "brier": 0.19522537121286204,
+        "log_loss": 0.5804941625463451,
+        "ece": 0.04870885016535593
+      },
+      "challenger": {
+        "n": 3268,
+        "base_rate": 0.5,
+        "auc": 0.749920597942438,
+        "pr_auc": 0.7209017976335702,
+        "accuracy": 0.7368421052631579,
+        "brier": 0.19350309346770786,
+        "log_loss": 0.5752498635090848,
+        "ece": 0.012933784069144827
+      },
+      "delta": {
+        "auc": 0.002399290475198934,
+        "brier": -0.0017222777451541826,
+        "log_loss": -0.005244299037260314,
+        "ece": -0.0357750660962111
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 2,
+        "brier": 2,
+        "log_loss": 2,
+        "markets_total": 2
+      }
+    },
+    {
+      "segment": "scoreline_multigoals_overlap",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "scoreline_multigoals_overlap_nonfallback",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "scoreline_multiscore_overlap",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "scoreline_multiscore_overlap_nonfallback",
+      "rows": 0,
+      "fixtures": 0,
+      "markets": [
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin"
+      ],
+      "live": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "challenger": {
+        "n": 0,
+        "base_rate": null,
+        "auc": null,
+        "pr_auc": null,
+        "accuracy": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "delta": {
+        "auc": null,
+        "brier": null,
+        "log_loss": null,
+        "ece": null
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 0,
+        "brier": 0,
+        "log_loss": 0,
+        "markets_total": 0
+      }
+    },
+    {
+      "segment": "scoreline_totals_core_overlap",
+      "rows": 3268,
+      "fixtures": 1634,
+      "markets": [
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 3268,
+        "base_rate": 0.7343941248470012,
+        "auc": 0.5892600326420891,
+        "pr_auc": 0.7905843478388068,
+        "accuracy": 0.7340881272949816,
+        "brier": 0.19157519253847427,
+        "log_loss": 0.5701148217463619,
+        "ece": 0.010838713796992507
+      },
+      "challenger": {
+        "n": 3268,
+        "base_rate": 0.7343941248470012,
+        "auc": 0.5865579397081413,
+        "pr_auc": 0.7905986345011965,
+        "accuracy": 0.7343941248470012,
+        "brier": 0.1921780434539797,
+        "log_loss": 0.571426854315291,
+        "ece": 0.01389450840779706
+      },
+      "delta": {
+        "auc": -0.0027020929339478528,
+        "brier": 0.0006028509155054373,
+        "log_loss": 0.0013120325689292,
+        "ece": 0.0030557946108045533
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 1,
+        "brier": 1,
+        "log_loss": 1,
+        "markets_total": 2
+      }
+    },
+    {
+      "segment": "scoreline_totals_core_overlap_nonfallback",
+      "rows": 3268,
+      "fixtures": 1634,
+      "markets": [
+        "o15",
+        "u35"
+      ],
+      "live": {
+        "n": 3268,
+        "base_rate": 0.7343941248470012,
+        "auc": 0.5892600326420891,
+        "pr_auc": 0.7905843478388068,
+        "accuracy": 0.7340881272949816,
+        "brier": 0.19157519253847427,
+        "log_loss": 0.5701148217463619,
+        "ece": 0.010838713796992507
+      },
+      "challenger": {
+        "n": 3268,
+        "base_rate": 0.7343941248470012,
+        "auc": 0.5865579397081413,
+        "pr_auc": 0.7905986345011965,
+        "accuracy": 0.7343941248470012,
+        "brier": 0.1921780434539797,
+        "log_loss": 0.571426854315291,
+        "ece": 0.01389450840779706
+      },
+      "delta": {
+        "auc": -0.0027020929339478528,
+        "brier": 0.0006028509155054373,
+        "log_loss": 0.0013120325689292,
+        "ece": 0.0030557946108045533
+      },
+      "fallback_rows": 0,
+      "fallback_rate": 0.0,
+      "market_win_counts": {
+        "auc": 1,
+        "brier": 1,
+        "log_loss": 1,
+        "markets_total": 2
+      }
+    }
+  ]
+}

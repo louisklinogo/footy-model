@@ -1,0 +1,9 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_challenger_20260307",
+  "artifact_dir": "model_artifacts\\v2\\challenger_corners_20260307",
+  "trained_at_utc": "2026-03-07T22:14:54.510799+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "artifacts\\v2\\datasets\\scoreline_pit_candidate_v2\\pit_dataset_20260306T080633Z.csv"
+}

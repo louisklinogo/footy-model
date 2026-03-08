@@ -1,0 +1,9 @@
+{
+  "generated_at_utc": "2026-03-07T22:17:15.109924+00:00",
+  "model_name": "market_outcome_v2",
+  "model_version": "challenger_20260307",
+  "history_days": 180,
+  "window": 60,
+  "edge_bucket_by_market": [],
+  "edge_bucket_global": []
+}

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,9 +10,34 @@ from typing import Any
 
 ROOT_DIR = Path(__file__).resolve().parents[4]
 DEFAULT_SCOPE_PATH = ROOT_DIR / "model_v2" / "market_scope.yaml"
+DEFAULT_HANDICAP_CONTRACT_PATH = ROOT_DIR / "model_v2" / "handicap_contract.yaml"
 DEFAULT_BASELINE_PATH = (
     ROOT_DIR / "model_artifacts" / "v2" / "baselines" / "metrics_baseline_v2.json"
 )
+
+_FALLBACK_LEGACY_CANONICAL_SELECTIONS = {
+    "ah_h05": "ah2_home_m05",
+    "ah_a05": "ah2_away_m05",
+    "ah_h15": "ah2_home_m15",
+    "ah_a15": "ah2_away_m15",
+}
+_FALLBACK_LEGACY_CANONICAL_PROXIES = {
+    "eh_h1": "eh3_0_1_home",
+    "eh_a1": "eh3_1_0_away",
+}
+_EVENT_EQUIVALENT_MARKETS = {
+    "dc_x2": ("eh3_0_1_away",),
+    "dc_1x": ("eh3_1_0_home",),
+    "ah_h15": ("eh3_0_1_home",),
+    "ah_a15": ("eh3_1_0_away",),
+}
+_EXPANSION_PRIORITY = {
+    "source": 0,
+    "legacy_canonical_selection": 1,
+    "legacy_canonical_proxy": 1,
+    "derived_ah_complement": 2,
+    "event_equivalent_market": 3,
+}
 
 
 @dataclass(frozen=True)
@@ -40,6 +66,124 @@ def _to_int_or_none(value: Any) -> int | None:
     if isinstance(value, float) and value.is_integer():
         return int(value)
     return None
+
+
+def _read_yaml_payload(path: Path) -> dict[str, Any] | None:
+    try:
+        import yaml  # type: ignore
+
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+@lru_cache(maxsize=1)
+def _load_handicap_compatibility_maps() -> tuple[dict[str, str], dict[str, str]]:
+    canonical_selections = dict(_FALLBACK_LEGACY_CANONICAL_SELECTIONS)
+    canonical_proxies = dict(_FALLBACK_LEGACY_CANONICAL_PROXIES)
+
+    payload = _read_yaml_payload(DEFAULT_HANDICAP_CONTRACT_PATH)
+    runtime_scope = (
+        payload.get("legacy_repo_compatibility", {}).get("current_runtime_scope", {})
+        if isinstance(payload, dict)
+        else {}
+    )
+    if isinstance(runtime_scope, dict):
+        for legacy_market, metadata in runtime_scope.items():
+            if not isinstance(metadata, dict):
+                continue
+            canonical_selection = str(metadata.get("canonical_selection") or "").strip()
+            if canonical_selection:
+                canonical_selections[str(legacy_market).strip()] = canonical_selection
+            canonical_proxy = str(metadata.get("canonical_proxy_for") or "").strip()
+            if canonical_proxy:
+                canonical_proxies[str(legacy_market).strip()] = canonical_proxy
+
+    return canonical_selections, canonical_proxies
+
+
+def _ah2_complement_market(market_code: str) -> str | None:
+    parts = market_code.split("_")
+    if len(parts) != 3 or parts[0] != "ah2":
+        return None
+    side = {"home": "away", "away": "home"}.get(parts[1])
+    signed_line = parts[2]
+    if side is None or len(signed_line) < 2 or signed_line[0] not in {"m", "p"}:
+        return None
+    magnitude = signed_line[1:]
+    if not magnitude.isdigit():
+        return None
+    flipped = ("p" if signed_line[0] == "m" else "m") + magnitude
+    return f"ah2_{side}_{flipped}"
+
+
+def expand_baseline_market_rows(rows: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    canonical_selections, canonical_proxies = _load_handicap_compatibility_maps()
+    expanded: dict[str, dict[str, Any]] = {}
+    priorities: dict[str, int] = {}
+
+    def register_market(
+        *,
+        target_market: str,
+        source_market: str,
+        note: str,
+        row: dict[str, Any],
+    ) -> None:
+        priority = _EXPANSION_PRIORITY[note]
+        existing_priority = priorities.get(target_market)
+        if existing_priority is not None and existing_priority <= priority:
+            return
+        mapped = dict(row)
+        mapped["market"] = target_market
+        mapped["market_code"] = target_market
+        mapped["source_market_code"] = source_market
+        mapped["mapping_note"] = note
+        expanded[target_market] = mapped
+        priorities[target_market] = priority
+
+    for row in rows:
+        market = str(row.get("market") or row.get("market_code") or "").strip()
+        if not market:
+            continue
+
+        register_market(target_market=market, source_market=market, note="source", row=row)
+
+        canonical_selection = canonical_selections.get(market)
+        if canonical_selection:
+            register_market(
+                target_market=canonical_selection,
+                source_market=market,
+                note="legacy_canonical_selection",
+                row=row,
+            )
+            complement_market = _ah2_complement_market(canonical_selection)
+            if complement_market:
+                register_market(
+                    target_market=complement_market,
+                    source_market=market,
+                    note="derived_ah_complement",
+                    row=row,
+                )
+
+        canonical_proxy = canonical_proxies.get(market)
+        if canonical_proxy:
+            register_market(
+                target_market=canonical_proxy,
+                source_market=market,
+                note="legacy_canonical_proxy",
+                row=row,
+            )
+
+        for equivalent_market in _EVENT_EQUIVALENT_MARKETS.get(market, ()): 
+            register_market(
+                target_market=equivalent_market,
+                source_market=market,
+                note="event_equivalent_market",
+                row=row,
+            )
+
+    return expanded
 
 
 def _extract_scope_markets_fallback(scope_text: str) -> list[str]:
@@ -99,9 +243,10 @@ def load_baseline_metrics(
     else:
         return {}
 
+    expanded_rows = expand_baseline_market_rows(rows)
+
     out: dict[str, BaselineMetric] = {}
-    for row in rows:
-        market_code = str(row.get("market_code") or row.get("market") or "").strip()
+    for market_code, row in expanded_rows.items():
         if not market_code:
             continue
         out[market_code] = BaselineMetric(
@@ -125,6 +270,56 @@ def missing_baseline_markets(
     return sorted({market for market in scope_markets if market not in baseline_metrics})
 
 
+def missing_scope_markets(
+    *,
+    selected_markets: list[str],
+    scope_markets: list[str],
+) -> list[str]:
+    scope_set = set(scope_markets)
+    return sorted({market for market in selected_markets if market not in scope_set})
+
+
+def validate_market_presence(
+    *,
+    market_list: list[str],
+    baseline_metrics: dict[str, BaselineMetric],
+    strict: bool,
+    baseline_path: Path,
+    market_set_name: str,
+) -> list[str]:
+    missing = sorted({market for market in market_list if market not in baseline_metrics})
+    if missing and strict:
+        missing_csv = ", ".join(missing)
+        raise RuntimeError(
+            f"Baseline registry missing {market_set_name} markets: "
+            f"{missing_csv}. path={baseline_path}. "
+            "Refresh the frozen baseline or fix the promotion policy / required-market list."
+        )
+    return missing
+
+
+def validate_markets_in_scope(
+    *,
+    selected_markets: list[str],
+    scope_markets: list[str],
+    strict: bool,
+    scope_path: Path,
+    market_set_name: str,
+) -> list[str]:
+    missing = missing_scope_markets(
+        selected_markets=selected_markets,
+        scope_markets=scope_markets,
+    )
+    if missing and strict:
+        missing_csv = ", ".join(missing)
+        raise RuntimeError(
+            f"{market_set_name.capitalize()} markets are not present in scope: "
+            f"{missing_csv}. path={scope_path}. "
+            "Fix the promotion policy / required-market list or update the scoped market contract first."
+        )
+    return missing
+
+
 def validate_baseline_coverage(
     *,
     scope_markets: list[str],
@@ -132,16 +327,13 @@ def validate_baseline_coverage(
     strict: bool,
     baseline_path: Path,
 ) -> list[str]:
-    missing = missing_baseline_markets(
-        scope_markets=scope_markets, baseline_metrics=baseline_metrics
+    missing = validate_market_presence(
+        market_list=scope_markets,
+        baseline_metrics=baseline_metrics,
+        strict=strict,
+        baseline_path=baseline_path,
+        market_set_name="scope",
     )
-    if missing and strict:
-        missing_csv = ", ".join(missing)
-        raise RuntimeError(
-            "Baseline registry missing markets: "
-            f"{missing_csv}. path={baseline_path}. "
-            "Add missing rows or run with --allow-missing-baseline."
-        )
     return missing
 
 

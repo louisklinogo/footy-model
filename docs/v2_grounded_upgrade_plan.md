@@ -1,5 +1,8 @@
 # V2 Grounded Upgrade Plan
 
+> Active planning document for v2 work.
+> Not canonical for the live runtime state; see `docs/current_state.md`.
+
 Updated: 2026-03-06
 Owner: Augment Agent
 Status: Active working plan

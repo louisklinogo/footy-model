@@ -1,0 +1,9 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "poisson_head_v1",
+  "artifact_dir": "model_artifacts\\v2\\audit_scoreline_20260308",
+  "trained_at_utc": "2026-03-08T08:40:47.685226+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv"
+}

@@ -1,0 +1,174 @@
+version: 1
+name: handicap_contract_v1
+description: Canonical sportsbook-aligned football handicap contract for v2.
+
+goal_diff:
+  symbol: d
+  definition: home_goals - away_goals
+
+principles:
+  - European handicap and Asian handicap are distinct market families.
+  - European handicap is a 3-way partition after handicap adjustment.
+  - Asian handicap is a 2-way market with settlement states.
+  - Legacy repo codes may act as compatibility aliases and are not automatically canonical.
+
+families:
+  european_handicap:
+    canonical_family_code: eh3
+    display_name: European Handicap
+    bookmaker_ui_shape: three_way
+    selection_labels: [home, draw, away]
+    display_notation: 'Handicap H:A'
+    generic_rule:
+      displayed_home_headstart: H
+      displayed_away_headstart: A
+      threshold: A - H
+      home_selection: 'd > threshold'
+      draw_selection: 'd = threshold'
+      away_selection: 'd < threshold'
+    examples:
+      - display_line: '0:1'
+        threshold: 1
+        home: home wins by 2+
+        draw: home wins by exactly 1
+        away: draw or away win
+      - display_line: '0:2'
+        threshold: 2
+        home: home wins by 3+
+        draw: home wins by exactly 2
+        away: home wins by 1, draw, or away win
+      - display_line: '1:0'
+        threshold: -1
+        home: home win or draw
+        draw: away wins by exactly 1
+        away: away wins by 2+
+      - display_line: '2:0'
+        threshold: -2
+        home: home win, draw, or away loses by exactly 1
+        draw: away wins by exactly 2
+        away: away wins by 3+
+    canonical_naming:
+      line_market_pattern: eh3_<homeHeadstart>_<awayHeadstart>
+      selection_pattern: eh3_<homeHeadstart>_<awayHeadstart>_<selection>
+      examples:
+        - eh3_0_1_home
+        - eh3_0_1_draw
+        - eh3_0_1_away
+        - eh3_1_0_home
+        - eh3_1_0_draw
+        - eh3_1_0_away
+    modeling_contract:
+      target_shape: three mutually exclusive outcomes per displayed line
+      probability_partition: must_sum_to_one
+      push_state: none
+    evaluation_contract:
+      settled_rows_used: all
+      note: draw-after-handicap is a real class, not a push
+    settlement_contract:
+      outcomes: [full_win, full_loss]
+      note: no handicap push unless match data is missing or the bookmaker voids externally
+
+  asian_handicap:
+    canonical_family_code: ah2
+    display_name: Asian Handicap
+    bookmaker_ui_shape: two_way
+    selection_labels: [home, away]
+    display_notation: 'Asian Handicap side(line)'
+    line_classes:
+      whole:
+        examples: ['-1.0', '+1.0']
+        push_possible: true
+        half_outcomes: false
+      half:
+        examples: ['-0.5', '+1.5']
+        push_possible: false
+        half_outcomes: false
+      quarter:
+        examples: ['-0.25', '-0.75', '+1.25']
+        push_possible: via_split_components
+        half_outcomes: true
+    generic_rule:
+      selected_net: selected_goals + handicap - opponent_goals
+      full_win: 'selected_net > 0'
+      push: 'selected_net = 0'
+      full_loss: 'selected_net < 0'
+      quarter_line_rule: split stake equally across adjacent whole/half lines
+    examples:
+      - selection: 'Home (-0.5)'
+        full_win: home wins match
+        push: never
+        full_loss: draw or away win
+        complement: 'Away (+0.5)'
+      - selection: 'Home (-1.5)'
+        full_win: home wins by 2+
+        push: never
+        full_loss: home wins by 1, draw, or away win
+        complement: 'Away (+1.5)'
+      - selection: 'Home (-1.0)'
+        full_win: home wins by 2+
+        push: home wins by exactly 1
+        full_loss: draw or away win
+        complement: 'Away (+1.0)'
+      - selection: 'Home (-1.25)'
+        split_into: ['Home (-1.0)', 'Home (-1.5)']
+    canonical_naming:
+      selection_pattern: ah2_<side>_<signedLine>
+      examples:
+        - ah2_home_m05
+        - ah2_away_p05
+        - ah2_home_m15
+        - ah2_away_p15
+        - ah2_home_m10
+    modeling_contract:
+      target_shape: selection event plus settlement-aware outcome rules for whole/quarter lines
+      note: push and half-outcome rows must remain explicit in evaluation logic
+    evaluation_contract:
+      half_lines: binary on all settled rows
+      whole_lines: push rows retained as push, not silently relabeled
+      quarter_lines: half-win and half-loss retained as distinct settlement outcomes
+    settlement_contract:
+      outcomes: [full_win, half_win, push, half_loss, full_loss]
+
+legacy_repo_compatibility:
+  current_runtime_scope:
+    ah_h05:
+      canonical_selection: ah2_home_m05
+      sportsbook_label: 'Home (-0.5)'
+      status: exact_match
+      current_meaning: home wins match
+    ah_a05:
+      canonical_selection: ah2_away_m05
+      sportsbook_label: 'Away (-0.5)'
+      status: exact_match_with_runtime_odds_gap
+      current_meaning: away wins match
+      known_gap: odds resolver currently appears to look up Away (+0.5) as primary selection
+    ah_h15:
+      canonical_selection: ah2_home_m15
+      sportsbook_label: 'Home (-1.5)'
+      status: exact_match
+      current_meaning: home wins by 2+
+    ah_a15:
+      canonical_selection: ah2_away_m15
+      sportsbook_label: 'Away (-1.5)'
+      status: exact_match_with_runtime_odds_gap
+      current_meaning: away wins by 2+
+      known_gap: odds resolver currently appears to look up Away (+1.5) as primary selection
+    eh_h1:
+      canonical_proxy_for: eh3_0_1_home
+      sportsbook_label: 'Handicap 0:1 -> Home'
+      status: partial_match_legacy_binary_proxy
+      current_meaning: win if home wins by 2+, push if home wins by exactly 1, else loss
+      missing_canonical_companions: [eh3_0_1_draw, eh3_0_1_away]
+    eh_a1:
+      canonical_proxy_for: eh3_1_0_away
+      sportsbook_label: 'Handicap 1:0 -> Away'
+      status: partial_match_legacy_binary_proxy
+      current_meaning: win if away wins by 2+, push if away wins by exactly 1, else loss
+      missing_canonical_companions: [eh3_1_0_home, eh3_1_0_draw]
+
+downstream_alignment_required:
+  - scoreline derivation must stop treating EH as a binary alias of AH cover events
+  - target generation must represent EH as a 3-way partition per displayed line
+  - evaluation must score EH draw-after-handicap as a real class, not as a skipped push row
+  - odds resolution must align repo aliases with the intended side and sign of the handicap line
+  - exports should distinguish canonical handicap outputs from legacy compatibility aliases

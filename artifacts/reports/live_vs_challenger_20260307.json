@@ -1,0 +1,396 @@
+{
+  "summary": {
+    "live_rows": 9,
+    "challenger_rows": 122,
+    "overlap_fixtures": 9,
+    "live_only_fixtures": 0,
+    "challenger_only_fixtures": 113,
+    "probability_columns_compared": [
+      "p_1x2_a",
+      "p_1x2_d",
+      "p_1x2_h",
+      "p_a_1up",
+      "p_a_2up",
+      "p_ac25",
+      "p_ac35",
+      "p_ac45",
+      "p_ac55",
+      "p_ao15",
+      "p_c105",
+      "p_c75",
+      "p_c85",
+      "p_c95",
+      "p_dc_12",
+      "p_dc_1x",
+      "p_dc_x2",
+      "p_h_1up",
+      "p_h_2up",
+      "p_hc25",
+      "p_hc35",
+      "p_hc45",
+      "p_hc55",
+      "p_ho15",
+      "p_o15",
+      "p_u35"
+    ]
+  },
+  "avg_abs_probability_diff": {
+    "p_1x2_a": 0.05743965416907003,
+    "p_1x2_d": 0.0695325595521546,
+    "p_1x2_h": 0.06372564895678573,
+    "p_a_1up": 0.0434946456112159,
+    "p_a_2up": 0.035704334096031305,
+    "p_ac25": 0.09838633377356082,
+    "p_ac35": 0.15250645420650175,
+    "p_ac45": 0.18209806251258287,
+    "p_ac55": 0.1792932410155187,
+    "p_ao15": null,
+    "p_c105": 0.028992405656000808,
+    "p_c75": 0.030204212979999263,
+    "p_c85": 0.019913414238505938,
+    "p_c95": 0.027780053753408085,
+    "p_dc_12": 0.06953255955215458,
+    "p_dc_1x": 0.057439654169069994,
+    "p_dc_x2": 0.06372564895678576,
+    "p_h_1up": 0.04708279503091089,
+    "p_h_2up": 0.042454127515626806,
+    "p_hc25": 0.09113518844098552,
+    "p_hc35": 0.1367168120669525,
+    "p_hc45": 0.1676794098442055,
+    "p_hc55": 0.17945280601867675,
+    "p_ho15": null,
+    "p_o15": 0.04667111921816901,
+    "p_u35": 0.048519827360144784
+  },
+  "mean_signed_probability_diff": {
+    "p_1x2_a": -0.009022594861441136,
+    "p_1x2_d": -0.03651963102565438,
+    "p_1x2_h": 0.007642375242983569,
+    "p_a_1up": -0.002948671119833077,
+    "p_a_2up": -0.0059603724027030985,
+    "p_ac25": -0.04830854796217032,
+    "p_ac35": -0.04864623412643361,
+    "p_ac45": -0.040471004454419174,
+    "p_ac55": -0.030529837143764078,
+    "p_ao15": null,
+    "p_c105": 0.009558348619229206,
+    "p_c75": 0.023444361821699608,
+    "p_c85": -0.0023939924281543875,
+    "p_c95": 0.006023035801475525,
+    "p_dc_12": 0.0365196310256544,
+    "p_dc_1x": 0.009022594861441061,
+    "p_dc_x2": -0.007642375242983594,
+    "p_h_1up": 0.02975514941936726,
+    "p_h_2up": 0.02294688763988417,
+    "p_hc25": 0.05604864097137541,
+    "p_hc35": 0.09209847336633571,
+    "p_hc45": 0.11543612046159489,
+    "p_hc55": 0.11910785740867443,
+    "p_ho15": null,
+    "p_o15": -0.017356623412567336,
+    "p_u35": -0.036714539498448114
+  },
+  "risk_action_changes": [
+    {
+      "fixture_id": 19589,
+      "league_code_live": "P1",
+      "home_team_live": "Estrela",
+      "away_team_live": "Gil Vicente",
+      "risk_action_live": "bet_small",
+      "risk_action_chall": "bet",
+      "risk_market_code_live": "away_and_o25",
+      "risk_market_code_chall": "dc_1x",
+      "risk_score_live": 21.0,
+      "risk_score_chall": 12.0
+    },
+    {
+      "fixture_id": 19590,
+      "league_code_live": "P1",
+      "home_team_live": "Estoril",
+      "away_team_live": "Casa Pia",
+      "risk_action_live": "bet",
+      "risk_action_chall": "pass",
+      "risk_market_code_live": "away_and_o25",
+      "risk_market_code_chall": "c95",
+      "risk_score_live": 13.0,
+      "risk_score_chall": 12.0
+    },
+    {
+      "fixture_id": 19591,
+      "league_code_live": "P1",
+      "home_team_live": "Alverca",
+      "away_team_live": "AFS",
+      "risk_action_live": "bet",
+      "risk_action_chall": "watch",
+      "risk_market_code_live": "home_or_o15",
+      "risk_market_code_chall": "dc_x2",
+      "risk_score_live": 13.0,
+      "risk_score_chall": 12.0
+    },
+    {
+      "fixture_id": 19593,
+      "league_code_live": "P1",
+      "home_team_live": "Tondela",
+      "away_team_live": "Rio Ave",
+      "risk_action_live": "bet_small",
+      "risk_action_chall": "pass",
+      "risk_market_code_live": "away_or_o15",
+      "risk_market_code_chall": "1x2_a",
+      "risk_score_live": 21.0,
+      "risk_score_chall": 8.0
+    },
+    {
+      "fixture_id": 19594,
+      "league_code_live": "P1",
+      "home_team_live": "Santa Clara",
+      "away_team_live": "Vitoria Guimaraes",
+      "risk_action_live": "bet",
+      "risk_action_chall": "watch",
+      "risk_market_code_live": "away_or_o25",
+      "risk_market_code_chall": "o15",
+      "risk_score_live": 13.0,
+      "risk_score_chall": 12.0
+    },
+    {
+      "fixture_id": 19595,
+      "league_code_live": "P1",
+      "home_team_live": "Moreirense",
+      "away_team_live": "Nacional",
+      "risk_action_live": "bet",
+      "risk_action_chall": "pass",
+      "risk_market_code_live": "home_and_o25",
+      "risk_market_code_chall": "1x2_a",
+      "risk_score_live": 13.0,
+      "risk_score_chall": 8.0
+    },
+    {
+      "fixture_id": 19596,
+      "league_code_live": "P1",
+      "home_team_live": "Benfica",
+      "away_team_live": "FC Porto",
+      "risk_action_live": "bet",
+      "risk_action_chall": "watch",
+      "risk_market_code_live": "home_or_o15",
+      "risk_market_code_chall": "o15",
+      "risk_score_live": 13.0,
+      "risk_score_chall": 12.0
+    }
+  ],
+  "top_probability_diffs": [
+    {
+      "fixture_id": 19597,
+      "league_code": "P1",
+      "home_team": "Braga",
+      "away_team": "Sporting CP",
+      "market": "p_ac55",
+      "live": 0.8252306628767678,
+      "challenger": 0.3622932950511516,
+      "abs_diff": 0.46293736782561623
+    },
+    {
+      "fixture_id": 19597,
+      "league_code": "P1",
+      "home_team": "Braga",
+      "away_team": "Sporting CP",
+      "market": "p_ac45",
+      "live": 0.910542753015664,
+      "challenger": 0.4982907591678762,
+      "abs_diff": 0.4122519938477878
+    },
+    {
+      "fixture_id": 19596,
+      "league_code": "P1",
+      "home_team": "Benfica",
+      "away_team": "FC Porto",
+      "market": "p_ac45",
+      "live": 0.7127584561257317,
+      "challenger": 0.3255821186257648,
+      "abs_diff": 0.38717633749996694
+    },
+    {
+      "fixture_id": 19596,
+      "league_code": "P1",
+      "home_team": "Benfica",
+      "away_team": "FC Porto",
+      "market": "p_ac35",
+      "live": 0.8473374398889015,
+      "challenger": 0.4825961340522882,
+      "abs_diff": 0.36474130583661335
+    },
+    {
+      "fixture_id": 19596,
+      "league_code": "P1",
+      "home_team": "Benfica",
+      "away_team": "FC Porto",
+      "market": "p_ac55",
+      "live": 0.5517018668424882,
+      "challenger": 0.2056448852401846,
+      "abs_diff": 0.34605698160230364
+    },
+    {
+      "fixture_id": 19589,
+      "league_code": "P1",
+      "home_team": "Estrela",
+      "away_team": "Gil Vicente",
+      "market": "p_hc35",
+      "live": 0.265976660496814,
+      "challenger": 0.5818272912659079,
+      "abs_diff": 0.3158506307690939
+    },
+    {
+      "fixture_id": 19597,
+      "league_code": "P1",
+      "home_team": "Braga",
+      "away_team": "Sporting CP",
+      "market": "p_ac35",
+      "live": 0.9626500716931794,
+      "challenger": 0.6483189557070067,
+      "abs_diff": 0.3143311159861727
+    },
+    {
+      "fixture_id": 19589,
+      "league_code": "P1",
+      "home_team": "Estrela",
+      "away_team": "Gil Vicente",
+      "market": "p_hc45",
+      "live": 0.1238646567574605,
+      "challenger": 0.4216272351366126,
+      "abs_diff": 0.2977625783791521
+    },
+    {
+      "fixture_id": 19596,
+      "league_code": "P1",
+      "home_team": "Benfica",
+      "away_team": "FC Porto",
+      "market": "p_ac25",
+      "live": 0.9373008643042816,
+      "challenger": 0.662367558372728,
+      "abs_diff": 0.27493330593155363
+    },
+    {
+      "fixture_id": 19596,
+      "league_code": "P1",
+      "home_team": "Benfica",
+      "away_team": "FC Porto",
+      "market": "p_hc55",
+      "live": 0.8160425645962448,
+      "challenger": 0.5444902958512343,
+      "abs_diff": 0.2715522687450105
+    },
+    {
+      "fixture_id": 19589,
+      "league_code": "P1",
+      "home_team": "Estrela",
+      "away_team": "Gil Vicente",
+      "market": "p_hc25",
+      "live": 0.48384910323871,
+      "challenger": 0.7464091415212304,
+      "abs_diff": 0.2625600382825204
+    },
+    {
+      "fixture_id": 19595,
+      "league_code": "P1",
+      "home_team": "Moreirense",
+      "away_team": "Nacional",
+      "market": "p_hc45",
+      "live": 0.2564517484081726,
+      "challenger": 0.5149580769363322,
+      "abs_diff": 0.25850632852815963
+    },
+    {
+      "fixture_id": 19595,
+      "league_code": "P1",
+      "home_team": "Moreirense",
+      "away_team": "Nacional",
+      "market": "p_hc55",
+      "live": 0.1298885550572899,
+      "challenger": 0.3752269768938876,
+      "abs_diff": 0.2453384218365977
+    },
+    {
+      "fixture_id": 19589,
+      "league_code": "P1",
+      "home_team": "Estrela",
+      "away_team": "Gil Vicente",
+      "market": "p_hc55",
+      "live": 0.0497081591200272,
+      "challenger": 0.2863397896883015,
+      "abs_diff": 0.2366316305682743
+    },
+    {
+      "fixture_id": 19592,
+      "league_code": "P1",
+      "home_team": "Famalicao",
+      "away_team": "Arouca",
+      "market": "p_hc55",
+      "live": 0.1803636057494184,
+      "challenger": 0.412607523053714,
+      "abs_diff": 0.2322439173042956
+    }
+  ],
+  "top_fixture_mean_abs_shifts": [
+    {
+      "fixture_id": 19589,
+      "league_code_live": "P1",
+      "home_team_live": "Estrela",
+      "away_team_live": "Gil Vicente",
+      "mean_abs_prob_diff": 0.13640090671429986
+    },
+    {
+      "fixture_id": 19596,
+      "league_code_live": "P1",
+      "home_team_live": "Benfica",
+      "away_team_live": "FC Porto",
+      "mean_abs_prob_diff": 0.11734947916002281
+    },
+    {
+      "fixture_id": 19597,
+      "league_code_live": "P1",
+      "home_team_live": "Braga",
+      "away_team_live": "Sporting CP",
+      "mean_abs_prob_diff": 0.10097214430246121
+    },
+    {
+      "fixture_id": 19595,
+      "league_code_live": "P1",
+      "home_team_live": "Moreirense",
+      "away_team_live": "Nacional",
+      "mean_abs_prob_diff": 0.08081135027411789
+    },
+    {
+      "fixture_id": 19593,
+      "league_code_live": "P1",
+      "home_team_live": "Tondela",
+      "away_team_live": "Rio Ave",
+      "mean_abs_prob_diff": 0.07562296978932848
+    },
+    {
+      "fixture_id": 19592,
+      "league_code_live": "P1",
+      "home_team_live": "Famalicao",
+      "away_team_live": "Arouca",
+      "mean_abs_prob_diff": 0.06609259515834946
+    },
+    {
+      "fixture_id": 19594,
+      "league_code_live": "P1",
+      "home_team_live": "Santa Clara",
+      "away_team_live": "Vitoria Guimaraes",
+      "mean_abs_prob_diff": 0.0590784868982479
+    },
+    {
+      "fixture_id": 19591,
+      "league_code_live": "P1",
+      "home_team_live": "Alverca",
+      "away_team_live": "AFS",
+      "mean_abs_prob_diff": 0.04637715028132019
+    },
+    {
+      "fixture_id": 19590,
+      "league_code_live": "P1",
+      "home_team_live": "Estoril",
+      "away_team_live": "Casa Pia",
+      "mean_abs_prob_diff": 0.04460028068248392
+    }
+  ]
+}

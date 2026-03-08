@@ -1,0 +1,10 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "poisson_head_v1_total_intensity_v1",
+  "artifact_dir": "model_artifacts\\v2\\live_verification_scoreline_20260306_total_intensity_v1",
+  "trained_at_utc": "2026-03-06T22:30:00.443961+00:00",
+  "model_type_selected": "histgb_poisson",
+  "data_source": "legacy_fetch_dataset",
+  "total_intensity_multiplier": 0.9998470609917407
+}

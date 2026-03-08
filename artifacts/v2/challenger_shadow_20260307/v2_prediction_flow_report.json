@@ -1,0 +1,124 @@
+{
+  "generated_at_utc": "2026-03-07T22:17:19.894094+00:00",
+  "dry_run": false,
+  "model_name": "market_outcome_v2",
+  "model_version": "challenger_20260307",
+  "scope": "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+  "scoreline_dir": "model_artifacts\\v2\\challenger_scoreline_20260307",
+  "corners_dir": "model_artifacts\\v2\\challenger_corners_20260307",
+  "anytime_dir": "model_artifacts\\v2\\challenger_anytime_20260307",
+  "out_dir": "artifacts\\v2\\challenger_shadow_20260307",
+  "export_out": "storage\\reports\\market_predictions_v2_challenger_20260307.csv",
+  "steps": [
+    {
+      "name": "predict.scoreline",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\families\\scoreline\\predict_scoreline.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--artifact-dir",
+        "model_artifacts\\v2\\challenger_scoreline_20260307",
+        "--out-dir",
+        "artifacts\\v2\\challenger_shadow_20260307",
+        "--days",
+        "3",
+        "--model-name",
+        "market_outcome_v2",
+        "--model-version",
+        "challenger_20260307",
+        "--write-db"
+      ],
+      "returncode": 0,
+      "stdout": "Wrote v2 scoreline predictions: artifacts\\v2\\challenger_shadow_20260307\\scoreline_v2_predictions_20260307T221654Z.csv\nUpserted 6344 predictions into DB.\n",
+      "stderr": "C:\\Developer\\soccer\\footy-model\\src\\modeling\\evaluation\\predict_market_outcomes_fixtures_first.py:478: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.\n  df = pd.read_sql(base_query, conn, params=tuple(params))\n",
+      "dry_run": false
+    },
+    {
+      "name": "predict.corners",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\families\\corners\\predict_corners.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--artifact-dir",
+        "model_artifacts\\v2\\challenger_corners_20260307",
+        "--out-dir",
+        "artifacts\\v2\\challenger_shadow_20260307",
+        "--days",
+        "3",
+        "--model-name",
+        "market_outcome_v2",
+        "--model-version",
+        "challenger_20260307",
+        "--write-db"
+      ],
+      "returncode": 0,
+      "stdout": "Wrote v2 corners predictions: artifacts\\v2\\challenger_shadow_20260307\\corners_v2_predictions_20260307T221702Z.csv\nUpserted 1464 predictions into DB.\n",
+      "stderr": "C:\\Developer\\soccer\\footy-model\\src\\modeling\\evaluation\\predict_market_outcomes_fixtures_first.py:478: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.\n  df = pd.read_sql(base_query, conn, params=tuple(params))\n",
+      "dry_run": false
+    },
+    {
+      "name": "predict.anytime",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\families\\anytime\\predict_anytime.py",
+        "--scope",
+        "C:\\Developer\\soccer\\footy-model\\model_v2\\market_scope.yaml",
+        "--artifact-dir",
+        "model_artifacts\\v2\\challenger_anytime_20260307",
+        "--out-dir",
+        "artifacts\\v2\\challenger_shadow_20260307",
+        "--days",
+        "3",
+        "--model-name",
+        "market_outcome_v2",
+        "--model-version",
+        "challenger_20260307",
+        "--write-db"
+      ],
+      "returncode": 0,
+      "stdout": "Wrote v2 anytime predictions: artifacts\\v2\\challenger_shadow_20260307\\anytime_v2_predictions_20260307T221706Z.csv\nUpserted 488 predictions into DB.\n",
+      "stderr": "C:\\Developer\\soccer\\footy-model\\src\\modeling\\evaluation\\predict_market_outcomes_fixtures_first.py:478: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.\n  df = pd.read_sql(base_query, conn, params=tuple(params))\n",
+      "dry_run": false
+    },
+    {
+      "name": "risk.assess",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\evaluation\\assess_prediction_risk.py",
+        "--days",
+        "3",
+        "--history-days",
+        "180",
+        "--model",
+        "market_outcome_v2",
+        "--version",
+        "challenger_20260307"
+      ],
+      "returncode": 0,
+      "stdout": "Resolved tradable markets: 5 (required=11, gating=27, coverage_applied=True)\nEdge bucket report: artifacts\\reports\\risk_edge_buckets\\edge_bucket_report_20260307T221715Z.json\nAssessed 2928 rows, upserted 2928 risk rows: pass=2868 watch=15 bet_small=17 bet=28\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "export.csv",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\export\\export_market_outcomes_fixtures_first.py",
+        "--days",
+        "3",
+        "--model",
+        "market_outcome_v2",
+        "--version",
+        "challenger_20260307",
+        "--out",
+        "storage\\reports\\market_predictions_v2_challenger_20260307.csv"
+      ],
+      "returncode": 0,
+      "stdout": "Saved 122 fixtures to storage\\reports\\market_predictions_v2_challenger_20260307.csv\n",
+      "stderr": "C:\\Developer\\soccer\\footy-model\\src\\modeling\\export\\export_market_outcomes_fixtures_first.py:303: UserWarning: pandas only supports SQLAlchemy connectable (engine/connection) or database string URI or sqlite3 DBAPI2 connection. Other DBAPI2 objects are not tested. Please consider using SQLAlchemy.\n  return pd.read_sql(query, conn, params=tuple(params))\n",
+      "dry_run": false
+    }
+  ]
+}

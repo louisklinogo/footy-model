@@ -1,0 +1,95 @@
+{
+  "generated_at_utc": "2026-03-08T15:29:30.733298+00:00",
+  "evaluation_flow_report_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308_recheck\\evaluation_flow_report.json",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308_recheck",
+  "promotion_registry_path": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308_recheck\\promotion_registry.json",
+  "promotion_policy_name": "scoreline_core_v1",
+  "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+  "decision": {
+    "status": "failed",
+    "basis": "required_markets",
+    "passed_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_away",
+      "o15",
+      "u35"
+    ],
+    "failed_markets": [
+      "eh3_0_1_draw",
+      "eh3_1_0_draw"
+    ],
+    "missing_required_markets": []
+  },
+  "summary": {
+    "markets_total": 76,
+    "markets_passed": 65,
+    "markets_failed": 11,
+    "required_markets_total": 22,
+    "required_markets_passed": 20,
+    "required_markets_failed": 2,
+    "required_markets_missing": []
+  },
+  "recommendation_status": "hold",
+  "recommended_scope": "none",
+  "headline": "Hold promotion until the recorded gate passes.",
+  "rationale": [
+    "Top-level promotion decision status is failed.",
+    "Required gate has 2 failed and 0 missing required markets."
+  ],
+  "follow_up_markets": [
+    "eh3_0_1_draw",
+    "eh3_1_0_draw",
+    "mg_1_5",
+    "mg_2_4",
+    "mg_2_5",
+    "mg_2_6",
+    "hmg_0",
+    "hmg_1_2",
+    "hmg_1_3",
+    "hmg_2_3",
+    "ms_other_awaywin"
+  ],
+  "checklist": [
+    {
+      "item": "promotion_registry_generated",
+      "ok": true,
+      "detail": "model_artifacts\\v2\\evaluation_scoreline_v21_contract_20260308_recheck\\promotion_registry.json"
+    },
+    {
+      "item": "top_level_decision_passed",
+      "ok": false,
+      "detail": "failed"
+    },
+    {
+      "item": "required_markets_complete",
+      "ok": true,
+      "detail": "missing=0"
+    },
+    {
+      "item": "required_markets_passed",
+      "ok": false,
+      "detail": "passed=20/22"
+    },
+    {
+      "item": "full_scope_markets_passed",
+      "ok": false,
+      "detail": "passed=65/76"
+    }
+  ]
+}

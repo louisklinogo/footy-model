@@ -5,7 +5,13 @@ import json
 from pathlib import Path
 import tempfile
 
-from src.modeling.v2.run_evaluation_flow import build_promotion_summary, build_run_plan
+import pytest
+
+from src.modeling.v2.run_evaluation_flow import (
+    build_promotion_summary,
+    build_run_plan,
+    validate_promotion_inputs,
+)
 
 
 def _args(**overrides: object) -> argparse.Namespace:
@@ -17,6 +23,9 @@ def _args(**overrides: object) -> argparse.Namespace:
         "anytime_dir": "out/anytime",
         "evaluation_dir": "out/evaluation",
         "baseline_path": "out/baseline.json",
+        "scoreline_dataset_path": None,
+        "corners_dataset_path": None,
+        "anytime_dataset_path": None,
         "max_rows": None,
         "skip_train": False,
         "rebuild_baseline": False,
@@ -43,6 +52,7 @@ def test_build_run_plan_defaults_include_all_steps() -> None:
         "train.scoreline",
         "train.corners",
         "train.anytime",
+        "train.scoreline_residuals",
         "eval.walkforward",
         "eval.calibration",
         "eval.promotion_registry",
@@ -70,6 +80,21 @@ def test_build_run_plan_respects_skip_flags_and_forwards_options() -> None:
     assert "--auc-tolerance" in promotion_cmd and "0.01" in promotion_cmd
     assert "--brier-tolerance" in promotion_cmd and "0.02" in promotion_cmd
     assert "--calibration-report" in promotion_cmd
+
+
+def test_build_run_plan_forwards_dataset_paths_to_family_trainers() -> None:
+    plan = build_run_plan(
+        _args(
+            scoreline_dataset_path="storage/pit/scoreline.parquet",
+            corners_dataset_path="storage/pit/corners.parquet",
+            anytime_dataset_path="storage/pit/anytime.parquet",
+        )
+    )
+    commands = dict(plan)
+    assert "storage/pit/scoreline.parquet" in commands["train.scoreline"]
+    assert "storage/pit/scoreline.parquet" in commands["train.scoreline_residuals"]
+    assert "storage/pit/corners.parquet" in commands["train.corners"]
+    assert "storage/pit/anytime.parquet" in commands["train.anytime"]
 
 
 def test_build_run_plan_forwards_required_markets_to_promotion_registry() -> None:
@@ -167,3 +192,82 @@ def test_build_promotion_summary_preserves_policy_metadata_for_recommendation_la
         summary = build_promotion_summary(evaluation_dir)
         assert summary is not None
         assert summary["rules"]["promotion_policy_path"] == "model_v2/promotion_policies/scoreline_core.yaml"
+
+
+def test_validate_promotion_inputs_raises_when_baseline_missing_required_market() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_flow_baseline_guard_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "scope.yaml"
+        scope_path.write_text("markets:\n  - o15\n  - eh3_0_1_draw\n", encoding="utf-8")
+        baseline_path = tmp_path / "baseline.json"
+        baseline_path.write_text(
+            json.dumps({"metrics": [{"market_code": "o15", "auc": 0.61, "brier": 0.18}]}),
+            encoding="utf-8",
+        )
+
+        args = _args(
+            scope=scope_path,
+            baseline_path=baseline_path,
+            required_market=["eh3_0_1_draw"],
+        )
+
+        with pytest.raises(RuntimeError, match="Baseline registry missing required markets"):
+            validate_promotion_inputs(args, validate_baseline=True)
+
+
+def test_validate_promotion_inputs_allows_null_metric_required_baseline_row() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_flow_baseline_null_required_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "scope.yaml"
+        scope_path.write_text("markets:\n  - eh3_0_1_draw\n", encoding="utf-8")
+        baseline_path = tmp_path / "baseline.json"
+        baseline_path.write_text(
+            json.dumps(
+                {
+                    "metrics": [
+                        {
+                            "market_code": "eh3_0_1_draw",
+                            "auc": None,
+                            "brier": None,
+                            "log_loss": None,
+                            "ece": None,
+                            "n": None,
+                        }
+                    ]
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        args = _args(
+            scope=scope_path,
+            baseline_path=baseline_path,
+            required_market=["eh3_0_1_draw"],
+        )
+        out = validate_promotion_inputs(args, validate_baseline=True)
+
+        assert out["required_markets"] == ["eh3_0_1_draw"]
+        assert out["baseline_validation"]["validated"] is True
+
+
+def test_validate_promotion_inputs_can_defer_baseline_validation_for_rebuild_flow() -> None:
+    with tempfile.TemporaryDirectory(prefix="v2_eval_flow_baseline_defer_") as td:
+        tmp_path = Path(td)
+        scope_path = tmp_path / "scope.yaml"
+        scope_path.write_text("markets:\n  - o15\n  - eh3_0_1_draw\n", encoding="utf-8")
+        baseline_path = tmp_path / "baseline.json"
+        baseline_path.write_text(
+            json.dumps({"metrics": [{"market_code": "o15", "auc": 0.61, "brier": 0.18}]}),
+            encoding="utf-8",
+        )
+        args = _args(
+            scope=scope_path,
+            baseline_path=baseline_path,
+            required_market=["eh3_0_1_draw"],
+            rebuild_baseline=True,
+        )
+
+        out = validate_promotion_inputs(args, validate_baseline=False)
+
+        assert out["required_markets"] == ["eh3_0_1_draw"]
+        assert out["baseline_validation"]["validated"] is False
