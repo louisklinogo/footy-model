@@ -128,3 +128,4 @@ DB-backed tests will skip when DB env vars are missing.
 - Keep scheduler scripts idempotent and lock-protected.
 - Do not reintroduce Flashscore calls into active scheduler chain unless explicitly requested.
 - Keep outputs and reports under existing `artifacts/` and `storage/` structure.
+- Put ad hoc smoke/self-check outputs under `artifacts/tmp/` (local scratch; gitignored) rather than creating new root-level scratch files or mixing temporary outputs into repo-backed benchmark/artifact directories.

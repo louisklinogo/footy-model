@@ -64,4 +64,6 @@ Thumbs.db
 
 # Local pytest temp roots
 .pytest_tmp/
+.pytest_tmp*/
 artifacts/pytest_tmp/
+artifacts/tmp/
