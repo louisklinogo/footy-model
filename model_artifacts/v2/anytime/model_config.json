@@ -1,4 +1,12 @@
 {
   "max_goals": 8,
-  "path_version": "constant"
+  "path_version": "direct_monotone",
+  "state_ladder_prior_version": "phase_split",
+  "state_ladder_blend": {},
+  "direct_monotone_blend": {
+    "home_1up": 0.1,
+    "away_1up": 0.2,
+    "home_2up": 0.0,
+    "away_2up": 0.0
+  }
 }

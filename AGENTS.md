@@ -34,6 +34,21 @@ Production runtime is Python. JS Flashscore scrapers still exist but are legacy 
 - Prefer explicit named frozen baseline snapshots for important promotion decisions; generic baseline files can drift after scope/contract changes.
 - If baseline coverage is incomplete, rebuild or replace the baseline intentionally before doing any further model diagnosis.
 
+## Current V2 Challenger References
+
+- Current leading anytime challenger artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
+- Current repo-backed bundled challenger reference:
+  - scoreline: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
+  - corners: `model_artifacts/v2/live_verification_corners_20260306/`
+  - anytime: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
+  - bundled evaluation: `model_artifacts/v2/evaluation_bundle_refresh_anytime_direct_monotone_v1_20260309/`
+  - bundled live compare: `artifacts/v2/family_replacement/live_replacement_20260309_bundle_anytime_direct_monotone_v1/`
+- Stable v2 alias behavior:
+  - `model_artifacts/v2/anytime` should mirror the current anytime leader for default v2 bundle/prediction/evaluation flows.
+  - Explicit `--anytime-dir` overrides are still supported for challenger experiments.
+- Important scope note:
+  - The active scheduled production runtime is not the v2 bundle path; these references are for challenger/evaluation flows unless explicitly wired into runtime.
+
 ## Source-of-Truth Policy
 
 - Active enrichment and settlement path is SofaScore-first.
