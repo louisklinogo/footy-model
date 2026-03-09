@@ -76,6 +76,21 @@ Use `--baseline-path model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_
 
 Do not rebuild the champion baseline as part of a challenger evaluation run unless you are intentionally refreshing the frozen baseline itself.
 
+## Current repo-backed bundle reference
+
+- Scoreline artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
+- Corners artifact: `model_artifacts/v2/live_verification_corners_20260306/`
+- Anytime artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
+- Baseline snapshot: `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`
+- Latest bundled evaluation output: `model_artifacts/v2/evaluation_bundle_refresh_anytime_direct_monotone_v1_20260309/`
+- Latest bundled live-replacement output: `artifacts/v2/family_replacement/live_replacement_20260309_bundle_anytime_direct_monotone_v1/`
+
+Reference command shape for re-evaluating the current bundled challenger without retraining families:
+
+- `python src/modeling/v2/run_evaluation_flow.py --skip-train --scope model_v2/market_scope.yaml --scoreline-dir model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308 --corners-dir model_artifacts/v2/corners --anytime-dir model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308 --baseline-path model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json --evaluation-dir model_artifacts/v2/evaluation_bundle_refresh_anytime_direct_monotone_v1_20260309 --promotion-policy model_v2/promotion_policies/scoreline_core.yaml`
+
+The `--corners-dir model_artifacts/v2/corners` selector currently resolves to `model_artifacts/v2/live_verification_corners_20260306/` in the emitted bundle artifacts.
+
 For prediction-time isolation, challengers should also carry a distinct `model_version` inside their artifact directory. Example training shape:
 
 - `python src/modeling/v2/families/scoreline/train_scoreline.py --output-dir model_artifacts/v2/scoreline_dc_candidate_v1 --model-version scoreline_dc_candidate_v1`

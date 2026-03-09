@@ -1,0 +1,11 @@
+{
+  "max_goals": 8,
+  "path_version": "state_ladder",
+  "state_ladder_prior_version": "constant",
+  "state_ladder_blend": {
+    "home_1up": 0.1,
+    "away_1up": 0.2,
+    "home_2up_cond": 0.0,
+    "away_2up_cond": 0.1
+  }
+}

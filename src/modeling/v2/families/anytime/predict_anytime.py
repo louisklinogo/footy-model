@@ -21,9 +21,12 @@ from src.modeling.evaluation.predict_market_outcomes_fixtures_first import (
     add_derived_features,
     fetch_candidate_fixtures,
 )
+from src.modeling.v2.calibration.methods import apply_binary_calibrator
 from src.modeling.v2.families.anytime.derive_markets import (
     derive_and_validate_anytime,
+    derive_and_validate_anytime_direct_monotone,
     derive_and_validate_anytime_phase_split,
+    derive_and_validate_anytime_state_ladder,
 )
 from src.modeling.v2.families.anytime.features import build_anytime_features
 from src.modeling.v2.io.artifact_identity import resolve_model_identity
@@ -82,7 +85,7 @@ def parse_args() -> argparse.Namespace:
 
 def load_artifacts(
     artifact_dir: Path,
-) -> tuple[dict[str, object], list[str], dict[str, float], int, str]:
+) -> tuple[dict[str, object], list[str], dict[str, float], int, str, dict[str, Any]]:
     features = json.loads((artifact_dir / "features.json").read_text(encoding="utf-8"))
     imputation_payload = json.loads(
         (artifact_dir / "imputation.json").read_text(encoding="utf-8")
@@ -95,17 +98,49 @@ def load_artifacts(
     config_path = artifact_dir / "model_config.json"
     max_goals = 8
     path_version = "constant"
+    extra_config: dict[str, Any] = {}
     if config_path.exists():
         try:
             payload = json.loads(config_path.read_text(encoding="utf-8"))
             max_goals = int(payload.get("max_goals", 8))
             path_version = str(payload.get("path_version", "constant"))
+            extra_config = payload if isinstance(payload, dict) else {}
         except (OSError, json.JSONDecodeError, TypeError, ValueError):
             max_goals = 8
             path_version = "constant"
+            extra_config = {}
 
     models: dict[str, object]
-    if path_version == "phase_split":
+    if path_version == "direct_monotone":
+        models = {
+            "home": joblib.load(artifact_dir / "home_goals_model.pkl"),
+            "away": joblib.load(artifact_dir / "away_goals_model.pkl"),
+            "home_1up_head": joblib.load(artifact_dir / "home_1up_head.pkl"),
+            "away_1up_head": joblib.load(artifact_dir / "away_1up_head.pkl"),
+            "home_2up_head": joblib.load(artifact_dir / "home_2up_head.pkl"),
+            "away_2up_head": joblib.load(artifact_dir / "away_2up_head.pkl"),
+            "direct_monotone_head_calibrators": joblib.load(artifact_dir / "direct_monotone_head_calibrators.joblib")
+            if (artifact_dir / "direct_monotone_head_calibrators.joblib").exists()
+            else {},
+        }
+    elif path_version == "state_ladder":
+        models = {
+            "home_p1": joblib.load(artifact_dir / "home_goals_p1_model.pkl"),
+            "away_p1": joblib.load(artifact_dir / "away_goals_p1_model.pkl"),
+            "home_p2": joblib.load(artifact_dir / "home_goals_p2_model.pkl"),
+            "away_p2": joblib.load(artifact_dir / "away_goals_p2_model.pkl"),
+            "home_1up_head": joblib.load(artifact_dir / "home_1up_head.pkl"),
+            "away_1up_head": joblib.load(artifact_dir / "away_1up_head.pkl"),
+            "home_2up_cond_head": joblib.load(artifact_dir / "home_2up_cond_head.pkl"),
+            "away_2up_cond_head": joblib.load(artifact_dir / "away_2up_cond_head.pkl"),
+            "state_ladder_head_calibrators": joblib.load(artifact_dir / "state_ladder_head_calibrators.joblib")
+            if (artifact_dir / "state_ladder_head_calibrators.joblib").exists()
+            else {},
+        }
+        if str(extra_config.get("state_ladder_prior_version", "phase_split")) == "constant_model":
+            models["home_prior"] = joblib.load(artifact_dir / "home_prior_model.pkl")
+            models["away_prior"] = joblib.load(artifact_dir / "away_prior_model.pkl")
+    elif path_version == "phase_split":
         models = {
             "home_p1": joblib.load(artifact_dir / "home_goals_p1_model.pkl"),
             "away_p1": joblib.load(artifact_dir / "away_goals_p1_model.pkl"),
@@ -118,7 +153,7 @@ def load_artifacts(
             "away": joblib.load(artifact_dir / "away_goals_model.pkl"),
         }
 
-    return models, list(features), medians, max(4, int(max_goals)), path_version
+    return models, list(features), medians, max(4, int(max_goals)), path_version, extra_config
 
 
 def _apply_imputation(df: pd.DataFrame, medians: dict[str, float]) -> pd.DataFrame:
@@ -159,7 +194,7 @@ def upsert_predictions(rows: list[tuple[int, str, str, str, float, str]]) -> int
 
 def main() -> None:
     args = parse_args()
-    models, features, medians, max_goals, path_version = load_artifacts(args.artifact_dir)
+    models, features, medians, max_goals, path_version, extra_config = load_artifacts(args.artifact_dir)
     model_name, model_version = resolve_model_identity(
         args.artifact_dir,
         default_model_name=MODEL_NAME,
@@ -188,7 +223,10 @@ def main() -> None:
     scored = _apply_imputation(featured, medians)
 
     x = scored[features]
-    if path_version == "phase_split":
+    if path_version == "direct_monotone":
+        home_lambda = np.clip(models["home"].predict(x), 0.05, 8.0)
+        away_lambda = np.clip(models["away"].predict(x), 0.05, 8.0)
+    elif path_version in {"phase_split", "state_ladder"}:
         home_lambda_p1 = np.clip(models["home_p1"].predict(x), 0.01, 6.0)
         away_lambda_p1 = np.clip(models["away_p1"].predict(x), 0.01, 6.0)
         home_lambda_p2 = np.clip(models["home_p2"].predict(x), 0.01, 6.0)
@@ -199,13 +237,167 @@ def main() -> None:
 
     rows_csv: list[dict[str, Any]] = []
     rows_db: list[tuple[int, str, str, str, float, str]] = []
-    if path_version == "phase_split":
+    if path_version == "direct_monotone":
+        prior_rows = [
+            derive_and_validate_anytime(
+                lambda_home=float(lh),
+                lambda_away=float(la),
+                max_goals=max_goals,
+            )
+            for lh, la in zip(home_lambda, away_lambda, strict=True)
+        ]
+        prior_frame = pd.DataFrame(prior_rows).rename(
+            columns={market: f"prior_{market}" for market in ["h_1up", "a_1up", "h_2up", "a_2up"]}
+        )
+        head_x = pd.concat([x.reset_index(drop=True), prior_frame.reset_index(drop=True)], axis=1)
+        direct_monotone_blend = extra_config.get("direct_monotone_blend") or {}
+        head_calibrators = models.get("direct_monotone_head_calibrators") or {}
+
+        def _head_probs(name: str) -> np.ndarray:
+            probs = models[name].predict_proba(head_x)
+            classes = [int(c) for c in getattr(models[name], "classes_", [0, 1])]
+            if probs.shape[1] == 1:
+                return np.full(len(head_x), 1.0 if classes and classes[0] == 1 else 0.0)
+            idx = classes.index(1) if 1 in classes else probs.shape[1] - 1
+            return np.clip(probs[:, idx], 0.001, 0.999)
+
+        raw_home_1up = _head_probs("home_1up_head")
+        raw_away_1up = _head_probs("away_1up_head")
+        raw_home_2up = _head_probs("home_2up_head")
+        raw_away_2up = _head_probs("away_2up_head")
+        cal_home_1up = apply_binary_calibrator(head_calibrators.get("home_1up", {"method": "identity"}), raw_home_1up)
+        cal_away_1up = apply_binary_calibrator(head_calibrators.get("away_1up", {"method": "identity"}), raw_away_1up)
+        cal_home_2up = apply_binary_calibrator(head_calibrators.get("home_2up", {"method": "identity"}), raw_home_2up)
+        cal_away_2up = apply_binary_calibrator(head_calibrators.get("away_2up", {"method": "identity"}), raw_away_2up)
+        prior_home_1up = prior_frame["prior_h_1up"].to_numpy(dtype=float)
+        prior_away_1up = prior_frame["prior_a_1up"].to_numpy(dtype=float)
+        prior_home_2up = prior_frame["prior_h_2up"].to_numpy(dtype=float)
+        prior_away_2up = prior_frame["prior_a_2up"].to_numpy(dtype=float)
+        home_1up_prob = np.clip(prior_home_1up + float(direct_monotone_blend.get("home_1up", 0.35)) * (cal_home_1up - prior_home_1up), 0.001, 0.999)
+        away_1up_prob = np.clip(prior_away_1up + float(direct_monotone_blend.get("away_1up", 0.35)) * (cal_away_1up - prior_away_1up), 0.001, 0.999)
+        home_2up_prob = np.clip(prior_home_2up + float(direct_monotone_blend.get("home_2up", 0.35)) * (cal_home_2up - prior_home_2up), 0.001, 0.999)
+        away_2up_prob = np.clip(prior_away_2up + float(direct_monotone_blend.get("away_2up", 0.35)) * (cal_away_2up - prior_away_2up), 0.001, 0.999)
+        iterator = zip(
+            scored.itertuples(index=False),
+            home_lambda,
+            away_lambda,
+            home_1up_prob,
+            away_1up_prob,
+            home_2up_prob,
+            away_2up_prob,
+            strict=True,
+        )
+    elif path_version == "phase_split":
         iterator = zip(
             scored.itertuples(index=False),
             home_lambda_p1,
             away_lambda_p1,
             home_lambda_p2,
             away_lambda_p2,
+            strict=True,
+        )
+    elif path_version == "state_ladder":
+        prior_version = str(extra_config.get("state_ladder_prior_version", "phase_split"))
+        prior_home_total = None
+        prior_away_total = None
+        if prior_version == "constant_model":
+            prior_home_total = np.clip(models["home_prior"].predict(x), 0.01, 6.0)
+            prior_away_total = np.clip(models["away_prior"].predict(x), 0.01, 6.0)
+        prior_rows = [
+            (
+                derive_and_validate_anytime(
+                    lambda_home=(float(ph) if prior_home_total is not None else float(lh_p1) + float(lh_p2)),
+                    lambda_away=(float(pa) if prior_away_total is not None else float(la_p1) + float(la_p2)),
+                    max_goals=max_goals,
+                )
+                if prior_version in {"constant", "constant_model"}
+                else derive_and_validate_anytime_phase_split(
+                    lambda_home_p1=float(lh_p1),
+                    lambda_away_p1=float(la_p1),
+                    lambda_home_p2=float(lh_p2),
+                    lambda_away_p2=float(la_p2),
+                    max_goals=max_goals,
+                )
+            )
+            for lh_p1, la_p1, lh_p2, la_p2, ph, pa in zip(
+                home_lambda_p1,
+                away_lambda_p1,
+                home_lambda_p2,
+                away_lambda_p2,
+                prior_home_total if prior_home_total is not None else home_lambda_p1,
+                prior_away_total if prior_away_total is not None else away_lambda_p1,
+                strict=True,
+            )
+        ]
+        prior_frame = pd.DataFrame(prior_rows).rename(
+            columns={market: f"prior_{market}" for market in ["h_1up", "a_1up", "h_2up", "a_2up"]}
+        )
+        head_x = pd.concat([x.reset_index(drop=True), prior_frame.reset_index(drop=True)], axis=1)
+        state_ladder_blend = extra_config.get("state_ladder_blend") or {}
+        head_calibrators = models.get("state_ladder_head_calibrators") or {}
+
+        def _conditional_from_joint(numer: np.ndarray, denom: np.ndarray) -> np.ndarray:
+            cond = np.divide(numer, np.maximum(denom, 1e-6))
+            return np.clip(cond, 0.001, 0.999)
+
+        def _head_probs(name: str) -> np.ndarray:
+            probs = models[name].predict_proba(head_x)
+            classes = [int(c) for c in getattr(models[name], "classes_", [0, 1])]
+            if probs.shape[1] == 1:
+                return np.full(len(head_x), 1.0 if classes and classes[0] == 1 else 0.0)
+            idx = classes.index(1) if 1 in classes else probs.shape[1] - 1
+            return np.clip(probs[:, idx], 0.001, 0.999)
+
+        raw_home_1up = _head_probs("home_1up_head")
+        raw_away_1up = _head_probs("away_1up_head")
+        raw_home_2up_cond = _head_probs("home_2up_cond_head")
+        raw_away_2up_cond = _head_probs("away_2up_cond_head")
+        cal_home_1up = apply_binary_calibrator(head_calibrators.get("home_1up", {"method": "identity"}), raw_home_1up)
+        cal_away_1up = apply_binary_calibrator(head_calibrators.get("away_1up", {"method": "identity"}), raw_away_1up)
+        cal_home_2up_cond = apply_binary_calibrator(head_calibrators.get("home_2up_cond", {"method": "identity"}), raw_home_2up_cond)
+        cal_away_2up_cond = apply_binary_calibrator(head_calibrators.get("away_2up_cond", {"method": "identity"}), raw_away_2up_cond)
+        prior_home_1up = prior_frame["prior_h_1up"].to_numpy(dtype=float)
+        prior_away_1up = prior_frame["prior_a_1up"].to_numpy(dtype=float)
+        prior_home_2up_cond = _conditional_from_joint(
+            prior_frame["prior_h_2up"].to_numpy(dtype=float),
+            prior_home_1up,
+        )
+        prior_away_2up_cond = _conditional_from_joint(
+            prior_frame["prior_a_2up"].to_numpy(dtype=float),
+            prior_away_1up,
+        )
+        home_1up_prob = np.clip(
+            prior_home_1up + float(state_ladder_blend.get("home_1up", 0.35)) * (cal_home_1up - prior_home_1up),
+            0.001,
+            0.999,
+        )
+        away_1up_prob = np.clip(
+            prior_away_1up + float(state_ladder_blend.get("away_1up", 0.35)) * (cal_away_1up - prior_away_1up),
+            0.001,
+            0.999,
+        )
+        home_2up_cond_prob = np.clip(
+            prior_home_2up_cond
+            + float(state_ladder_blend.get("home_2up_cond", 0.35)) * (cal_home_2up_cond - prior_home_2up_cond),
+            0.001,
+            0.999,
+        )
+        away_2up_cond_prob = np.clip(
+            prior_away_2up_cond
+            + float(state_ladder_blend.get("away_2up_cond", 0.35)) * (cal_away_2up_cond - prior_away_2up_cond),
+            0.001,
+            0.999,
+        )
+        iterator = zip(
+            scored.itertuples(index=False),
+            home_lambda_p1,
+            away_lambda_p1,
+            home_lambda_p2,
+            away_lambda_p2,
+            home_1up_prob,
+            away_1up_prob,
+            home_2up_cond_prob,
+            away_2up_cond_prob,
             strict=True,
         )
     else:
@@ -217,12 +409,29 @@ def main() -> None:
         )
 
     for item in iterator:
-        if path_version == "phase_split":
+        if path_version == "direct_monotone":
+            fixture, lh, la, ph1, pa1, ph2, pa2 = item
+        elif path_version == "phase_split":
             fixture, lh_p1, la_p1, lh_p2, la_p2 = item
+        elif path_version == "state_ladder":
+            fixture, lh_p1, la_p1, lh_p2, la_p2, ph1, pa1, ph2c, pa2c = item
         else:
             fixture, lh, la = item
         fixture_id = int(fixture.fixture_id)
-        if path_version == "phase_split":
+        if path_version == "direct_monotone":
+            lambda_home = float(lh)
+            lambda_away = float(la)
+            p_home_1up = float(ph1)
+            p_away_1up = float(pa1)
+            p_home_2up = float(ph2)
+            p_away_2up = float(pa2)
+            markets = derive_and_validate_anytime_direct_monotone(
+                p_home_1up=p_home_1up,
+                p_away_1up=p_away_1up,
+                p_home_2up=p_home_2up,
+                p_away_2up=p_away_2up,
+            )
+        elif path_version == "phase_split":
             lambda_home_p1 = float(lh_p1)
             lambda_away_p1 = float(la_p1)
             lambda_home_p2 = float(lh_p2)
@@ -233,6 +442,21 @@ def main() -> None:
                 lambda_home_p2=lambda_home_p2,
                 lambda_away_p2=lambda_away_p2,
                 max_goals=max_goals,
+            )
+        elif path_version == "state_ladder":
+            lambda_home_p1 = float(lh_p1)
+            lambda_away_p1 = float(la_p1)
+            lambda_home_p2 = float(lh_p2)
+            lambda_away_p2 = float(la_p2)
+            p_home_1up = float(ph1)
+            p_away_1up = float(pa1)
+            p_home_2up_cond = float(ph2c)
+            p_away_2up_cond = float(pa2c)
+            markets = derive_and_validate_anytime_state_ladder(
+                p_home_1up=p_home_1up,
+                p_away_1up=p_away_1up,
+                p_home_2up_given_1up=p_home_2up_cond,
+                p_away_2up_given_1up=p_away_2up_cond,
             )
         else:
             lambda_home = float(lh)
@@ -252,7 +476,20 @@ def main() -> None:
                 "path_version": path_version,
                 "generated_at_utc": datetime.now(tz=UTC).isoformat(),
             }
-            if path_version == "phase_split":
+            if path_version == "direct_monotone":
+                metadata.update(
+                    {
+                        "derivation": "direct_monotone_v1",
+                        "lambda_home_pred": lambda_home,
+                        "lambda_away_pred": lambda_away,
+                        "p_home_1up_pred": p_home_1up,
+                        "p_away_1up_pred": p_away_1up,
+                        "p_home_2up_pred": p_home_2up,
+                        "p_away_2up_pred": p_away_2up,
+                        "direct_monotone_blend": extra_config.get("direct_monotone_blend", {}),
+                    }
+                )
+            elif path_version == "phase_split":
                 metadata.update(
                     {
                         "derivation": "markov_ctmc_phase_split",
@@ -260,6 +497,22 @@ def main() -> None:
                         "lambda_away_p1_pred": lambda_away_p1,
                         "lambda_home_p2_pred": lambda_home_p2,
                         "lambda_away_p2_pred": lambda_away_p2,
+                    }
+                )
+            elif path_version == "state_ladder":
+                metadata.update(
+                    {
+                        "derivation": "state_ladder_v1",
+                        "lambda_home_p1_pred": lambda_home_p1,
+                        "lambda_away_p1_pred": lambda_away_p1,
+                        "lambda_home_p2_pred": lambda_home_p2,
+                        "lambda_away_p2_pred": lambda_away_p2,
+                        "p_home_1up_pred": p_home_1up,
+                        "p_away_1up_pred": p_away_1up,
+                        "p_home_2up_given_1up_pred": p_home_2up_cond,
+                        "p_away_2up_given_1up_pred": p_away_2up_cond,
+                        "state_ladder_prior_version": extra_config.get("state_ladder_prior_version", "phase_split"),
+                        "state_ladder_blend": extra_config.get("state_ladder_blend", {}),
                     }
                 )
             else:

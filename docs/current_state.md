@@ -1,6 +1,6 @@
 # Current Repo State (Canonical)
 
-Updated: 2026-03-06
+Updated: 2026-03-09
 Owner: Augment Agent
 Status: Canonical current-state summary
 
@@ -41,11 +41,18 @@ These are the identities currently seen in the live DB tables (`predictions`, `p
   - pinned named baseline snapshot: `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`
 - This does **not** mean v2 is the active live runtime yet; it means this is the current repo-backed scoreline challenger reference for future v2 comparisons.
 - Current leading anytime challenger reference is:
-  - artifact: `model_artifacts/v2/anytime_h1up_rich_snapshot_v1_candidate_20260308/`
-  - evaluation: `model_artifacts/v2/evaluation_anytime_h1up_rich_snapshot_v1_candidate_20260308/`
-  - live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260308_anytime_h1up_rich_snapshot_v1/`
-- Anytime status nuance: this contract-only challenger is better than the earlier rich snapshot and improves all four anytime markets versus that prior leader, but `h_1up` / `h_2up` still remain slightly behind live on the matched live-overlap benchmark.
+  - artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
+  - evaluation: `model_artifacts/v2/evaluation_anytime_direct_monotone_v1_candidate_20260308/`
+  - live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260308_anytime_direct_monotone_v1/`
+- Anytime status nuance: the earlier `anytime_h1up_rich_snapshot_v1_candidate_20260308` contract-only challenger was the best bounded model, and the full `state_ladder` research branch (`v1` through `v5`) was scientifically useful but repeatedly lost on matched live-overlap, especially on home ladders. The first `direct_monotone` candidate changes that: `anytime_direct_monotone_v1_candidate_20260308` keeps the leader-style constant-goals backbone, adds direct monotone heads with chrono OOF blending, improves `h_1up` and `a_1up`, and preserves `h_2up` / `a_2up` while also improving the aggregate anytime matched live-overlap benchmark versus the prior leader.
 - Current corners status: the bounded `corners_attack_block_candidate_20260308` rerun is recorded as a stop signal, not a promotion path. Corners should be revisited later as a deeper totals-first structural sprint.
+- Current repo-backed bundled challenger reference is:
+  - scoreline artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
+  - corners artifact: `model_artifacts/v2/live_verification_corners_20260306/`
+  - anytime artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
+  - bundled evaluation: `model_artifacts/v2/evaluation_bundle_refresh_anytime_direct_monotone_v1_20260309/`
+  - bundled live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260309_bundle_anytime_direct_monotone_v1/`
+- Bundle status nuance: this is still a challenger bundle, not the active live runtime. It passes the current required scoreline-core promotion gate (`22/22` required markets passed, `75/76` scoped markets passed) and modestly improves the matched full-bundle overlap versus the prior anytime-led bundle; the gain comes from the new anytime family while scoreline and corners remain unchanged.
 
 ## Canonical source-of-truth hierarchy
 

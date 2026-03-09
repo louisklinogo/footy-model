@@ -393,6 +393,8 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
             THEN ig.away_goals_p1
             ELSE NULL
         END AS away_goals_p1,
+        ils.first_home_lead_minute AS first_home_lead_minute,
+        ils.first_away_lead_minute AS first_away_lead_minute,
         ils.home_led_by_1_any AS home_led_by_1_any,
         ils.away_led_by_1_any AS away_led_by_1_any,
         ils.home_led_by_2_any AS home_led_by_2_any,

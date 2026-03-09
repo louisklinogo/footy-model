@@ -5,6 +5,7 @@ from functools import lru_cache
 import numpy as np
 
 from src.pricing.markov import MarkovPricer
+from src.modeling.v2.families.anytime.state_pricer import derive_state_ladder_probs
 
 
 ANYTIME_MARKETS = ("h_1up", "a_1up", "h_2up", "a_2up")
@@ -94,5 +95,41 @@ def derive_and_validate_anytime_phase_split(
         max_goals_int,
     )
     out = {market: float(value) for market, value in zip(ANYTIME_MARKETS, probs_tuple, strict=True)}
+    _validate_anytime_probs(out)
+    return out
+
+
+def derive_and_validate_anytime_state_ladder(
+    *,
+    p_home_1up: float,
+    p_away_1up: float,
+    p_home_2up_given_1up: float,
+    p_away_2up_given_1up: float,
+) -> dict[str, float]:
+    out = derive_state_ladder_probs(
+        p_home_1up=p_home_1up,
+        p_away_1up=p_away_1up,
+        p_home_2up_given_1up=p_home_2up_given_1up,
+        p_away_2up_given_1up=p_away_2up_given_1up,
+    )
+    _validate_anytime_probs(out)
+    return out
+
+
+def derive_and_validate_anytime_direct_monotone(
+    *,
+    p_home_1up: float,
+    p_away_1up: float,
+    p_home_2up: float,
+    p_away_2up: float,
+) -> dict[str, float]:
+    out = {
+        "h_1up": float(np.clip(float(p_home_1up), 0.001, 0.999)),
+        "a_1up": float(np.clip(float(p_away_1up), 0.001, 0.999)),
+        "h_2up": float(np.clip(float(p_home_2up), 0.001, 0.999)),
+        "a_2up": float(np.clip(float(p_away_2up), 0.001, 0.999)),
+    }
+    out["h_2up"] = min(out["h_2up"], out["h_1up"])
+    out["a_2up"] = min(out["a_2up"], out["a_1up"])
     _validate_anytime_probs(out)
     return out
