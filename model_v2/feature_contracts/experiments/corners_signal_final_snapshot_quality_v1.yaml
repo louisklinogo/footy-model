@@ -1,6 +1,6 @@
-version: 2
+version: 1
 family: corners
-description: Feature contract for corners totals and team-corners distributions with expanded non-odds signal anchors.
+description: Final bounded corners feature-engineering experiment using snapshot-quality and game-state proxies from team premium snapshots.
 
 required_features:
   - league_total_corners_mean
@@ -44,6 +44,20 @@ required_features:
   - home_rolling_possession_against
   - away_rolling_possession
   - away_rolling_possession_against
+  - home_rolling_lead_rate_1up
+  - away_rolling_lead_rate_1up
+  - home_rolling_lead_rate_2up
+  - away_rolling_lead_rate_2up
+  - lead_rate_1up_diff
+  - lead_rate_2up_diff
+  - home_rolling_rest_days
+  - away_rolling_rest_days
+  - rest_days_sum
+  - rest_days_diff
+  - home_fidelity_score
+  - away_fidelity_score
+  - fidelity_score_sum
+  - fidelity_score_diff
 
 optional_features:
   - odds_c75_over
@@ -72,6 +86,14 @@ missingness_indicators:
   - away_season_baseline_xg_is_missing
   - home_recent_xg_mean_5_is_missing
   - away_recent_xg_mean_5_is_missing
+  - home_rolling_rest_days_is_missing
+  - away_rolling_rest_days_is_missing
+  - home_fidelity_score_is_missing
+  - away_fidelity_score_is_missing
+  - home_rolling_lead_rate_1up_is_missing
+  - away_rolling_lead_rate_1up_is_missing
+  - home_rolling_lead_rate_2up_is_missing
+  - away_rolling_lead_rate_2up_is_missing
 
 forbidden_cross_family_features:
   - odds_over_15
@@ -105,6 +127,4 @@ disabled_features:
   - odds_c85_over_is_missing
   - odds_c95_over_is_missing
   - odds_c105_over_is_missing
-  - home_rolling_crosses
-  - away_rolling_crosses
   - corners_net_diff

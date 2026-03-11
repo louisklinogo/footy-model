@@ -326,6 +326,10 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         tph.rolling_corners_against AS home_rolling_corners_against,
         tph.rolling_goals_prevented AS home_rolling_goals_prevented,
         tph.rolling_goals_prevented_against AS home_rolling_goals_prevented_against,
+        tph.rolling_errors_lead_to_shot AS home_rolling_errors_lead_to_shot,
+        tph.rolling_errors_lead_to_shot_against AS home_rolling_errors_lead_to_shot_against,
+        tph.rolling_tackles_pct AS home_rolling_tackles_pct,
+        tph.rolling_tackles_pct_against AS home_rolling_tackles_pct_against,
         -- New Home Phase 2
         tph.rolling_xg_p1 AS home_rolling_xg_p1,
         tph.rolling_xg_p1_against AS home_rolling_xg_p1_against,
@@ -357,6 +361,10 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         tpa.rolling_corners_against AS away_rolling_corners_against,
         tpa.rolling_goals_prevented AS away_rolling_goals_prevented,
         tpa.rolling_goals_prevented_against AS away_rolling_goals_prevented_against,
+        tpa.rolling_errors_lead_to_shot AS away_rolling_errors_lead_to_shot,
+        tpa.rolling_errors_lead_to_shot_against AS away_rolling_errors_lead_to_shot_against,
+        tpa.rolling_tackles_pct AS away_rolling_tackles_pct,
+        tpa.rolling_tackles_pct_against AS away_rolling_tackles_pct_against,
         -- New Away Phase 2
         tpa.rolling_xg_p1 AS away_rolling_xg_p1,
         tpa.rolling_xg_p1_against AS away_rolling_xg_p1_against,
@@ -368,14 +376,18 @@ def fetch_dataset(prediction_lead_hours: int | None = None) -> pd.DataFrame:
         tpa.rolling_sot_h2_delta_against AS away_rolling_sot_h2_delta_against,
         tpa.rolling_possession AS away_rolling_possession,
         tpa.rolling_possession_against AS away_rolling_possession_against,
+        tph.rolling_rest_days AS home_rolling_rest_days,
         tph.rolling_lead_rate_1up AS home_rolling_lead_rate_1up,
         tph.rolling_lead_rate_1up_against AS home_rolling_lead_rate_1up_against,
         tph.rolling_lead_rate_2up AS home_rolling_lead_rate_2up,
         tph.rolling_lead_rate_2up_against AS home_rolling_lead_rate_2up_against,
+        tph.fidelity_score AS home_fidelity_score,
         tpa.rolling_lead_rate_1up AS away_rolling_lead_rate_1up,
         tpa.rolling_lead_rate_1up_against AS away_rolling_lead_rate_1up_against,
         tpa.rolling_lead_rate_2up AS away_rolling_lead_rate_2up,
         tpa.rolling_lead_rate_2up_against AS away_rolling_lead_rate_2up_against,
+        tpa.rolling_rest_days AS away_rolling_rest_days,
+        tpa.fidelity_score AS away_fidelity_score,
 
         ff.home_formation,
         ff.away_formation,
@@ -758,6 +770,16 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
         out["home_rolling_corners"] - out["away_rolling_corners_against"]
     )
     out["sample_size_diff"] = out["home_sample_size"] - out["away_sample_size"]
+    out["lead_rate_1up_diff"] = (
+        out["home_rolling_lead_rate_1up"] - out["away_rolling_lead_rate_1up"]
+    )
+    out["lead_rate_2up_diff"] = (
+        out["home_rolling_lead_rate_2up"] - out["away_rolling_lead_rate_2up"]
+    )
+    out["rest_days_sum"] = out["home_rolling_rest_days"] + out["away_rolling_rest_days"]
+    out["rest_days_diff"] = out["home_rolling_rest_days"] - out["away_rolling_rest_days"]
+    out["fidelity_score_sum"] = out["home_fidelity_score"] + out["away_fidelity_score"]
+    out["fidelity_score_diff"] = out["home_fidelity_score"] - out["away_fidelity_score"]
 
     # Goal difference feature for 1X2/AH markets
     out["goal_diff_proxy"] = out["home_rolling_xg"] - out["away_rolling_xg"]
@@ -833,6 +855,21 @@ def add_targets_and_derived(df: pd.DataFrame) -> pd.DataFrame:
     out["style_delta"] = out["home_style_score"] - out["away_style_score"]
 
     out = _add_xg_anchor_features(out)
+    for feature in (
+        "home_rolling_errors_lead_to_shot",
+        "away_rolling_errors_lead_to_shot",
+        "home_rolling_tackles_pct",
+        "away_rolling_tackles_pct",
+        "home_rolling_rest_days",
+        "away_rolling_rest_days",
+        "home_fidelity_score",
+        "away_fidelity_score",
+        "home_rolling_lead_rate_1up",
+        "away_rolling_lead_rate_1up",
+        "home_rolling_lead_rate_2up",
+        "away_rolling_lead_rate_2up",
+    ):
+        out[f"{feature}_is_missing"] = out[feature].isna().astype(float)
 
     return out
 

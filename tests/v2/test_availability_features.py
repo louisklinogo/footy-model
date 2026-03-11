@@ -65,6 +65,10 @@ def test_fetch_dataset_includes_availability_cutoff(monkeypatch: pytest.MonkeyPa
     query = captured["query"]
     assert isinstance(query, str)
     assert "home_availability_known" in query
+    assert "home_rolling_errors_lead_to_shot" in query
+    assert "away_rolling_tackles_pct" in query
+    assert "home_rolling_rest_days" in query
+    assert "away_fidelity_score" in query
     assert "player_availability pa" in query
     assert "pa.event_recorded_at <= (f.match_datetime_utc - INTERVAL '6 hours')" in query
     assert captured["closed"] is True
@@ -96,6 +100,10 @@ def test_fetch_candidate_fixtures_includes_availability_features(monkeypatch: py
     assert isinstance(query, str)
     assert "f.home_team_id" in query
     assert "home_lineup_known" in query
+    assert "home_rolling_errors_lead_to_shot" in query
+    assert "away_rolling_tackles_pct" in query
+    assert "home_rolling_rest_days" in query
+    assert "away_fidelity_score" in query
     assert "pa.event_recorded_at <= f.match_datetime_utc" in query
     assert captured["params"] == (3, "EPL", 10)
     assert captured["closed"] is True

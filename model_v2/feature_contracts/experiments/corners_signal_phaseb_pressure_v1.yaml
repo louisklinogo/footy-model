@@ -1,6 +1,6 @@
-version: 2
+version: 1
 family: corners
-description: Feature contract for corners totals and team-corners distributions with expanded non-odds signal anchors.
+description: Experimental Phase B corners contract adding defensive-pressure signals from team premium snapshots on top of the current signal-expanded corners base.
 
 required_features:
   - league_total_corners_mean
@@ -44,6 +44,14 @@ required_features:
   - home_rolling_possession_against
   - away_rolling_possession
   - away_rolling_possession_against
+  - home_rolling_errors_lead_to_shot
+  - home_rolling_errors_lead_to_shot_against
+  - away_rolling_errors_lead_to_shot
+  - away_rolling_errors_lead_to_shot_against
+  - home_rolling_tackles_pct
+  - home_rolling_tackles_pct_against
+  - away_rolling_tackles_pct
+  - away_rolling_tackles_pct_against
 
 optional_features:
   - odds_c75_over
@@ -72,6 +80,10 @@ missingness_indicators:
   - away_season_baseline_xg_is_missing
   - home_recent_xg_mean_5_is_missing
   - away_recent_xg_mean_5_is_missing
+  - home_rolling_errors_lead_to_shot_is_missing
+  - away_rolling_errors_lead_to_shot_is_missing
+  - home_rolling_tackles_pct_is_missing
+  - away_rolling_tackles_pct_is_missing
 
 forbidden_cross_family_features:
   - odds_over_15
@@ -105,6 +117,4 @@ disabled_features:
   - odds_c85_over_is_missing
   - odds_c95_over_is_missing
   - odds_c105_over_is_missing
-  - home_rolling_crosses
-  - away_rolling_crosses
   - corners_net_diff
