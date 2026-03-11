@@ -67,3 +67,12 @@ Thumbs.db
 .pytest_tmp*/
 artifacts/pytest_tmp/
 artifacts/tmp/
+
+# Local runtime outputs
+artifacts/locks/
+artifacts/logs/*.log
+artifacts/logs/*.stdout.log
+artifacts/reports/backbone_health/backbone_health_*.json
+artifacts/reports/odds_coverage/
+artifacts/reports/risk_edge_buckets/
+artifacts/v2/predictions/
