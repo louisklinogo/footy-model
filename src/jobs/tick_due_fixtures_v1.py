@@ -49,6 +49,10 @@ class Options:
     skip_predict: bool
     skip_score: bool
     log_file: str | None
+    predict_runtime: str
+    hybrid_model_name: str
+    hybrid_model_version: str
+    hybrid_export_out: str | None
     dry_run: bool
 
 
@@ -79,6 +83,10 @@ def parse_args() -> Options:
     _ = parser.add_argument("--skip-predict", action="store_true")
     _ = parser.add_argument("--skip-score", action="store_true")
     _ = parser.add_argument("--log-file", default=None)
+    _ = parser.add_argument("--predict-runtime", choices=["legacy", "hybrid_v2"], default="legacy")
+    _ = parser.add_argument("--hybrid-model-name", default="market_outcome_v2")
+    _ = parser.add_argument("--hybrid-model-version", default="hybrid_v1")
+    _ = parser.add_argument("--hybrid-export-out", default="storage/reports/market_predictions_hybrid_v1.csv")
     _ = parser.add_argument("--dry-run", action="store_true")
     ns = parser.parse_args()
     return Options(
@@ -93,6 +101,10 @@ def parse_args() -> Options:
         skip_predict=bool(ns.skip_predict),
         skip_score=bool(ns.skip_score),
         log_file=ns.log_file if isinstance(ns.log_file, str) else None,
+        predict_runtime=str(ns.predict_runtime),
+        hybrid_model_name=str(ns.hybrid_model_name),
+        hybrid_model_version=str(ns.hybrid_model_version),
+        hybrid_export_out=ns.hybrid_export_out if isinstance(ns.hybrid_export_out, str) else None,
         dry_run=bool(ns.dry_run),
     )
 
@@ -526,9 +538,12 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], True)
-                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
-                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], True)
-                run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
+                if options.predict_runtime == "hybrid_v2":
+                    run_command(build_hybrid_predict_command(options, league), True)
+                else:
+                    run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
+                    run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], True)
+                    run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], True)
             _finish_run(run_id, "success", "predict dry-run complete", details, options.dry_run)
             return
 
@@ -552,14 +567,38 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], False)
-            run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
-            run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], False)
-            run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
+            if options.predict_runtime == "hybrid_v2":
+                run_command(build_hybrid_predict_command(options, league), False)
+            else:
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "assess_prediction_risk.py"), "--league", league, "--days", str(options.predict_days)], False)
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "export" / "export_market_outcomes_fixtures_first.py"), "--league", league, "--days", str(options.predict_days)], False)
 
         _finish_run(run_id, "success", f"predict complete targets={len(targets)} active_leagues={len(active_leagues)}", details, options.dry_run)
     except Exception as exc:
         _finish_run(run_id, "fail", f"predict failed: {exc}", details, options.dry_run)
         raise
+
+
+def build_hybrid_predict_command(options: Options, league: str) -> list[str]:
+    command = [
+        sys.executable,
+        str(ROOT / "src" / "modeling" / "v2" / "run_hybrid_prediction_flow.py"),
+        "--league",
+        league,
+        "--days",
+        str(options.predict_days),
+        "--model-name",
+        options.hybrid_model_name,
+        "--model-version",
+        options.hybrid_model_version,
+        "--run-risk",
+    ]
+    if options.hybrid_export_out:
+        command.extend(["--export-out", options.hybrid_export_out])
+    if options.dry_run:
+        command.append("--dry-run")
+    return command
 
 
 def select_score_targets(league: str, since_days: int, max_score: int) -> list[int]:
