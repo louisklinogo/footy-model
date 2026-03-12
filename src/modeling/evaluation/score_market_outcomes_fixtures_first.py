@@ -21,6 +21,12 @@ if str(ROOT_DIR) not in sys.path:
 from src.betting.settlement import settle_market
 from src.betting.odds_resolver import OddsResolution, resolve_odds_for_market
 from src.db.db_utils import connect_db
+from src.modeling.v2.families.scoreline.derive_markets import (
+    MULTIGOALS_AWAY_RANGES,
+    MULTIGOALS_HOME_RANGES,
+    MULTIGOALS_TOTAL_RANGES,
+    MULTISCORE_GROUPS,
+)
 
 
 MODEL_NAME = "market_outcome_gbm"
@@ -69,6 +75,27 @@ CANONICAL_HANDICAP_MARKETS = (
     "eh3_1_0_draw",
     "eh3_1_0_away",
 )
+SCORELINE_MULTIGOALS_TOTAL_MARKETS = tuple(MULTIGOALS_TOTAL_RANGES.keys())
+SCORELINE_MULTIGOALS_HOME_MARKETS = tuple(MULTIGOALS_HOME_RANGES.keys())
+SCORELINE_MULTIGOALS_AWAY_MARKETS = tuple(MULTIGOALS_AWAY_RANGES.keys())
+SCORELINE_MULTISCORE_MARKETS = (
+    *tuple(MULTISCORE_GROUPS.keys()),
+    "ms_draw",
+    "ms_other_homewin",
+    "ms_other_awaywin",
+)
+_MULTISCORE_HOME_GROUP_SCORES = {
+    score
+    for scores in MULTISCORE_GROUPS.values()
+    for score in scores
+    if score[0] > score[1]
+}
+_MULTISCORE_AWAY_GROUP_SCORES = {
+    score
+    for scores in MULTISCORE_GROUPS.values()
+    for score in scores
+    if score[0] < score[1]
+}
 MARKETS = (
     # Goals
     "o15",
@@ -99,6 +126,11 @@ MARKETS = (
     # Team Totals
     "ho15",
     "ao15",
+    # Scoreline multigoals / multiscore
+    *SCORELINE_MULTIGOALS_TOTAL_MARKETS,
+    *SCORELINE_MULTIGOALS_HOME_MARKETS,
+    *SCORELINE_MULTIGOALS_AWAY_MARKETS,
+    *SCORELINE_MULTISCORE_MARKETS,
     # Legacy Handicap Markets
     *LEGACY_HANDICAP_MARKETS,
     # Canonical Handicap Markets
@@ -417,6 +449,25 @@ def compute_actual(row: dict[str, object]) -> float | None:
     if market == "ao15":
         return 1.0 if a >= 2 else 0.0
 
+    # === SCORELINE MULTIGOALS / MULTISCORE ===
+    if market in MULTIGOALS_TOTAL_RANGES:
+        low, high = MULTIGOALS_TOTAL_RANGES[market]
+        return 1.0 if _is_in_range(total_goals, low=low, high=high) else 0.0
+    if market in MULTIGOALS_HOME_RANGES:
+        low, high = MULTIGOALS_HOME_RANGES[market]
+        return 1.0 if _is_in_range(h, low=low, high=high) else 0.0
+    if market in MULTIGOALS_AWAY_RANGES:
+        low, high = MULTIGOALS_AWAY_RANGES[market]
+        return 1.0 if _is_in_range(a, low=low, high=high) else 0.0
+    if market in MULTISCORE_GROUPS:
+        return 1.0 if (h, a) in MULTISCORE_GROUPS[market] else 0.0
+    if market == "ms_draw":
+        return 1.0 if h == a else 0.0
+    if market == "ms_other_homewin":
+        return 1.0 if h > a and (h, a) not in _MULTISCORE_HOME_GROUP_SCORES else 0.0
+    if market == "ms_other_awaywin":
+        return 1.0 if h < a and (h, a) not in _MULTISCORE_AWAY_GROUP_SCORES else 0.0
+
     # === HANDICAP MARKETS ===
     if _is_handicap_market_code(market):
         try:
@@ -486,6 +537,12 @@ def is_push_outcome(row: dict[str, object]) -> bool:
     except ValueError:
         return False
     return result.outcome == "push"
+
+
+def _is_in_range(value: int, *, low: int, high: int | None) -> bool:
+    if high is None:
+        return value >= low
+    return low <= value <= high
 
 
 def _isoformat_or_none(value: object) -> str | None:

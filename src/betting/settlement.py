@@ -7,6 +7,13 @@ from decimal import Decimal
 from decimal import ROUND_HALF_UP
 from decimal import getcontext
 
+from src.modeling.v2.families.scoreline.derive_markets import (
+    MULTIGOALS_AWAY_RANGES,
+    MULTIGOALS_HOME_RANGES,
+    MULTIGOALS_TOTAL_RANGES,
+    MULTISCORE_GROUPS,
+)
+
 
 getcontext().prec = 12
 
@@ -19,6 +26,20 @@ class SettlementResult:
     actual: float | None
     return_factor: float
     outcome: str
+
+
+_MULTISCORE_HOME_GROUP_SCORES = {
+    score
+    for scores in MULTISCORE_GROUPS.values()
+    for score in scores
+    if score[0] > score[1]
+}
+_MULTISCORE_AWAY_GROUP_SCORES = {
+    score
+    for scores in MULTISCORE_GROUPS.values()
+    for score in scores
+    if score[0] < score[1]
+}
 
 
 def settle_asian_handicap(
@@ -144,6 +165,59 @@ def settle_market(
             market_code, goals_markets[market_code](home_goals, away_goals), odds
         )
 
+    if market_code in MULTIGOALS_TOTAL_RANGES:
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        total_goals = int(home_goals) + int(away_goals)
+        low, high = MULTIGOALS_TOTAL_RANGES[market_code]
+        return _binary(market_code, _is_in_range(total_goals, low=low, high=high), odds)
+
+    if market_code in MULTIGOALS_HOME_RANGES:
+        if home_goals is None:
+            return _void(market_code)
+        low, high = MULTIGOALS_HOME_RANGES[market_code]
+        return _binary(market_code, _is_in_range(int(home_goals), low=low, high=high), odds)
+
+    if market_code in MULTIGOALS_AWAY_RANGES:
+        if away_goals is None:
+            return _void(market_code)
+        low, high = MULTIGOALS_AWAY_RANGES[market_code]
+        return _binary(market_code, _is_in_range(int(away_goals), low=low, high=high), odds)
+
+    if market_code in MULTISCORE_GROUPS:
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(
+            market_code,
+            (int(home_goals), int(away_goals)) in MULTISCORE_GROUPS[market_code],
+            odds,
+        )
+
+    if market_code == "ms_draw":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, int(home_goals) == int(away_goals), odds)
+
+    if market_code == "ms_other_homewin":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        score = (int(home_goals), int(away_goals))
+        return _binary(
+            market_code,
+            int(home_goals) > int(away_goals) and score not in _MULTISCORE_HOME_GROUP_SCORES,
+            odds,
+        )
+
+    if market_code == "ms_other_awaywin":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        score = (int(home_goals), int(away_goals))
+        return _binary(
+            market_code,
+            int(home_goals) < int(away_goals) and score not in _MULTISCORE_AWAY_GROUP_SCORES,
+            odds,
+        )
+
     corners_thresholds = {
         "c75": 8,
         "c85": 9,
@@ -223,14 +297,58 @@ def supported_market_codes() -> tuple[str, ...]:
         "eh_h1",
         "h_1up",
         "h_2up",
+        "amg_0",
+        "amg_1_2",
+        "amg_1_3",
+        "amg_2_3",
+        "amg_4p",
         "hc25",
         "hc35",
         "hc45",
         "hc55",
+        "hmg_0",
+        "hmg_1_2",
+        "hmg_1_3",
+        "hmg_2_3",
+        "hmg_4p",
         "ho15",
+        "mg_0",
+        "mg_1_2",
+        "mg_1_3",
+        "mg_1_4",
+        "mg_1_5",
+        "mg_1_6",
+        "mg_2_3",
+        "mg_2_4",
+        "mg_2_5",
+        "mg_2_6",
+        "mg_3_4",
+        "mg_3_5",
+        "mg_3_6",
+        "mg_4_5",
+        "mg_4_6",
+        "mg_5_6",
+        "mg_7p",
+        "ms_a_0_1_0_2_0_3",
+        "ms_a_0_4_0_5_0_6",
+        "ms_a_2_3_2_4_1_5",
+        "ms_draw",
+        "ms_h_1_0_2_0_3_0",
+        "ms_h_1_2_1_3_1_4",
+        "ms_h_2_1_3_1_4_1",
+        "ms_h_3_2_4_2_5_1",
+        "ms_h_4_0_5_0_6_0",
+        "ms_other_awaywin",
+        "ms_other_homewin",
         "o15",
         "u35",
     )
+
+
+def _is_in_range(value: int, *, low: int, high: int | None) -> bool:
+    if high is None:
+        return value >= low
+    return low <= value <= high
 
 
 def _void(market_code: str) -> SettlementResult:
