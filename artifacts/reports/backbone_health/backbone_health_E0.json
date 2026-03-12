@@ -11,9 +11,9 @@
     "layer2_model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model"
   },
   "summary": {
-    "fixtures_total": 6,
-    "l1_pair_count": 6,
-    "adj_pair_count": 6,
+    "fixtures_total": 9,
+    "l1_pair_count": 9,
+    "adj_pair_count": 9,
     "l1_late_count": 0,
     "l1_unknown_asof_count": 0,
     "adj_late_count": 0,

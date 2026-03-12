@@ -1,0 +1,14 @@
+{
+  "path_version": "totals_first_market_heads",
+  "model_type_selected": "poisson_glm",
+  "direct_team_markets": [
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55"
+  ]
+}

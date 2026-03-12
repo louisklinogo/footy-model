@@ -91,6 +91,13 @@ Reference command shape for re-evaluating the current bundled challenger without
 
 The `--corners-dir model_artifacts/v2/corners` selector currently resolves to `model_artifacts/v2/live_verification_corners_20260306/` in the emitted bundle artifacts.
 
+Current corners research leader for future challenger work:
+
+- `model_artifacts/v2/corners_totals_first_style_matchup_possession_box_touches_corners_against_featurepass_autoresearch_v1_candidate_20260312/`
+- evaluation: `model_artifacts/v2/evaluation_corners_totals_first_style_matchup_possession_box_touches_corners_against_featurepass_autoresearch_v1_candidate_20260312/`
+
+This is the current best non-promoted corners branch (`67 / 76` scoped markets passed). Use it explicitly via `--corners-dir` for further challenger experiments, but keep the official repo-backed bundle reference on `live_verification_corners_20260306/` until promotion actually passes.
+
 For prediction-time isolation, challengers should also carry a distinct `model_version` inside their artifact directory. Example training shape:
 
 - `python src/modeling/v2/families/scoreline/train_scoreline.py --output-dir model_artifacts/v2/scoreline_dc_candidate_v1 --model-version scoreline_dc_candidate_v1`

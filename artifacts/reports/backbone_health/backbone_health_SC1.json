@@ -8,12 +8,12 @@
     "max_l1_unknown_asof": 0,
     "enforce_adj_enabled_league": true,
     "min_adj_enabled_coverage": 0.95,
-    "layer2_model_dir": "/mnt/c/Developer/soccer/footy-model/model_artifacts/situational_model"
+    "layer2_model_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\situational_model"
   },
   "summary": {
-    "fixtures_total": 4,
-    "l1_pair_count": 4,
-    "adj_pair_count": 4,
+    "fixtures_total": 5,
+    "l1_pair_count": 5,
+    "adj_pair_count": 5,
     "l1_late_count": 0,
     "l1_unknown_asof_count": 0,
     "adj_late_count": 0,

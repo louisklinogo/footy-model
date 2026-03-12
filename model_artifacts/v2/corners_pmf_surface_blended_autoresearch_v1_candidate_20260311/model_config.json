@@ -1,0 +1,49 @@
+{
+  "path_version": "pmf_surface_blended",
+  "model_type_selected": "poisson_glm",
+  "direct_total_markets": [
+    "c75",
+    "c85",
+    "c95",
+    "c105"
+  ],
+  "direct_team_markets": [
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55"
+  ],
+  "pmf_max_count": 12,
+  "home_share_prior_blend": 1.0,
+  "pmf_market_blend": {
+    "c75": 1.0,
+    "c85": 1.0,
+    "c95": 1.0,
+    "c105": 0.75,
+    "hc25": 0.75,
+    "hc35": 0.75,
+    "hc45": 0.75,
+    "hc55": 0.75,
+    "ac25": 0.75,
+    "ac35": 0.75,
+    "ac45": 0.75,
+    "ac55": 0.75
+  },
+  "total_market_head_blend": {},
+  "team_market_head_blend": {},
+  "league_regime_features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_home_share_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count"
+  ]
+}

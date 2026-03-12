@@ -1,0 +1,10 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_signal_phaseb_pressure_v1_candidate_20260310",
+  "artifact_dir": "model_artifacts\\v2\\corners_signal_phaseb_pressure_v1_candidate_20260310",
+  "trained_at_utc": "2026-03-10T07:58:40.549515+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "artifacts\\v2\\datasets\\phaseb_20260310\\pit_dataset_20260310T075555Z.csv",
+  "path_version": "totals_first"
+}

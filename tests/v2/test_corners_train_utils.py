@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 import tempfile
@@ -8,12 +9,16 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from src.modeling.v2.families.corners import features as corners_features
 from src.modeling.v2.families.corners.features import (
+    AXIS_INTERACTION_FEATURES,
+    STYLE_MATCHUP_FEATURES,
+    STYLE_MATCHUP_INTERACTION_FEATURES,
     add_corners_context_features,
     apply_league_regime,
     fit_league_regime,
 )
-from src.modeling.v2.families.corners import train_corners
+from src.modeling.v2.families.corners import predict_corners, train_corners
 from src.modeling.v2.families.corners.train_corners import (
     _derive_corner_frame,
     _fit_corner_models,
@@ -238,6 +243,460 @@ def test_totals_first_residual_corner_models_preserve_total_and_emit_valid_marke
     assert (derived["c75"] >= derived["c85"]).all()
     assert (derived["c85"] >= derived["c95"]).all()
     assert (derived["hc25"] >= derived["hc35"]).all()
+
+
+def test_totals_first_neural_share_residual_preserves_total_and_adjusts_share(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _ConstantRegressor:
+        def __init__(self, value: float) -> None:
+            self.value = float(value)
+
+        def predict(self, x: pd.DataFrame) -> np.ndarray:
+            return np.full(len(x), self.value, dtype=float)
+
+    frame = pd.DataFrame(
+        [
+            {"home_rolling_corners": 5.0, "away_rolling_corners": 4.0},
+            {"home_rolling_corners": 6.0, "away_rolling_corners": 3.5},
+        ]
+    )
+    monkeypatch.setattr(
+        train_corners,
+        "predict_neural_share_residual_delta",
+        lambda bundle, x, base_total_mu, base_home_share: np.array([0.1, -0.05], dtype=float),
+    )
+    preds = _predict_corner_rates(
+        models={
+            "total": _ConstantRegressor(10.0),
+            "home_share": _ConstantRegressor(0.5),
+            "neural_share_residual": {"delta_bound": 0.2},
+        },
+        x=frame,
+        path_version="totals_first_neural_share_residual",
+    )
+
+    assert np.allclose(preds["total"], np.array([10.0, 10.0]))
+    assert np.allclose(preds["home"] + preds["away"], preds["total"])
+    assert np.allclose(preds["base_home"], np.array([5.0, 5.0]))
+    assert np.allclose(preds["home_share_residual_delta"], np.array([0.1, -0.05]))
+    assert np.allclose(preds["home_share"], np.array([0.6, 0.45]))
+
+
+def test_totals_first_neural_total_share_residual_preserves_total_and_adjusts_both_axes(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _ConstantRegressor:
+        def __init__(self, value: float) -> None:
+            self.value = float(value)
+
+        def predict(self, x: pd.DataFrame) -> np.ndarray:
+            return np.full(len(x), self.value, dtype=float)
+
+    frame = pd.DataFrame(
+        [
+            {"home_rolling_corners": 5.0, "away_rolling_corners": 4.0},
+            {"home_rolling_corners": 6.0, "away_rolling_corners": 3.5},
+        ]
+    )
+    monkeypatch.setattr(
+        train_corners,
+        "predict_neural_total_residual_delta",
+        lambda bundle, x, base_total_mu, base_home_share: np.array([1.5, -1.0], dtype=float),
+    )
+    monkeypatch.setattr(
+        train_corners,
+        "predict_neural_share_residual_delta",
+        lambda bundle, x, base_total_mu, base_home_share: np.array([0.1, -0.05], dtype=float),
+    )
+    preds = _predict_corner_rates(
+        models={
+            "total": _ConstantRegressor(10.0),
+            "home_share": _ConstantRegressor(0.5),
+            "neural_total_residual": {"delta_bound": 3.0},
+            "neural_share_residual": {"delta_bound": 0.2},
+        },
+        x=frame,
+        path_version="totals_first_neural_total_share_residual",
+    )
+
+    assert np.allclose(preds["base_total"], np.array([10.0, 10.0]))
+    assert np.allclose(preds["total_residual_delta"], np.array([1.5, -1.0]))
+    assert np.allclose(preds["total"], np.array([11.5, 9.0]))
+    assert np.allclose(preds["home"] + preds["away"], preds["total"])
+    assert np.allclose(preds["home_share_residual_delta"], np.array([0.1, -0.05]))
+    assert np.allclose(preds["base_home"], np.array([5.75, 4.5]))
+    assert np.allclose(preds["home_share"], np.array([0.6, 0.45]))
+
+
+def test_main_writes_neural_share_residual_artifacts_and_model_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="corners_neural_artifacts_") as td:
+        root = Path(td)
+        output_dir = root / "artifacts"
+        dataset_path = root / "pit_dataset.csv"
+        contract_path = root / "corners_contract.yaml"
+        scope_path = root / "scope.yaml"
+        pd.DataFrame(
+            [
+                {
+                    "fixture_id": idx + 1,
+                    "match_datetime_utc": f"2026-03-{(idx % 28) + 1:02d}T12:00:00Z",
+                    "prediction_time_utc": f"2026-03-{(idx % 28) + 1:02d}T06:00:00Z",
+                    "home_rolling_corners": 5.0 + (idx % 3),
+                    "away_rolling_corners": 4.0 + (idx % 2),
+                    "home_corners": 5.0 + (idx % 3),
+                    "away_corners": 4.0 + (idx % 2),
+                    "total_corners": 9.0 + (idx % 3) + (idx % 2),
+                }
+                for idx in range(16)
+            ]
+        ).to_csv(dataset_path, index=False)
+        contract_path.write_text(
+            "\n".join(
+                [
+                    "family: corners",
+                    "required_features:",
+                    "  - home_rolling_corners",
+                    "  - away_rolling_corners",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        scope_path.write_text("version: 1\nmarkets: []\n", encoding="utf-8")
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "passed"}),
+            encoding="utf-8",
+        )
+
+        monkeypatch.setattr(
+            train_corners,
+            "parse_args",
+            lambda: argparse.Namespace(
+                dataset_path=dataset_path,
+                output_dir=output_dir,
+                contract=contract_path,
+                scope=scope_path,
+                model_version="test_neural_share_residual_v1",
+                model_type="poisson_glm",
+                path_version="totals_first_neural_share_residual",
+                max_rows=None,
+                folds=3,
+                min_fold_test_n=1,
+            ),
+        )
+        monkeypatch.setattr(train_corners, "add_corners_context_features", lambda df: df.copy())
+        monkeypatch.setattr(train_corners, "fit_league_regime", lambda df: {})
+        monkeypatch.setattr(train_corners, "apply_league_regime", lambda df, regime: df.copy())
+        monkeypatch.setattr(
+            train_corners,
+            "_evaluate_walkforward",
+            lambda **kwargs: ([], {}, []),
+        )
+        monkeypatch.setattr(
+            train_corners.legacy_calibrator,
+            "split_time_respecting",
+            lambda df: (df.iloc[:10].reset_index(drop=True), df.iloc[10:].reset_index(drop=True)),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "fit_neural_share_residual_bundle",
+            lambda *args, **kwargs: {
+                "delta_bound": 0.2,
+                "dropout": 0.05,
+                "hidden_dims": [32, 16],
+                "artifact_format": "torch_bundle_v1",
+                "target_kind": "home_share_residual",
+            },
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "save_neural_share_residual_bundle",
+            lambda bundle, path: path.write_text(json.dumps(bundle), encoding="utf-8"),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "predict_neural_share_residual_delta",
+            lambda bundle, x, base_total_mu, base_home_share: np.zeros(len(x), dtype=float),
+        )
+        monkeypatch.setattr(
+            predict_corners,
+            "load_neural_share_residual_bundle",
+            lambda path: json.loads(path.read_text(encoding="utf-8")),
+        )
+
+        train_corners.main()
+
+        model_config = json.loads((output_dir / "model_config.json").read_text(encoding="utf-8"))
+        assert model_config["path_version"] == "totals_first_neural_share_residual"
+        assert model_config["neural_residual_sidecar"] == "neural_share_residual_bundle.pt"
+        assert model_config["neural_residual_kind"] == "home_share_residual"
+        assert (output_dir / "neural_share_residual_bundle.pt").exists()
+        assert (output_dir / "holdout_predictions.csv").exists()
+
+        models, features, medians, dispersion, path_version, league_regime = predict_corners.load_artifacts(output_dir)
+
+        assert path_version == "totals_first_neural_share_residual"
+        assert "neural_share_residual" in models
+        assert features == ["home_rolling_corners", "away_rolling_corners"]
+        assert set(medians) == {"home_rolling_corners", "away_rolling_corners"}
+        assert set(dispersion) == {"total_r", "home_r", "away_r"}
+        assert league_regime == {}
+
+
+def test_main_writes_neural_total_share_residual_artifacts_and_model_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    with tempfile.TemporaryDirectory(prefix="corners_neural_total_share_artifacts_") as td:
+        root = Path(td)
+        output_dir = root / "artifacts"
+        dataset_path = root / "pit_dataset.csv"
+        contract_path = root / "corners_contract.yaml"
+        scope_path = root / "scope.yaml"
+        pd.DataFrame(
+            [
+                {
+                    "fixture_id": idx + 1,
+                    "match_datetime_utc": f"2026-03-{(idx % 28) + 1:02d}T12:00:00Z",
+                    "prediction_time_utc": f"2026-03-{(idx % 28) + 1:02d}T06:00:00Z",
+                    "home_rolling_corners": 5.0 + (idx % 3),
+                    "away_rolling_corners": 4.0 + (idx % 2),
+                    "home_corners": 5.0 + (idx % 3),
+                    "away_corners": 4.0 + (idx % 2),
+                    "total_corners": 9.0 + (idx % 3) + (idx % 2),
+                }
+                for idx in range(16)
+            ]
+        ).to_csv(dataset_path, index=False)
+        contract_path.write_text(
+            "\n".join(
+                [
+                    "family: corners",
+                    "required_features:",
+                    "  - home_rolling_corners",
+                    "  - away_rolling_corners",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        scope_path.write_text("version: 1\nmarkets: []\n", encoding="utf-8")
+        (root / "pit_validation_report.json").write_text(
+            json.dumps({"status": "passed"}),
+            encoding="utf-8",
+        )
+
+        monkeypatch.setattr(
+            train_corners,
+            "parse_args",
+            lambda: argparse.Namespace(
+                dataset_path=dataset_path,
+                output_dir=output_dir,
+                contract=contract_path,
+                scope=scope_path,
+                model_version="test_neural_total_share_residual_v1",
+                model_type="poisson_glm",
+                path_version="totals_first_neural_total_share_residual",
+                max_rows=None,
+                folds=3,
+                min_fold_test_n=1,
+            ),
+        )
+        monkeypatch.setattr(train_corners, "add_corners_context_features", lambda df: df.copy())
+        monkeypatch.setattr(train_corners, "fit_league_regime", lambda df: {})
+        monkeypatch.setattr(train_corners, "apply_league_regime", lambda df, regime: df.copy())
+        monkeypatch.setattr(train_corners, "_evaluate_walkforward", lambda **kwargs: ([], {}, []))
+        monkeypatch.setattr(
+            train_corners.legacy_calibrator,
+            "split_time_respecting",
+            lambda df: (df.iloc[:10].reset_index(drop=True), df.iloc[10:].reset_index(drop=True)),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "fit_neural_total_residual_bundle",
+            lambda *args, **kwargs: {
+                "delta_bound": 3.0,
+                "dropout": 0.05,
+                "hidden_dims": [32, 16],
+                "artifact_format": "torch_bundle_v1",
+                "target_kind": "total_corners_residual",
+            },
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "fit_neural_share_residual_bundle",
+            lambda *args, **kwargs: {
+                "delta_bound": 0.2,
+                "dropout": 0.05,
+                "hidden_dims": [32, 16],
+                "artifact_format": "torch_bundle_v1",
+                "target_kind": "home_share_residual",
+            },
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "predict_neural_total_residual_delta",
+            lambda bundle, x, base_total_mu, base_home_share: np.zeros(len(x), dtype=float),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "predict_neural_share_residual_delta",
+            lambda bundle, x, base_total_mu, base_home_share: np.zeros(len(x), dtype=float),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "save_neural_total_residual_bundle",
+            lambda bundle, path: path.write_text(json.dumps(bundle), encoding="utf-8"),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "save_neural_share_residual_bundle",
+            lambda bundle, path: path.write_text(json.dumps(bundle), encoding="utf-8"),
+        )
+        monkeypatch.setattr(
+            predict_corners,
+            "load_neural_total_residual_bundle",
+            lambda path: json.loads(path.read_text(encoding="utf-8")),
+        )
+        monkeypatch.setattr(
+            predict_corners,
+            "load_neural_share_residual_bundle",
+            lambda path: json.loads(path.read_text(encoding="utf-8")),
+        )
+
+        train_corners.main()
+
+        model_config = json.loads((output_dir / "model_config.json").read_text(encoding="utf-8"))
+        assert model_config["path_version"] == "totals_first_neural_total_share_residual"
+        assert model_config["neural_total_residual_sidecar"] == "neural_total_residual_bundle.pt"
+        assert model_config["neural_share_residual_sidecar"] == "neural_share_residual_bundle.pt"
+        assert (output_dir / "neural_total_residual_bundle.pt").exists()
+        assert (output_dir / "neural_share_residual_bundle.pt").exists()
+
+        models, _, _, _, path_version, league_regime = predict_corners.load_artifacts(output_dir)
+
+        assert path_version == "totals_first_neural_total_share_residual"
+        assert "neural_total_residual" in models
+        assert "neural_share_residual" in models
+        assert league_regime == {}
+
+
+def test_main_writes_neural_total_ladder_artifacts_and_model_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rows: list[dict[str, float | int | str]] = []
+    for idx in range(24):
+        total_corners = 12.0 if idx % 4 == 0 else 9.0 if idx % 4 in (1, 2) else 6.0
+        home_corners = 7.0 if total_corners >= 9.0 else 3.0
+        away_corners = total_corners - home_corners
+        rows.append(
+            {
+                "fixture_id": idx + 1,
+                "match_datetime_utc": f"2024-06-{(idx % 9) + 1:02d}T12:00:00Z",
+                "league_code": "E0",
+                "home_rolling_corners": 5.0 + (idx % 3),
+                "away_rolling_corners": 4.0 + (idx % 2),
+                    "home_goals": 1,
+                    "away_goals": 1,
+                    "total_goals": 2,
+                "home_corners": home_corners,
+                "away_corners": away_corners,
+                "total_corners": total_corners,
+            }
+        )
+
+    with tempfile.TemporaryDirectory(prefix="v2_corners_neural_total_ladder_") as td:
+        root = Path(td)
+        dataset_path = root / "dataset.csv"
+        contract_path = root / "corners.yaml"
+        scope_path = root / "scope.yaml"
+        output_dir = root / "artifacts"
+        pd.DataFrame(rows).to_csv(dataset_path, index=False)
+        contract_path.write_text(
+            "family: corners\nrequired_features:\n  - home_rolling_corners\n  - away_rolling_corners\n",
+            encoding="utf-8",
+        )
+        scope_path.write_text("markets:\n  corners: []\n", encoding="utf-8")
+
+        monkeypatch.setattr(
+            train_corners,
+            "parse_args",
+            lambda: argparse.Namespace(
+                dataset_path=dataset_path,
+                contract=contract_path,
+                output_dir=output_dir,
+                scope=scope_path,
+                model_version="test_neural_total_ladder_v1",
+                model_type="poisson_glm",
+                path_version="totals_surface_neural_ladder_calibrated",
+                max_rows=None,
+                folds=3,
+                min_fold_test_n=1,
+            ),
+        )
+        monkeypatch.setattr(train_corners, "add_corners_context_features", lambda df: df.copy())
+        monkeypatch.setattr(train_corners, "fit_league_regime", lambda df: {})
+        monkeypatch.setattr(train_corners, "apply_league_regime", lambda df, regime: df.copy())
+        monkeypatch.setattr(train_corners.legacy_calibrator, "add_targets_and_derived", lambda df: df.copy())
+        monkeypatch.setattr(
+            train_corners,
+            "_evaluate_walkforward",
+            lambda **kwargs: ([], {}, []),
+        )
+        monkeypatch.setattr(
+            train_corners.legacy_calibrator,
+            "split_time_respecting",
+            lambda df: (df.iloc[:10].reset_index(drop=True), df.iloc[10:].reset_index(drop=True)),
+        )
+        monkeypatch.setattr(train_corners, "load_scope_markets", lambda path: ["c75", "c85", "c95", "c105"])
+        monkeypatch.setattr(
+            train_corners,
+            "_fit_neural_total_surface_models",
+            lambda **kwargs: (
+                {"hidden_dims": [8, 4], "dropout": 0.0, "artifact_format": "torch_bundle_v1"},
+                {market: {"method": "identity"} for market in ("c75", "c85", "c95", "c105")},
+                {market: 1.0 for market in ("c75", "c85", "c95", "c105")},
+                {market: {"status": "identity"} for market in ("c75", "c85", "c95", "c105")},
+            ),
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "predict_neural_total_market_ladder_probs",
+            lambda bundle, x, *, prior_total_probs: {
+                "c75": np.full(len(x), 0.8, dtype=float),
+                "c85": np.full(len(x), 0.65, dtype=float),
+                "c95": np.full(len(x), 0.5, dtype=float),
+                "c105": np.full(len(x), 0.35, dtype=float),
+            },
+        )
+        monkeypatch.setattr(
+            train_corners,
+            "save_neural_total_market_ladder_bundle",
+            lambda bundle, path: path.write_text(json.dumps(bundle), encoding="utf-8"),
+        )
+        monkeypatch.setattr(
+            predict_corners,
+            "load_neural_total_market_ladder_bundle",
+            lambda path: json.loads(path.read_text(encoding="utf-8")),
+        )
+
+        train_corners.main()
+
+        model_config = json.loads((output_dir / "model_config.json").read_text(encoding="utf-8"))
+        assert model_config["path_version"] == "totals_surface_neural_ladder_calibrated"
+        assert model_config["neural_total_market_ladder_sidecar"] == "neural_total_market_ladder_bundle.pt"
+        assert model_config["neural_total_market_ladder_kind"] == "conditional_total_market_ladder"
+        assert (output_dir / "neural_total_market_ladder_bundle.pt").exists()
+        assert (output_dir / "holdout_predictions.csv").exists()
+
+        models, _, _, _, path_version, league_regime = predict_corners.load_artifacts(output_dir)
+
+        assert path_version == "totals_surface_neural_ladder_calibrated"
+        assert "neural_total_market_ladder" in models
+        assert models["total_market_ladder_blend"]["c75"] == 1.0
+        assert league_regime == {}
 
 
 def test_totals_first_market_heads_emit_direct_team_market_probs() -> None:
@@ -688,6 +1147,63 @@ def test_totals_surface_calibrated_emits_direct_total_market_probs() -> None:
     assert (derived["c95"] >= derived["c105"]).all()
 
 
+def test_totals_surface_neural_ladder_emits_monotone_total_market_probs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class _ConstantRegressor:
+        def __init__(self, value: float) -> None:
+            self.value = float(value)
+
+        def predict(self, x: pd.DataFrame) -> np.ndarray:
+            return np.full(len(x), self.value, dtype=float)
+
+    frame = pd.DataFrame(
+        {
+            "home_rolling_corners": [5.0, 4.0],
+            "away_rolling_corners": [4.0, 5.0],
+        }
+    )
+    monkeypatch.setattr(
+        train_corners,
+        "predict_neural_total_market_ladder_probs",
+        lambda bundle, x, *, prior_total_probs: {
+            "c75": np.array([0.82, 0.76]),
+            "c85": np.array([0.68, 0.6]),
+            "c95": np.array([0.5, 0.45]),
+            "c105": np.array([0.31, 0.28]),
+        },
+    )
+
+    preds = _predict_corner_rates(
+        models={
+            "total": _ConstantRegressor(10.0),
+            "home_share": _ConstantRegressor(0.5),
+            "neural_total_market_ladder": {"stub": True},
+            "total_market_ladder_calibrators": {},
+            "total_market_ladder_blend": {market: 1.0 for market in ("c75", "c85", "c95", "c105")},
+        },
+        x=frame,
+        path_version="totals_surface_neural_ladder_calibrated",
+        total_r=None,
+        home_r=None,
+        away_r=None,
+    )
+    derived = _derive_corner_frame(
+        preds=preds,
+        total_r=None,
+        home_r=None,
+        away_r=None,
+        path_version="totals_surface_neural_ladder_calibrated",
+    )
+
+    assert "total_market_probs" in preds
+    assert "team_market_probs" not in preds
+    assert set(preds["total_market_probs"].keys()) == {"c75", "c85", "c95", "c105"}
+    assert (derived["c75"] >= derived["c85"]).all()
+    assert (derived["c85"] >= derived["c95"]).all()
+    assert (derived["c95"] >= derived["c105"]).all()
+
+
 def test_add_corners_context_features_derives_style_delta_from_formation() -> None:
     frame = pd.DataFrame(
         {
@@ -700,6 +1216,210 @@ def test_add_corners_context_features_derives_style_delta_from_formation() -> No
     assert "style_delta" in enriched.columns
     assert enriched["style_delta"].notna().all()
     assert enriched.loc[0, "style_delta"] > 0.0
+
+
+def test_add_corners_context_features_merges_cluster_axes(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(
+        corners_features,
+        "_load_style_cluster_fixture_frame",
+        lambda: pd.DataFrame(
+            {
+                "fixture_id": [1, 2],
+                "home_style_cluster": [
+                    "Possession_Press_FrontFoot",
+                    "Balanced_MidBlock_Measured",
+                ],
+                "home_style_cluster_confidence": [0.92, 0.71],
+                "away_style_cluster": [
+                    "Direct_LowBlock_Reactive",
+                    "Direct_LowBlock_Reactive",
+                ],
+                "away_style_cluster_confidence": [0.81, 0.63],
+            }
+        ),
+    )
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1, 2],
+            "home_style_score": [1.4, 0.3],
+            "away_style_score": [0.4, 0.5],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    np.testing.assert_allclose(enriched["style_delta"].to_numpy(), np.array([1.0, -0.2]))
+    assert enriched["home_style_possession_axis"].tolist() == [1.0, 0.0]
+    assert enriched["away_style_possession_axis"].tolist() == [-1.0, -1.0]
+    assert enriched["home_style_press_axis"].tolist() == [1.0, 0.0]
+    assert enriched["away_style_press_axis"].tolist() == [-1.0, -1.0]
+    assert enriched["home_style_attack_axis"].tolist() == [1.0, 0.0]
+    assert enriched["away_style_attack_axis"].tolist() == [-1.0, -1.0]
+    assert enriched["style_possession_delta"].tolist() == [2.0, 1.0]
+    assert enriched["style_press_delta"].tolist() == [2.0, 1.0]
+    assert enriched["style_attack_delta"].tolist() == [2.0, 1.0]
+    assert enriched["style_cluster_same"].tolist() == [0.0, 0.0]
+    assert enriched["home_style_cluster_confidence"].tolist() == [0.92, 0.71]
+    assert enriched["away_style_cluster_confidence"].tolist() == [0.81, 0.63]
+
+
+def test_add_corners_context_features_preserves_existing_cluster_columns(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(corners_features, "_load_style_cluster_fixture_frame", lambda: None)
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1],
+            "home_style_cluster": ["Possession_Press_FrontFoot"],
+            "away_style_cluster": ["Balanced_MidBlock_Measured"],
+            "home_style_cluster_confidence": [0.88],
+            "away_style_cluster_confidence": [0.76],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    assert enriched.loc[0, "style_possession_delta"] == 1.0
+    assert enriched.loc[0, "style_press_delta"] == 1.0
+    assert enriched.loc[0, "style_attack_delta"] == 1.0
+    assert enriched.loc[0, "style_cluster_same"] == 0.0
+
+
+def test_add_corners_context_features_builds_fixed_style_matchup_cells(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(corners_features, "_load_style_cluster_fixture_frame", lambda: None)
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1, 2],
+            "home_style_cluster": [
+                "Possession_LowBlock_FrontFoot",
+                "Balanced_MidBlock_Measured",
+            ],
+            "away_style_cluster": [
+                "Direct_MidBlock_Reactive",
+                "Balanced_Press_Measured",
+            ],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    active_row0 = [feat for feat in STYLE_MATCHUP_FEATURES if enriched.loc[0, feat] == 1.0]
+    active_row1 = [feat for feat in STYLE_MATCHUP_FEATURES if enriched.loc[1, feat] == 1.0]
+    assert active_row0 == ["style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive"]
+    assert active_row1 == ["style_matchup_balanced_midblock_measured__balanced_press_measured"]
+    zero_count_row0 = int((enriched.loc[0, list(STYLE_MATCHUP_FEATURES)] == 0.0).sum())
+    zero_count_row1 = int((enriched.loc[1, list(STYLE_MATCHUP_FEATURES)] == 0.0).sum())
+    assert zero_count_row0 == len(STYLE_MATCHUP_FEATURES) - 1
+    assert zero_count_row1 == len(STYLE_MATCHUP_FEATURES) - 1
+
+
+def test_add_corners_context_features_builds_style_matchup_interactions(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(corners_features, "_load_style_cluster_fixture_frame", lambda: None)
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1],
+            "home_style_cluster": ["Possession_LowBlock_FrontFoot"],
+            "away_style_cluster": ["Direct_MidBlock_Reactive"],
+            "home_rolling_corners": [6.5],
+            "away_rolling_corners": [4.0],
+            "home_rolling_corners_against": [3.5],
+            "away_rolling_corners_against": [6.0],
+            "home_rolling_possession": [58.0],
+            "home_rolling_possession_against": [41.0],
+            "away_rolling_possession": [42.0],
+            "away_rolling_possession_against": [57.0],
+            "home_rolling_box_touches": [23.0],
+            "away_rolling_box_touches": [11.0],
+            "home_rolling_box_touches_against": [9.0],
+            "away_rolling_box_touches_against": [15.0],
+            "home_rolling_crosses": [18.0],
+            "away_rolling_crosses": [12.0],
+            "home_rolling_crosses_against": [10.0],
+            "away_rolling_crosses_against": [17.0],
+            "home_rolling_xg": [1.8],
+            "home_rolling_xg_against": [0.8],
+            "away_rolling_xg": [0.9],
+            "away_rolling_xg_against": [1.4],
+            "home_rolling_sot": [5.0],
+            "away_rolling_sot": [3.0],
+            "home_rolling_sot_against": [2.0],
+            "away_rolling_sot_against": [4.0],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    active_interactions = {
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_corners": 6.5,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_corners": 4.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_corners_against": 3.5,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_corners_against": 6.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_possession": 58.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_possession_against": 41.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_possession": 42.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_possession_against": 57.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_box_touches": 23.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_box_touches": 11.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_box_touches_against": 9.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_box_touches_against": 15.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_crosses": 18.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_crosses": 12.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_crosses_against": 10.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_crosses_against": 17.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_xg": 1.8,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_xg_against": 0.8,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_xg": 0.9,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_xg_against": 1.4,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_sot": 5.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_sot": 3.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__home_rolling_sot_against": 2.0,
+        "style_matchup_possession_lowblock_frontfoot__direct_midblock_reactive__x__away_rolling_sot_against": 4.0,
+    }
+    for feature_name, expected in active_interactions.items():
+        assert enriched.loc[0, feature_name] == expected
+    zero_interactions = [
+        feature
+        for feature in STYLE_MATCHUP_INTERACTION_FEATURES
+        if feature not in active_interactions
+    ]
+    assert (enriched.loc[0, zero_interactions] == 0.0).all()
+
+
+def test_add_corners_context_features_builds_axis_interactions(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(corners_features, "_load_style_cluster_fixture_frame", lambda: None)
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1],
+            "home_style_cluster": ["Possession_LowBlock_FrontFoot"],
+            "away_style_cluster": ["Direct_MidBlock_Reactive"],
+            "home_rolling_xg_against": [0.7],
+            "away_rolling_xg_against": [1.1],
+            "home_rolling_box_touches": [18.0],
+            "away_rolling_box_touches": [14.0],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    assert enriched.loc[0, "home_style_attack_axis__x__away_rolling_xg_against"] == 1.1
+    assert enriched.loc[0, "away_style_attack_axis__x__home_rolling_xg_against"] == -0.7
+    assert enriched.loc[0, "home_style_press_axis__x__away_rolling_box_touches"] == -14.0
+    assert enriched.loc[0, "away_style_press_axis__x__home_rolling_box_touches"] == 0.0
+    assert set(AXIS_INTERACTION_FEATURES).issubset(set(enriched.columns))
+
+
+def test_add_corners_context_features_leaves_matchup_cells_missing_for_unknown_clusters(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(corners_features, "_load_style_cluster_fixture_frame", lambda: None)
+    frame = pd.DataFrame(
+        {
+            "fixture_id": [1],
+            "home_style_cluster": ["Unknown_Cluster"],
+            "away_style_cluster": ["Balanced_Press_Measured"],
+        }
+    )
+
+    enriched = add_corners_context_features(frame)
+
+    assert enriched.loc[0, list(STYLE_MATCHUP_FEATURES)].isna().all()
+    assert not any(feature in enriched.columns for feature in STYLE_MATCHUP_INTERACTION_FEATURES)
 
 
 def test_apply_league_regime_adds_smoothed_league_features_with_fallback() -> None:

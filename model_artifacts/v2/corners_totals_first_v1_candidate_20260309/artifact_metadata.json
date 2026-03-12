@@ -1,0 +1,10 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_totals_first_v1_candidate_20260309",
+  "artifact_dir": "model_artifacts\\v2\\corners_totals_first_v1_candidate_20260309",
+  "trained_at_utc": "2026-03-09T17:58:17.098514+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv",
+  "path_version": "totals_first"
+}

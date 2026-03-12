@@ -35,6 +35,22 @@ from src.modeling.v2.families.corners.features import (
     add_corners_context_features,
     apply_league_regime,
 )
+from src.modeling.v2.families.corners.neural_residual import (
+    NEURAL_TOTAL_RESIDUAL_BUNDLE_FILENAME,
+    NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION,
+    NEURAL_SHARE_RESIDUAL_BUNDLE_FILENAME,
+    NEURAL_SHARE_RESIDUAL_PATH_VERSION,
+    load_neural_total_residual_bundle,
+    load_neural_share_residual_bundle,
+    predict_neural_total_residual_delta,
+    predict_neural_share_residual_delta,
+)
+from src.modeling.v2.families.corners.neural_total_ladder import (
+    NEURAL_TOTAL_MARKET_LADDER_BUNDLE_FILENAME,
+    NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION,
+    load_neural_total_market_ladder_bundle,
+    predict_neural_total_market_ladder_probs,
+)
 from src.modeling.v2.io.artifact_identity import resolve_model_identity
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 
@@ -45,11 +61,24 @@ DEFAULT_OUT_DIR = ROOT_DIR / "artifacts" / "v2" / "predictions"
 MODEL_NAME = "corners_v2"
 MODEL_VERSION = "distribution_head_v1"
 TOTAL_SURFACE_PATHS = {"totals_surface_calibrated"}
+NEURAL_TOTAL_LADDER_PATHS = {NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION}
 PMF_SURFACE_PATHS = {"pmf_surface_blended"}
 SHARE_PRIOR_PATHS = {"totals_first_league_share_residual"}
+NEURAL_SHARE_RESIDUAL_PATHS = {NEURAL_SHARE_RESIDUAL_PATH_VERSION}
+NEURAL_TOTAL_SHARE_RESIDUAL_PATHS = {NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION}
 CALIBRATED_TEAM_HEAD_PATHS = {"totals_first_team_market_calibrated"}
 MARKET_HEAD_PATHS = {"totals_first_market_heads", *CALIBRATED_TEAM_HEAD_PATHS}
-TOTALS_FIRST_PATHS = {"totals_first", "totals_first_residual", *SHARE_PRIOR_PATHS, *MARKET_HEAD_PATHS, *TOTAL_SURFACE_PATHS, *PMF_SURFACE_PATHS}
+TOTALS_FIRST_PATHS = {
+    "totals_first",
+    "totals_first_residual",
+    *SHARE_PRIOR_PATHS,
+    *NEURAL_SHARE_RESIDUAL_PATHS,
+    *NEURAL_TOTAL_SHARE_RESIDUAL_PATHS,
+    *MARKET_HEAD_PATHS,
+    *TOTAL_SURFACE_PATHS,
+    *NEURAL_TOTAL_LADDER_PATHS,
+    *PMF_SURFACE_PATHS,
+}
 TOTAL_HEAD_MARKETS = tuple(TOTAL_MARKETS.keys())
 TEAM_HEAD_MARKETS = tuple(HOME_MARKETS.keys()) + tuple(AWAY_MARKETS.keys())
 PMF_MAX_COUNT = 12
@@ -112,6 +141,9 @@ def load_artifacts(
             "pmf_surface_blended"
             if (artifact_dir / "home_count_distribution_model.pkl").exists()
             else (
+            NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION
+            if (artifact_dir / NEURAL_TOTAL_MARKET_LADDER_BUNDLE_FILENAME).exists()
+            else (
             "totals_surface_calibrated"
             if (artifact_dir / "total_market_heads.pkl").exists()
             else (
@@ -124,9 +156,19 @@ def load_artifacts(
             "totals_first_market_heads"
             if (artifact_dir / "team_market_heads.pkl").exists()
             else (
+            NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION
+            if (artifact_dir / NEURAL_TOTAL_RESIDUAL_BUNDLE_FILENAME).exists()
+            and (artifact_dir / NEURAL_SHARE_RESIDUAL_BUNDLE_FILENAME).exists()
+            else (
+            NEURAL_SHARE_RESIDUAL_PATH_VERSION
+            if (artifact_dir / NEURAL_SHARE_RESIDUAL_BUNDLE_FILENAME).exists()
+            else (
             "totals_first_residual"
             if (artifact_dir / "home_delta_model.pkl").exists()
             else "totals_first"
+            )
+            )
+            )
             )
             )
             )
@@ -141,6 +183,20 @@ def load_artifacts(
         }
         if path_version == "totals_first_residual":
             models["home_delta"] = joblib.load(artifact_dir / "home_delta_model.pkl")
+        if path_version in NEURAL_TOTAL_SHARE_RESIDUAL_PATHS:
+            models["neural_total_residual"] = load_neural_total_residual_bundle(
+                artifact_dir
+                / str(model_config.get("neural_total_residual_sidecar") or NEURAL_TOTAL_RESIDUAL_BUNDLE_FILENAME)
+            )
+        if path_version in NEURAL_SHARE_RESIDUAL_PATHS:
+            models["neural_share_residual"] = load_neural_share_residual_bundle(
+                artifact_dir / str(model_config.get("neural_residual_sidecar") or NEURAL_SHARE_RESIDUAL_BUNDLE_FILENAME)
+            )
+        if path_version in NEURAL_TOTAL_SHARE_RESIDUAL_PATHS:
+            models["neural_share_residual"] = load_neural_share_residual_bundle(
+                artifact_dir
+                / str(model_config.get("neural_share_residual_sidecar") or NEURAL_SHARE_RESIDUAL_BUNDLE_FILENAME)
+            )
         if path_version in SHARE_PRIOR_PATHS:
             models["home_share_residual"] = joblib.load(artifact_dir / "home_share_residual_model.pkl")
             models["home_share_prior_blend"] = float(model_config.get("home_share_prior_blend") or 1.0)
@@ -162,6 +218,16 @@ def load_artifacts(
                 joblib.load(calibrator_path) if calibrator_path.exists() else {}
             )
             models["total_market_head_blend"] = model_config.get("total_market_head_blend") or {}
+        if path_version in NEURAL_TOTAL_LADDER_PATHS:
+            models["neural_total_market_ladder"] = load_neural_total_market_ladder_bundle(
+                artifact_dir
+                / str(model_config.get("neural_total_market_ladder_sidecar") or NEURAL_TOTAL_MARKET_LADDER_BUNDLE_FILENAME)
+            )
+            calibrator_path = artifact_dir / "total_market_ladder_calibrators.joblib"
+            models["total_market_ladder_calibrators"] = (
+                joblib.load(calibrator_path) if calibrator_path.exists() else {}
+            )
+            models["total_market_ladder_blend"] = model_config.get("total_market_ladder_blend") or {}
         if path_version in MARKET_HEAD_PATHS:
             models["team_market_heads"] = joblib.load(artifact_dir / "team_market_heads.pkl")
             if path_version in CALIBRATED_TEAM_HEAD_PATHS:
@@ -406,8 +472,25 @@ def _predict_corner_rates(
 ) -> dict[str, Any]:
     if path_version in TOTALS_FIRST_PATHS:
         total_mu = np.clip(models["total"].predict(x), 0.1, 30.0)
+        total_mu_base = np.asarray(total_mu, dtype=float)
         home_share_prior = None
         home_share_raw = None
+        total_raw = np.asarray(total_mu, dtype=float)
+        total_delta = None
+        neural_share_delta = None
+        if path_version in NEURAL_TOTAL_SHARE_RESIDUAL_PATHS:
+            base_share_for_total = np.clip(models["home_share"].predict(x), 0.05, 0.95)
+            total_delta = np.asarray(
+                predict_neural_total_residual_delta(
+                    models["neural_total_residual"],
+                    x,
+                    base_total_mu=total_mu_base,
+                    base_home_share=base_share_for_total,
+                ),
+                dtype=float,
+            )
+            total_raw = total_mu_base + total_delta
+            total_mu = np.clip(total_raw, 0.1, 30.0)
         if path_version in SHARE_PRIOR_PATHS:
             home_share, home_share_prior, home_share_raw = _predict_share_with_prior(
                 residual_model=models["home_share_residual"],
@@ -416,15 +499,32 @@ def _predict_corner_rates(
             )
         else:
             home_share = np.clip(models["home_share"].predict(x), 0.05, 0.95)
+        base_share = np.asarray(home_share, dtype=float)
+        if path_version in (NEURAL_SHARE_RESIDUAL_PATHS | NEURAL_TOTAL_SHARE_RESIDUAL_PATHS):
+            neural_share_delta = np.asarray(
+                predict_neural_share_residual_delta(
+                    models["neural_share_residual"],
+                    x,
+                    base_total_mu=np.asarray(total_mu, dtype=float),
+                    base_home_share=base_share,
+                ),
+                dtype=float,
+            )
+            home_share_raw = base_share + neural_share_delta
+            home_share = np.clip(home_share_raw, 0.05, 0.95)
         base_home_mu: list[float] = []
         home_mu: list[float] = []
         away_mu: list[float] = []
-        for total_value, share_value in zip(total_mu, home_share, strict=True):
+        for total_value, base_share_value, share_value in zip(total_mu, base_share, home_share, strict=True):
+            base_hm, _ = reconcile_team_means_from_total_share(
+                total_mu=float(total_value),
+                home_share=float(base_share_value),
+            )
             hm, am = reconcile_team_means_from_total_share(
                 total_mu=float(total_value),
                 home_share=float(share_value),
             )
-            base_home_mu.append(hm)
+            base_home_mu.append(base_hm)
             home_mu.append(hm)
             away_mu.append(am)
         home_delta = None
@@ -448,6 +548,13 @@ def _predict_corner_rates(
             away_mu = adjusted_away
         out: dict[str, Any] = {
             "total": np.asarray(total_mu, dtype=float),
+            "base_total": total_mu_base,
+            "total_raw": np.asarray(total_raw, dtype=float),
+            "total_residual_delta": (
+                np.asarray(total_delta, dtype=float)
+                if total_delta is not None
+                else np.zeros(len(total_mu), dtype=float)
+            ),
             "home_share": np.asarray(home_share, dtype=float),
             "home_share_prior": (
                 np.asarray(home_share_prior, dtype=float)
@@ -463,6 +570,11 @@ def _predict_corner_rates(
             "home_delta": (
                 np.asarray(home_delta, dtype=float)
                 if home_delta is not None
+                else np.zeros(len(total_mu), dtype=float)
+            ),
+            "home_share_residual_delta": (
+                np.asarray(neural_share_delta, dtype=float)
+                if neural_share_delta is not None
                 else np.zeros(len(total_mu), dtype=float)
             ),
             "home": np.asarray(home_mu, dtype=float),
@@ -529,6 +641,31 @@ def _predict_corner_rates(
             calibrators = models.get("total_market_head_calibrators") or {}
             blend = models.get("total_market_head_blend") or {}
             total_market_probs: dict[str, np.ndarray] = {}
+            for market in TOTAL_HEAD_MARKETS:
+                calibrated = apply_binary_calibrator(
+                    calibrators.get(market, {"method": "identity"}),
+                    raw_total_probs[market],
+                )
+                alpha = float(blend.get(market, 0.35))
+                total_market_probs[market] = np.clip(
+                    prior_total_probs[market] + alpha * (calibrated - prior_total_probs[market]),
+                    0.001,
+                    0.999,
+                )
+            out["total_market_probs"] = _project_total_head_prob_arrays(total_market_probs)
+        if path_version in NEURAL_TOTAL_LADDER_PATHS:
+            prior_total_probs = _derive_total_market_prior_probs(
+                total_mu=np.asarray(total_mu, dtype=float),
+                total_r=total_r,
+            )
+            raw_total_probs = predict_neural_total_market_ladder_probs(
+                models["neural_total_market_ladder"],
+                x,
+                prior_total_probs=prior_total_probs,
+            )
+            total_market_probs: dict[str, np.ndarray] = {}
+            calibrators = models.get("total_market_ladder_calibrators") or {}
+            blend = models.get("total_market_ladder_blend") or {}
             for market in TOTAL_HEAD_MARKETS:
                 calibrated = apply_binary_calibrator(
                     calibrators.get(market, {"method": "identity"}),

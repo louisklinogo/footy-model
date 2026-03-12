@@ -1,15 +1,17 @@
 """
 build_team_style_clusters.py
 ----------------------------
-Cluster teams into style-of-play archetypes using rolling tactical stats
-and formation data. Outputs a point-in-time cluster label per team per fixture.
+Cluster teams into style-of-play archetypes using PIT-safe rolling tactical stats
+and formation data. Fits on played fixtures, then scores every valid fixture row
+with the frozen scaler/model so upcoming fixtures can receive stable labels too.
 
 Usage:
-    python src/features/build_team_style_clusters.py [--k 5] [--method kmeans]
+    python src/features/build_team_style_clusters.py [--k 4] [--method gmm]
     python src/features/build_team_style_clusters.py --evaluate  # silhouette + ARI only
 
 Outputs:
     model_artifacts/style_clusters/cluster_model.pkl
+    model_artifacts/style_clusters/team_cluster_labels.parquet
     model_artifacts/style_clusters/cluster_labels.parquet
     model_artifacts/style_clusters/cluster_report.md
 """
@@ -39,26 +41,32 @@ from src.db.db_utils import connect_db
 CLUSTER_FEATURES = [
     "rolling_possession",
     "rolling_tackles_pct",
-    "rolling_xg_p1",
-    "rolling_xg_h2_delta",
-    "rolling_corners",
+    "xg_net",
+    "corners_net",
 ]
-
-ARCHETYPE_NAMES_K4 = {0: "Possession", 1: "CounterAttack", 2: "HighPress", 3: "LowBlock"}
-ARCHETYPE_NAMES_K5 = {0: "Possession", 1: "CounterAttack", 2: "HighPress", 3: "LowBlock", 4: "Direct"}
-ARCHETYPE_NAMES_K6 = {0: "Possession", 1: "CounterAttack", 2: "HighPress", 3: "LowBlock", 4: "Direct", 5: "Balanced"}
+FORMATION_FEATURES = ["defenders", "midfielders", "forwards"]
+SNAPSHOT_SOURCE_COLUMNS = [
+    "rolling_possession",
+    "rolling_tackles_pct",
+    "rolling_xg",
+    "rolling_xg_against",
+    "rolling_corners",
+    "rolling_corners_against",
+]
+FIT_STATUSES = {"ft"}
+FEATURE_VERSION = "hybrid_net_v2"
 
 OUT_DIR = ROOT_DIR / "model_artifacts" / "style_clusters"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build team style-of-play clusters.")
-    parser.add_argument("--k", type=int, default=5, help="Number of clusters (default: 5).")
+    parser.add_argument("--k", type=int, default=4, help="Number of clusters (default: 4).")
     parser.add_argument(
         "--method",
         choices=("kmeans", "gmm"),
-        default="kmeans",
-        help="Clustering algorithm (default: kmeans).",
+        default="gmm",
+        help="Clustering algorithm (default: gmm).",
     )
     parser.add_argument(
         "--evaluate",
@@ -82,6 +90,12 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=0.3,
         help="Minimum Adjusted Rand Index (temporal stability) required to save clusters (default: 0.3).",
+    )
+    parser.add_argument(
+        "--min-cluster-share",
+        type=float,
+        default=0.05,
+        help="Minimum allowed share for the smallest cluster on fit rows (default: 0.05).",
     )
     return parser.parse_args()
 
@@ -116,9 +130,10 @@ def load_data() -> pd.DataFrame:
                 tps.is_home,
                 tps.rolling_possession,
                 tps.rolling_tackles_pct,
-                tps.rolling_xg_p1,
-                tps.rolling_xg_h2_delta,
-                tps.rolling_corners
+                tps.rolling_xg,
+                tps.rolling_xg_against,
+                tps.rolling_corners,
+                tps.rolling_corners_against
             FROM team_premium_snapshots tps
             """,
             conn,
@@ -131,10 +146,9 @@ def load_data() -> pd.DataFrame:
         warnings.simplefilter("ignore", UserWarning)
         fixtures = pd.read_sql(
             """
-            SELECT f.fixture_id, f.match_datetime_utc, f.league_code,
+            SELECT f.fixture_id, f.status, f.match_datetime_utc, f.league_code,
                    f.home_team_id, f.away_team_id
             FROM fixtures f
-            WHERE f.status = 'ft'
             """,
             conn,
         )
@@ -154,7 +168,7 @@ def load_data() -> pd.DataFrame:
 
     # Merge fixture context onto snapshots
     snap = snap.merge(
-        fixtures[["fixture_id", "match_datetime_utc", "league_code",
+        fixtures[["fixture_id", "status", "match_datetime_utc", "league_code",
                    "home_team_id", "away_team_id"]],
         on="fixture_id",
         how="left",
@@ -186,19 +200,38 @@ def build_feature_matrix(df: pd.DataFrame) -> tuple[np.ndarray, pd.DataFrame]:
     Build standardised feature matrix for clustering.
     Returns (X_scaled, df_valid) where df_valid has no NaNs in cluster features.
     """
-    cluster_cols = CLUSTER_FEATURES + ["defenders", "midfielders", "forwards"]
-    available = [c for c in cluster_cols if c in df.columns]
-    if not available:
-        raise RuntimeError(f"None of {cluster_cols} found in dataframe columns: {list(df.columns)}")
+    df = add_style_axes(df)
+    cluster_cols = CLUSTER_FEATURES + FORMATION_FEATURES
+    missing = [c for c in cluster_cols if c not in df.columns]
+    if missing:
+        raise RuntimeError(f"Missing required cluster columns {missing} in dataframe columns: {list(df.columns)}")
 
-    df_valid = df.dropna(subset=available).copy()
+    df_valid = df.dropna(subset=cluster_cols).copy()
     print(f"  Rows with all cluster features: {len(df_valid)} / {len(df)} ({len(df_valid)/len(df):.1%})")
 
-    # Z-score standardise within league-season to remove league-specific biases
     scaler = StandardScaler()
-    X = df_valid[available].values.astype(float)
+    X = df_valid[cluster_cols].values.astype(float)
     X_scaled = scaler.fit_transform(X)
-    return X_scaled, df_valid, available, scaler
+    return X_scaled, df_valid, cluster_cols, scaler
+
+
+def add_style_axes(df: pd.DataFrame) -> pd.DataFrame:
+    out = df.copy()
+    out["xg_net"] = out["rolling_xg"] - out["rolling_xg_against"]
+    out["corners_net"] = out["rolling_corners"] - out["rolling_corners_against"]
+    return out
+
+
+def transform_feature_matrix(
+    df: pd.DataFrame,
+    *,
+    feature_names: list[str],
+    scaler: StandardScaler,
+) -> tuple[np.ndarray, pd.DataFrame]:
+    df = add_style_axes(df)
+    df_valid = df.dropna(subset=feature_names).copy()
+    X_scaled = scaler.transform(df_valid[feature_names].values.astype(float))
+    return X_scaled, df_valid
 
 
 def fit_clusters(X: np.ndarray, k: int, method: str) -> object:
@@ -246,10 +279,10 @@ def assess_temporal_ari(df: pd.DataFrame, k: int, method: str) -> float:
         if len(train_df) < 50 or len(test_df) < 50:
             continue
 
-        available = CLUSTER_FEATURES + ["defenders", "midfielders", "forwards"]
-        available = [c for c in available if c in df.columns]
-        train_valid = train_df.dropna(subset=available)
-        test_valid = test_df.dropna(subset=available)
+        prepared = add_style_axes(df)
+        available = CLUSTER_FEATURES + FORMATION_FEATURES
+        train_valid = prepared[prepared["season"] == train_season].dropna(subset=available)
+        test_valid = prepared[prepared["season"] == test_season].dropna(subset=available)
         if len(train_valid) < 50 or len(test_valid) < 50:
             continue
 
@@ -269,41 +302,82 @@ def assess_temporal_ari(df: pd.DataFrame, k: int, method: str) -> float:
     return float(np.mean(ari_scores)) if ari_scores else 0.0
 
 
+def assess_min_cluster_share(labels: np.ndarray) -> float:
+    if len(labels) == 0:
+        return 0.0
+    return float(pd.Series(labels).value_counts(normalize=True).min())
+
+
 def label_clusters(centroids: np.ndarray, feature_names: list[str]) -> dict[int, str]:
     """
-    Auto-label clusters from centroids by ranking by possession and pressing features.
+    Create deterministic semantic-ish labels from actual fitted features.
     Returns a dict of {cluster_id: label_string}.
     """
     feat_idx = {f: i for i, f in enumerate(feature_names)}
-    poss_idx = feat_idx.get("rolling_possession", None)
-    press_idx = feat_idx.get("rolling_tackles_pct", None)
-    h2_idx = feat_idx.get("rolling_xg_h2_delta", None)
+    poss_values = centroids[:, feat_idx["rolling_possession"]]
+    press_values = centroids[:, feat_idx["rolling_tackles_pct"]]
+    xg_values = centroids[:, feat_idx["xg_net"]]
+    corners_values = centroids[:, feat_idx["corners_net"]]
 
-    k = len(centroids)
     labels: dict[int, str] = {}
-    assigned: set[str] = set()
+
+    def _band(values: np.ndarray, idx: int, high_label: str, low_label: str, mid_label: str) -> str:
+        order = np.argsort(values)
+        low_cut = max(1, len(values) // 3)
+        high_cut = max(1, len(values) - low_cut)
+        rank = int(np.where(order == idx)[0][0])
+        if rank < low_cut:
+            return low_label
+        if rank >= high_cut:
+            return high_label
+        return mid_label
 
     for i, centroid in enumerate(centroids):
-        poss = centroid[poss_idx] if poss_idx is not None else 0
-        press = centroid[press_idx] if press_idx is not None else 0
-        h2 = centroid[h2_idx] if h2_idx is not None else 0
-
-        if poss > 0.5 and "Possession" not in assigned:
-            label = "Possession"
-        elif press > 0.5 and h2 > 0 and "HighPress" not in assigned:
-            label = "HighPress"
-        elif press < -0.3 and "LowBlock" not in assigned:
-            label = "LowBlock"
-        elif h2 < -0.3 and "CounterAttack" not in assigned:
-            label = "CounterAttack"
-        elif "Direct" not in assigned:
-            label = "Direct"
-        else:
-            label = f"Style_{i}"
-        assigned.add(label)
-        labels[i] = label
+        poss_label = _band(poss_values, i, "Possession", "Direct", "Balanced")
+        press_label = _band(press_values, i, "Press", "LowBlock", "MidBlock")
+        attack_signal = (xg_values + corners_values) / 2.0
+        attack_label = _band(attack_signal, i, "FrontFoot", "Reactive", "Measured")
+        labels[i] = f"{poss_label}_{press_label}_{attack_label}"
 
     return labels
+
+
+def build_fixture_style_frame(output: pd.DataFrame) -> pd.DataFrame:
+    home_style = (
+        output[output["is_home"]]
+        .rename(
+            columns={
+                "style_cluster": "home_style_cluster",
+                "style_cluster_raw": "home_style_cluster_raw",
+                "style_cluster_confidence": "home_style_cluster_confidence",
+            }
+        )
+        [["fixture_id", "home_style_cluster", "home_style_cluster_raw", "home_style_cluster_confidence"]]
+    )
+    away_style = (
+        output[~output["is_home"]]
+        .rename(
+            columns={
+                "style_cluster": "away_style_cluster",
+                "style_cluster_raw": "away_style_cluster_raw",
+                "style_cluster_confidence": "away_style_cluster_confidence",
+            }
+        )
+        [["fixture_id", "away_style_cluster", "away_style_cluster_raw", "away_style_cluster_confidence"]]
+    )
+    fixture_style = home_style.merge(away_style, on="fixture_id", how="outer")
+    fixture_style["style_matchup"] = (
+        fixture_style["home_style_cluster"].fillna("Unknown")
+        + "_vs_"
+        + fixture_style["away_style_cluster"].fillna("Unknown")
+    )
+    return fixture_style
+
+
+def predict_cluster_confidence(model: object, X: np.ndarray, method: str) -> np.ndarray:
+    if method == "gmm" and hasattr(model, "predict_proba"):
+        return model.predict_proba(X).max(axis=1)
+    return np.full(len(X), np.nan, dtype=float)
 
 
 def main() -> None:
@@ -311,25 +385,35 @@ def main() -> None:
 
     print("Loading data...")
     df = load_data()
+    fit_df = df[df["status"].isin(FIT_STATUSES)].copy()
+    if fit_df.empty:
+        raise RuntimeError(f"No fit rows found for statuses={sorted(FIT_STATUSES)}")
 
     print("Building feature matrix...")
-    X_scaled, df_valid, feature_names, scaler = build_feature_matrix(df)
+    X_scaled, fit_valid, feature_names, scaler = build_feature_matrix(fit_df)
 
     print(f"\nFitting {args.method} clusters (k={args.k})...")
     model = fit_clusters(X_scaled, args.k, args.method)
     labels = predict_labels(model, X_scaled, args.method)
-    df_valid = df_valid.copy()
-    df_valid["style_cluster_raw"] = labels
+    fit_valid = fit_valid.copy()
+    fit_valid["style_cluster_raw"] = labels
 
     print("\nEvaluating silhouette score...")
     sil = assess_silhouette(X_scaled, labels)
     print(f"  Silhouette: {sil:.4f}  (gate: >= {args.min_silhouette})")
 
     print("\nEvaluating temporal ARI stability...")
-    ari = assess_temporal_ari(df, args.k, args.method)
+    ari = assess_temporal_ari(fit_df, args.k, args.method)
     print(f"  Mean ARI:   {ari:.4f}  (gate: >= {args.min_ari})")
 
-    gate_passed = sil >= args.min_silhouette and ari >= args.min_ari
+    min_cluster_share = assess_min_cluster_share(labels)
+    print(f"  Min share:  {min_cluster_share:.4f}  (gate: >= {args.min_cluster_share})")
+
+    gate_passed = (
+        sil >= args.min_silhouette
+        and ari >= args.min_ari
+        and min_cluster_share >= args.min_cluster_share
+    )
     print(f"\n{'[PASS]' if gate_passed else '[FAIL]'} Gate: {'PASSED' if gate_passed else 'FAILED'}")
 
     if args.evaluate:
@@ -347,31 +431,22 @@ def main() -> None:
         centroids = model.means_
 
     cluster_labels = label_clusters(centroids, feature_names)
-    df_valid["style_cluster"] = df_valid["style_cluster_raw"].map(cluster_labels)
+    X_all, score_valid = transform_feature_matrix(df, feature_names=feature_names, scaler=scaler)
+    score_labels = predict_labels(model, X_all, args.method)
+    score_confidence = predict_cluster_confidence(model, X_all, args.method)
+    score_valid = score_valid.copy()
+    score_valid["style_cluster_raw"] = score_labels
+    score_valid["style_cluster"] = score_valid["style_cluster_raw"].map(cluster_labels)
+    score_valid["style_cluster_confidence"] = score_confidence
 
     # Build the output: one row per (fixture_id, team_id, side)
-    output = df_valid[
+    output = score_valid[
         ["fixture_id", "team_id", "is_home", "match_datetime_utc",
-         "league_code", "season", "style_cluster_raw", "style_cluster"]
+         "league_code", "status", "season", "style_cluster_raw", "style_cluster", "style_cluster_confidence"]
     ].copy()
 
     # Also produce a fixture-level frame with home/away labels for easy join
-    home_style = (
-        output[output["is_home"]]
-        .rename(columns={"style_cluster": "home_style_cluster", "style_cluster_raw": "home_style_cluster_raw"})
-        [["fixture_id", "home_style_cluster", "home_style_cluster_raw"]]
-    )
-    away_style = (
-        output[~output["is_home"]]
-        .rename(columns={"style_cluster": "away_style_cluster", "style_cluster_raw": "away_style_cluster_raw"})
-        [["fixture_id", "away_style_cluster", "away_style_cluster_raw"]]
-    )
-    fixture_style = home_style.merge(away_style, on="fixture_id", how="outer")
-    fixture_style["style_matchup"] = (
-        fixture_style["home_style_cluster"].fillna("Unknown")
-        + "_vs_"
-        + fixture_style["away_style_cluster"].fillna("Unknown")
-    )
+    fixture_style = build_fixture_style_frame(output)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -380,29 +455,41 @@ def main() -> None:
         "model": model,
         "scaler": scaler,
         "feature_names": feature_names,
+        "feature_version": FEATURE_VERSION,
         "cluster_labels": cluster_labels,
         "k": args.k,
         "method": args.method,
         "silhouette": sil,
         "temporal_ari": ari,
+        "min_cluster_share": min_cluster_share,
+        "fit_statuses": sorted(FIT_STATUSES),
     }
     model_path = args.out_dir / "cluster_model.pkl"
     joblib.dump(model_blob, model_path)
     print(f"Saved model: {model_path}")
+
+    team_labels_path = args.out_dir / "team_cluster_labels.parquet"
+    output.to_parquet(team_labels_path, index=False)
+    print(f"Saved team labels: {team_labels_path}")
 
     labels_path = args.out_dir / "cluster_labels.parquet"
     fixture_style.to_parquet(labels_path, index=False)
     print(f"Saved labels: {labels_path}")
 
     # Save report
-    cluster_sizes = df_valid["style_cluster"].value_counts().to_dict()
+    cluster_sizes = fit_valid["style_cluster_raw"].value_counts().sort_index().to_dict()
     report_lines = [
         "# Style Cluster Report",
         "",
         f"- Method: `{args.method}`",
         f"- k: `{args.k}`",
+        f"- Feature version: `{FEATURE_VERSION}`",
+        f"- Fit statuses: `{sorted(FIT_STATUSES)}`",
+        f"- Fit rows (valid): `{len(fit_valid)}`",
+        f"- Scored rows (valid): `{len(output)}`",
         f"- Silhouette: `{sil:.4f}` (gate: >= {args.min_silhouette})",
         f"- Temporal ARI: `{ari:.4f}` (gate: >= {args.min_ari})",
+        f"- Min cluster share: `{min_cluster_share:.4f}` (gate: >= {args.min_cluster_share})",
         f"- Gate: `{'PASSED' if gate_passed else 'FAILED'}`",
         "",
         "## Cluster Sizes",
@@ -410,7 +497,7 @@ def main() -> None:
         "| --- | --- | --- |",
     ]
     for raw_id, label in sorted(cluster_labels.items()):
-        n = int(cluster_sizes.get(label, 0))
+        n = int(cluster_sizes.get(raw_id, 0))
         report_lines.append(f"| {raw_id} | {label} | {n} |")
 
     report_lines += [
@@ -432,10 +519,17 @@ def main() -> None:
         "k": args.k,
         "method": args.method,
         "features": feature_names,
+        "feature_version": FEATURE_VERSION,
         "silhouette": sil,
         "temporal_ari": ari,
+        "min_cluster_share": min_cluster_share,
         "gate_passed": gate_passed,
         "cluster_labels": cluster_labels,
+        "fit_statuses": sorted(FIT_STATUSES),
+        "snapshot_source_columns": SNAPSHOT_SOURCE_COLUMNS,
+        "fit_rows_valid": len(fit_valid),
+        "scored_rows_valid": len(output),
+        "status_counts_scored": output["status"].value_counts(dropna=False).to_dict(),
     }
     meta_path = args.out_dir / "cluster_model.meta.json"
     meta_path.write_text(json.dumps(meta, indent=2), encoding="utf-8")

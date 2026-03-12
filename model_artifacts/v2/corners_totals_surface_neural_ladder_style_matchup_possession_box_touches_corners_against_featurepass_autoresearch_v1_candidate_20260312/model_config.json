@@ -1,0 +1,41 @@
+{
+  "path_version": "totals_surface_neural_ladder_calibrated",
+  "model_type_selected": "poisson_glm",
+  "direct_total_markets": [
+    "c75",
+    "c85",
+    "c95",
+    "c105"
+  ],
+  "direct_team_markets": [],
+  "pmf_max_count": 12,
+  "home_share_prior_blend": 1.0,
+  "pmf_market_blend": {},
+  "total_market_head_blend": {},
+  "total_market_ladder_blend": {
+    "c75": 0.75,
+    "c85": 0.75,
+    "c95": 0.75,
+    "c105": 0.75
+  },
+  "team_market_head_blend": {},
+  "league_regime_features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_home_share_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count"
+  ],
+  "neural_total_market_ladder_kind": "conditional_total_market_ladder",
+  "neural_total_market_ladder_sidecar": "neural_total_market_ladder_bundle.pt",
+  "neural_total_market_ladder_hidden_dims": [
+    32,
+    16
+  ],
+  "neural_total_market_ladder_dropout": 0.05,
+  "neural_total_market_ladder_artifact_format": "torch_bundle_v1"
+}

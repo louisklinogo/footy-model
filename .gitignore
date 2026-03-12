@@ -76,3 +76,8 @@ artifacts/reports/backbone_health/backbone_health_*.json
 artifacts/reports/odds_coverage/
 artifacts/reports/risk_edge_buckets/
 artifacts/v2/predictions/
+
+# Local corners autoresearch outputs
+autoresearch_corners/experiment.local.json
+autoresearch_corners/results/
+autoresearch/

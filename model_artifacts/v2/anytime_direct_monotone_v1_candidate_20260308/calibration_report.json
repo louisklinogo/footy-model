@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-03-09T03:20:53.115268+00:00",
+  "generated_at_utc": "2026-03-12T16:49:07.560291+00:00",
   "family": "anytime",
   "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
   "holdout_predictions_path": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308\\holdout_predictions.csv",

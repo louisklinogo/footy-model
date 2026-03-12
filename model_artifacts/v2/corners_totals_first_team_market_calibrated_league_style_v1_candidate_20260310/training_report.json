@@ -1,0 +1,638 @@
+{
+  "train_rows": 6105,
+  "test_rows": 1527,
+  "features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count",
+    "home_sample_size",
+    "away_sample_size",
+    "home_rolling_corners",
+    "home_rolling_corners_against",
+    "away_rolling_corners",
+    "away_rolling_corners_against",
+    "home_rolling_box_touches",
+    "away_rolling_box_touches",
+    "home_rolling_xg",
+    "home_rolling_xg_against",
+    "away_rolling_xg",
+    "away_rolling_xg_against",
+    "home_rolling_sot",
+    "home_rolling_sot_against",
+    "away_rolling_sot",
+    "away_rolling_sot_against",
+    "xg_net_diff",
+    "home_season_baseline_xg",
+    "away_season_baseline_xg",
+    "home_recent_xg_mean_5",
+    "away_recent_xg_mean_5",
+    "home_regressed_recent_xg",
+    "away_regressed_recent_xg",
+    "regressed_xg_diff",
+    "home_recent_vs_baseline_zscore",
+    "away_recent_vs_baseline_zscore",
+    "recent_vs_baseline_gap",
+    "style_delta",
+    "home_rolling_possession",
+    "home_rolling_possession_against",
+    "away_rolling_possession",
+    "away_rolling_possession_against",
+    "home_season_baseline_xg_is_missing",
+    "away_season_baseline_xg_is_missing",
+    "home_recent_xg_mean_5_is_missing",
+    "away_recent_xg_mean_5_is_missing"
+  ],
+  "model_name": "corners_v2",
+  "model_version": "corners_totals_first_team_market_calibrated_league_style_v1_candidate_20260310",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv",
+  "path_version": "totals_first_team_market_calibrated",
+  "model_type_requested": "auto",
+  "model_type_selected": "poisson_glm",
+  "model_selection_summary": {
+    "histgb_poisson": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.5575851203367876,
+      "pr_auc_mean": 0.6053193076310426,
+      "accuracy_mean": 0.6409466854656437,
+      "brier_mean": 0.22283227603665168,
+      "log_loss_mean": 0.637265387839043,
+      "ece_mean": 0.05339449070683417
+    },
+    "poisson_glm": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.5723242712866148,
+      "pr_auc_mean": 0.6197498386160515,
+      "accuracy_mean": 0.6502080080652469,
+      "brier_mean": 0.21821378771935038,
+      "log_loss_mean": 0.626267697748744,
+      "ece_mean": 0.0326632262754474
+    }
+  },
+  "dispersion": {
+    "total_r": 53.83725367937051,
+    "home_r": 8.836220390779218,
+    "away_r": 7.727227679393919
+  },
+  "home_corners_mae": 2.2447626331872947,
+  "away_corners_mae": 2.065325114982835,
+  "total_corners_mae": 2.7070289907221072,
+  "walkforward_folds": 6,
+  "walkforward_min_fold_test_n": 60,
+  "walkforward_markets_scored": 12,
+  "walkforward_league_rows": 2244,
+  "holdout_league_rows": 468,
+  "holdout_prediction_rows": 18324,
+  "league_regime_features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count"
+  ],
+  "league_regime_prior_strength": 30.0,
+  "total_market_head_blend": {},
+  "total_market_head_calibration": {},
+  "team_market_head_blend": {
+    "hc25": 0.5,
+    "hc35": 0.5,
+    "hc45": 0.4,
+    "hc55": 0.4,
+    "ac25": 0.4,
+    "ac35": 0.5,
+    "ac45": 0.35,
+    "ac55": 0.4
+  },
+  "team_market_head_calibration": {
+    "hc25": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.8321048321048321,
+          "auc": 0.5749507874015748,
+          "pr_auc": 0.8645929566752795,
+          "accuracy": 0.8202293202293203,
+          "brier": 0.15017375387426463,
+          "log_loss": 0.5184376937898411,
+          "ece": 0.0859880304957785
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.8321048321048321,
+          "auc": 0.5749507874015748,
+          "pr_auc": 0.8645929566752795,
+          "accuracy": 0.8321048321048321,
+          "brier": 0.13885758093035586,
+          "log_loss": 0.4497320855892698,
+          "ece": 0.01450646711074495
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.8321048321048321,
+          "auc": 0.5647667802957558,
+          "pr_auc": 0.8533598835535736,
+          "accuracy": 0.8296478296478297,
+          "brier": 0.14077152810404284,
+          "log_loss": 0.45469191430818556,
+          "ece": 0.03690390001714976
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.8321048321048321,
+        "auc": 0.5749507874015748,
+        "pr_auc": 0.8645929566752795,
+        "accuracy": 0.8202293202293203,
+        "brier": 0.15017375387426463,
+        "log_loss": 0.5184376937898411,
+        "ece": 0.0859880304957785
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.8321048321048321,
+        "auc": 0.5749507874015748,
+        "pr_auc": 0.8645929566752795,
+        "accuracy": 0.8321048321048321,
+        "brier": 0.13885758093035586,
+        "log_loss": 0.4497320855892698,
+        "ece": 0.01450646711074495
+      },
+      "improvement": {
+        "brier_delta": -0.01131617294390877,
+        "log_loss_delta": -0.06870560820057126,
+        "ece_delta": -0.07148156338503354,
+        "auc_delta": 0.0
+      }
+    },
+    "hc35": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.7092547092547092,
+          "auc": 0.5810713007839183,
+          "pr_auc": 0.7610876927788335,
+          "accuracy": 0.6814086814086814,
+          "brier": 0.22119323349149725,
+          "log_loss": 0.6633541603915432,
+          "ece": 0.12277729133141504
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.7092547092547092,
+          "auc": 0.5810713007839183,
+          "pr_auc": 0.7610876927788335,
+          "accuracy": 0.7129402129402129,
+          "brier": 0.2036008118252981,
+          "log_loss": 0.5970265310388908,
+          "ece": 0.04000453339130106
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.7092547092547092,
+          "auc": 0.5790423836320464,
+          "pr_auc": 0.7553696843590334,
+          "accuracy": 0.7100737100737101,
+          "brier": 0.2058387612549866,
+          "log_loss": 0.6019143161407802,
+          "ece": 0.049482443973465795
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.7092547092547092,
+        "auc": 0.5810713007839183,
+        "pr_auc": 0.7610876927788335,
+        "accuracy": 0.6814086814086814,
+        "brier": 0.22119323349149725,
+        "log_loss": 0.6633541603915432,
+        "ece": 0.12277729133141504
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.7092547092547092,
+        "auc": 0.5810713007839183,
+        "pr_auc": 0.7610876927788335,
+        "accuracy": 0.7129402129402129,
+        "brier": 0.2036008118252981,
+        "log_loss": 0.5970265310388908,
+        "ece": 0.04000453339130106
+      },
+      "improvement": {
+        "brier_delta": -0.01759242166619915,
+        "log_loss_delta": -0.06632762935265235,
+        "ece_delta": -0.08277275794011399,
+        "auc_delta": 0.0
+      }
+    },
+    "hc45": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.5704340704340705,
+          "auc": 0.5701673285397435,
+          "pr_auc": 0.6242291948159202,
+          "accuracy": 0.5696150696150696,
+          "brier": 0.26557828678217027,
+          "log_loss": 0.7464601221496341,
+          "ece": 0.1349243033602762
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.5704340704340705,
+          "auc": 0.5701673285397435,
+          "pr_auc": 0.6242291948159202,
+          "accuracy": 0.5696150696150696,
+          "brier": 0.2443421573401676,
+          "log_loss": 0.6820344544767325,
+          "ece": 0.049837449879442976
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.5704340704340705,
+          "auc": 0.5691418415788598,
+          "pr_auc": 0.6203532824653855,
+          "accuracy": 0.5581490581490581,
+          "brier": 0.24705164189922285,
+          "log_loss": 0.687699701708146,
+          "ece": 0.07108171712052903
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.5704340704340705,
+        "auc": 0.5701673285397435,
+        "pr_auc": 0.6242291948159202,
+        "accuracy": 0.5696150696150696,
+        "brier": 0.26557828678217027,
+        "log_loss": 0.7464601221496341,
+        "ece": 0.1349243033602762
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.5704340704340705,
+        "auc": 0.5701673285397435,
+        "pr_auc": 0.6242291948159202,
+        "accuracy": 0.5696150696150696,
+        "brier": 0.2443421573401676,
+        "log_loss": 0.6820344544767325,
+        "ece": 0.049837449879442976
+      },
+      "improvement": {
+        "brier_delta": -0.021236129442002677,
+        "log_loss_delta": -0.06442566767290159,
+        "ece_delta": -0.08508685348083322,
+        "auc_delta": 0.0
+      }
+    },
+    "hc55": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.43366093366093367,
+          "auc": 0.5604784114674549,
+          "pr_auc": 0.4813440646098731,
+          "accuracy": 0.5622440622440622,
+          "brier": 0.2694430503881915,
+          "log_loss": 0.7655989725054799,
+          "ece": 0.13737030715124784
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.43366093366093367,
+          "auc": 0.5604784114674549,
+          "pr_auc": 0.4813440646098731,
+          "accuracy": 0.5659295659295659,
+          "brier": 0.2471787880669232,
+          "log_loss": 0.6896614843832382,
+          "ece": 0.05284730674153038
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.43366093366093367,
+          "auc": 0.5616865936499937,
+          "pr_auc": 0.4774293124710556,
+          "accuracy": 0.5634725634725635,
+          "brier": 0.2492464691608666,
+          "log_loss": 0.6934992960905345,
+          "ece": 0.0725134709271046
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.43366093366093367,
+        "auc": 0.5604784114674549,
+        "pr_auc": 0.4813440646098731,
+        "accuracy": 0.5622440622440622,
+        "brier": 0.2694430503881915,
+        "log_loss": 0.7655989725054799,
+        "ece": 0.13737030715124784
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.43366093366093367,
+        "auc": 0.5604784114674549,
+        "pr_auc": 0.4813440646098731,
+        "accuracy": 0.5659295659295659,
+        "brier": 0.2471787880669232,
+        "log_loss": 0.6896614843832382,
+        "ece": 0.05284730674153038
+      },
+      "improvement": {
+        "brier_delta": -0.022264262321268297,
+        "log_loss_delta": -0.07593748812224177,
+        "ece_delta": -0.08452300040971747,
+        "auc_delta": 0.0
+      }
+    },
+    "ac25": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.7538902538902539,
+          "auc": 0.5815122541554407,
+          "pr_auc": 0.8031687037229447,
+          "accuracy": 0.7252252252252253,
+          "brier": 0.20052513776437053,
+          "log_loss": 0.6228924857377116,
+          "ece": 0.10774828779893321
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.7538902538902539,
+          "auc": 0.5815122541554407,
+          "pr_auc": 0.8031687037229447,
+          "accuracy": 0.7530712530712531,
+          "brier": 0.1840232726947359,
+          "log_loss": 0.5536312650617894,
+          "ece": 0.03194490742033999
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.7538902538902539,
+          "auc": 0.577322243120058,
+          "pr_auc": 0.7941020238159275,
+          "accuracy": 0.7285012285012284,
+          "brier": 0.1888266292015303,
+          "log_loss": 0.563883237506757,
+          "ece": 0.050798873489329155
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.7538902538902539,
+        "auc": 0.5815122541554407,
+        "pr_auc": 0.8031687037229447,
+        "accuracy": 0.7252252252252253,
+        "brier": 0.20052513776437053,
+        "log_loss": 0.6228924857377116,
+        "ece": 0.10774828779893321
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.7538902538902539,
+        "auc": 0.5815122541554407,
+        "pr_auc": 0.8031687037229447,
+        "accuracy": 0.7530712530712531,
+        "brier": 0.1840232726947359,
+        "log_loss": 0.5536312650617894,
+        "ece": 0.03194490742033999
+      },
+      "improvement": {
+        "brier_delta": -0.016501865069634636,
+        "log_loss_delta": -0.06926122067592222,
+        "ece_delta": -0.07580338037859322,
+        "auc_delta": 0.0
+      }
+    },
+    "ac35": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.592956592956593,
+          "auc": 0.5884186333470436,
+          "pr_auc": 0.6610269718417654,
+          "accuracy": 0.5868140868140869,
+          "brier": 0.2590919163577553,
+          "log_loss": 0.7406808366878955,
+          "ece": 0.12805716746624582
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.592956592956593,
+          "auc": 0.5884186333470436,
+          "pr_auc": 0.6610269718417654,
+          "accuracy": 0.5868140868140869,
+          "brier": 0.23907557545514577,
+          "log_loss": 0.6718634453514389,
+          "ece": 0.03807839694683843
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.592956592956593,
+          "auc": 0.5880455384239136,
+          "pr_auc": 0.6540114010998205,
+          "accuracy": 0.5933660933660934,
+          "brier": 0.24284126399392847,
+          "log_loss": 0.680088646167606,
+          "ece": 0.06025121031265675
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.592956592956593,
+        "auc": 0.5884186333470436,
+        "pr_auc": 0.6610269718417654,
+        "accuracy": 0.5868140868140869,
+        "brier": 0.2590919163577553,
+        "log_loss": 0.7406808366878955,
+        "ece": 0.12805716746624582
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.592956592956593,
+        "auc": 0.5884186333470436,
+        "pr_auc": 0.6610269718417654,
+        "accuracy": 0.5868140868140869,
+        "brier": 0.23907557545514577,
+        "log_loss": 0.6718634453514389,
+        "ece": 0.03807839694683843
+      },
+      "improvement": {
+        "brier_delta": -0.020016340902609536,
+        "log_loss_delta": -0.06881739133645659,
+        "ece_delta": -0.08997877051940739,
+        "auc_delta": 0.0
+      }
+    },
+    "ac45": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.432022932022932,
+          "auc": 0.5966684548806281,
+          "pr_auc": 0.5107048132078318,
+          "accuracy": 0.5892710892710893,
+          "brier": 0.2648607646004403,
+          "log_loss": 0.7561570596346642,
+          "ece": 0.1438759430319631
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.432022932022932,
+          "auc": 0.5966684548806281,
+          "pr_auc": 0.5107048132078318,
+          "accuracy": 0.5909090909090909,
+          "brier": 0.2401688922090027,
+          "log_loss": 0.673912581738777,
+          "ece": 0.029383348705430672
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.432022932022932,
+          "auc": 0.5955439302664896,
+          "pr_auc": 0.5056851921629851,
+          "accuracy": 0.5913185913185913,
+          "brier": 0.24329765883932508,
+          "log_loss": 0.6809125466994161,
+          "ece": 0.049264225533163335
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.432022932022932,
+        "auc": 0.5966684548806281,
+        "pr_auc": 0.5107048132078318,
+        "accuracy": 0.5892710892710893,
+        "brier": 0.2648607646004403,
+        "log_loss": 0.7561570596346642,
+        "ece": 0.1438759430319631
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.432022932022932,
+        "auc": 0.5966684548806281,
+        "pr_auc": 0.5107048132078318,
+        "accuracy": 0.5909090909090909,
+        "brier": 0.2401688922090027,
+        "log_loss": 0.673912581738777,
+        "ece": 0.029383348705430672
+      },
+      "improvement": {
+        "brier_delta": -0.02469187239143758,
+        "log_loss_delta": -0.08224447789588718,
+        "ece_delta": -0.11449259432653243,
+        "auc_delta": 0.0
+      }
+    },
+    "ac55": {
+      "rows_total": 6105,
+      "fit_rows": 3663,
+      "eval_rows": 2442,
+      "status": "calibrated",
+      "selected_method": "sigmoid",
+      "candidate_metrics": {
+        "identity": {
+          "n": 2442,
+          "base_rate": 0.2968877968877969,
+          "auc": 0.5906958809471211,
+          "pr_auc": 0.3735580765759581,
+          "accuracy": 0.6605241605241605,
+          "brier": 0.22429719510124083,
+          "log_loss": 0.6694654009489116,
+          "ece": 0.12279718771170468
+        },
+        "sigmoid": {
+          "n": 2442,
+          "base_rate": 0.2968877968877969,
+          "auc": 0.5906958809471211,
+          "pr_auc": 0.3735580765759581,
+          "accuracy": 0.7022932022932022,
+          "brier": 0.2050983213905344,
+          "log_loss": 0.6005641142854931,
+          "ece": 0.022431288509018075
+        },
+        "isotonic": {
+          "n": 2442,
+          "base_rate": 0.2968877968877969,
+          "auc": 0.5891310023497278,
+          "pr_auc": 0.36103820878843557,
+          "accuracy": 0.6981981981981982,
+          "brier": 0.20667666490928993,
+          "log_loss": 0.6043598976747819,
+          "ece": 0.04203885454643096
+        }
+      },
+      "raw_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.2968877968877969,
+        "auc": 0.5906958809471211,
+        "pr_auc": 0.3735580765759581,
+        "accuracy": 0.6605241605241605,
+        "brier": 0.22429719510124083,
+        "log_loss": 0.6694654009489116,
+        "ece": 0.12279718771170468
+      },
+      "calibrated_eval_metrics": {
+        "n": 2442,
+        "base_rate": 0.2968877968877969,
+        "auc": 0.5906958809471211,
+        "pr_auc": 0.3735580765759581,
+        "accuracy": 0.7022932022932022,
+        "brier": 0.2050983213905344,
+        "log_loss": 0.6005641142854931,
+        "ece": 0.022431288509018075
+      },
+      "improvement": {
+        "brier_delta": -0.019198873710706416,
+        "log_loss_delta": -0.06890128666341855,
+        "ece_delta": -0.10036589920268661,
+        "auc_delta": 0.0
+      }
+    }
+  },
+  "trained_at_utc": "2026-03-10T02:25:02.203813+00:00"
+}

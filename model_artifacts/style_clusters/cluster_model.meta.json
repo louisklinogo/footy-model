@@ -4,20 +4,40 @@
   "features": [
     "rolling_possession",
     "rolling_tackles_pct",
-    "rolling_xg_p1",
-    "rolling_xg_h2_delta",
-    "rolling_corners",
+    "xg_net",
+    "corners_net",
     "defenders",
     "midfielders",
     "forwards"
   ],
-  "silhouette": 0.23974570650766364,
-  "temporal_ari": 0.5810324138111997,
+  "feature_version": "hybrid_net_v2",
+  "silhouette": 0.20702043557008706,
+  "temporal_ari": 0.5009883711074506,
+  "min_cluster_share": 0.05569813414718735,
   "gate_passed": true,
   "cluster_labels": {
-    "0": "LowBlock",
-    "1": "Direct",
-    "2": "Style_2",
-    "3": "Style_3"
+    "0": "Possession_LowBlock_FrontFoot",
+    "1": "Balanced_Press_Measured",
+    "2": "Direct_MidBlock_Reactive",
+    "3": "Balanced_MidBlock_Measured"
+  },
+  "fit_statuses": [
+    "ft"
+  ],
+  "snapshot_source_columns": [
+    "rolling_possession",
+    "rolling_tackles_pct",
+    "rolling_xg",
+    "rolling_xg_against",
+    "rolling_corners",
+    "rolling_corners_against"
+  ],
+  "fit_rows_valid": 14417,
+  "scored_rows_valid": 19269,
+  "status_counts_scored": {
+    "ft": 14417,
+    "scheduled": 4816,
+    "postponed": 34,
+    "cancelled": 2
   }
 }

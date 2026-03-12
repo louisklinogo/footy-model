@@ -1,0 +1,28 @@
+{
+  "path_version": "totals_surface_calibrated",
+  "model_type_selected": "poisson_glm",
+  "direct_total_markets": [
+    "c75",
+    "c85",
+    "c95",
+    "c105"
+  ],
+  "direct_team_markets": [],
+  "total_market_head_blend": {
+    "c75": 0.75,
+    "c85": 0.75,
+    "c95": 0.6,
+    "c105": 0.6
+  },
+  "team_market_head_blend": {},
+  "league_regime_features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count"
+  ]
+}

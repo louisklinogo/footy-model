@@ -337,6 +337,16 @@ def run_sofa_enrichment_for_league(league: str, limit: int, dry_run: bool) -> No
             "--status",
             "ft",
         ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_formations.py"),
+            "--league",
+            league,
+            "--limit",
+            limit_str,
+            "--status",
+            "ft",
+        ],
     ]
     for cmd in commands:
         if dry_run:

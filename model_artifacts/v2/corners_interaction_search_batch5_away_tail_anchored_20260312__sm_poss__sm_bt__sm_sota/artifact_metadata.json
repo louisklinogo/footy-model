@@ -1,0 +1,10 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_interaction_search_batch5_away_tail_anchored_20260312__sm_poss__sm_bt__sm_sota",
+  "artifact_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\corners_interaction_search_batch5_away_tail_anchored_20260312__sm_poss__sm_bt__sm_sota",
+  "trained_at_utc": "2026-03-12T10:47:03.707968+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "C:\\Developer\\soccer\\footy-model\\artifacts\\v2\\datasets\\final_corners_feature_pass_20260310\\pit_dataset_20260310T085757Z.csv",
+  "path_version": "totals_first"
+}

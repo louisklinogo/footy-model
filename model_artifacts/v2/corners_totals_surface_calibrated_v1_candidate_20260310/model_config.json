@@ -1,0 +1,17 @@
+{
+  "path_version": "totals_surface_calibrated",
+  "model_type_selected": "poisson_glm",
+  "direct_total_markets": [
+    "c75",
+    "c85",
+    "c95",
+    "c105"
+  ],
+  "direct_team_markets": [],
+  "total_market_head_blend": {
+    "c75": 0.75,
+    "c85": 0.6,
+    "c95": 0.6,
+    "c105": 0.75
+  }
+}

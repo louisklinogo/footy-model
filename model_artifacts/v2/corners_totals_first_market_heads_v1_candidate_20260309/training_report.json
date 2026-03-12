@@ -1,0 +1,73 @@
+{
+  "train_rows": 6105,
+  "test_rows": 1527,
+  "features": [
+    "home_sample_size",
+    "away_sample_size",
+    "home_rolling_corners",
+    "home_rolling_corners_against",
+    "away_rolling_corners",
+    "away_rolling_corners_against",
+    "home_rolling_box_touches",
+    "away_rolling_box_touches",
+    "odds_c75_over",
+    "odds_c75_under",
+    "odds_c85_over",
+    "odds_c85_under",
+    "odds_c95_over",
+    "odds_c95_under",
+    "odds_c105_over",
+    "odds_c105_under",
+    "implied_c75_over",
+    "implied_c85_over",
+    "implied_c95_over",
+    "implied_c105_over",
+    "corners_gap_75",
+    "corners_gap_85",
+    "corners_gap_95",
+    "corners_gap_105"
+  ],
+  "model_name": "corners_v2",
+  "model_version": "corners_totals_first_market_heads_v1_candidate_20260309",
+  "data_source": "artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv",
+  "path_version": "totals_first_market_heads",
+  "model_type_requested": "auto",
+  "model_type_selected": "poisson_glm",
+  "model_selection_summary": {
+    "histgb_poisson": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.5607911884063191,
+      "pr_auc_mean": 0.6114929444234766,
+      "accuracy_mean": 0.6397997212855434,
+      "brier_mean": 0.22457593143404075,
+      "log_loss_mean": 0.643432175067869,
+      "ece_mean": 0.06723561110451624
+    },
+    "poisson_glm": {
+      "markets_used": 12,
+      "n_total": 78504,
+      "auc_mean": 0.566524176116701,
+      "pr_auc_mean": 0.6152650955386086,
+      "accuracy_mean": 0.6456467450767142,
+      "brier_mean": 0.2215599361226334,
+      "log_loss_mean": 0.6364403914437419,
+      "ece_mean": 0.05066002904132858
+    }
+  },
+  "dispersion": {
+    "total_r": 53.83725367937051,
+    "home_r": 8.836220390779218,
+    "away_r": 7.727227679393919
+  },
+  "home_corners_mae": 2.2614774597760223,
+  "away_corners_mae": 2.078110884742156,
+  "total_corners_mae": 2.7153854901083947,
+  "walkforward_folds": 6,
+  "walkforward_min_fold_test_n": 60,
+  "walkforward_markets_scored": 12,
+  "walkforward_league_rows": 2244,
+  "holdout_league_rows": 468,
+  "holdout_prediction_rows": 18324,
+  "trained_at_utc": "2026-03-09T23:04:50.615101+00:00"
+}

@@ -1,0 +1,10 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "corners_totals_first_cluster_refresh_autoresearch_v1_candidate_20260311",
+  "artifact_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\corners_totals_first_cluster_refresh_autoresearch_v1_candidate_20260311",
+  "trained_at_utc": "2026-03-11T18:31:32.790179+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "C:\\Developer\\soccer\\footy-model\\artifacts\\v2\\datasets\\audit_20260308\\pit_dataset_20260308T083848Z.csv",
+  "path_version": "totals_first"
+}

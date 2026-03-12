@@ -1,0 +1,203 @@
+{
+  "generated_at_utc": "2026-03-10T07:07:02.064267+00:00",
+  "dry_run": false,
+  "rebuild_baseline": false,
+  "scope": "model_v2\\market_scope.yaml",
+  "baseline_path": "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json",
+  "promotion_preflight": {
+    "required_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_draw",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_draw",
+      "eh3_1_0_away",
+      "o15",
+      "u35"
+    ],
+    "required_market_metadata": {
+      "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+      "promotion_policy_name": "scoreline_core_v1"
+    },
+    "baseline_validation": {
+      "validated": true,
+      "baseline_path": "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json",
+      "scope_markets_checked": 76,
+      "required_markets_checked": 22
+    }
+  },
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310",
+  "scoreline_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+  "corners_dir": "model_artifacts\\v2\\corners_signal_phasea_v1_candidate_20260310",
+  "anytime_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+  "evaluation_flow_report_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\evaluation_flow_report.json",
+  "promotion_summary": {
+    "promotion_registry_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\promotion_registry.json",
+    "decision": {
+      "status": "passed",
+      "basis": "required_markets",
+      "passed_markets": [
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "ah2_home_m05",
+        "ah2_away_p05",
+        "ah2_away_m05",
+        "ah2_home_p05",
+        "ah2_home_m15",
+        "ah2_away_p15",
+        "ah2_away_m15",
+        "ah2_home_p15",
+        "eh3_0_1_home",
+        "eh3_0_1_draw",
+        "eh3_0_1_away",
+        "eh3_1_0_home",
+        "eh3_1_0_draw",
+        "eh3_1_0_away",
+        "o15",
+        "u35"
+      ],
+      "failed_markets": [],
+      "missing_required_markets": []
+    },
+    "summary": {
+      "markets_total": 76,
+      "markets_passed": 63,
+      "markets_failed": 13,
+      "required_markets_total": 22,
+      "required_markets_passed": 22,
+      "required_markets_failed": 0,
+      "required_markets_missing": []
+    },
+    "rules": {
+      "promotion_policy_name": "scoreline_core_v1",
+      "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+      "required_markets": [
+        "1x2_h",
+        "1x2_d",
+        "1x2_a",
+        "dc_1x",
+        "dc_x2",
+        "dc_12",
+        "ah2_home_m05",
+        "ah2_away_p05",
+        "ah2_away_m05",
+        "ah2_home_p05",
+        "ah2_home_m15",
+        "ah2_away_p15",
+        "ah2_away_m15",
+        "ah2_home_p15",
+        "eh3_0_1_home",
+        "eh3_0_1_draw",
+        "eh3_0_1_away",
+        "eh3_1_0_home",
+        "eh3_1_0_draw",
+        "eh3_1_0_away",
+        "o15",
+        "u35"
+      ]
+    }
+  },
+  "steps": [
+    {
+      "name": "eval.walkforward",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\run_walkforward.py",
+        "--scope",
+        "model_v2\\market_scope.yaml",
+        "--scoreline-dir",
+        "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "--corners-dir",
+        "model_artifacts\\v2\\corners_signal_phasea_v1_candidate_20260310",
+        "--anytime-dir",
+        "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310"
+      ],
+      "returncode": 0,
+      "stdout": "Saved evaluation report to model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\nMissing holdout markets: 0\nMissing walk-forward markets: 0\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.calibration",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\calibration\\run_calibration.py",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\evaluation_report.json",
+        "--output-dir",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310"
+      ],
+      "returncode": 0,
+      "stdout": "Saved calibration report to model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\calibration_report.json\nMarkets calibrated: 39\n",
+      "stderr": "",
+      "dry_run": false
+    },
+    {
+      "name": "eval.promotion_registry",
+      "command": [
+        "C:\\Python313\\python.exe",
+        "C:\\Developer\\soccer\\footy-model\\src\\modeling\\v2\\eval\\promotion_registry.py",
+        "--scope",
+        "model_v2\\market_scope.yaml",
+        "--baseline",
+        "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json",
+        "--evaluation-report",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\evaluation_report.json",
+        "--calibration-report",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\calibration_report.json",
+        "--output",
+        "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\promotion_registry.json",
+        "--min-support",
+        "200",
+        "--min-folds",
+        "3",
+        "--max-ece",
+        "0.05",
+        "--auc-tolerance",
+        "0.0",
+        "--brier-tolerance",
+        "0.0",
+        "--log-loss-tolerance",
+        "0.0",
+        "--promotion-policy",
+        "model_v2\\promotion_policies\\scoreline_core.yaml"
+      ],
+      "returncode": 0,
+      "stdout": "Saved promotion registry to model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\promotion_registry.json\nMarkets passed: 63\nMarkets failed: 13\n",
+      "stderr": "",
+      "dry_run": false
+    }
+  ],
+  "promotion_recommendation": {
+    "status": "promote",
+    "scope": "required_markets_only",
+    "headline": "Promote for required/core markets only; keep tail markets on a follow-up track.",
+    "json_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\promotion_recommendation.json",
+    "markdown_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\promotion_recommendation.md"
+  },
+  "shadow_comparison": {
+    "json_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\shadow_comparison.json",
+    "markdown_path": "model_artifacts\\v2\\evaluation_corners_signal_phasea_v1_candidate_20260310\\shadow_comparison.md",
+    "market_count": 76
+  }
+}

@@ -1,0 +1,118 @@
+version: 1
+family: corners
+description: Compact corners experiment adding only rest-days and fidelity-score team features on top of the control contract.
+
+required_features:
+  - league_total_corners_mean
+  - league_home_corners_mean
+  - league_away_corners_mean
+  - league_home_share_mean
+  - league_c75_rate
+  - league_c85_rate
+  - league_c95_rate
+  - league_c105_rate
+  - league_fixture_count
+  - home_sample_size
+  - away_sample_size
+  - home_rolling_corners
+  - home_rolling_corners_against
+  - away_rolling_corners
+  - away_rolling_corners_against
+  - home_rolling_box_touches
+  - away_rolling_box_touches
+  - home_rolling_xg
+  - home_rolling_xg_against
+  - away_rolling_xg
+  - away_rolling_xg_against
+  - home_rolling_sot
+  - home_rolling_sot_against
+  - away_rolling_sot
+  - away_rolling_sot_against
+  - xg_net_diff
+  - home_season_baseline_xg
+  - away_season_baseline_xg
+  - home_recent_xg_mean_5
+  - away_recent_xg_mean_5
+  - home_regressed_recent_xg
+  - away_regressed_recent_xg
+  - regressed_xg_diff
+  - home_recent_vs_baseline_zscore
+  - away_recent_vs_baseline_zscore
+  - recent_vs_baseline_gap
+  - style_delta
+  - home_rolling_possession
+  - home_rolling_possession_against
+  - away_rolling_possession
+  - away_rolling_possession_against
+
+optional_features:
+  - odds_c75_over
+  - odds_c75_under
+  - odds_c85_over
+  - odds_c85_under
+  - odds_c95_over
+  - odds_c95_under
+  - odds_c105_over
+  - odds_c105_under
+  - implied_c75_over
+  - implied_c85_over
+  - implied_c95_over
+  - implied_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105
+  - home_rolling_rest_days
+  - away_rolling_rest_days
+  - home_fidelity_score
+  - away_fidelity_score
+
+missingness_indicators:
+  - odds_c75_over_is_missing
+  - odds_c85_over_is_missing
+  - odds_c95_over_is_missing
+  - odds_c105_over_is_missing
+  - home_season_baseline_xg_is_missing
+  - away_season_baseline_xg_is_missing
+  - home_recent_xg_mean_5_is_missing
+  - away_recent_xg_mean_5_is_missing
+  - home_rolling_rest_days_is_missing
+  - away_rolling_rest_days_is_missing
+  - home_fidelity_score_is_missing
+  - away_fidelity_score_is_missing
+
+forbidden_cross_family_features:
+  - odds_over_15
+  - odds_under_15
+  - odds_over_25
+  - odds_under_25
+  - odds_over_35
+  - odds_under_35
+  - odds_gap_15
+  - odds_gap_25
+  - odds_gap_35
+
+disabled_features:
+  - odds_c75_over
+  - odds_c75_under
+  - odds_c85_over
+  - odds_c85_under
+  - odds_c95_over
+  - odds_c95_under
+  - odds_c105_over
+  - odds_c105_under
+  - implied_c75_over
+  - implied_c85_over
+  - implied_c95_over
+  - implied_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105
+  - odds_c75_over_is_missing
+  - odds_c85_over_is_missing
+  - odds_c95_over_is_missing
+  - odds_c105_over_is_missing
+  - home_rolling_crosses
+  - away_rolling_crosses
+  - corners_net_diff

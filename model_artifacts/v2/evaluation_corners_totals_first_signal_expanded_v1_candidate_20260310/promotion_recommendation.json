@@ -1,0 +1,95 @@
+{
+  "generated_at_utc": "2026-03-10T01:12:13.422771+00:00",
+  "evaluation_flow_report_path": "model_artifacts\\v2\\evaluation_corners_totals_first_signal_expanded_v1_candidate_20260310\\evaluation_flow_report.json",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_corners_totals_first_signal_expanded_v1_candidate_20260310",
+  "promotion_registry_path": "model_artifacts\\v2\\evaluation_corners_totals_first_signal_expanded_v1_candidate_20260310\\promotion_registry.json",
+  "promotion_policy_name": "scoreline_core_v1",
+  "promotion_policy_path": "model_v2\\promotion_policies\\scoreline_core.yaml",
+  "decision": {
+    "status": "passed",
+    "basis": "required_markets",
+    "passed_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_draw",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_draw",
+      "eh3_1_0_away",
+      "o15",
+      "u35"
+    ],
+    "failed_markets": [],
+    "missing_required_markets": []
+  },
+  "summary": {
+    "markets_total": 76,
+    "markets_passed": 64,
+    "markets_failed": 12,
+    "required_markets_total": 22,
+    "required_markets_passed": 22,
+    "required_markets_failed": 0,
+    "required_markets_missing": []
+  },
+  "recommendation_status": "promote",
+  "recommended_scope": "required_markets_only",
+  "headline": "Promote for required/core markets only; keep tail markets on a follow-up track.",
+  "rationale": [
+    "Required promotion gate passed (22/22).",
+    "Overall scoped evaluation still has 12 non-required failed markets."
+  ],
+  "follow_up_markets": [
+    "c75",
+    "c85",
+    "c95",
+    "hc25",
+    "hc35",
+    "hc45",
+    "hc55",
+    "ac25",
+    "ac35",
+    "ac45",
+    "ac55",
+    "a_1up"
+  ],
+  "checklist": [
+    {
+      "item": "promotion_registry_generated",
+      "ok": true,
+      "detail": "model_artifacts\\v2\\evaluation_corners_totals_first_signal_expanded_v1_candidate_20260310\\promotion_registry.json"
+    },
+    {
+      "item": "top_level_decision_passed",
+      "ok": true,
+      "detail": "passed"
+    },
+    {
+      "item": "required_markets_complete",
+      "ok": true,
+      "detail": "missing=0"
+    },
+    {
+      "item": "required_markets_passed",
+      "ok": true,
+      "detail": "passed=22/22"
+    },
+    {
+      "item": "full_scope_markets_passed",
+      "ok": false,
+      "detail": "passed=64/76"
+    }
+  ]
+}

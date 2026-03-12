@@ -1,0 +1,17 @@
+{
+  "path_version": "totals_first",
+  "model_type_selected": "poisson_glm",
+  "direct_total_markets": [],
+  "direct_team_markets": [],
+  "total_market_head_blend": {},
+  "league_regime_features": [
+    "league_total_corners_mean",
+    "league_home_corners_mean",
+    "league_away_corners_mean",
+    "league_c75_rate",
+    "league_c85_rate",
+    "league_c95_rate",
+    "league_c105_rate",
+    "league_fixture_count"
+  ]
+}

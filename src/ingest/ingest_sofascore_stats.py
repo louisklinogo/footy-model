@@ -6,6 +6,10 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from sofascore_wrapper.api import SofascoreAPI
 
 from src.db.db_utils import connect_db
@@ -220,6 +224,8 @@ async def main():
                         OR (s.fidelity_score = 0.0 AND s.raw_json->>'error' IS NULL)
                         OR s.h_corners IS NULL
                         OR s.a_corners IS NULL
+                        OR s.h_possession IS NULL
+                        OR s.h_xg_p1 IS NULL
                       )
                 """
                 if args.league:
