@@ -1,6 +1,10 @@
 from __future__ import annotations
 
-from src.jobs.tick_due_fixtures_v1 import Options, build_hybrid_predict_command
+from src.jobs.tick_due_fixtures_v1 import (
+    Options,
+    build_hybrid_predict_command,
+    build_score_command,
+)
 
 
 def _options(**overrides: object) -> Options:
@@ -39,3 +43,19 @@ def test_build_hybrid_predict_command_targets_hybrid_identity() -> None:
 def test_build_hybrid_predict_command_forwards_dry_run() -> None:
     command = build_hybrid_predict_command(_options(dry_run=True), "E1")
     assert "--dry-run" in command
+
+
+def test_build_score_command_targets_hybrid_identity_for_hybrid_runtime() -> None:
+    command = build_score_command(_options(), "E0")
+    assert command[1].endswith("score_market_outcomes_fixtures_first.py")
+    assert "--league" in command and "E0" in command
+    assert "--model" in command and "market_outcome_v2" in command
+    assert "--version" in command and "hybrid_v1" in command
+
+
+def test_build_score_command_uses_legacy_defaults_for_legacy_runtime() -> None:
+    command = build_score_command(_options(predict_runtime="legacy"), "E1")
+    assert command[1].endswith("score_market_outcomes_fixtures_first.py")
+    assert "--league" in command and "E1" in command
+    assert "--model" not in command
+    assert "--version" not in command

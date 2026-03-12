@@ -146,6 +146,18 @@ def parse_args() -> argparse.Namespace:
         description="Score settled market outcome predictions"
     )
     parser.add_argument(
+        "--model",
+        type=str,
+        default=MODEL_NAME,
+        help="Model name to score from predictions table",
+    )
+    parser.add_argument(
+        "--version",
+        type=str,
+        default=MODEL_VERSION,
+        help="Model version to score from predictions table",
+    )
+    parser.add_argument(
         "--league", type=str, default=None, help="Optional league_code filter"
     )
     parser.add_argument(
@@ -175,6 +187,8 @@ def ensure_prediction_scores_schema() -> None:
 
 
 def fetch_unscored_predictions(
+    model_name: str,
+    model_version: str,
     league: str | None,
     limit: int | None,
     since_days: int | None,
@@ -265,8 +279,8 @@ def fetch_unscored_predictions(
     """
     params: list[object] = [
         list(ODDS_MARKET_CODES),
-        MODEL_NAME,
-        MODEL_VERSION,
+        model_name,
+        model_version,
         list(MARKETS),
         list(CORNERS_MARKETS),
         list(ANYTIME_MARKETS),
@@ -621,6 +635,8 @@ def main() -> None:
     args = parse_args()
     ensure_prediction_scores_schema()
     candidates = fetch_unscored_predictions(
+        model_name=str(args.model),
+        model_version=str(args.version),
         league=args.league,
         limit=args.limit,
         since_days=args.since_days,

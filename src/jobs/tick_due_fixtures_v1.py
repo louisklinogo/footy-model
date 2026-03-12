@@ -611,6 +611,29 @@ def build_hybrid_predict_command(options: Options, league: str) -> list[str]:
     return command
 
 
+def build_score_command(options: Options, league: str) -> list[str]:
+    command = [
+        sys.executable,
+        str(ROOT / "src" / "modeling" / "evaluation" / "score_market_outcomes_fixtures_first.py"),
+        "--league",
+        league,
+        "--since-days",
+        str(options.score_since_days),
+        "--limit",
+        str(options.max_score),
+    ]
+    if options.predict_runtime == "hybrid_v2":
+        command.extend(
+            [
+                "--model",
+                options.hybrid_model_name,
+                "--version",
+                options.hybrid_model_version,
+            ]
+        )
+    return command
+
+
 def select_score_targets(league: str, since_days: int, max_score: int) -> list[int]:
     conn = connect_db()
     try:
@@ -665,7 +688,7 @@ def run_score_phase(options: Options, leagues: Sequence[str]) -> None:
             if not options.dry_run:
                 score_targets = select_score_targets(league, options.score_since_days, options.max_score)
             try:
-                run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "score_market_outcomes_fixtures_first.py"), "--league", league, "--since-days", str(options.score_since_days), "--limit", str(options.max_score)], options.dry_run)
+                run_command(build_score_command(options, league), options.dry_run)
             except Exception as exc:
                 failures.append(f"{league}: {exc}")
             finally:
