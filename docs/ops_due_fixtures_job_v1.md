@@ -5,7 +5,7 @@
 
 `src/jobs/tick_due_fixtures_v1.py` runs the v1 fixtures-first operational tick in three phases:
 
-1. settle: refresh due fixtures, enrich premium payloads, and ingest v1 fixture rows
+1. settle: refresh due fixtures, enrich premium payloads, ingest v1 fixture rows, and repair recent finished fixtures that are still missing post-match stats or derived lead states
 2. predict: build team snapshots, generate fixtures-first predictions, and export outputs
 3. score: score recent finished fixtures for each target league
 
@@ -18,10 +18,22 @@ This job is intentionally tied to v1-only scripts and v1-only data paths.
 - Tick ID batches root: `data/v1/ids/tick`
 - v1 ingestion/prediction scripts invoked by the job:
   - `src/ingest/ingest_premium_fixtures_v1.py`
+  - `src/ingest/ingest_sofascore_stats.py`
+  - `src/ingest/ingest_sofascore_incidents.py`
   - `src/features/build_team_premium_snapshots_v1.py`
+  - `src/modeling/evaluation/build_incident_lead_state_features.py`
   - `src/modeling/evaluation/predict_market_outcomes_fixtures_first.py`
   - `src/modeling/export/export_market_outcomes_fixtures_first.py`
   - `src/modeling/evaluation/score_market_outcomes_fixtures_first.py`
+
+## Settle repair behavior
+
+The settle phase now includes a bounded repair pass for recent `ft` fixtures in the active league set when either of these is still missing:
+
+- `fixture_stats_premium.h_corners` / `fixture_stats_premium.a_corners`
+- `fixture_incident_lead_states`
+
+The repair pass writes a temporary fixture-id CSV under `artifacts/tmp/tick_due_fixtures_v1/`, reruns SofaScore stats and incidents for only those fixtures, rebuilds incident lead-state features, and then allows the normal score phase to pick them up.
 
 ## Environment variables
 

@@ -1,6 +1,6 @@
 # Current Repo State (Canonical)
 
-Updated: 2026-03-09
+Updated: 2026-03-13
 Owner: Augment Agent
 Status: Canonical current-state summary
 
@@ -8,6 +8,9 @@ Status: Canonical current-state summary
 
 - Active scheduler wrapper: `scripts/run_tick_scheduler.cmd`
 - Active job entrypoint: `src/jobs/tick_due_fixtures_v1.py`
+- Active settle/runtime repair behavior:
+  - the settle phase now includes a bounded post-match repair pass for recent `ft` fixtures that are still missing `fixture_stats_premium` corners stats or `fixture_incident_lead_states`
+  - this repair path reruns SofaScore stats/incidents for targeted fixture IDs and then rebuilds incident lead-state features before the normal score phase
 - Active predict path:
   1. `src/features/build_team_premium_snapshots_v1.py`
   2. `src/modeling/layer1_poisson/predict_lambda.py`
@@ -26,6 +29,12 @@ Status: Canonical current-state summary
   - `situational_xgb / v2`
 
 These are the identities currently seen in the live DB tables (`predictions`, `prediction_risk_assessments`, `pipeline_runs`) at material volume.
+
+## Recent runtime repair note
+
+- Hybrid scoring is now fully scoreable on finished fixtures when upstream post-match data exists.
+- `score_market_outcomes_fixtures_first.py` now supports explicit `--model` / `--version` selection, which is how `market_outcome_v2 / hybrid_v1` is backfilled and scored.
+- Scoreline family exotics (`mg_*`, `hmg_*`, `amg_*`, `ms_*`) are now part of the scorer's supported market set.
 
 ## What v2 is today
 

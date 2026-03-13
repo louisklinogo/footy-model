@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from src.jobs.tick_due_fixtures_v1 import (
     Options,
     build_hybrid_predict_command,
+    build_postmatch_repair_commands,
     build_score_command,
 )
 
@@ -59,3 +62,20 @@ def test_build_score_command_uses_legacy_defaults_for_legacy_runtime() -> None:
     assert "--league" in command and "E1" in command
     assert "--model" not in command
     assert "--version" not in command
+
+
+def test_build_postmatch_repair_commands_cover_stats_incidents_and_lead_states() -> None:
+    fixture_ids_file = Path("artifacts/tmp/test_fixture_ids_runtime.csv")
+    fixture_ids_file.parent.mkdir(parents=True, exist_ok=True)
+    fixture_ids_file.write_text("fixture_id\n123\n456\n", encoding="utf-8")
+    try:
+        commands = build_postmatch_repair_commands(fixture_ids_file)
+        assert len(commands) == 3
+        assert commands[0][1].endswith("ingest_sofascore_stats.py")
+        assert commands[1][1].endswith("ingest_sofascore_incidents.py")
+        assert commands[2][1].endswith("build_incident_lead_state_features.py")
+        for command in commands:
+            assert "--fixture-ids-file" in command and str(fixture_ids_file) in command
+    finally:
+        if fixture_ids_file.exists():
+            fixture_ids_file.unlink()

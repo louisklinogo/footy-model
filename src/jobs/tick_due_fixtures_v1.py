@@ -8,6 +8,7 @@ import argparse
 import json
 import subprocess
 import sys
+import tempfile
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -354,6 +355,69 @@ def run_sofa_enrichment_for_league(league: str, limit: int, dry_run: bool) -> No
         run_command(cmd, dry_run)
 
 
+def write_fixture_ids_csv(fixture_ids: Sequence[int]) -> Path:
+    tmp_root = ROOT / "artifacts" / "tmp" / "tick_due_fixtures_v1"
+    tmp_root.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        mode="w",
+        suffix=".csv",
+        prefix="fixture_ids_",
+        dir=tmp_root,
+        delete=False,
+        encoding="utf-8",
+    ) as handle:
+        handle.write("fixture_id\n")
+        for fixture_id in fixture_ids:
+            handle.write(f"{int(fixture_id)}\n")
+        return Path(handle.name)
+
+
+def build_postmatch_repair_commands(fixture_ids_file: Path) -> list[list[str]]:
+    fixture_ids_arg = str(fixture_ids_file)
+    return [
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_stats.py"),
+            "--fixture-ids-file",
+            fixture_ids_arg,
+            "--limit",
+            "500",
+        ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "ingest" / "ingest_sofascore_incidents.py"),
+            "--fixture-ids-file",
+            fixture_ids_arg,
+            "--status",
+            "ft",
+            "--limit",
+            "500",
+        ],
+        [
+            sys.executable,
+            str(ROOT / "src" / "modeling" / "evaluation" / "build_incident_lead_state_features.py"),
+            "--fixture-ids-file",
+            fixture_ids_arg,
+            "--status",
+            "ft",
+        ],
+    ]
+
+
+def run_postmatch_repair_for_fixtures(fixture_ids: Sequence[int], dry_run: bool) -> None:
+    if not fixture_ids:
+        return
+    fixture_ids_file = write_fixture_ids_csv(fixture_ids)
+    try:
+        for cmd in build_postmatch_repair_commands(fixture_ids_file):
+            if dry_run:
+                cmd = [*cmd, "--dry-run"]
+            run_command(cmd, dry_run)
+    finally:
+        if fixture_ids_file.exists():
+            fixture_ids_file.unlink()
+
+
 def mark_settle_selection(fixture_ids: Sequence[int]) -> None:
     if not fixture_ids:
         return
@@ -394,6 +458,50 @@ def delete_existing_premium_json(league: str, flashscore_ids: Sequence[str], dry
         p.unlink()
 
 
+def select_postmatch_repair_targets(leagues: Sequence[str], limit: int) -> list[int]:
+    conn = connect_db()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                WITH ranked AS (
+                    SELECT
+                        f.fixture_id,
+                        f.league_code,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY f.league_code
+                            ORDER BY f.match_datetime_utc DESC, f.fixture_id DESC
+                        ) AS league_rank
+                    FROM fixtures f
+                    LEFT JOIN fixture_stats_premium fs
+                      ON fs.fixture_id = f.fixture_id
+                    LEFT JOIN fixture_incident_lead_states ils
+                      ON ils.fixture_id = f.fixture_id
+                    WHERE f.league_code = ANY(%s)
+                      AND f.sofascore_id IS NOT NULL
+                      AND f.status = 'ft'
+                      AND f.match_datetime_utc IS NOT NULL
+                      AND f.match_datetime_utc >= NOW() - INTERVAL '7 days'
+                      AND (
+                          fs.fixture_id IS NULL
+                          OR fs.h_corners IS NULL
+                          OR fs.a_corners IS NULL
+                          OR ils.fixture_id IS NULL
+                      )
+                )
+                SELECT fixture_id
+                FROM ranked
+                WHERE league_rank <= %s
+                ORDER BY fixture_id DESC
+                """,
+                (list(leagues), max(1, int(limit))),
+            )
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+    return [row[0] for row in rows if isinstance(row[0], int)]
+
+
 def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
     details = {"leagues": list(leagues), "dry_run": options.dry_run}
     run_id = _start_run(SETTLE_JOB, details, options.dry_run)
@@ -416,6 +524,7 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
                     limit=options.max_settle,
                     dry_run=True,
                 )
+            run_postmatch_repair_for_fixtures([101, 202], dry_run=True)
             _finish_run(run_id, "success", "settle dry-run complete", details, options.dry_run)
             return
 
@@ -443,10 +552,14 @@ def run_settle_phase(options: Options, leagues: Sequence[str]) -> None:
                 dry_run=False,
             )
 
+        repair_fixture_ids = select_postmatch_repair_targets(leagues, options.max_settle)
+        if repair_fixture_ids:
+            run_postmatch_repair_for_fixtures(repair_fixture_ids, dry_run=False)
+
         _finish_run(
             run_id,
             "success",
-            f"settle complete targets={len(targets)} sofa_enrichment_leagues={len(grouped)}",
+            f"settle complete targets={len(targets)} sofa_enrichment_leagues={len(grouped)} repair_targets={len(repair_fixture_ids)}",
             details,
             options.dry_run,
         )
