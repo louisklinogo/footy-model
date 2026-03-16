@@ -1,0 +1,4014 @@
+{
+  "generated_at_utc": "2026-03-15T11:13:37.290342+00:00",
+  "evaluation_dir": "model_artifacts\\v2\\evaluation_scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+  "baseline_path": "model_artifacts\\v2\\baselines\\metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json",
+  "promotion_registry_path": "model_artifacts\\v2\\evaluation_scoreline_dbreuse_team_player_context_v1_candidate_20260315\\promotion_registry.json",
+  "decision": {
+    "status": "failed",
+    "basis": "required_markets",
+    "passed_markets": [
+      "o15",
+      "u35"
+    ],
+    "failed_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_draw",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_draw",
+      "eh3_1_0_away"
+    ],
+    "missing_required_markets": []
+  },
+  "promotion_recommendation": {
+    "status": "hold",
+    "scope": "none",
+    "headline": "Hold promotion until the recorded gate passes.",
+    "json_path": "model_artifacts\\v2\\evaluation_scoreline_dbreuse_team_player_context_v1_candidate_20260315\\promotion_recommendation.json",
+    "markdown_path": "model_artifacts\\v2\\evaluation_scoreline_dbreuse_team_player_context_v1_candidate_20260315\\promotion_recommendation.md"
+  },
+  "summary": {
+    "markets_total": 76,
+    "markets_passed": 29,
+    "markets_failed": 47,
+    "passed_markets": [
+      "o15",
+      "u35",
+      "mg_0",
+      "mg_1_2",
+      "mg_2_4",
+      "mg_2_6",
+      "mg_3_4",
+      "mg_3_5",
+      "mg_3_6",
+      "mg_7p",
+      "hmg_4p",
+      "amg_2_3",
+      "amg_4p",
+      "ms_h_4_0_5_0_6_0",
+      "ms_a_0_4_0_5_0_6",
+      "ms_h_2_1_3_1_4_1",
+      "ms_other_awaywin",
+      "c75",
+      "c85",
+      "c95",
+      "c105",
+      "hc25",
+      "hc35",
+      "hc45",
+      "hc55",
+      "ac25",
+      "ac35",
+      "ac45",
+      "ac55"
+    ],
+    "failed_markets": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_draw",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_draw",
+      "eh3_1_0_away",
+      "mg_1_3",
+      "mg_1_4",
+      "mg_1_5",
+      "mg_1_6",
+      "mg_2_3",
+      "mg_2_5",
+      "mg_4_5",
+      "mg_4_6",
+      "mg_5_6",
+      "hmg_0",
+      "hmg_1_2",
+      "hmg_1_3",
+      "hmg_2_3",
+      "amg_0",
+      "amg_1_2",
+      "amg_1_3",
+      "ms_h_1_0_2_0_3_0",
+      "ms_a_0_1_0_2_0_3",
+      "ms_h_1_2_1_3_1_4",
+      "ms_h_3_2_4_2_5_1",
+      "ms_a_2_3_2_4_1_5",
+      "ms_other_homewin",
+      "ms_draw",
+      "h_1up",
+      "a_1up",
+      "h_2up",
+      "a_2up"
+    ],
+    "required_markets_total": 22,
+    "required_markets_passed": 2,
+    "required_markets_failed": 20,
+    "required_markets_missing": [],
+    "required_market_list": [
+      "1x2_h",
+      "1x2_d",
+      "1x2_a",
+      "dc_1x",
+      "dc_x2",
+      "dc_12",
+      "ah2_home_m05",
+      "ah2_away_p05",
+      "ah2_away_m05",
+      "ah2_home_p05",
+      "ah2_home_m15",
+      "ah2_away_p15",
+      "ah2_away_m15",
+      "ah2_home_p15",
+      "eh3_0_1_home",
+      "eh3_0_1_draw",
+      "eh3_0_1_away",
+      "eh3_1_0_home",
+      "eh3_1_0_draw",
+      "eh3_1_0_away",
+      "o15",
+      "u35"
+    ]
+  },
+  "candidate_artifacts": {
+    "scoreline": {
+      "family": "scoreline",
+      "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+      "model_name": "scoreline_v2",
+      "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+      "artifact_created_at": null
+    },
+    "corners": {
+      "family": "corners",
+      "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+      "model_name": "corners_v2",
+      "model_version": "live_verification_corners_20260306",
+      "artifact_created_at": null
+    },
+    "anytime": {
+      "family": "anytime",
+      "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+      "model_name": "anytime_v2",
+      "model_version": "markov_head_v1",
+      "artifact_created_at": null
+    }
+  },
+  "baseline_artifacts": {
+    "scoreline": {
+      "family": "scoreline",
+      "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+      "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+      "model_name": "scoreline_v2",
+      "model_version": "poisson_head_v1",
+      "artifact_created_at": null
+    },
+    "corners": {
+      "family": "corners",
+      "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+      "artifact_dir": "model_artifacts\\v2\\corners",
+      "model_name": "corners_v2",
+      "model_version": "distribution_head_v1",
+      "artifact_created_at": null
+    },
+    "anytime": {
+      "family": "anytime",
+      "holdout_path": "model_artifacts\\v2\\anytime\\metrics_holdout.json",
+      "artifact_dir": "model_artifacts\\v2\\anytime",
+      "model_name": "anytime_v2",
+      "model_version": "anytime_direct_monotone_v1_candidate_20260308",
+      "artifact_created_at": null
+    }
+  },
+  "improvement_summary": {
+    "auc": 26,
+    "brier": 31,
+    "log_loss": 30,
+    "ece": 34
+  },
+  "markets": [
+    {
+      "market": "1x2_h",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6471067774936061,
+        "brier": 0.23147983690052507,
+        "pr_auc": 0.5690689946070935,
+        "accuracy": 0.609547123623011,
+        "log_loss": 0.654965594295495,
+        "ece": 0.03550390883331887,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "1x2_h",
+        "n": 1720,
+        "base_rate": 0.43023255813953487,
+        "auc": 0.6314065085493656,
+        "pr_auc": 0.5510706411395965,
+        "accuracy": 0.6040697674418605,
+        "brier": 0.23308220574351146,
+        "log_loss": 0.658127900111905,
+        "ece": 0.02310748449676672
+      },
+      "deltas": {
+        "auc": -0.01570026894424048,
+        "brier": 0.0016023688429863958,
+        "log_loss": 0.0031623058164100826,
+        "ece": -0.012396424336552154
+      }
+    },
+    {
+      "market": "1x2_d",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5337373483736383,
+        "brier": 0.19350310612002172,
+        "pr_auc": 0.2793607733308505,
+        "accuracy": 0.7368421052631579,
+        "log_loss": 0.5752499267615999,
+        "ece": 0.012932992598093067,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "1x2_d",
+        "n": 1720,
+        "base_rate": 0.2691860465116279,
+        "auc": 0.5590919790855873,
+        "pr_auc": 0.3077943565054734,
+        "accuracy": 0.7308139534883721,
+        "brier": 0.195687379173424,
+        "log_loss": 0.579556247884807,
+        "ece": 0.019120635224864374
+      },
+      "deltas": {
+        "auc": 0.02535463071194899,
+        "brier": 0.002184273053402269,
+        "log_loss": 0.0043063211232070575,
+        "ece": 0.006187642626771307
+      }
+    },
+    {
+      "market": "1x2_a",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6506136720422435,
+        "brier": 0.19816603218711684,
+        "pr_auc": 0.44380015071639933,
+        "accuracy": 0.7062423500611995,
+        "log_loss": 0.5830419851275311,
+        "ece": 0.03079773425606501,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "1x2_a",
+        "n": 1720,
+        "base_rate": 0.3005813953488372,
+        "auc": 0.6318721249744755,
+        "pr_auc": 0.4321482831210561,
+        "accuracy": 0.7052325581395349,
+        "brier": 0.20096864861416985,
+        "log_loss": 0.5899064900234521,
+        "ece": 0.026700026879404575
+      },
+      "deltas": {
+        "auc": -0.018741547067767983,
+        "brier": 0.002802616427053012,
+        "log_loss": 0.006864504895920942,
+        "ece": -0.0040977073766604345
+      }
+    },
+    {
+      "market": "dc_1x",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6506136720422435,
+        "brier": 0.19816603218711684,
+        "pr_auc": 0.7986218527345347,
+        "accuracy": 0.7062423500611995,
+        "log_loss": 0.5830419851275312,
+        "ece": 0.030797734256065017,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "dc_1x",
+        "n": 1720,
+        "base_rate": 0.6994186046511628,
+        "auc": 0.6318721249744755,
+        "pr_auc": 0.7825751723235744,
+        "accuracy": 0.7052325581395349,
+        "brier": 0.20096864861416985,
+        "log_loss": 0.5899064900234521,
+        "ece": 0.026700026879404544
+      },
+      "deltas": {
+        "auc": -0.018741547067767983,
+        "brier": 0.002802616427053012,
+        "log_loss": 0.006864504895920831,
+        "ece": -0.004097707376660473
+      }
+    },
+    {
+      "market": "dc_x2",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6471067774936062,
+        "brier": 0.23147983690052507,
+        "pr_auc": 0.6907326652055361,
+        "accuracy": 0.609547123623011,
+        "log_loss": 0.6549655942954952,
+        "ece": 0.03550390883331886,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "dc_x2",
+        "n": 1720,
+        "base_rate": 0.5697674418604651,
+        "auc": 0.6314065085493658,
+        "pr_auc": 0.682465898634204,
+        "accuracy": 0.6040697674418605,
+        "brier": 0.23308220574351146,
+        "log_loss": 0.658127900111905,
+        "ece": 0.023107484496766778
+      },
+      "deltas": {
+        "auc": -0.01570026894424048,
+        "brier": 0.0016023688429863958,
+        "log_loss": 0.0031623058164098605,
+        "ece": -0.012396424336552081
+      }
+    },
+    {
+      "market": "dc_12",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5337373483736383,
+        "brier": 0.19350310612002172,
+        "pr_auc": 0.7638357556585227,
+        "accuracy": 0.7368421052631579,
+        "log_loss": 0.5752499267615999,
+        "ece": 0.012932992598093065,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "dc_12",
+        "n": 1720,
+        "base_rate": 0.7308139534883721,
+        "auc": 0.5590919790855873,
+        "pr_auc": 0.7716260726287058,
+        "accuracy": 0.7308139534883721,
+        "brier": 0.195687379173424,
+        "log_loss": 0.5795562478848069,
+        "ece": 0.019120635224864325
+      },
+      "deltas": {
+        "auc": 0.02535463071194899,
+        "brier": 0.002184273053402269,
+        "log_loss": 0.0043063211232069465,
+        "ece": 0.00618764262677126
+      }
+    },
+    {
+      "market": "ah2_home_m05",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6471067774936061,
+        "brier": 0.23147983690052507,
+        "pr_auc": 0.5690689946070935,
+        "accuracy": 0.609547123623011,
+        "log_loss": 0.654965594295495,
+        "ece": 0.03550390883331887,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_home_m05",
+        "n": 1720,
+        "base_rate": 0.43023255813953487,
+        "auc": 0.6314065085493656,
+        "pr_auc": 0.5510706411395965,
+        "accuracy": 0.6040697674418605,
+        "brier": 0.23308220574351146,
+        "log_loss": 0.658127900111905,
+        "ece": 0.02310748449676672
+      },
+      "deltas": {
+        "auc": -0.01570026894424048,
+        "brier": 0.0016023688429863958,
+        "log_loss": 0.0031623058164100826,
+        "ece": -0.012396424336552154
+      }
+    },
+    {
+      "market": "ah2_away_p05",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6471067774936062,
+        "brier": 0.23147983690052507,
+        "pr_auc": 0.6907326652055361,
+        "accuracy": 0.609547123623011,
+        "log_loss": 0.654965594295495,
+        "ece": 0.03550390883331885,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_away_p05",
+        "n": 1720,
+        "base_rate": 0.5697674418604651,
+        "auc": 0.6314065085493658,
+        "pr_auc": 0.682465898634204,
+        "accuracy": 0.6040697674418605,
+        "brier": 0.23308220574351146,
+        "log_loss": 0.6581279001119049,
+        "ece": 0.02310748449676677
+      },
+      "deltas": {
+        "auc": -0.01570026894424048,
+        "brier": 0.0016023688429863958,
+        "log_loss": 0.0031623058164099715,
+        "ece": -0.012396424336552081
+      }
+    },
+    {
+      "market": "ah2_away_m05",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6506136720422435,
+        "brier": 0.19816603218711684,
+        "pr_auc": 0.44380015071639933,
+        "accuracy": 0.7062423500611995,
+        "log_loss": 0.5830419851275311,
+        "ece": 0.03079773425606501,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_away_m05",
+        "n": 1720,
+        "base_rate": 0.3005813953488372,
+        "auc": 0.6318721249744755,
+        "pr_auc": 0.4321482831210561,
+        "accuracy": 0.7052325581395349,
+        "brier": 0.20096864861416985,
+        "log_loss": 0.5899064900234521,
+        "ece": 0.026700026879404575
+      },
+      "deltas": {
+        "auc": -0.018741547067767983,
+        "brier": 0.002802616427053012,
+        "log_loss": 0.006864504895920942,
+        "ece": -0.0040977073766604345
+      }
+    },
+    {
+      "market": "ah2_home_p05",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6506136720422435,
+        "brier": 0.1981660321871169,
+        "pr_auc": 0.7986218527345347,
+        "accuracy": 0.7062423500611995,
+        "log_loss": 0.5830419851275311,
+        "ece": 0.030797734256065017,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_home_p05",
+        "n": 1720,
+        "base_rate": 0.6994186046511628,
+        "auc": 0.6318721249744755,
+        "pr_auc": 0.7825751723235744,
+        "accuracy": 0.7052325581395349,
+        "brier": 0.20096864861416985,
+        "log_loss": 0.5899064900234521,
+        "ece": 0.026700026879404547
+      },
+      "deltas": {
+        "auc": -0.018741547067767983,
+        "brier": 0.0028026164270529563,
+        "log_loss": 0.006864504895920942,
+        "ece": -0.004097707376660469
+      }
+    },
+    {
+      "market": "ah2_home_m15",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6539379752879386,
+        "brier": 0.15334291029857017,
+        "pr_auc": 0.321908972100607,
+        "accuracy": 0.7974296205630355,
+        "log_loss": 0.48007922127625313,
+        "ece": 0.022728022786329675,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_home_m15",
+        "n": 1720,
+        "base_rate": 0.2005813953488372,
+        "auc": 0.6368052700922266,
+        "pr_auc": 0.3184296076192938,
+        "accuracy": 0.8,
+        "brier": 0.15352988169697426,
+        "log_loss": 0.481528855255251,
+        "ece": 0.016499533239743604
+      },
+      "deltas": {
+        "auc": -0.017132705195711972,
+        "brier": 0.0001869713984040955,
+        "log_loss": 0.0014496339789978885,
+        "ece": -0.006228489546586072
+      }
+    },
+    {
+      "market": "ah2_away_p15",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6539379752879386,
+        "brier": 0.15334291029857017,
+        "pr_auc": 0.874209254820369,
+        "accuracy": 0.7974296205630355,
+        "log_loss": 0.480079221276253,
+        "ece": 0.022728022786329644,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_away_p15",
+        "n": 1720,
+        "base_rate": 0.7994186046511628,
+        "auc": 0.6368052700922266,
+        "pr_auc": 0.8653591451962148,
+        "accuracy": 0.8,
+        "brier": 0.15352988169697426,
+        "log_loss": 0.4815288552552512,
+        "ece": 0.01649953323974366
+      },
+      "deltas": {
+        "auc": -0.017132705195711972,
+        "brier": 0.0001869713984040955,
+        "log_loss": 0.001449633978998166,
+        "ece": -0.006228489546585985
+      }
+    },
+    {
+      "market": "ah2_away_m15",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.661781867377183,
+        "brier": 0.10522050482571031,
+        "pr_auc": 0.20696671279011486,
+        "accuracy": 0.8757649938800489,
+        "log_loss": 0.3593153542829758,
+        "ece": 0.012611250087126696,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_away_m15",
+        "n": 1720,
+        "base_rate": 0.12209302325581395,
+        "auc": 0.6476631977294229,
+        "pr_auc": 0.19897004561060688,
+        "accuracy": 0.877906976744186,
+        "brier": 0.10433219532160078,
+        "log_loss": 0.35849752187657935,
+        "ece": 0.019703486284526797
+      },
+      "deltas": {
+        "auc": -0.014118669647760096,
+        "brier": -0.0008883095041095357,
+        "log_loss": -0.0008178324063964348,
+        "ece": 0.0070922361974001015
+      }
+    },
+    {
+      "market": "ah2_home_p15",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6617818673771829,
+        "brier": 0.10522050482571031,
+        "pr_auc": 0.9267066876488368,
+        "accuracy": 0.8757649938800489,
+        "log_loss": 0.3593153542829758,
+        "ece": 0.012611250087126678,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ah2_home_p15",
+        "n": 1720,
+        "base_rate": 0.877906976744186,
+        "auc": 0.6476631977294229,
+        "pr_auc": 0.9222427008795651,
+        "accuracy": 0.877906976744186,
+        "brier": 0.10433219532160076,
+        "log_loss": 0.35849752187657935,
+        "ece": 0.019703486284526808
+      },
+      "deltas": {
+        "auc": -0.014118669647759985,
+        "brier": -0.0008883095041095496,
+        "log_loss": -0.0008178324063964348,
+        "ece": 0.007092236197400129
+      }
+    },
+    {
+      "market": "eh3_0_1_home",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6539379752879386,
+        "brier": 0.15334291029857017,
+        "pr_auc": 0.321908972100607,
+        "accuracy": 0.7974296205630355,
+        "log_loss": 0.48007922127625313,
+        "ece": 0.022728022786329675,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_0_1_home",
+        "n": 1720,
+        "base_rate": 0.2005813953488372,
+        "auc": 0.6368052700922266,
+        "pr_auc": 0.3184296076192938,
+        "accuracy": 0.8,
+        "brier": 0.15352988169697426,
+        "log_loss": 0.481528855255251,
+        "ece": 0.016499533239743604
+      },
+      "deltas": {
+        "auc": -0.017132705195711972,
+        "brier": 0.0001869713984040955,
+        "log_loss": 0.0014496339789978885,
+        "ece": -0.006228489546586072
+      }
+    },
+    {
+      "market": "eh3_0_1_draw",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5678818379378828,
+        "brier": 0.17893288437782526,
+        "pr_auc": 0.2708203214874209,
+        "accuracy": 0.7643818849449204,
+        "log_loss": 0.5424310844328961,
+        "ece": 0.031332772732182546,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_0_1_draw",
+        "n": 1720,
+        "base_rate": 0.22965116279069767,
+        "auc": 0.5638853594459039,
+        "pr_auc": 0.25856546737373076,
+        "accuracy": 0.7703488372093024,
+        "brier": 0.17582050279275457,
+        "log_loss": 0.5356751420016417,
+        "ece": 0.03087563904528933
+      },
+      "deltas": {
+        "auc": -0.003996478491978928,
+        "brier": -0.0031123815850706837,
+        "log_loss": -0.006755942431254436,
+        "ece": -0.0004571336868932144
+      }
+    },
+    {
+      "market": "eh3_0_1_away",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6471067774936062,
+        "brier": 0.23147983690052507,
+        "pr_auc": 0.6907326652055361,
+        "accuracy": 0.609547123623011,
+        "log_loss": 0.654965594295495,
+        "ece": 0.03550390883331885,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_0_1_away",
+        "n": 1720,
+        "base_rate": 0.5697674418604651,
+        "auc": 0.6314065085493658,
+        "pr_auc": 0.682465898634204,
+        "accuracy": 0.6040697674418605,
+        "brier": 0.23308220574351146,
+        "log_loss": 0.6581279001119049,
+        "ece": 0.02310748449676677
+      },
+      "deltas": {
+        "auc": -0.01570026894424048,
+        "brier": 0.0016023688429863958,
+        "log_loss": 0.0031623058164099715,
+        "ece": -0.012396424336552081
+      }
+    },
+    {
+      "market": "eh3_1_0_home",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6506136720422435,
+        "brier": 0.1981660321871169,
+        "pr_auc": 0.7986218527345347,
+        "accuracy": 0.7062423500611995,
+        "log_loss": 0.5830419851275311,
+        "ece": 0.030797734256065017,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_1_0_home",
+        "n": 1720,
+        "base_rate": 0.6994186046511628,
+        "auc": 0.6318721249744755,
+        "pr_auc": 0.7825751723235744,
+        "accuracy": 0.7052325581395349,
+        "brier": 0.20096864861416985,
+        "log_loss": 0.5899064900234521,
+        "ece": 0.026700026879404547
+      },
+      "deltas": {
+        "auc": -0.018741547067767983,
+        "brier": 0.0028026164270529563,
+        "log_loss": 0.006864504895920942,
+        "ece": -0.004097707376660469
+      }
+    },
+    {
+      "market": "eh3_1_0_draw",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5969181740815181,
+        "brier": 0.1426980863924946,
+        "pr_auc": 0.24408856131020656,
+        "accuracy": 0.8243574051407588,
+        "log_loss": 0.45744403123001387,
+        "ece": 0.020406023301265303,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_1_0_draw",
+        "n": 1720,
+        "base_rate": 0.17848837209302326,
+        "auc": 0.5737336643683248,
+        "pr_auc": 0.22353992251840044,
+        "accuracy": 0.8215116279069767,
+        "brier": 0.14531924168917504,
+        "log_loss": 0.46449949466196366,
+        "ece": 0.009654878834733746
+      },
+      "deltas": {
+        "auc": -0.023184509713193302,
+        "brier": 0.002621155296680444,
+        "log_loss": 0.007055463431949793,
+        "ece": -0.010751144466531557
+      }
+    },
+    {
+      "market": "eh3_1_0_away",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.661781867377183,
+        "brier": 0.10522050482571031,
+        "pr_auc": 0.20696671279011486,
+        "accuracy": 0.8757649938800489,
+        "log_loss": 0.3593153542829758,
+        "ece": 0.012611250087126696,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "eh3_1_0_away",
+        "n": 1720,
+        "base_rate": 0.12209302325581395,
+        "auc": 0.6476631977294229,
+        "pr_auc": 0.19897004561060688,
+        "accuracy": 0.877906976744186,
+        "brier": 0.10433219532160078,
+        "log_loss": 0.35849752187657935,
+        "ece": 0.019703486284526797
+      },
+      "deltas": {
+        "auc": -0.014118669647760096,
+        "brier": -0.0008883095041095357,
+        "log_loss": -0.0008178324063964348,
+        "ece": 0.0070922361974001015
+      }
+    },
+    {
+      "market": "o15",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5738907212448485,
+        "brier": 0.17623739053644244,
+        "pr_auc": 0.8140575905332192,
+        "accuracy": 0.7692778457772338,
+        "log_loss": 0.5365851921044688,
+        "ece": 0.019858873755175043,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "o15",
+        "n": 1720,
+        "base_rate": 0.7697674418604651,
+        "auc": 0.58355267173243,
+        "pr_auc": 0.8248208920288447,
+        "accuracy": 0.7697674418604651,
+        "brier": 0.1755197700730979,
+        "log_loss": 0.5339717916950318,
+        "ece": 0.028916894122461883
+      },
+      "deltas": {
+        "auc": 0.00966195048758145,
+        "brier": -0.0007176204633445316,
+        "log_loss": -0.0026134004094369168,
+        "ece": 0.00905802036728684
+      }
+    },
+    {
+      "market": "u35",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.570984635067256,
+        "brier": 0.20811932012822285,
+        "pr_auc": 0.7487566015799545,
+        "accuracy": 0.6995104039167687,
+        "log_loss": 0.6062701948438366,
+        "ece": 0.015085459646546865,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "u35",
+        "n": 1720,
+        "base_rate": 0.7127906976744186,
+        "auc": 0.5729545739741497,
+        "pr_auc": 0.7581695947819618,
+        "accuracy": 0.7145348837209302,
+        "brier": 0.2015787753759113,
+        "log_loss": 0.5922836021772008,
+        "ece": 0.013732567074312769
+      },
+      "deltas": {
+        "auc": 0.0019699389068936757,
+        "brier": -0.006540544752311556,
+        "log_loss": -0.013986592666635822,
+        "ece": -0.0013528925722340965
+      }
+    },
+    {
+      "market": "mg_0",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5800780376548454,
+        "brier": 0.06675776836837378,
+        "pr_auc": 0.09337999268013536,
+        "accuracy": 0.9277845777233782,
+        "log_loss": 0.25742430384249226,
+        "ece": 0.00412003979079174,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_0",
+        "n": 1720,
+        "base_rate": 0.07151162790697674,
+        "auc": 0.5981286049554296,
+        "pr_auc": 0.09503759049032454,
+        "accuracy": 0.9284883720930233,
+        "brier": 0.0659515742533923,
+        "log_loss": 0.25370633504052126,
+        "ece": 0.0010054975874907814
+      },
+      "deltas": {
+        "auc": 0.018050567300584186,
+        "brier": -0.0008061941149814789,
+        "log_loss": -0.0037179688019710055,
+        "ece": -0.0031145422033009586
+      }
+    },
+    {
+      "market": "mg_1_2",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5491543264857037,
+        "brier": 0.23657974278825505,
+        "pr_auc": 0.4081125772088631,
+        "accuracy": 0.6181150550795593,
+        "log_loss": 0.6660329347076814,
+        "ece": 0.04558756257325262,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_1_2",
+        "n": 1720,
+        "base_rate": 0.3953488372093023,
+        "auc": 0.5643113687782806,
+        "pr_auc": 0.44696762016939984,
+        "accuracy": 0.6087209302325581,
+        "brier": 0.23656185101156302,
+        "log_loss": 0.6654099747711822,
+        "ece": 0.039911196123941076
+      },
+      "deltas": {
+        "auc": 0.015157042292576861,
+        "brier": -1.789177669203612e-05,
+        "log_loss": -0.00062295993649919,
+        "ece": -0.0056763664493115415
+      }
+    },
+    {
+      "market": "mg_1_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.540870679642757,
+        "brier": 0.23315319973563634,
+        "pr_auc": 0.6603112386824743,
+        "accuracy": 0.6266829865361077,
+        "log_loss": 0.6590022877554478,
+        "ece": 0.01984224357013129,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_1_3",
+        "n": 1720,
+        "base_rate": 0.6412790697674419,
+        "auc": 0.5366012245959524,
+        "pr_auc": 0.6682993842838243,
+        "accuracy": 0.641860465116279,
+        "brier": 0.22891806311049567,
+        "log_loss": 0.650288881273965,
+        "ece": 0.01663976367996571
+      },
+      "deltas": {
+        "auc": -0.004269455046804649,
+        "brier": -0.004235136625140662,
+        "log_loss": -0.008713406481482777,
+        "ece": -0.003202479890165578
+      }
+    },
+    {
+      "market": "mg_1_4",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5422183968926554,
+        "brier": 0.16925638255220715,
+        "pr_auc": 0.8084112375784296,
+        "accuracy": 0.7833537331701347,
+        "log_loss": 0.5213122625484928,
+        "ece": 0.010783620734936439,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_1_4",
+        "n": 1720,
+        "base_rate": 0.786046511627907,
+        "auc": 0.5327885821327502,
+        "pr_auc": 0.7982623899327125,
+        "accuracy": 0.786046511627907,
+        "brier": 0.1673910522401372,
+        "log_loss": 0.5171898720955321,
+        "ece": 0.009255295197179911
+      },
+      "deltas": {
+        "auc": -0.00942981475990523,
+        "brier": -0.0018653303120699516,
+        "log_loss": -0.0041223904529607,
+        "ece": -0.0015283255377565273
+      }
+    },
+    {
+      "market": "mg_1_5",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.49179556449292294,
+        "brier": 0.11072979095658422,
+        "pr_auc": 0.8673698035272401,
+        "accuracy": 0.8733170134638923,
+        "log_loss": 0.38044045721208647,
+        "ece": 0.0010243669374205844,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_1_5",
+        "n": 1720,
+        "base_rate": 0.8726744186046511,
+        "auc": 0.5048415211776623,
+        "pr_auc": 0.8755459517809967,
+        "accuracy": 0.872093023255814,
+        "brier": 0.11167748348690218,
+        "log_loss": 0.382964222413017,
+        "ece": 0.0016719122149674776
+      },
+      "deltas": {
+        "auc": 0.013045956684739402,
+        "brier": 0.0009476925303179562,
+        "log_loss": 0.0025237652009305056,
+        "ece": 0.0006475452775468933
+      }
+    },
+    {
+      "market": "mg_1_6",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5403451225816487,
+        "brier": 0.08179628831701581,
+        "pr_auc": 0.9221488593164455,
+        "accuracy": 0.9100367197062423,
+        "log_loss": 0.30199887507756756,
+        "ece": 0.0011670610255790433,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_1_6",
+        "n": 1720,
+        "base_rate": 0.911046511627907,
+        "auc": 0.525363814958019,
+        "pr_auc": 0.9177544960190657,
+        "accuracy": 0.911046511627907,
+        "brier": 0.08124546936386925,
+        "log_loss": 0.3007210171284011,
+        "ece": 0.0073934772919825795
+      },
+      "deltas": {
+        "auc": -0.014981307623629703,
+        "brier": -0.0005508189531465563,
+        "log_loss": -0.001277857949166461,
+        "ece": 0.006226416266403537
+      }
+    },
+    {
+      "market": "mg_2_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5051189072445283,
+        "brier": 0.2490647475057415,
+        "pr_auc": 0.46913851426842457,
+        "accuracy": 0.5312117503059975,
+        "log_loss": 0.6912750931815489,
+        "ece": 0.005480540595754593,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_2_3",
+        "n": 1720,
+        "base_rate": 0.48255813953488375,
+        "auc": 0.4918918370109652,
+        "pr_auc": 0.4725877349187665,
+        "accuracy": 0.5174418604651163,
+        "brier": 0.2502171307796911,
+        "log_loss": 0.6935668438037835,
+        "ece": 0.021209910591630507
+      },
+      "deltas": {
+        "auc": -0.01322707023356312,
+        "brier": 0.001152383273949592,
+        "log_loss": 0.002291750622234634,
+        "ece": 0.015729369995875913
+      }
+    },
+    {
+      "market": "mg_2_4",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5045120975022089,
+        "brier": 0.23463929819590798,
+        "pr_auc": 0.6360539759512209,
+        "accuracy": 0.6248470012239902,
+        "log_loss": 0.6621168297154788,
+        "ece": 0.0130679808217598,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_2_4",
+        "n": 1720,
+        "base_rate": 0.6273255813953489,
+        "auc": 0.5080677925912217,
+        "pr_auc": 0.6362544752533442,
+        "accuracy": 0.6284883720930232,
+        "brier": 0.23422240280981352,
+        "log_loss": 0.6612575086560427,
+        "ece": 0.022094515074807777
+      },
+      "deltas": {
+        "auc": 0.003555695089012767,
+        "brier": -0.0004168953860944624,
+        "log_loss": -0.0008593210594360912,
+        "ece": 0.009026534253047976
+      }
+    },
+    {
+      "market": "mg_2_5",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5400146613557528,
+        "brier": 0.2038248705248728,
+        "pr_auc": 0.7533691902858614,
+        "accuracy": 0.7148102815177478,
+        "log_loss": 0.5976775718352639,
+        "ece": 0.022827234619275785,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_2_5",
+        "n": 1720,
+        "base_rate": 0.713953488372093,
+        "auc": 0.5396142845793279,
+        "pr_auc": 0.7452781822018345,
+        "accuracy": 0.7133720930232558,
+        "brier": 0.20473646006870877,
+        "log_loss": 0.5996178226178621,
+        "ece": 0.03008727481554506
+      },
+      "deltas": {
+        "auc": -0.00040037677642490443,
+        "brier": 0.0009115895438359667,
+        "log_loss": 0.0019402507825981852,
+        "ece": 0.007260040196269274
+      }
+    },
+    {
+      "market": "mg_2_6",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5618009980584393,
+        "brier": 0.1860220079132514,
+        "pr_auc": 0.7956928611965521,
+        "accuracy": 0.7515299877600979,
+        "log_loss": 0.5587139193771764,
+        "ece": 0.02417069758195649,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_2_6",
+        "n": 1720,
+        "base_rate": 0.7523255813953489,
+        "auc": 0.5625485266052782,
+        "pr_auc": 0.798179700521626,
+        "accuracy": 0.7523255813953489,
+        "brier": 0.18601459472241288,
+        "log_loss": 0.5585754078349724,
+        "ece": 0.032901879055214106
+      },
+      "deltas": {
+        "auc": 0.0007475285468389048,
+        "brier": -7.41319083852332e-06,
+        "log_loss": -0.00013851154220401174,
+        "ece": 0.008731181473257615
+      }
+    },
+    {
+      "market": "mg_3_4",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5184268619652308,
+        "brier": 0.24153010940157454,
+        "pr_auc": 0.4202749511371203,
+        "accuracy": 0.5979192166462668,
+        "log_loss": 0.6762541438071215,
+        "ece": 0.03633993202828179,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_3_4",
+        "n": 1720,
+        "base_rate": 0.39069767441860465,
+        "auc": 0.5405768640948746,
+        "pr_auc": 0.4346119061029048,
+        "accuracy": 0.6093023255813953,
+        "brier": 0.23790103794213682,
+        "log_loss": 0.6687648123248167,
+        "ece": 0.030303223882354974
+      },
+      "deltas": {
+        "auc": 0.022150002129643798,
+        "brier": -0.0036290714594377216,
+        "log_loss": -0.007489331482304795,
+        "ece": -0.0060367081459268175
+      }
+    },
+    {
+      "market": "mg_3_5",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5479207876281245,
+        "brier": 0.25050387457939244,
+        "pr_auc": 0.5437172152599872,
+        "accuracy": 0.5152998776009792,
+        "log_loss": 0.6941912058536578,
+        "ece": 0.04456319563583196,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_3_5",
+        "n": 1720,
+        "base_rate": 0.47732558139534886,
+        "auc": 0.5626796047577562,
+        "pr_auc": 0.5521180775040486,
+        "accuracy": 0.5465116279069767,
+        "brier": 0.24774059564566348,
+        "log_loss": 0.6886417163983514,
+        "ece": 0.0387093154558744
+      },
+      "deltas": {
+        "auc": 0.014758817129631785,
+        "brier": -0.002763278933728963,
+        "log_loss": -0.005549489455306422,
+        "ece": -0.0058538801799575615
+      }
+    },
+    {
+      "market": "mg_3_6",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5617424242424243,
+        "brier": 0.24881915469832197,
+        "pr_auc": 0.5897372808194754,
+        "accuracy": 0.533047735618115,
+        "log_loss": 0.6907864864240902,
+        "ece": 0.04492533773439693,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_3_6",
+        "n": 1720,
+        "base_rate": 0.5156976744186047,
+        "auc": 0.5757222844041788,
+        "pr_auc": 0.6052949090714729,
+        "accuracy": 0.5372093023255814,
+        "brier": 0.24642298023994846,
+        "log_loss": 0.6859133012697112,
+        "ece": 0.04152391969554353
+      },
+      "deltas": {
+        "auc": 0.013979860161754565,
+        "brier": -0.0023961744583735067,
+        "log_loss": -0.004873185154379067,
+        "ece": -0.003401418038853396
+      }
+    },
+    {
+      "market": "mg_4_5",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.553573447696582,
+        "brier": 0.18469794245649226,
+        "pr_auc": 0.28793790282014436,
+        "accuracy": 0.7539779681762546,
+        "log_loss": 0.5557788722374007,
+        "ece": 0.01800994971185351,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_4_5",
+        "n": 1720,
+        "base_rate": 0.2313953488372093,
+        "auc": 0.550434661963372,
+        "pr_auc": 0.2783777141540851,
+        "accuracy": 0.7686046511627908,
+        "brier": 0.17665400996527317,
+        "log_loss": 0.5378460275531011,
+        "ece": 0.011144396703897962
+      },
+      "deltas": {
+        "auc": -0.0031387857332100255,
+        "brier": -0.008043932491219097,
+        "log_loss": -0.017932844684299676,
+        "ece": -0.006865553007955549
+      }
+    },
+    {
+      "market": "mg_4_6",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5658040054371113,
+        "brier": 0.2012004652401582,
+        "pr_auc": 0.33443675998146716,
+        "accuracy": 0.7172582619339045,
+        "log_loss": 0.5915525059717743,
+        "ece": 0.01963971272785827,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_4_6",
+        "n": 1720,
+        "base_rate": 0.26976744186046514,
+        "auc": 0.5609196546233253,
+        "pr_auc": 0.32851930842321764,
+        "accuracy": 0.7302325581395349,
+        "brier": 0.19483744041380982,
+        "log_loss": 0.5779713031217578,
+        "ece": 0.01390948642685183
+      },
+      "deltas": {
+        "auc": -0.00488435081378602,
+        "brier": -0.0063630248263483735,
+        "log_loss": -0.013581202850016516,
+        "ece": -0.00573022630100644
+      }
+    },
+    {
+      "market": "mg_5_6",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5990388944747435,
+        "brier": 0.10953105112181062,
+        "pr_auc": 0.1825603374462215,
+        "accuracy": 0.8733170134638923,
+        "log_loss": 0.3750370862650114,
+        "ece": 0.019181951530928925,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_5_6",
+        "n": 1720,
+        "base_rate": 0.125,
+        "auc": 0.5855643977439543,
+        "pr_auc": 0.18403680411089868,
+        "accuracy": 0.875,
+        "brier": 0.10791063299047901,
+        "log_loss": 0.3709165484947456,
+        "ece": 0.011450230447302862
+      },
+      "deltas": {
+        "auc": -0.013474496730789154,
+        "brier": -0.0016204181313316107,
+        "log_loss": -0.004120537770265831,
+        "ece": -0.007731721083626063
+      }
+    },
+    {
+      "market": "mg_7p",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5902782253732947,
+        "brier": 0.017470169428498696,
+        "pr_auc": 0.0214953247872366,
+        "accuracy": 0.9822521419828641,
+        "log_loss": 0.08929239116917065,
+        "ece": 0.003330502962665769,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "mg_7p",
+        "n": 1720,
+        "base_rate": 0.01744186046511628,
+        "auc": 0.6711341222879684,
+        "pr_auc": 0.027810666677773675,
+        "accuracy": 0.9825581395348837,
+        "brier": 0.01735256634414922,
+        "log_loss": 0.08702838075731212,
+        "ece": 0.003984984932752247
+      },
+      "deltas": {
+        "auc": 0.08085589691467376,
+        "brier": -0.00011760308434947617,
+        "log_loss": -0.0022640104118585302,
+        "ece": 0.0006544819700864783
+      }
+    },
+    {
+      "market": "hmg_0",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6227528953345143,
+        "brier": 0.1651253424907862,
+        "pr_auc": 0.29530949915626514,
+        "accuracy": 0.7839657282741738,
+        "log_loss": 0.5095036352505447,
+        "ece": 0.020137279540139715,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "hmg_0",
+        "n": 1720,
+        "base_rate": 0.2127906976744186,
+        "auc": 0.5969662848794506,
+        "pr_auc": 0.2737681581010129,
+        "accuracy": 0.7872093023255814,
+        "brier": 0.1651263465247661,
+        "log_loss": 0.5097790534040822,
+        "ece": 0.02870899305896471
+      },
+      "deltas": {
+        "auc": -0.025786610455063697,
+        "brier": 1.00403397990112e-06,
+        "log_loss": 0.0002754181535375988,
+        "ece": 0.008571713518824995
+      }
+    },
+    {
+      "market": "hmg_1_2",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5485203342704679,
+        "brier": 0.2407201037932487,
+        "pr_auc": 0.6293396086703648,
+        "accuracy": 0.5954712362301101,
+        "log_loss": 0.6744671252966061,
+        "ece": 0.017490563518551577,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "hmg_1_2",
+        "n": 1720,
+        "base_rate": 0.6034883720930233,
+        "auc": 0.5413968606444832,
+        "pr_auc": 0.6462514104788128,
+        "accuracy": 0.6069767441860465,
+        "brier": 0.2382911767964675,
+        "log_loss": 0.6694584470787963,
+        "ece": 0.030475282967526305
+      },
+      "deltas": {
+        "auc": -0.007123473625984644,
+        "brier": -0.002428926996781211,
+        "log_loss": -0.005008678217809814,
+        "ece": 0.012984719448974728
+      }
+    },
+    {
+      "market": "hmg_1_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5456276387317531,
+        "brier": 0.2028239505221709,
+        "pr_auc": 0.7380444397575991,
+        "accuracy": 0.715422276621787,
+        "log_loss": 0.5953805755120032,
+        "ece": 0.017731917399647485,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "hmg_1_3",
+        "n": 1720,
+        "base_rate": 0.725,
+        "auc": 0.5211975972778644,
+        "pr_auc": 0.7298923772103896,
+        "accuracy": 0.725,
+        "brier": 0.20038224236661664,
+        "log_loss": 0.5904695402153758,
+        "ece": 0.03244487248313559
+      },
+      "deltas": {
+        "auc": -0.024430041453888718,
+        "brier": -0.002441708155554251,
+        "log_loss": -0.004911035296627397,
+        "ece": 0.014712955083488102
+      }
+    },
+    {
+      "market": "hmg_2_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5668891972249752,
+        "brier": 0.23365232969302976,
+        "pr_auc": 0.43106685716406595,
+        "accuracy": 0.6175030599755202,
+        "log_loss": 0.659809305174141,
+        "ece": 0.015217859677477144,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "hmg_2_3",
+        "n": 1720,
+        "base_rate": 0.3808139534883721,
+        "auc": 0.5568125291187328,
+        "pr_auc": 0.4253991852742112,
+        "accuracy": 0.6191860465116279,
+        "brier": 0.23431316044618386,
+        "log_loss": 0.6613364640226708,
+        "ece": 0.026071853843015167
+      },
+      "deltas": {
+        "auc": -0.010076668106242415,
+        "brier": 0.0006608307531540958,
+        "log_loss": 0.0015271588485297194,
+        "ece": 0.010853994165538023
+      }
+    },
+    {
+      "market": "hmg_4p",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.7048966350666417,
+        "brier": 0.06155601558169477,
+        "pr_auc": 0.1586415430907876,
+        "accuracy": 0.9314565483476133,
+        "log_loss": 0.2341994134236012,
+        "ece": 0.012203314094565678,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "hmg_4p",
+        "n": 1720,
+        "base_rate": 0.062209302325581396,
+        "auc": 0.7155037052917012,
+        "pr_auc": 0.1585490051770388,
+        "accuracy": 0.9366279069767441,
+        "brier": 0.05613298030063189,
+        "log_loss": 0.21648652277387057,
+        "ece": 0.012449038613527384
+      },
+      "deltas": {
+        "auc": 0.010607070225059467,
+        "brier": -0.005423035281062874,
+        "log_loss": -0.01771289064973064,
+        "ece": 0.0002457245189617062
+      }
+    },
+    {
+      "market": "amg_0",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6067777409372237,
+        "brier": 0.1983566086090211,
+        "pr_auc": 0.361699695549875,
+        "accuracy": 0.715422276621787,
+        "log_loss": 0.5842393508735897,
+        "ece": 0.023281355934009793,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "amg_0",
+        "n": 1720,
+        "base_rate": 0.28837209302325584,
+        "auc": 0.6075713551549653,
+        "pr_auc": 0.3550292257146379,
+        "accuracy": 0.711046511627907,
+        "brier": 0.20022909355181026,
+        "log_loss": 0.587898278785772,
+        "ece": 0.025016445025956142
+      },
+      "deltas": {
+        "auc": 0.0007936142177416006,
+        "brier": 0.0018724849427891599,
+        "log_loss": 0.0036589279121823637,
+        "ece": 0.0017350890919463485
+      }
+    },
+    {
+      "market": "amg_1_2",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5266783303400012,
+        "brier": 0.2419197761408725,
+        "pr_auc": 0.6130188946929134,
+        "accuracy": 0.5862913096695227,
+        "log_loss": 0.6768952075011083,
+        "ece": 0.018993033931263253,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "amg_1_2",
+        "n": 1720,
+        "base_rate": 0.5808139534883721,
+        "auc": 0.5300890349434039,
+        "pr_auc": 0.6036265749840878,
+        "accuracy": 0.5767441860465117,
+        "brier": 0.24317896516193485,
+        "log_loss": 0.6794306454373832,
+        "ece": 0.010586581365988564
+      },
+      "deltas": {
+        "auc": 0.003410704603402648,
+        "brier": 0.0012591890210623402,
+        "log_loss": 0.0025354379362748647,
+        "ece": -0.00840645256527469
+      }
+    },
+    {
+      "market": "amg_1_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5675089238953664,
+        "brier": 0.21544260915390517,
+        "pr_auc": 0.734301321785285,
+        "accuracy": 0.6799265605875153,
+        "log_loss": 0.621985662358545,
+        "ece": 0.02663032725643883,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "amg_1_3",
+        "n": 1720,
+        "base_rate": 0.6767441860465117,
+        "auc": 0.5664749128532225,
+        "pr_auc": 0.726504393595231,
+        "accuracy": 0.6761627906976744,
+        "brier": 0.21706546431829138,
+        "log_loss": 0.6253759540471339,
+        "ece": 0.01926081356306901
+      },
+      "deltas": {
+        "auc": -0.0010340110421439563,
+        "brier": 0.0016228551643862055,
+        "log_loss": 0.0033902916885888423,
+        "ece": -0.007369513693369821
+      }
+    },
+    {
+      "market": "amg_2_3",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5682505196349297,
+        "brier": 0.2162921091659121,
+        "pr_auc": 0.3996601662611944,
+        "accuracy": 0.6762545899632803,
+        "log_loss": 0.6240255033645183,
+        "ece": 0.021797611762599624,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "amg_2_3",
+        "n": 1720,
+        "base_rate": 0.3226744186046512,
+        "auc": 0.5757584193635696,
+        "pr_auc": 0.39724256085575493,
+        "accuracy": 0.6773255813953488,
+        "brier": 0.21591944592225173,
+        "log_loss": 0.6234901148104904,
+        "ece": 0.022066539121971134
+      },
+      "deltas": {
+        "auc": 0.007507899728639966,
+        "brier": -0.00037266324366036496,
+        "log_loss": -0.0005353885540279046,
+        "ece": 0.0002689273593715104
+      }
+    },
+    {
+      "market": "amg_4p",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.7059010152284265,
+        "brier": 0.03372075247161933,
+        "pr_auc": 0.07669124076920633,
+        "accuracy": 0.9645042839657283,
+        "log_loss": 0.14573406799672536,
+        "ece": 0.0013785717054673875,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "amg_4p",
+        "n": 1720,
+        "base_rate": 0.03488372093023256,
+        "auc": 0.7212399598393574,
+        "pr_auc": 0.0801404580405327,
+        "accuracy": 0.9651162790697675,
+        "brier": 0.03311872711896899,
+        "log_loss": 0.14312621252267346,
+        "ece": 0.0017814683041615154
+      },
+      "deltas": {
+        "auc": 0.015338944610930882,
+        "brier": -0.0006020253526503386,
+        "log_loss": -0.002607855474051901,
+        "ece": 0.00040289659869412794
+      }
+    },
+    {
+      "market": "ms_h_1_0_2_0_3_0",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6084381304969539,
+        "brier": 0.1506226455889182,
+        "pr_auc": 0.24489649153014076,
+        "accuracy": 0.8115055079559363,
+        "log_loss": 0.47629671657233785,
+        "ece": 0.02662760129103973,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_h_1_0_2_0_3_0",
+        "n": 1720,
+        "base_rate": 0.19883720930232557,
+        "auc": 0.5941497126948964,
+        "pr_auc": 0.24312829083127352,
+        "accuracy": 0.8011627906976744,
+        "brier": 0.15708074361246852,
+        "log_loss": 0.4913318510526071,
+        "ece": 0.015409422133897404
+      },
+      "deltas": {
+        "auc": -0.014288417802057585,
+        "brier": 0.006458098023550324,
+        "log_loss": 0.015035134480269274,
+        "ece": -0.011218179157142327
+      }
+    },
+    {
+      "market": "ms_a_0_1_0_2_0_3",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6277906157300424,
+        "brier": 0.11244345436329786,
+        "pr_auc": 0.19185135170639908,
+        "accuracy": 0.868421052631579,
+        "log_loss": 0.38181646388818236,
+        "ece": 0.028795846939293036,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_a_0_1_0_2_0_3",
+        "n": 1720,
+        "base_rate": 0.1308139534883721,
+        "auc": 0.5969468599033817,
+        "pr_auc": 0.17370695214937154,
+        "accuracy": 0.8691860465116279,
+        "brier": 0.113108502046693,
+        "log_loss": 0.38439583216459544,
+        "ece": 0.028806420842533476
+      },
+      "deltas": {
+        "auc": -0.030843755826660657,
+        "brier": 0.0006650476833951341,
+        "log_loss": 0.0025793682764130854,
+        "ece": 1.0573903240440607e-05
+      }
+    },
+    {
+      "market": "ms_h_4_0_5_0_6_0",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.7592748318163831,
+        "brier": 0.02230974195384245,
+        "pr_auc": 0.07092693960649381,
+        "accuracy": 0.9767441860465116,
+        "log_loss": 0.10193977923476939,
+        "ece": 0.002724047071770483,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_h_4_0_5_0_6_0",
+        "n": 1720,
+        "base_rate": 0.01802325581395349,
+        "auc": 0.8039019079814359,
+        "pr_auc": 0.05906705865952129,
+        "accuracy": 0.9819767441860465,
+        "brier": 0.01743235710577238,
+        "log_loss": 0.08239698851761655,
+        "ece": 0.0027650505843141928
+      },
+      "deltas": {
+        "auc": 0.04462707616505279,
+        "brier": -0.004877384848070071,
+        "log_loss": -0.01954279071715284,
+        "ece": 4.100351254370969e-05
+      }
+    },
+    {
+      "market": "ms_a_0_4_0_5_0_6",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.757806691449814,
+        "brier": 0.011974771065776756,
+        "pr_auc": 0.04377385561240607,
+        "accuracy": 0.9877600979192166,
+        "log_loss": 0.06155325550926609,
+        "ece": 0.0030584385659562386,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_a_0_4_0_5_0_6",
+        "n": 1720,
+        "base_rate": 0.010465116279069767,
+        "auc": 0.7957957957957957,
+        "pr_auc": 0.04157033560804996,
+        "accuracy": 0.9895348837209302,
+        "brier": 0.010242555650652962,
+        "log_loss": 0.0532901080855261,
+        "ece": 0.0012612902199350077
+      },
+      "deltas": {
+        "auc": 0.037989104345981684,
+        "brier": -0.0017322154151237935,
+        "log_loss": -0.008263147423739986,
+        "ece": -0.001797148346021231
+      }
+    },
+    {
+      "market": "ms_h_2_1_3_1_4_1",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5517059477382769,
+        "brier": 0.1389039945052306,
+        "pr_auc": 0.19053467268598567,
+        "accuracy": 0.8329253365973073,
+        "log_loss": 0.4503515136903379,
+        "ece": 0.018547235659165467,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_h_2_1_3_1_4_1",
+        "n": 1720,
+        "base_rate": 0.15523255813953488,
+        "auc": 0.5561604429425366,
+        "pr_auc": 0.18792958004769758,
+        "accuracy": 0.8447674418604652,
+        "brier": 0.13050363461304051,
+        "log_loss": 0.4293981294192319,
+        "ece": 0.01073619785867808
+      },
+      "deltas": {
+        "auc": 0.0044544952042597785,
+        "brier": -0.008400359892190096,
+        "log_loss": -0.02095338427110599,
+        "ece": -0.007811037800487388
+      }
+    },
+    {
+      "market": "ms_h_1_2_1_3_1_4",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6072801086453998,
+        "brier": 0.10225754961464187,
+        "pr_auc": 0.17127837862221953,
+        "accuracy": 0.8824969400244798,
+        "log_loss": 0.3549287322751908,
+        "ece": 0.00974817744133752,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_h_1_2_1_3_1_4",
+        "n": 1720,
+        "base_rate": 0.12209302325581395,
+        "auc": 0.6149385052034059,
+        "pr_auc": 0.19022966064506253,
+        "accuracy": 0.877906976744186,
+        "brier": 0.10563539435991369,
+        "log_loss": 0.36404302252711884,
+        "ece": 0.011356663109396406
+      },
+      "deltas": {
+        "auc": 0.007658396558006042,
+        "brier": 0.0033778447452718213,
+        "log_loss": 0.009114290251928059,
+        "ece": 0.0016084856680588858
+      }
+    },
+    {
+      "market": "ms_h_3_2_4_2_5_1",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "auc_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6581754789847275,
+        "brier": 0.04450356835284122,
+        "pr_auc": 0.10066059779890552,
+        "accuracy": 0.9528763769889841,
+        "log_loss": 0.1855195509052444,
+        "ece": 0.006179530484599988,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_h_3_2_4_2_5_1",
+        "n": 1720,
+        "base_rate": 0.045930232558139536,
+        "auc": 0.60317497049499,
+        "pr_auc": 0.09022609602208327,
+        "accuracy": 0.9540697674418605,
+        "brier": 0.043460223619790385,
+        "log_loss": 0.18300219555247502,
+        "ece": 0.006266045032581813
+      },
+      "deltas": {
+        "auc": -0.055000508489737476,
+        "brier": -0.001043344733050837,
+        "log_loss": -0.002517355352769396,
+        "ece": 8.651454798182506e-05
+      }
+    },
+    {
+      "market": "ms_a_2_3_2_4_1_5",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5888081343310301,
+        "brier": 0.03124487958917312,
+        "pr_auc": 0.05733247808880686,
+        "accuracy": 0.9675642594859241,
+        "log_loss": 0.14105997298201933,
+        "ece": 0.0022761049493575,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_a_2_3_2_4_1_5",
+        "n": 1720,
+        "base_rate": 0.03255813953488372,
+        "auc": 0.5943080357142857,
+        "pr_auc": 0.061138532935689126,
+        "accuracy": 0.9674418604651163,
+        "brier": 0.03133630288746272,
+        "log_loss": 0.14169006453743058,
+        "ece": 0.002906789392555134
+      },
+      "deltas": {
+        "auc": 0.005499901383255623,
+        "brier": 9.142329828959808e-05,
+        "log_loss": 0.0006300915554112441,
+        "ece": 0.0006306844431976343
+      }
+    },
+    {
+      "market": "ms_other_homewin",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6643289328932893,
+        "brier": 0.010905328918585632,
+        "pr_auc": 0.017332396404944234,
+        "accuracy": 0.988984088127295,
+        "log_loss": 0.05983541227808927,
+        "ece": 0.001396132960549348,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_other_homewin",
+        "n": 1720,
+        "base_rate": 0.012209302325581395,
+        "auc": 0.6771770509263152,
+        "pr_auc": 0.021937981410892288,
+        "accuracy": 0.9877906976744186,
+        "brier": 0.012257697330263974,
+        "log_loss": 0.06515708254776324,
+        "ece": 0.0011531969593032124
+      },
+      "deltas": {
+        "auc": 0.01284811803302588,
+        "brier": 0.001352368411678342,
+        "log_loss": 0.005321670269673971,
+        "ece": -0.0002429360012461356
+      }
+    },
+    {
+      "market": "ms_other_awaywin",
+      "family": "scoreline",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6661637931034483,
+        "brier": 0.006079387102907549,
+        "pr_auc": 0.012519510858502881,
+        "accuracy": 0.9938800489596084,
+        "log_loss": 0.03664561506544599,
+        "ece": 0.00131374125034846,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_other_awaywin",
+        "n": 1720,
+        "base_rate": 0.004651162790697674,
+        "auc": 0.6953490070093458,
+        "pr_auc": 0.016147467158152858,
+        "accuracy": 0.9953488372093023,
+        "brier": 0.004629865659550337,
+        "log_loss": 0.02910460758852814,
+        "ece": 0.0027522452543858947
+      },
+      "deltas": {
+        "auc": 0.029185213905897456,
+        "brier": -0.0014495214433572125,
+        "log_loss": -0.007541007476917848,
+        "ece": 0.0014385040040374346
+      }
+    },
+    {
+      "market": "ms_draw",
+      "family": "scoreline",
+      "status": "failed",
+      "reasons": [
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "scoreline",
+        "holdout_path": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_v21_total_intensity_snap_20260308",
+        "model_name": "scoreline_v2",
+        "model_version": "poisson_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "scoreline",
+        "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "model_name": "scoreline_v2",
+        "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5337373483736383,
+        "brier": 0.19350310612002172,
+        "pr_auc": 0.2793607733308505,
+        "accuracy": 0.7368421052631579,
+        "log_loss": 0.5752499267615999,
+        "ece": 0.012932992598093067,
+        "n": 1634
+      },
+      "challenger": {
+        "family": "scoreline",
+        "market": "ms_draw",
+        "n": 1720,
+        "base_rate": 0.2691860465116279,
+        "auc": 0.5590919790855873,
+        "pr_auc": 0.3077943565054734,
+        "accuracy": 0.7308139534883721,
+        "brier": 0.195687379173424,
+        "log_loss": 0.579556247884807,
+        "ece": 0.019120635224864374
+      },
+      "deltas": {
+        "auc": 0.02535463071194899,
+        "brier": 0.002184273053402269,
+        "log_loss": 0.0043063211232070575,
+        "ece": 0.006187642626771307
+      }
+    },
+    {
+      "market": "c75",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5722941046962589,
+        "brier": 0.2007013195454839,
+        "pr_auc": 0.7587134755937899,
+        "accuracy": 0.7177472167648985,
+        "log_loss": 0.5904959135983897,
+        "ece": 0.02282926530213317,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "c75",
+        "n": 1527,
+        "base_rate": 0.7177472167648985,
+        "auc": 0.5722941046962589,
+        "pr_auc": 0.7587134755937899,
+        "accuracy": 0.7177472167648985,
+        "brier": 0.2007013195454839,
+        "log_loss": 0.5904959135983897,
+        "ece": 0.02282926530213317
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "c85",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5751559505330739,
+        "brier": 0.23220796951377298,
+        "pr_auc": 0.6707445445578466,
+        "accuracy": 0.6247544204322201,
+        "log_loss": 0.6569450055780334,
+        "ece": 0.021184904047692875,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "c85",
+        "n": 1527,
+        "base_rate": 0.6208251473477406,
+        "auc": 0.5751559505330739,
+        "pr_auc": 0.6707445445578466,
+        "accuracy": 0.6247544204322201,
+        "brier": 0.23220796951377298,
+        "log_loss": 0.6569450055780334,
+        "ece": 0.021184904047692875
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "c95",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5793012044058607,
+        "brier": 0.2466042085742435,
+        "pr_auc": 0.5548261840955976,
+        "accuracy": 0.5579567779960707,
+        "log_loss": 0.6863170945009486,
+        "ece": 0.031030173625970558,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "c95",
+        "n": 1527,
+        "base_rate": 0.49443352979698757,
+        "auc": 0.5793012044058607,
+        "pr_auc": 0.5548261840955976,
+        "accuracy": 0.5579567779960707,
+        "brier": 0.2466042085742435,
+        "log_loss": 0.6863170945009486,
+        "ece": 0.031030173625970558
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "c105",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.5899762167608859,
+        "brier": 0.22860901332505343,
+        "pr_auc": 0.4360263249168439,
+        "accuracy": 0.6352324819908317,
+        "log_loss": 0.6494553687403977,
+        "ece": 0.03308055978618244,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "c105",
+        "n": 1527,
+        "base_rate": 0.36411263916175507,
+        "auc": 0.5899762167608859,
+        "pr_auc": 0.4360263249168439,
+        "accuracy": 0.6352324819908317,
+        "brier": 0.22860901332505343,
+        "log_loss": 0.6494553687403977,
+        "ece": 0.03308055978618244
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "hc25",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6212973239610309,
+        "brier": 0.13580634858333684,
+        "pr_auc": 0.8845437713070663,
+        "accuracy": 0.8330058939096268,
+        "log_loss": 0.43936485722634155,
+        "ece": 0.01551997495802019,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "hc25",
+        "n": 1527,
+        "base_rate": 0.8330058939096268,
+        "auc": 0.6212973239610309,
+        "pr_auc": 0.8845437713070663,
+        "accuracy": 0.8330058939096268,
+        "brier": 0.13580634858333684,
+        "log_loss": 0.43936485722634155,
+        "ece": 0.01551997495802019
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "hc35",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6356888807593033,
+        "brier": 0.20206482013162463,
+        "pr_auc": 0.7949965698111113,
+        "accuracy": 0.6987557301899149,
+        "log_loss": 0.5914614091334343,
+        "ece": 0.0314165650546253,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "hc35",
+        "n": 1527,
+        "base_rate": 0.6974459724950884,
+        "auc": 0.6356888807593033,
+        "pr_auc": 0.7949965698111113,
+        "accuracy": 0.6987557301899149,
+        "brier": 0.20206482013162463,
+        "log_loss": 0.5914614091334343,
+        "ece": 0.0314165650546253
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "hc45",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6294404125286479,
+        "brier": 0.2359061932513749,
+        "pr_auc": 0.6697873764120579,
+        "accuracy": 0.6011787819253438,
+        "log_loss": 0.6641947618199668,
+        "ece": 0.028875827092214795,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "hc45",
+        "n": 1527,
+        "base_rate": 0.5546823837590046,
+        "auc": 0.6294404125286479,
+        "pr_auc": 0.6697873764120579,
+        "accuracy": 0.6011787819253438,
+        "brier": 0.2359061932513749,
+        "log_loss": 0.6641947618199668,
+        "ece": 0.028875827092214795
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "hc55",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6370681310171251,
+        "brier": 0.23165072283475568,
+        "pr_auc": 0.5601682097785479,
+        "accuracy": 0.6182056319580878,
+        "log_loss": 0.6555161880088323,
+        "ece": 0.03049361069763691,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "hc55",
+        "n": 1527,
+        "base_rate": 0.4204322200392927,
+        "auc": 0.6370681310171251,
+        "pr_auc": 0.5601682097785479,
+        "accuracy": 0.6182056319580878,
+        "brier": 0.23165072283475568,
+        "log_loss": 0.6555161880088323,
+        "ece": 0.03049361069763691
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "ac25",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6213297015794703,
+        "brier": 0.19491495320107996,
+        "pr_auc": 0.7929732983115223,
+        "accuracy": 0.722331368696791,
+        "log_loss": 0.5766812910583028,
+        "ece": 0.030063415601517353,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "ac25",
+        "n": 1527,
+        "base_rate": 0.7229862475442044,
+        "auc": 0.6213297015794703,
+        "pr_auc": 0.7929732983115223,
+        "accuracy": 0.722331368696791,
+        "brier": 0.19491495320107996,
+        "log_loss": 0.5766812910583028,
+        "ece": 0.030063415601517353
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "ac35",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6272015195620987,
+        "brier": 0.2368528314706395,
+        "pr_auc": 0.6695915399221033,
+        "accuracy": 0.5854616895874263,
+        "log_loss": 0.6660882434443662,
+        "ece": 0.03761000806582354,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "ac35",
+        "n": 1527,
+        "base_rate": 0.5605762933857237,
+        "auc": 0.6272015195620987,
+        "pr_auc": 0.6695915399221033,
+        "accuracy": 0.5854616895874263,
+        "brier": 0.2368528314706395,
+        "log_loss": 0.6660882434443662,
+        "ece": 0.03761000806582354
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "ac45",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6131308734966513,
+        "brier": 0.2339016060718954,
+        "pr_auc": 0.5085735632390833,
+        "accuracy": 0.6208251473477406,
+        "log_loss": 0.6602245538735506,
+        "ece": 0.04496940106129747,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "ac45",
+        "n": 1527,
+        "base_rate": 0.4073346430910282,
+        "auc": 0.6131308734966513,
+        "pr_auc": 0.5085735632390833,
+        "accuracy": 0.6208251473477406,
+        "brier": 0.2339016060718954,
+        "log_loss": 0.6602245538735506,
+        "ece": 0.04496940106129747
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "ac55",
+      "family": "corners",
+      "status": "passed",
+      "reasons": [],
+      "baseline_artifact": {
+        "family": "corners",
+        "holdout_path": "model_artifacts\\v2\\corners\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\corners",
+        "model_name": "corners_v2",
+        "model_version": "distribution_head_v1",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "corners",
+        "artifact_dir": "model_artifacts\\v2\\live_verification_corners_20260306",
+        "model_name": "corners_v2",
+        "model_version": "live_verification_corners_20260306",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6359708605378623,
+        "brier": 0.19610269434670338,
+        "pr_auc": 0.4108530018442496,
+        "accuracy": 0.7138179436804192,
+        "log_loss": 0.579234795250618,
+        "ece": 0.03837910168111202,
+        "n": 1527
+      },
+      "challenger": {
+        "family": "corners",
+        "market": "ac55",
+        "n": 1527,
+        "base_rate": 0.2861820563195809,
+        "auc": 0.6359708605378623,
+        "pr_auc": 0.4108530018442496,
+        "accuracy": 0.7138179436804192,
+        "brier": 0.19610269434670338,
+        "log_loss": 0.579234795250618,
+        "ece": 0.03837910168111202
+      },
+      "deltas": {
+        "auc": 0.0,
+        "brier": 0.0,
+        "log_loss": 0.0,
+        "ece": 0.0
+      }
+    },
+    {
+      "market": "h_1up",
+      "family": "anytime",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "anytime",
+        "holdout_path": "model_artifacts\\v2\\anytime\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\anytime",
+        "model_name": "anytime_v2",
+        "model_version": "anytime_direct_monotone_v1_candidate_20260308",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "anytime",
+        "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+        "model_name": "anytime_v2",
+        "model_version": "markov_head_v1",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6390167272459242,
+        "brier": 0.22865106342241626,
+        "pr_auc": 0.721607626511956,
+        "accuracy": 0.6176688938381588,
+        "log_loss": 0.6488408921142998,
+        "ece": 0.042408732244456245,
+        "n": 1347
+      },
+      "challenger": {
+        "family": "anytime",
+        "market": "h_1up",
+        "n": 1403,
+        "base_rate": 0.609408410548824,
+        "auc": 0.6111004396636361,
+        "pr_auc": 0.700294873996604,
+        "accuracy": 0.6151104775481112,
+        "brier": 0.23067494104171068,
+        "log_loss": 0.653239811704216,
+        "ece": 0.023473532463868085
+      },
+      "deltas": {
+        "auc": -0.027916287582288035,
+        "brier": 0.0020238776192944286,
+        "log_loss": 0.004398919589916117,
+        "ece": -0.01893519978058816
+      }
+    },
+    {
+      "market": "a_1up",
+      "family": "anytime",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "anytime",
+        "holdout_path": "model_artifacts\\v2\\anytime\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\anytime",
+        "model_name": "anytime_v2",
+        "model_version": "anytime_direct_monotone_v1_candidate_20260308",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "anytime",
+        "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+        "model_name": "anytime_v2",
+        "model_version": "markov_head_v1",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.613868158929525,
+        "brier": 0.24107674498782225,
+        "pr_auc": 0.5867935470795792,
+        "accuracy": 0.576837416481069,
+        "log_loss": 0.6749807390878,
+        "ece": 0.02484911765606804,
+        "n": 1347
+      },
+      "challenger": {
+        "family": "anytime",
+        "market": "a_1up",
+        "n": 1403,
+        "base_rate": 0.47540983606557374,
+        "auc": 0.6008042174564892,
+        "pr_auc": 0.5734972228247937,
+        "accuracy": 0.5808980755523877,
+        "brier": 0.24181013628580783,
+        "log_loss": 0.6764880502894144,
+        "ece": 0.02945825791964889
+      },
+      "deltas": {
+        "auc": -0.0130639414730358,
+        "brier": 0.0007333912979855806,
+        "log_loss": 0.001507311201614403,
+        "ece": 0.004609140263580849
+      }
+    },
+    {
+      "market": "h_2up",
+      "family": "anytime",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "brier_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "anytime",
+        "holdout_path": "model_artifacts\\v2\\anytime\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\anytime",
+        "model_name": "anytime_v2",
+        "model_version": "anytime_direct_monotone_v1_candidate_20260308",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "anytime",
+        "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+        "model_name": "anytime_v2",
+        "model_version": "markov_head_v1",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.622627341251713,
+        "brier": 0.1860976083015517,
+        "pr_auc": 0.3782486797185861,
+        "accuracy": 0.7423904974016332,
+        "log_loss": 0.5575770949985565,
+        "ece": 0.02471534979909172,
+        "n": 1347
+      },
+      "challenger": {
+        "family": "anytime",
+        "market": "h_2up",
+        "n": 1403,
+        "base_rate": 0.2637205987170349,
+        "auc": 0.6101410219512833,
+        "pr_auc": 0.36467535047289656,
+        "accuracy": 0.7398431931575196,
+        "brier": 0.1882084862688087,
+        "log_loss": 0.5623094011071988,
+        "ece": 0.02265021459925969
+      },
+      "deltas": {
+        "auc": -0.01248631930042976,
+        "brier": 0.0021108779672570077,
+        "log_loss": 0.004732306108642392,
+        "ece": -0.002065135199832032
+      }
+    },
+    {
+      "market": "a_2up",
+      "family": "anytime",
+      "status": "failed",
+      "reasons": [
+        "auc_failed",
+        "log_loss_failed"
+      ],
+      "baseline_artifact": {
+        "family": "anytime",
+        "holdout_path": "model_artifacts\\v2\\anytime\\metrics_holdout.json",
+        "artifact_dir": "model_artifacts\\v2\\anytime",
+        "model_name": "anytime_v2",
+        "model_version": "anytime_direct_monotone_v1_candidate_20260308",
+        "artifact_created_at": null
+      },
+      "candidate_artifact": {
+        "family": "anytime",
+        "artifact_dir": "model_artifacts\\v2\\anytime_direct_monotone_v1_candidate_20260308",
+        "model_name": "anytime_v2",
+        "model_version": "markov_head_v1",
+        "artifact_created_at": null
+      },
+      "baseline": {
+        "auc": 0.6308116906092986,
+        "brier": 0.15095529203859284,
+        "pr_auc": 0.29440601135594,
+        "accuracy": 0.8069784706755754,
+        "log_loss": 0.47541090373437334,
+        "ece": 0.007563140554627568,
+        "n": 1347
+      },
+      "challenger": {
+        "family": "anytime",
+        "market": "a_2up",
+        "n": 1403,
+        "base_rate": 0.1924447612259444,
+        "auc": 0.6255140400771468,
+        "pr_auc": 0.29120043403037293,
+        "accuracy": 0.8075552387740556,
+        "brier": 0.15081679770827278,
+        "log_loss": 0.475658941756185,
+        "ece": 0.01081495729147462
+      },
+      "deltas": {
+        "auc": -0.00529765053215181,
+        "brier": -0.00013849433032006586,
+        "log_loss": 0.00024803802181166956,
+        "ece": 0.0032518167368470524
+      }
+    }
+  ]
+}

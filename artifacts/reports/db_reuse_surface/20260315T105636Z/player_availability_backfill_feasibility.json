@@ -1,0 +1,92 @@
+{
+  "generated_at_utc": "2026-03-15T10:56:37.910025+00:00",
+  "timing_columns": [
+    "event_recorded_at",
+    "first_recorded_at",
+    "last_refreshed_at",
+    "recorded_at"
+  ],
+  "timing_stats": {
+    "event_recorded_at": {
+      "min_ts": "2023-09-19 15:45:00+00:00",
+      "max_ts": "2026-03-15 10:00:43.146971+00:00",
+      "non_null_rows": 354236
+    },
+    "first_recorded_at": {
+      "min_ts": "2026-02-24 05:36:31.838898+00:00",
+      "max_ts": "2026-03-15 10:20:23.843972+00:00",
+      "non_null_rows": 354236
+    },
+    "last_refreshed_at": {
+      "min_ts": "2026-02-26 07:27:40.528189+00:00",
+      "max_ts": "2026-03-15 10:20:23.843972+00:00",
+      "non_null_rows": 354236
+    },
+    "recorded_at": {
+      "min_ts": "2026-02-24 05:36:31.838898+00:00",
+      "max_ts": "2026-03-15 10:20:23.843972+00:00",
+      "non_null_rows": 354236
+    }
+  },
+  "timing_coverage_180d": {
+    "event_recorded_at": {
+      "fixtures_total": 6373,
+      "fixtures_with_any_pa": 5958,
+      "fixtures_with_pa_by_kickoff": 5958,
+      "fixtures_with_pa_by_t24h": 112,
+      "fixtures_with_pa_by_t6h": 131,
+      "fixtures_with_pa_by_t90m": 144,
+      "fixtures_with_missing_status_by_t6h": 124,
+      "fixtures_with_both_teams_by_t6h": 131
+    },
+    "first_recorded_at": {
+      "fixtures_total": 6373,
+      "fixtures_with_any_pa": 5958,
+      "fixtures_with_pa_by_kickoff": 176,
+      "fixtures_with_pa_by_t24h": 137,
+      "fixtures_with_pa_by_t6h": 154,
+      "fixtures_with_pa_by_t90m": 166,
+      "fixtures_with_missing_status_by_t6h": 140,
+      "fixtures_with_both_teams_by_t6h": 154
+    },
+    "last_refreshed_at": {
+      "fixtures_total": 6373,
+      "fixtures_with_any_pa": 5958,
+      "fixtures_with_pa_by_kickoff": 155,
+      "fixtures_with_pa_by_t24h": 112,
+      "fixtures_with_pa_by_t6h": 131,
+      "fixtures_with_pa_by_t90m": 144,
+      "fixtures_with_missing_status_by_t6h": 124,
+      "fixtures_with_both_teams_by_t6h": 131
+    },
+    "recorded_at": {
+      "fixtures_total": 6373,
+      "fixtures_with_any_pa": 5958,
+      "fixtures_with_pa_by_kickoff": 176,
+      "fixtures_with_pa_by_t24h": 137,
+      "fixtures_with_pa_by_t6h": 154,
+      "fixtures_with_pa_by_t90m": 166,
+      "fixtures_with_missing_status_by_t6h": 140,
+      "fixtures_with_both_teams_by_t6h": 154
+    }
+  },
+  "timing_distribution_60d": {
+    "rows_total": 88818.0,
+    "event_avg_hrs_before": 3.2605103147671426,
+    "event_p50_hrs_before": 1.0,
+    "event_p10_hrs_before": 1.0,
+    "first_avg_hrs_before": -428.7796237643663,
+    "first_p50_hrs_before": -421.4247680397222,
+    "first_p10_hrs_before": -916.551272966524,
+    "last_avg_hrs_before": -432.6970346569316,
+    "last_p50_hrs_before": -425.46125783027776,
+    "last_p10_hrs_before": -925.7809278369408
+  },
+  "conclusion": {
+    "cards_backfill_status": "proven_parser_backfill_candidate",
+    "anytime_player_context_backfill_status": "not_proven_from_current_db_surface",
+    "current_main_constraint": "historical prematch player_availability capture is sparse at useful pre-match horizons",
+    "config_issue_found": "db_reuse_features currently prefers last_refreshed_at over earlier timing columns; this likely understates coverage slightly but does not change the overall conclusion",
+    "recommended_next_step": "audit whether event_recorded_at is valid as PIT availability clock, then decide whether to switch timing column; do not assume historical backfill is available until that is validated"
+  }
+}

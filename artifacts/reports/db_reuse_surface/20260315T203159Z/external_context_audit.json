@@ -1,0 +1,99 @@
+{
+  "generated_at_utc": "2026-03-15T20:31:59.470314+00:00",
+  "phase": "phase5_external_context_initial_ingestion",
+  "summary": {
+    "team_external_context": {
+      "rows_total": 18,
+      "rows_sofascore": 18,
+      "rows_with_team_id": 18,
+      "rows_null_canonical_id": 0,
+      "rows_with_provider_id": 18,
+      "context_types": 5,
+      "leagues": 1,
+      "canonical_entities": 5,
+      "max_snapshot_time_utc": "2026-03-15T20:31:15.677822+00:00",
+      "max_ingested_at": "2026-03-15T20:31:16.391296+00:00"
+    },
+    "match_external_context": {
+      "rows_total": 12,
+      "rows_sofascore": 12,
+      "rows_with_fixture_id": 12,
+      "rows_null_canonical_id": 0,
+      "rows_with_provider_id": 12,
+      "context_types": 2,
+      "canonical_entities": 5,
+      "max_snapshot_time_utc": "2026-03-15T20:31:20.015735+00:00",
+      "max_ingested_at": "2026-03-15T20:31:20.295349+00:00"
+    },
+    "player_external_context": {
+      "rows_total": 18,
+      "rows_sofascore": 18,
+      "rows_with_player_id": 18,
+      "rows_null_canonical_id": 0,
+      "rows_with_provider_id": 18,
+      "context_types": 3,
+      "leagues": 1,
+      "canonical_entities": 5,
+      "max_snapshot_time_utc": "2026-03-15T20:31:24.755441+00:00",
+      "max_ingested_at": "2026-03-15T20:31:24.561224+00:00"
+    }
+  },
+  "context_breakdown": {
+    "team_external_context": [
+      {
+        "context_type": "league_stats",
+        "rows": 6,
+        "rows_sofascore": 6
+      },
+      {
+        "context_type": "standings_away",
+        "rows": 2,
+        "rows_sofascore": 2
+      },
+      {
+        "context_type": "standings_home",
+        "rows": 2,
+        "rows_sofascore": 2
+      },
+      {
+        "context_type": "standings_total",
+        "rows": 2,
+        "rows_sofascore": 2
+      },
+      {
+        "context_type": "team_overview",
+        "rows": 6,
+        "rows_sofascore": 6
+      }
+    ],
+    "match_external_context": [
+      {
+        "context_type": "h2h_results",
+        "rows": 6,
+        "rows_sofascore": 6
+      },
+      {
+        "context_type": "team_streaks",
+        "rows": 6,
+        "rows_sofascore": 6
+      }
+    ],
+    "player_external_context": [
+      {
+        "context_type": "attributes",
+        "rows": 6,
+        "rows_sofascore": 6
+      },
+      {
+        "context_type": "league_stats",
+        "rows": 6,
+        "rows_sofascore": 6
+      },
+      {
+        "context_type": "player_overview",
+        "rows": 6,
+        "rows_sofascore": 6
+      }
+    ]
+  }
+}

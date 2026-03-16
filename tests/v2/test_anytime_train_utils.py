@@ -109,6 +109,41 @@ def test_anytime_select_features_excludes_disabled_entries() -> None:
         assert selected == ["lambda_home_l1", "lambda_away_l1"]
 
 
+def test_anytime_select_features_supports_dbreuse_player_context_contract() -> None:
+    contract = Path("model_v2/feature_contracts/experiments/anytime_dbreuse_player_context_v1.yaml")
+    frame = pd.DataFrame(
+        [
+            {
+                "home_sample_size": 10,
+                "away_sample_size": 11,
+                "lambda_home_l1": 1.4,
+                "lambda_away_l1": 1.0,
+                "adj_lambda_home_resolved": 1.5,
+                "adj_lambda_away_resolved": 1.1,
+                "home_rolling_xg": 1.7,
+                "away_rolling_xg": 1.2,
+                "home_rolling_sot": 4.2,
+                "away_rolling_sot": 3.9,
+                "goal_diff_proxy": 0.5,
+                "xg_net_diff": 0.4,
+                "home_missing_market_value_total": 20_000_000,
+                "home_top2_attack_xga_share": 0.72,
+                "lineup_completeness_home": 1.36,
+                "home_missing_market_value_total_is_missing": 0,
+                "home_availability_refresh_hours_dbreuse_is_missing": 0,
+            }
+        ]
+    )
+
+    selected = _select_features(frame, contract)
+
+    assert "home_missing_market_value_total" in selected
+    assert "home_top2_attack_xga_share" in selected
+    assert "lineup_completeness_home" in selected
+    assert "home_missing_market_value_total_is_missing" in selected
+    assert "home_availability_refresh_hours_dbreuse_is_missing" in selected
+
+
 def test_anytime_prepare_phase_targets_derives_second_half_goals() -> None:
     frame = pd.DataFrame(
         [

@@ -1,0 +1,47 @@
+[
+  {
+    "field_group": "ball_recoveries_surface",
+    "source_table": "fixture_stats_premium",
+    "columns": [
+      "h_ball_recoveries",
+      "a_ball_recoveries"
+    ],
+    "total_rows": 10857,
+    "covered_rows": 0,
+    "coverage_ratio": 0.0,
+    "latest_timestamp": "2026-03-15T14:00:59.813877+00:00",
+    "sample_rows_checked": 250,
+    "payload_key_hits": 0,
+    "diagnosis": "payload_absent_likely"
+  },
+  {
+    "field_group": "yellow_cards_surface",
+    "source_table": "fixture_stats_premium",
+    "columns": [
+      "h_yellow_cards",
+      "a_yellow_cards"
+    ],
+    "total_rows": 10857,
+    "covered_rows": 3640,
+    "coverage_ratio": 0.3352675693101225,
+    "latest_timestamp": "2026-03-15T14:00:59.813877+00:00",
+    "sample_rows_checked": 250,
+    "payload_key_hits": 220,
+    "diagnosis": "already_populated"
+  },
+  {
+    "field_group": "red_cards_surface",
+    "source_table": "fixture_stats_premium",
+    "columns": [
+      "h_red_cards",
+      "a_red_cards"
+    ],
+    "total_rows": 10857,
+    "covered_rows": 1183,
+    "coverage_ratio": 0.10896196002578981,
+    "latest_timestamp": "2026-03-15T14:00:59.813877+00:00",
+    "sample_rows_checked": 250,
+    "payload_key_hits": 54,
+    "diagnosis": "already_populated"
+  }
+]

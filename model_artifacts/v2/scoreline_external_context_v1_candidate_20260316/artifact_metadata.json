@@ -1,0 +1,9 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "scoreline_external_context_v1_candidate_20260316",
+  "artifact_dir": "model_artifacts\\v2\\scoreline_external_context_v1_candidate_20260316",
+  "trained_at_utc": "2026-03-16T03:36:59.014230+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "legacy_fetch_dataset"
+}

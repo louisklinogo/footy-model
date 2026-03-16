@@ -168,6 +168,74 @@ def test_select_features_supports_scoreline_live_parity_strict_contract() -> Non
     assert "adj_lambda_home_final_is_missing" in selected
 
 
+def test_select_features_supports_scoreline_dbreuse_team_player_context_contract() -> None:
+    contract = Path("model_v2/feature_contracts/experiments/scoreline_dbreuse_team_player_context_v1.yaml")
+    frame = pd.DataFrame(
+        [
+            {
+                "home_sample_size": 10,
+                "away_sample_size": 11,
+                "home_rolling_xg": 1.6,
+                "home_rolling_xg_against": 1.0,
+                "away_rolling_xg": 1.2,
+                "away_rolling_xg_against": 1.1,
+                "home_rolling_sot": 4.8,
+                "away_rolling_sot": 4.1,
+                "lambda_home_l1": 1.5,
+                "lambda_away_l1": 1.1,
+                "xg_net_diff": 0.5,
+                "goal_diff_proxy": 0.4,
+                "home_missing_market_value_total": 15000000,
+                "home_points_per_match": 2.1,
+                "standings_points_gap": 0.35,
+            }
+        ]
+    )
+
+    selected = _select_features(frame, contract)
+
+    assert "home_missing_market_value_total" in selected
+    assert "home_points_per_match" in selected
+    assert "standings_points_gap" in selected
+
+
+def test_select_features_supports_scoreline_external_context_contract() -> None:
+    contract = Path("model_v2/feature_contracts/experiments/scoreline_external_context_v1.yaml")
+    frame = pd.DataFrame(
+        [
+            {
+                "home_sample_size": 10,
+                "away_sample_size": 11,
+                "home_rolling_xg": 1.6,
+                "home_rolling_xg_against": 1.0,
+                "away_rolling_xg": 1.2,
+                "away_rolling_xg_against": 1.1,
+                "home_rolling_sot": 4.8,
+                "away_rolling_sot": 4.1,
+                "lambda_home_l1": 1.5,
+                "lambda_away_l1": 1.1,
+                "xg_net_diff": 0.5,
+                "goal_diff_proxy": 0.4,
+                "home_external_overall_points_per_match": 2.1,
+                "away_external_overall_points_per_match": 1.4,
+                "external_overall_points_gap": 0.7,
+                "home_external_match_form_points_last5": 10,
+                "away_external_match_form_points_last5": 6,
+                "external_match_form_points_gap": 4,
+                "external_h2h_home_win_rate": 0.5,
+            }
+        ]
+    )
+
+    selected = _select_features(frame, contract)
+
+    assert "home_external_overall_points_per_match" in selected
+    assert "external_overall_points_gap" in selected
+    assert "home_external_match_form_points_last5" in selected
+    assert "external_match_form_points_gap" in selected
+    assert "external_h2h_home_win_rate" in selected
+
+
 def test_aggregate_walkforward_quality_summarizes_markets() -> None:
     summary = {
         "o15": {"auc_mean": 0.61, "brier_mean": 0.19, "n_total": 120},

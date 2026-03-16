@@ -1,0 +1,124 @@
+version: 1
+family: scoreline
+description: Experimental scoreline contract adding DB-reuse standings-strength and player-context features from live SofaScore-derived tables.
+
+required_features:
+  - home_sample_size
+  - away_sample_size
+  - home_rolling_xg
+  - home_rolling_xg_against
+  - away_rolling_xg
+  - away_rolling_xg_against
+  - home_rolling_sot
+  - away_rolling_sot
+  - lambda_home_l1
+  - lambda_away_l1
+  - xg_net_diff
+  - goal_diff_proxy
+
+optional_features:
+  - adj_lambda_home_final
+  - adj_lambda_away_final
+  - rule_fired_home
+  - rule_fired_away
+  - odds_over_15
+  - odds_under_15
+  - odds_over_25
+  - odds_under_25
+  - odds_over_35
+  - odds_under_35
+  - implied_over15
+  - implied_under15
+  - implied_over25
+  - implied_under25
+  - implied_over35
+  - implied_under35
+  - odds_gap_15
+  - odds_gap_25
+  - odds_gap_35
+  - home_rolling_big_chances
+  - away_rolling_big_chances
+  - home_rolling_xgot
+  - away_rolling_xgot
+  - home_rolling_possession
+  - away_rolling_possession
+  - home_availability_known
+  - away_availability_known
+  - home_lineup_known
+  - away_lineup_known
+  - home_missing_players
+  - away_missing_players
+  - home_missing_defenders
+  - away_missing_defenders
+  - home_missing_midfielders
+  - away_missing_midfielders
+  - home_missing_forwards
+  - away_missing_forwards
+  - home_availability_freshness_hours
+  - away_availability_freshness_hours
+  - home_lineup_freshness_hours
+  - away_lineup_freshness_hours
+  - home_missing_market_value_total
+  - away_missing_market_value_total
+  - home_missing_market_value_attack
+  - away_missing_market_value_attack
+  - home_missing_market_value_defense
+  - away_missing_market_value_defense
+  - home_missing_market_value_top1
+  - away_missing_market_value_top1
+  - home_missing_market_value_share
+  - away_missing_market_value_share
+  - home_bench_attack_market_value
+  - away_bench_attack_market_value
+  - home_top1_attack_xg_share
+  - away_top1_attack_xg_share
+  - home_top2_attack_xga_share
+  - away_top2_attack_xga_share
+  - home_bench_attack_form_xga_sum
+  - away_bench_attack_form_xga_sum
+  - home_availability_refresh_hours_dbreuse
+  - away_availability_refresh_hours_dbreuse
+  - home_points_per_match
+  - away_points_per_match
+  - home_goal_diff_per_match
+  - away_goal_diff_per_match
+  - home_goals_for_per_match
+  - away_goals_for_per_match
+  - home_goals_against_per_match
+  - away_goals_against_per_match
+  - standings_points_gap
+  - standings_goal_diff_gap
+  - standings_goals_for_gap
+  - standings_goals_against_gap
+  - standings_win_rate_gap
+  - standings_draw_rate_gap
+  - standings_loss_rate_gap
+  - standings_strength_gap
+
+missingness_indicators:
+  - lambda_home_l1_is_missing
+  - lambda_away_l1_is_missing
+  - odds_over_15_is_missing
+  - odds_under_15_is_missing
+  - odds_over_25_is_missing
+  - odds_under_25_is_missing
+  - odds_over_35_is_missing
+  - odds_under_35_is_missing
+  - adj_lambda_home_final_is_missing
+  - adj_lambda_away_final_is_missing
+  - home_sample_size_is_missing
+  - away_sample_size_is_missing
+  - home_availability_freshness_hours_is_missing
+  - away_availability_freshness_hours_is_missing
+  - home_lineup_freshness_hours_is_missing
+  - away_lineup_freshness_hours_is_missing
+
+forbidden_cross_family_features:
+  - odds_c75_over
+  - odds_c85_over
+  - odds_c95_over
+  - odds_c105_over
+  - corners_gap_75
+  - corners_gap_85
+  - corners_gap_95
+  - corners_gap_105

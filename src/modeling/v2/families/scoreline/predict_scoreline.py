@@ -279,7 +279,7 @@ def main() -> None:
     fixtures["match_datetime_utc"] = pd.to_datetime(
         fixtures["match_datetime_utc"], utc=True, errors="coerce"
     )
-    featured = add_derived_features(fixtures)
+    featured = add_derived_features(fixtures, include_external_team_match_context=True)
     for feat in features:
         if feat not in featured.columns:
             featured[feat] = np.nan

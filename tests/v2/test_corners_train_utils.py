@@ -990,7 +990,8 @@ def test_totals_first_league_share_residual_emits_prior_aware_team_means() -> No
     assert (derived["ac35"] >= derived["ac45"]).all()
 
 
-def test_pmf_surface_blended_emits_coherent_total_and_team_market_probs() -> None:
+@pytest.mark.parametrize("path_version", ["pmf_surface_blended", "pmf_surface_blended_v2"])
+def test_pmf_surface_blended_emits_coherent_total_and_team_market_probs(path_version: str) -> None:
     rows: list[dict[str, float | str | int]] = []
     for idx in range(96):
         high_total = idx % 4 in {0, 1}
@@ -1064,12 +1065,12 @@ def test_pmf_surface_blended_emits_coherent_total_and_team_market_probs() -> Non
         train_df=frame,
         features=features,
         model_type="poisson_glm",
-        path_version="pmf_surface_blended",
+        path_version=path_version,
     )
     preds = _predict_corner_rates(
         models=models,
         x=frame[features],
-        path_version="pmf_surface_blended",
+        path_version=path_version,
         total_r=None,
         home_r=None,
         away_r=None,
@@ -1079,10 +1080,11 @@ def test_pmf_surface_blended_emits_coherent_total_and_team_market_probs() -> Non
         total_r=None,
         home_r=None,
         away_r=None,
-        path_version="pmf_surface_blended",
+        path_version=path_version,
     )
     assert "total_market_probs" in preds
     assert "team_market_probs" in preds
+    assert int(models["pmf_surface_models"]["max_count"]) >= 12
     assert set(preds["total_market_probs"].keys()) == {"c75", "c85", "c95", "c105"}
     assert set(preds["team_market_probs"].keys()) == {"hc25", "hc35", "hc45", "hc55", "ac25", "ac35", "ac45", "ac55"}
     assert (derived["c75"] >= derived["c85"]).all()
@@ -1094,6 +1096,47 @@ def test_pmf_surface_blended_emits_coherent_total_and_team_market_probs() -> Non
     assert (derived["ac25"] >= derived["ac35"]).all()
     assert (derived["ac35"] >= derived["ac45"]).all()
     assert (derived["ac45"] >= derived["ac55"]).all()
+
+
+def test_pmf_surface_blended_v2_expands_count_grid_for_higher_corner_support() -> None:
+    frame = pd.DataFrame(
+        {
+            "fixture_id": list(range(1, 33)),
+            "match_datetime_utc": [f"2024-10-{(idx % 28) + 1:02d}T12:00:00Z" for idx in range(32)],
+            "home_rolling_corners": np.linspace(4.0, 9.0, 32),
+            "away_rolling_corners": np.linspace(3.0, 8.0, 32),
+            "home_rolling_box_touches": np.linspace(18.0, 32.0, 32),
+            "away_rolling_box_touches": np.linspace(17.0, 31.0, 32),
+            "home_rolling_possession": np.linspace(44.0, 58.0, 32),
+            "away_rolling_possession": np.linspace(42.0, 56.0, 32),
+            "league_total_corners_mean": np.linspace(8.0, 11.5, 32),
+            "league_home_corners_mean": np.linspace(4.0, 6.5, 32),
+            "league_away_corners_mean": np.linspace(3.5, 5.5, 32),
+            "league_home_share_mean": np.linspace(0.46, 0.58, 32),
+            "home_corners": [6, 7, 8, 9, 10, 11, 12, 13] * 4,
+            "away_corners": [4, 5, 6, 7, 8, 9, 10, 14] * 4,
+        }
+    )
+    frame["total_corners"] = frame["home_corners"] + frame["away_corners"]
+    features = [
+        "home_rolling_corners",
+        "away_rolling_corners",
+        "home_rolling_box_touches",
+        "away_rolling_box_touches",
+        "home_rolling_possession",
+        "away_rolling_possession",
+        "league_total_corners_mean",
+        "league_home_corners_mean",
+        "league_away_corners_mean",
+        "league_home_share_mean",
+    ]
+    models = _fit_corner_models(
+        train_df=frame,
+        features=features,
+        model_type="poisson_glm",
+        path_version="pmf_surface_blended_v2",
+    )
+    assert int(models["pmf_surface_models"]["max_count"]) > 12
 
 
 def test_totals_surface_calibrated_emits_direct_total_market_probs() -> None:

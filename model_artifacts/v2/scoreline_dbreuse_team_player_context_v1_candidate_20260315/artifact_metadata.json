@@ -1,0 +1,9 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+  "artifact_dir": "model_artifacts\\v2\\scoreline_dbreuse_team_player_context_v1_candidate_20260315",
+  "trained_at_utc": "2026-03-15T11:10:59.683402+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "legacy_fetch_dataset"
+}

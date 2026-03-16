@@ -46,6 +46,8 @@ NAME_MAP = {
     "Hit woodwork": "hit_woodwork",
     "Dribbles": "dribbles", # Will split into success/total
     "Recovered balls": "ball_recoveries",
+    "Yellow cards": "yellow_cards",
+    "Red cards": "red_cards",
     "Duels": "duels",
     "Ground duels": "ground_duels",
     "Aerial duels": "aerial_duels",

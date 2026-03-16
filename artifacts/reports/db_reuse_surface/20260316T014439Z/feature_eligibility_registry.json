@@ -1,0 +1,501 @@
+[
+  {
+    "feature_group": "anytime_player_availability_value_burden",
+    "source_table": "player_availability+players",
+    "family_applicability": [
+      "anytime",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:20:17.783173+00:00",
+    "notes": "Live availability table is populated and players table has market_value_euro."
+  },
+  {
+    "feature_group": "anytime_attack_concentration",
+    "source_table": "player_availability+fixture_player_stats",
+    "family_applicability": [
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:20:13.497053+00:00",
+    "notes": "Historical player stats are populated enough to compute prior attacking burden from listed players."
+  },
+  {
+    "feature_group": "scoreline_standings_strength",
+    "source_table": "team_league_standings",
+    "family_applicability": [
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:20:07.367344",
+    "notes": "Simple league standings table already exists and is fresh."
+  },
+  {
+    "feature_group": "incident_lead_states",
+    "source_table": "fixture_incident_lead_states",
+    "family_applicability": [
+      "anytime",
+      "scoreline",
+      "corners"
+    ],
+    "readiness_status": "diagnostics_only",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:40:48.831121+00:00",
+    "notes": "Useful for targets and diagnostics, not prematch features."
+  },
+  {
+    "feature_group": "classic_xg_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.7481119911585927,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "classic_box_touches_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.7230613372628477,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "classic_crosses_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.7503223429729232,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "classic_sot_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.7554798305396943,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "classic_corners_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.7560324184932768,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "final_third_entries_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3089887640449438,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "long_balls_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "duels_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "ground_duels_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "aerial_duels_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "dribbles_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "dispossessed_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "woodwork_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3595505617977528,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "offsides_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.34509117701234115,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "fouls_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3596426597900166,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Premium fixture stat surface from live DB."
+  },
+  {
+    "feature_group": "ball_recoveries_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Sparse field diagnosis=payload_absent_likely sample_hits=0."
+  },
+  {
+    "feature_group": "yellow_cards_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.3645238533799963,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Sparse field diagnosis=already_populated sample_hits=229."
+  },
+  {
+    "feature_group": "red_cards_surface",
+    "source_table": "fixture_stats_premium",
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": 0.11641186222140357,
+    "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+    "notes": "Sparse field diagnosis=already_populated sample_hits=61."
+  },
+  {
+    "feature_group": "external_team_standings",
+    "source_table": "team_external_context",
+    "family_applicability": [
+      "scoreline",
+      "corners"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:40:04.114719+00:00",
+    "notes": "External context types present: standings_total, standings_home, standings_away; min canonical entities across required types=527; min provider entities across required types=527."
+  },
+  {
+    "feature_group": "external_team_overview",
+    "source_table": "team_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:40:04.114719+00:00",
+    "notes": "External context types present: team_overview; min canonical entities across required types=559; min provider entities across required types=559."
+  },
+  {
+    "feature_group": "external_team_league_stats",
+    "source_table": "team_external_context",
+    "family_applicability": [
+      "scoreline",
+      "corners"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:40:04.114719+00:00",
+    "notes": "External context types present: league_stats; min canonical entities across required types=559; min provider entities across required types=559."
+  },
+  {
+    "feature_group": "external_team_performance_graph",
+    "source_table": "team_external_context",
+    "family_applicability": [
+      "scoreline",
+      "corners"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:40:04.114719+00:00",
+    "notes": "External context types present: performance_graph; min canonical entities across required types=418; min provider entities across required types=418."
+  },
+  {
+    "feature_group": "external_match_pre_match_form",
+    "source_table": "match_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:41:11.890619+00:00",
+    "notes": "External context types present: pre_match_form; min canonical entities across required types=2752; min provider entities across required types=2752."
+  },
+  {
+    "feature_group": "external_match_team_streaks",
+    "source_table": "match_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:41:11.890619+00:00",
+    "notes": "External context types present: team_streaks; min canonical entities across required types=5000; min provider entities across required types=5000."
+  },
+  {
+    "feature_group": "external_match_h2h_results",
+    "source_table": "match_external_context",
+    "family_applicability": [
+      "scoreline"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:41:11.890619+00:00",
+    "notes": "External context types present: h2h_results; min canonical entities across required types=5000; min provider entities across required types=5000."
+  },
+  {
+    "feature_group": "external_player_overview",
+    "source_table": "player_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:42:21.935119+00:00",
+    "notes": "External context types present: player_overview; min canonical entities across required types=10000; min provider entities across required types=10000."
+  },
+  {
+    "feature_group": "external_player_attributes",
+    "source_table": "player_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:42:21.935119+00:00",
+    "notes": "External context types present: attributes; min canonical entities across required types=7630; min provider entities across required types=7630."
+  },
+  {
+    "feature_group": "external_player_league_stats",
+    "source_table": "player_external_context",
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "ready_now",
+    "coverage_ratio": null,
+    "latest_timestamp": "2026-03-16T01:42:21.935119+00:00",
+    "notes": "External context types present: league_stats; min canonical entities across required types=9017; min provider entities across required types=9017."
+  },
+  {
+    "feature_group": "pre_match_form",
+    "source_table": null,
+    "family_applicability": [
+      "anytime",
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "team_streaks",
+    "source_table": null,
+    "family_applicability": [
+      "anytime",
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "home_away_split_standings",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "performance_graph",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline",
+      "corners"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "h2h_results",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "win_probability",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "monitoring_only",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "votes",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "monitoring_only",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "shotmap",
+    "source_table": null,
+    "family_applicability": [
+      "corners",
+      "scoreline"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "heatmap",
+    "source_table": null,
+    "family_applicability": [
+      "corners"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  },
+  {
+    "feature_group": "transfer_snapshots",
+    "source_table": null,
+    "family_applicability": [
+      "scoreline",
+      "anytime"
+    ],
+    "readiness_status": "missing_requires_new_table",
+    "coverage_ratio": 0.0,
+    "latest_timestamp": null,
+    "notes": "No dedicated live DB table found during schema audit."
+  }
+]

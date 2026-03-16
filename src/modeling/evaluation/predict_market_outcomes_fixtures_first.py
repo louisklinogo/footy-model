@@ -27,6 +27,7 @@ from src.modeling.availability_features import (
     availability_feature_select_and_join,
     resolve_availability_feature_config,
 )
+from src.modeling.v2.db_reuse_features import add_db_reuse_context_features
 from src.pricing.markov import MarkovPricer
 
 
@@ -493,8 +494,17 @@ def fetch_candidate_fixtures(
     return df
 
 
-def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
-    out = df.copy()
+def add_derived_features(
+    df: pd.DataFrame,
+    *,
+    include_external_team_match_context: bool = False,
+) -> pd.DataFrame:
+    out = add_db_reuse_context_features(
+        df.copy(),
+        include_anytime_player_context=True,
+        include_standings_context=True,
+        include_external_team_match_context=include_external_team_match_context,
+    )
     out["xg_net_diff"] = out["home_rolling_xg"] - out["away_rolling_xg_against"]
     out["xgot_net_diff"] = out["home_rolling_xgot"] - out["away_rolling_xgot_against"]
     out["xa_net_diff"] = out["home_rolling_xa"] - out["away_rolling_xa_against"]
@@ -513,6 +523,10 @@ def add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     out["fidelity_score_sum"] = out["home_fidelity_score"] + out["away_fidelity_score"]
     out["fidelity_score_diff"] = out["home_fidelity_score"] - out["away_fidelity_score"]
     out["goal_diff_proxy"] = out["home_rolling_xg"] - out["away_rolling_xg"]
+    if "standings_points_gap" in out.columns:
+        out["standings_strength_gap"] = out["standings_points_gap"]
+    if "external_overall_points_gap" in out.columns:
+        out["external_team_strength_gap"] = out["external_overall_points_gap"]
 
     out["implied_over15"] = np.where(
         out["odds_over_15"] > 1.0, 1.0 / out["odds_over_15"], np.nan

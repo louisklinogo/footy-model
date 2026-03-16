@@ -72,9 +72,15 @@ artifacts/tmp/
 artifacts/locks/
 artifacts/logs/*.log
 artifacts/logs/*.stdout.log
+artifacts/state/availability_404_cooldown.json
 artifacts/reports/backbone_health/backbone_health_*.json
 artifacts/reports/odds_coverage/
 artifacts/reports/risk_edge_buckets/
+artifacts/reports/layer2_feature_health/
+artifacts/reports/leakage_audit/leakage_audit_*.json
+artifacts/reports/market_reconciliation/incident_timeline_quality_*.json
+artifacts/reports/market_reconciliation/incident_timeline_quality_*.md
+artifacts/reports/monitoring/
 artifacts/v2/predictions/
 
 # Local corners autoresearch outputs

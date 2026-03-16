@@ -1,12 +1,16 @@
 # Current Repo State (Canonical)
 
-Updated: 2026-03-13
+Updated: 2026-03-15
 Owner: Augment Agent
 Status: Canonical current-state summary
 
 ## What is live right now
 
 - Active scheduler wrapper: `scripts/run_tick_scheduler.cmd`
+- Active WSL auxiliary scheduler wrappers:
+  - `scripts/run_predict_scheduler_hybrid.sh`
+  - `scripts/run_score_scheduler_hybrid.sh`
+  - `scripts/run_external_context_scheduler.sh`
 - Active job entrypoint: `src/jobs/tick_due_fixtures_v1.py`
 - Active settle/runtime repair behavior:
   - the settle phase now includes a bounded post-match repair pass for recent `ft` fixtures that are still missing `fixture_stats_premium` corners stats or `fixture_incident_lead_states`
@@ -35,6 +39,14 @@ These are the identities currently seen in the live DB tables (`predictions`, `p
 - Hybrid scoring is now fully scoreable on finished fixtures when upstream post-match data exists.
 - `score_market_outcomes_fixtures_first.py` now supports explicit `--model` / `--version` selection, which is how `market_outcome_v2 / hybrid_v1` is backfilled and scored.
 - Scoreline family exotics (`mg_*`, `hmg_*`, `amg_*`, `ms_*`) are now part of the scorer's supported market set.
+- External context collection is now also wired into WSL as a separate hourly auxiliary job:
+  - script: `scripts/run_external_context_scheduler.sh`
+  - current cron line: `40 * * * * /home/louis/developer/footy-model/scripts/run_external_context_scheduler.sh >> /home/louis/developer/footy-model/artifacts/logs/cron_external_context.log 2>&1`
+  - current operational scope: scheduled/upcoming fixtures only, with a `0h` to `72h` horizon
+  - current persisted context types from the first real load:
+    - team: `standings_total`, `standings_home`, `standings_away`, `team_overview`, `league_stats`
+    - match: `team_streaks`, `h2h_results`
+    - player: `player_overview`, `attributes`, `league_stats`
 
 ## What v2 is today
 
@@ -45,9 +57,11 @@ These are the identities currently seen in the live DB tables (`predictions`, `p
   - `anytime_v2`
 - Current repo evidence indicates v2 family predictions are being run manually / experimentally, not through the active scheduled prediction path.
 - Current leading scoreline challenger reference is:
-  - artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
-  - passing evaluation: `model_artifacts/v2/evaluation_scoreline_v21_total_intensity_snap_20260308_eps/`
-  - pinned named baseline snapshot: `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`
+  - artifact: `model_artifacts/v2/scoreline_external_context_v1_candidate_20260316/`
+  - evaluation: `model_artifacts/v2/evaluation_scoreline_external_context_v1_candidate_20260316/`
+  - live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260316_scoreline_external_context_v1/`
+  - pinned named baseline snapshot still used for scoreline promotion decisions:
+    - `model_artifacts/v2/baselines/metrics_baseline_v2_scoreline_v21_total_intensity_snap_20260308_eps.json`
 - This does **not** mean v2 is the active live runtime yet; it means this is the current repo-backed scoreline challenger reference for future v2 comparisons.
 - Current leading anytime challenger reference is:
   - artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
@@ -64,12 +78,12 @@ These are the identities currently seen in the live DB tables (`predictions`, `p
 - Corners Phase B status (2026-03-10): the defensive-pressure extraction pass was executed in full and also failed clearly. `corners_signal_phaseb_pressure_v1_candidate_20260310` added `rolling_errors_lead_to_shot` and `rolling_tackles_pct` (plus missingness indicators) through both PIT and live prediction seams, but matched live `corners_overlap` regressed to `ΔAUC -0.017072`, `ΔBrier +0.004888`, `Δlog-loss +0.012008`, materially worse than the current leader. Corners should now be treated as parked / blocked until upstream support materially improves (especially team-corners odds, denser totals-corners odds, stronger style-cluster PIT coverage, or genuinely populated availability/lineup data).
 - Corners final bounded closeout (2026-03-10): a DB-audit-driven snapshot-quality pass (`corners_signal_final_snapshot_quality_v1_candidate_20260310`) added `rolling_rest_days`, `fidelity_score`, and compact lead-rate/rest/fidelity derived features through both PIT and live paths. It failed decisively, worsening matched live `corners_overlap` to `ΔAUC -0.01609`, `ΔBrier +0.00459`, `Δlog-loss +0.01161` and failing all `12/12` corners markets. A bounded autoresearch-style repo/DB audit after that found no hidden odds-table rescue or team-corners market seam; the only remaining repo-backed seam is situational context features, which looks incremental at best and not sufficient to justify another corners cycle. Practical conclusion: corners is parked until upstream support materially improves.
 - Current repo-backed bundled challenger reference is:
-  - scoreline artifact: `model_artifacts/v2/scoreline_v21_total_intensity_snap_20260308/`
+  - scoreline artifact: `model_artifacts/v2/scoreline_external_context_v1_candidate_20260316/`
   - corners artifact: `model_artifacts/v2/live_verification_corners_20260306/`
   - anytime artifact: `model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308/`
-  - bundled evaluation: `model_artifacts/v2/evaluation_bundle_refresh_anytime_direct_monotone_v1_20260309/`
-  - bundled live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260309_bundle_anytime_direct_monotone_v1/`
-- Bundle status nuance: this is still a challenger bundle, not the active live runtime. It passes the current required scoreline-core promotion gate (`22/22` required markets passed, `75/76` scoped markets passed) and modestly improves the matched full-bundle overlap versus the prior anytime-led bundle; the gain comes from the new anytime family while scoreline and corners remain unchanged.
+  - bundled evaluation: `model_artifacts/v2/evaluation_scoreline_external_context_v1_candidate_20260316/`
+  - bundled live-overlap comparison: `artifacts/v2/family_replacement/live_replacement_20260316_scoreline_external_context_v1/`
+- Bundle status nuance: this is still a challenger bundle, not the active live runtime. It passes the current required scoreline-core promotion gate (`22/22` required markets passed, `59/76` scoped markets passed) and materially improves the matched full-bundle overlap versus the current repo-backed bundle baseline, driven primarily by the new scoreline family.
 
 ## Canonical source-of-truth hierarchy
 

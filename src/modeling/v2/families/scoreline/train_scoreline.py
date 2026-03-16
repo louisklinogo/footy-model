@@ -37,6 +37,10 @@ from src.modeling.v2.families.scoreline.total_intensity import (
     apply_total_intensity_correction,
     fit_total_intensity_correction,
 )
+from src.modeling.v2.db_reuse_features import (
+    add_db_reuse_context_features,
+    build_feature_coverage_snapshot,
+)
 from src.modeling.v2.io.artifact_identity import build_artifact_metadata, write_artifact_metadata
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 from src.modeling.v2.io.contracts import load_feature_contract
@@ -427,11 +431,25 @@ def main() -> None:
 
     if "prediction_time_utc" not in df.columns:
         df = legacy_calibrator.add_targets_and_derived(df)
+    df = add_db_reuse_context_features(
+        df,
+        include_standings_context=True,
+        include_external_team_match_context=True,
+    )
     df["match_datetime_utc"] = pd.to_datetime(
         df["match_datetime_utc"], utc=True, errors="coerce"
     )
+    if "standings_points_gap" in df.columns:
+        df["standings_strength_gap"] = pd.to_numeric(
+            df["standings_points_gap"], errors="coerce"
+        )
+    if "external_overall_points_gap" in df.columns:
+        df["external_team_strength_gap"] = pd.to_numeric(
+            df["external_overall_points_gap"], errors="coerce"
+        )
 
     features = _select_features(df, args.contract)
+    feature_coverage_snapshot = build_feature_coverage_snapshot(df, features)
     scope_markets = set(load_scope_markets(args.scope))
     model_type_requested = str(args.model_type)
     model_selection_summary: dict[str, dict[str, float | int | None]]
@@ -591,6 +609,7 @@ def main() -> None:
         "holdout_league_rows": int(len(holdout_league_rows)),
         "holdout_prediction_rows": int(len(holdout_prediction_frame)),
         "scoreline_slice_rows": int(len(scoreline_slice_rows)),
+        "feature_coverage_snapshot_rows": int(len(features)),
         "trained_at_utc": datetime.now(tz=UTC).isoformat(),
     }
 
@@ -641,6 +660,9 @@ def main() -> None:
     )
     (args.output_dir / "scoreline_slice_summary_by_league.json").write_text(
         json.dumps(scoreline_slice_summary_by_league, indent=2, default=_json_default), encoding="utf-8"
+    )
+    (args.output_dir / "feature_coverage_snapshot.json").write_text(
+        json.dumps(feature_coverage_snapshot, indent=2), encoding="utf-8"
     )
     (args.output_dir / "training_report.json").write_text(
         json.dumps(diagnostics, indent=2), encoding="utf-8"

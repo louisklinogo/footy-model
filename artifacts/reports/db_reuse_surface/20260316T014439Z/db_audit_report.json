@@ -1,0 +1,451 @@
+{
+  "generated_at_utc": "2026-03-16T01:44:42.957741+00:00",
+  "table_surface": [
+    {
+      "table_name": "fixture_stats_premium",
+      "row_count": 10858,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "table_name": "fixture_incidents_sofascore",
+      "row_count": 169465,
+      "latest_timestamp": "2026-03-16T01:40:47.418747+00:00"
+    },
+    {
+      "table_name": "fixture_incident_lead_states",
+      "row_count": 8255,
+      "latest_timestamp": "2026-03-16T01:40:48.831121+00:00"
+    },
+    {
+      "table_name": "fixture_player_stats",
+      "row_count": 339182,
+      "latest_timestamp": "2026-03-16T01:20:13.497053+00:00"
+    },
+    {
+      "table_name": "player_availability",
+      "row_count": 359276,
+      "latest_timestamp": "2026-03-16T01:20:17.783173+00:00"
+    },
+    {
+      "table_name": "fixture_formations",
+      "row_count": 8677,
+      "latest_timestamp": "2026-03-16T01:20:20.906718+00:00"
+    },
+    {
+      "table_name": "fixture_odds_markets",
+      "row_count": 292777,
+      "latest_timestamp": "2026-03-16T01:40:47.819186+00:00"
+    },
+    {
+      "table_name": "team_league_standings",
+      "row_count": 892,
+      "latest_timestamp": "2026-03-16T01:20:07.367344"
+    },
+    {
+      "table_name": "team_external_context",
+      "row_count": 6081,
+      "latest_timestamp": "2026-03-16T01:40:04.114719+00:00"
+    },
+    {
+      "table_name": "match_external_context",
+      "row_count": 13855,
+      "latest_timestamp": "2026-03-16T01:41:11.890619+00:00"
+    },
+    {
+      "table_name": "player_external_context",
+      "row_count": 28051,
+      "latest_timestamp": "2026-03-16T01:42:21.935119+00:00"
+    }
+  ],
+  "premium_field_coverage": [
+    {
+      "field_group": "classic_xg_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_xg",
+        "a_xg"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 8123,
+      "coverage_ratio": 0.7481119911585927,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "classic_box_touches_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_box_touches",
+        "a_box_touches"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 7851,
+      "coverage_ratio": 0.7230613372628477,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "classic_crosses_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_crosses",
+        "a_crosses"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 8147,
+      "coverage_ratio": 0.7503223429729232,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "classic_sot_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_sot",
+        "a_sot"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 8203,
+      "coverage_ratio": 0.7554798305396943,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "classic_corners_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_corners",
+        "a_corners"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 8209,
+      "coverage_ratio": 0.7560324184932768,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "final_third_entries_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_final_third_entries",
+        "a_final_third_entries"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3355,
+      "coverage_ratio": 0.3089887640449438,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "long_balls_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_accurate_long_balls",
+        "a_accurate_long_balls",
+        "h_total_long_balls",
+        "a_total_long_balls"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "duels_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_duels_won",
+        "a_duels_won"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "ground_duels_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_ground_duels_won",
+        "a_ground_duels_won"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "aerial_duels_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_aerial_duels_won",
+        "a_aerial_duels_won"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "dribbles_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_dribbles_success",
+        "a_dribbles_success",
+        "h_dribbles_total",
+        "a_dribbles_total"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "dispossessed_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_dispossessed",
+        "a_dispossessed"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "woodwork_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_hit_woodwork",
+        "a_hit_woodwork"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3904,
+      "coverage_ratio": 0.3595505617977528,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "offsides_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_offsides",
+        "a_offsides"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3747,
+      "coverage_ratio": 0.34509117701234115,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "fouls_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_fouls",
+        "a_fouls"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3905,
+      "coverage_ratio": 0.3596426597900166,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "ball_recoveries_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_ball_recoveries",
+        "a_ball_recoveries"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 0,
+      "coverage_ratio": 0.0,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "yellow_cards_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_yellow_cards",
+        "a_yellow_cards"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3958,
+      "coverage_ratio": 0.3645238533799963,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    },
+    {
+      "field_group": "red_cards_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_red_cards",
+        "a_red_cards"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 1264,
+      "coverage_ratio": 0.11641186222140357,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00"
+    }
+  ],
+  "sparse_field_diagnostics": [
+    {
+      "field_group": "ball_recoveries_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_ball_recoveries",
+        "a_ball_recoveries"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 0,
+      "coverage_ratio": 0.0,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+      "sample_rows_checked": 250,
+      "payload_key_hits": 0,
+      "diagnosis": "payload_absent_likely"
+    },
+    {
+      "field_group": "yellow_cards_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_yellow_cards",
+        "a_yellow_cards"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 3958,
+      "coverage_ratio": 0.3645238533799963,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+      "sample_rows_checked": 250,
+      "payload_key_hits": 229,
+      "diagnosis": "already_populated"
+    },
+    {
+      "field_group": "red_cards_surface",
+      "source_table": "fixture_stats_premium",
+      "columns": [
+        "h_red_cards",
+        "a_red_cards"
+      ],
+      "total_rows": 10858,
+      "covered_rows": 1264,
+      "coverage_ratio": 0.11641186222140357,
+      "latest_timestamp": "2026-03-16T01:40:34.559343+00:00",
+      "sample_rows_checked": 250,
+      "payload_key_hits": 61,
+      "diagnosis": "already_populated"
+    }
+  ],
+  "external_context_surface": [
+    {
+      "context_type": "league_stats",
+      "rows_total": 1065,
+      "provider_entities": 559,
+      "canonical_entities": 559,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "performance_graph",
+      "rows_total": 900,
+      "provider_entities": 418,
+      "canonical_entities": 418,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "standings_away",
+      "rows_total": 1017,
+      "provider_entities": 527,
+      "canonical_entities": 527,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "standings_home",
+      "rows_total": 1017,
+      "provider_entities": 527,
+      "canonical_entities": 527,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "standings_total",
+      "rows_total": 1017,
+      "provider_entities": 527,
+      "canonical_entities": 527,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "team_overview",
+      "rows_total": 1065,
+      "provider_entities": 559,
+      "canonical_entities": 559,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:40:04.926470+00:00",
+      "latest_ingested_at": "2026-03-16T01:40:04.114719+00:00",
+      "table_name": "team_external_context"
+    },
+    {
+      "context_type": "h2h_results",
+      "rows_total": 5373,
+      "provider_entities": 5000,
+      "canonical_entities": 5000,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:41:11.899065+00:00",
+      "latest_ingested_at": "2026-03-16T01:41:11.890619+00:00",
+      "table_name": "match_external_context"
+    },
+    {
+      "context_type": "pre_match_form",
+      "rows_total": 3109,
+      "provider_entities": 2752,
+      "canonical_entities": 2752,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:41:11.899065+00:00",
+      "latest_ingested_at": "2026-03-16T01:41:11.890619+00:00",
+      "table_name": "match_external_context"
+    },
+    {
+      "context_type": "team_streaks",
+      "rows_total": 5373,
+      "provider_entities": 5000,
+      "canonical_entities": 5000,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:41:11.899065+00:00",
+      "latest_ingested_at": "2026-03-16T01:41:11.890619+00:00",
+      "table_name": "match_external_context"
+    },
+    {
+      "context_type": "attributes",
+      "rows_total": 8056,
+      "provider_entities": 7630,
+      "canonical_entities": 7630,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:42:22.545332+00:00",
+      "latest_ingested_at": "2026-03-16T01:42:21.935119+00:00",
+      "table_name": "player_external_context"
+    },
+    {
+      "context_type": "league_stats",
+      "rows_total": 9489,
+      "provider_entities": 9017,
+      "canonical_entities": 9017,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:42:22.545332+00:00",
+      "latest_ingested_at": "2026-03-16T01:42:21.935119+00:00",
+      "table_name": "player_external_context"
+    },
+    {
+      "context_type": "player_overview",
+      "rows_total": 10506,
+      "provider_entities": 10000,
+      "canonical_entities": 10000,
+      "null_canonical_rows": 0,
+      "latest_snapshot_time": "2026-03-16T01:42:22.545332+00:00",
+      "latest_ingested_at": "2026-03-16T01:42:21.935119+00:00",
+      "table_name": "player_external_context"
+    }
+  ]
+}

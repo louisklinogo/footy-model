@@ -1,8 +1,0 @@
-Log file: C:\Developer\soccer\footy-model\artifacts\logs\sofascore_odds_polling_20260228T230836Z.log
-Polling fixtures: 92
-Skip fixture 22188 (Sofa=14038608): odds endpoint returned not found (Failed to fetch /event/14038608/odds/1/all: 404)
-Skip fixture 22189 (Sofa=14038612): odds endpoint returned not found (Failed to fetch /event/14038612/odds/1/all: 404)
-Odds polling failed: Page.goto: net::ERR_NETWORK_ACCESS_DENIED at https://www.sofascore.com/api/v1/event/14053663/odds/1/all
-Call log:
-  - navigating to "https://www.sofascore.com/api/v1/event/14053663/odds/1/all", waiting until "load"
-

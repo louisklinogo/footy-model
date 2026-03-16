@@ -62,7 +62,7 @@ MODEL_NAME = "corners_v2"
 MODEL_VERSION = "distribution_head_v1"
 TOTAL_SURFACE_PATHS = {"totals_surface_calibrated"}
 NEURAL_TOTAL_LADDER_PATHS = {NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION}
-PMF_SURFACE_PATHS = {"pmf_surface_blended"}
+PMF_SURFACE_PATHS = {"pmf_surface_blended", "pmf_surface_blended_v2"}
 SHARE_PRIOR_PATHS = {"totals_first_league_share_residual"}
 NEURAL_SHARE_RESIDUAL_PATHS = {NEURAL_SHARE_RESIDUAL_PATH_VERSION}
 NEURAL_TOTAL_SHARE_RESIDUAL_PATHS = {NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION}
@@ -349,6 +349,33 @@ def _derive_full_market_prior_probs(
     return prior
 
 
+def _build_pmf_head_frame(
+    x: pd.DataFrame,
+    *,
+    total_mu: np.ndarray,
+    home_mu: np.ndarray,
+    away_mu: np.ndarray,
+    home_share: np.ndarray,
+    prior_probs: dict[str, np.ndarray],
+    path_version: str,
+) -> pd.DataFrame:
+    if path_version != "pmf_surface_blended_v2":
+        return x
+    prior_frame = pd.DataFrame(
+        {
+            "prior_total_corners_mu": np.asarray(total_mu, dtype=float),
+            "prior_home_corners_mu": np.asarray(home_mu, dtype=float),
+            "prior_away_corners_mu": np.asarray(away_mu, dtype=float),
+            "prior_home_share": np.asarray(home_share, dtype=float),
+            **{
+                f"prior_{market}": np.asarray(values, dtype=float)
+                for market, values in prior_probs.items()
+            },
+        }
+    )
+    return pd.concat([x.reset_index(drop=True), prior_frame.reset_index(drop=True)], axis=1)
+
+
 def _league_home_share_prior(frame: pd.DataFrame) -> np.ndarray:
     if "league_home_share_mean" not in frame.columns:
         return np.full(len(frame), 0.5, dtype=float)
@@ -583,12 +610,6 @@ def _predict_corner_rates(
         if path_version in PMF_SURFACE_PATHS:
             pmf_models = models["pmf_surface_models"]
             max_count = int(pmf_models.get("max_count", PMF_MAX_COUNT))
-            home_pmf = _full_count_probability_matrix(pmf_models["home"], x, max_count)
-            away_pmf = _full_count_probability_matrix(pmf_models["away"], x, max_count)
-            raw_total_probs, raw_team_probs, raw_home_mu, raw_away_mu, raw_total_mu = _derive_distribution_surface_probs(
-                home_pmf=home_pmf,
-                away_pmf=away_pmf,
-            )
             prior_all = _derive_full_market_prior_probs(
                 total_mu=np.asarray(total_mu, dtype=float),
                 home_mu=np.asarray(home_mu, dtype=float),
@@ -596,6 +617,21 @@ def _predict_corner_rates(
                 total_r=total_r,
                 home_r=home_r,
                 away_r=away_r,
+            )
+            pmf_x = _build_pmf_head_frame(
+                x,
+                total_mu=np.asarray(total_mu, dtype=float),
+                home_mu=np.asarray(home_mu, dtype=float),
+                away_mu=np.asarray(away_mu, dtype=float),
+                home_share=np.asarray(home_share, dtype=float),
+                prior_probs=prior_all,
+                path_version=path_version,
+            )
+            home_pmf = _full_count_probability_matrix(pmf_models["home"], pmf_x, max_count)
+            away_pmf = _full_count_probability_matrix(pmf_models["away"], pmf_x, max_count)
+            raw_total_probs, raw_team_probs, raw_home_mu, raw_away_mu, raw_total_mu = _derive_distribution_surface_probs(
+                home_pmf=home_pmf,
+                away_pmf=away_pmf,
             )
             calibrators = models.get("pmf_market_calibrators") or {}
             blend = models.get("pmf_market_blend") or {}

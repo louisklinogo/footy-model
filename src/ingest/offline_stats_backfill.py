@@ -25,6 +25,8 @@ NAME_MAP = {
     "Hit woodwork": "hit_woodwork",
     "Dribbles": "dribbles",
     "Recovered balls": "ball_recoveries",
+    "Yellow cards": "yellow_cards",
+    "Red cards": "red_cards",
     "Duels": "duels",
     "Ground duels": "ground_duels",
     "Aerial duels": "aerial_duels",
@@ -57,7 +59,11 @@ def process_batch():
             FROM fixture_stats_premium 
             WHERE fidelity_score > 0 
               AND raw_json IS NOT NULL 
-              AND h_shots_inside_box_p1 IS NULL
+              AND (
+                    h_shots_inside_box_p1 IS NULL
+                    OR h_yellow_cards IS NULL
+                    OR h_red_cards IS NULL
+                  )
         """)
         rows = cur.fetchall()
         

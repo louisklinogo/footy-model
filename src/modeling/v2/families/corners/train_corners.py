@@ -86,7 +86,7 @@ MODEL_NAME = "corners_v2"
 MODEL_VERSION = "distribution_head_v1"
 TOTAL_SURFACE_PATHS = {"totals_surface_calibrated"}
 NEURAL_TOTAL_LADDER_PATHS = {NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION}
-PMF_SURFACE_PATHS = {"pmf_surface_blended"}
+PMF_SURFACE_PATHS = {"pmf_surface_blended", "pmf_surface_blended_v2"}
 SHARE_PRIOR_PATHS = {"totals_first_league_share_residual"}
 NEURAL_SHARE_RESIDUAL_PATHS = {NEURAL_SHARE_RESIDUAL_PATH_VERSION}
 NEURAL_TOTAL_SHARE_RESIDUAL_PATHS = {NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION}
@@ -106,6 +106,7 @@ TOTALS_FIRST_PATHS = {
 TOTAL_HEAD_MARKETS = tuple(TOTAL_MARKETS.keys())
 TEAM_HEAD_MARKETS = tuple(HOME_MARKETS.keys()) + tuple(AWAY_MARKETS.keys())
 PMF_MAX_COUNT = 12
+PMF_SURFACE_V2_DEFAULT_MAX_COUNT = 16
 
 
 def parse_args() -> argparse.Namespace:
@@ -158,13 +159,14 @@ def parse_args() -> argparse.Namespace:
             NEURAL_SHARE_RESIDUAL_PATH_VERSION,
             NEURAL_TOTAL_SHARE_RESIDUAL_PATH_VERSION,
             "pmf_surface_blended",
+            "pmf_surface_blended_v2",
             "totals_first_market_heads",
             "totals_first_team_market_calibrated",
             "totals_surface_calibrated",
             NEURAL_TOTAL_MARKET_LADDER_PATH_VERSION,
         ),
         default="sum_heads",
-        help="Corners derivation path. `sum_heads` keeps legacy home/away heads; `totals_first` models total corners directly then splits to team means; `totals_first_residual` adds a residual home-team correction while preserving the direct total backbone; `totals_first_league_share_residual` anchors home-share to a smoothed league prior and learns residual deviations plus a conservative blend; `totals_first_neural_share_residual` keeps the classical totals-first backbone but learns a bounded PyTorch residual on home share; `totals_first_neural_total_share_residual` adds bounded PyTorch residuals on both total corners and home share while preserving the totals-first backbone contract; `pmf_surface_blended` trains home/away count PMFs and blends the coherent hc*/ac*/c* surface back toward the stronger totals-first prior backbone; `totals_first_market_heads` keeps the direct total backbone but predicts hc*/ac* markets with direct binary heads; `totals_first_team_market_calibrated` adds calibrated/blended direct team-market heads on top of the totals-first backbone; `totals_surface_calibrated` models c75/c85/c95/c105 directly with calibrated monotone totals heads while keeping the stable totals-first team prior path; `totals_surface_neural_ladder_calibrated` keeps the stable totals-first backbone but trains a PyTorch totals ladder for c75/c85/c95/c105 only, then calibrates/blends those totals markets against the prior without widening team-market scope.",
+        help="Corners derivation path. `sum_heads` keeps legacy home/away heads; `totals_first` models total corners directly then splits to team means; `totals_first_residual` adds a residual home-team correction while preserving the direct total backbone; `totals_first_league_share_residual` anchors home-share to a smoothed league prior and learns residual deviations plus a conservative blend; `totals_first_neural_share_residual` keeps the classical totals-first backbone but learns a bounded PyTorch residual on home share; `totals_first_neural_total_share_residual` adds bounded PyTorch residuals on both total corners and home share while preserving the totals-first backbone contract; `pmf_surface_blended` trains home/away count PMFs and blends the coherent hc*/ac*/c* surface back toward the stronger totals-first prior backbone; `pmf_surface_blended_v2` upgrades that PMF seam with prior-augmented PMF head features, a wider count grid, and stronger blend governance; `totals_first_market_heads` keeps the direct total backbone but predicts hc*/ac* markets with direct binary heads; `totals_first_team_market_calibrated` adds calibrated/blended direct team-market heads on top of the totals-first backbone; `totals_surface_calibrated` models c75/c85/c95/c105 directly with calibrated monotone totals heads while keeping the stable totals-first team prior path; `totals_surface_neural_ladder_calibrated` keeps the stable totals-first backbone but trains a PyTorch totals ladder for c75/c85/c105 only, then calibrates/blends those totals markets against the prior without widening team-market scope.",
     )
     parser.add_argument(
         "--max-rows",
@@ -247,7 +249,16 @@ def _positive_class_probability(model: Any, x: pd.DataFrame) -> np.ndarray:
     return np.clip(probs[:, idx], 0.001, 0.999)
 
 
-def _build_count_distribution_model() -> Any:
+def _build_count_distribution_model(*, path_version: str = "pmf_surface_blended") -> Any:
+    if path_version == "pmf_surface_blended_v2":
+        return HistGradientBoostingClassifier(
+            loss="log_loss",
+            learning_rate=0.04,
+            max_depth=8,
+            max_iter=400,
+            min_samples_leaf=20,
+            random_state=42,
+        )
     return HistGradientBoostingClassifier(
         loss="log_loss",
         learning_rate=0.05,
@@ -329,6 +340,45 @@ def _derive_full_market_prior_probs(
         )
     )
     return prior
+
+
+def _resolve_pmf_max_count(*, train_df: pd.DataFrame, path_version: str) -> int:
+    if path_version != "pmf_surface_blended_v2":
+        return PMF_MAX_COUNT
+    observed_max = int(
+        max(
+            pd.to_numeric(train_df["home_corners"], errors="coerce").fillna(0.0).max(),
+            pd.to_numeric(train_df["away_corners"], errors="coerce").fillna(0.0).max(),
+        )
+    )
+    return int(np.clip(observed_max, PMF_MAX_COUNT, PMF_SURFACE_V2_DEFAULT_MAX_COUNT))
+
+
+def _build_pmf_head_frame(
+    x: pd.DataFrame,
+    *,
+    total_mu: np.ndarray,
+    home_mu: np.ndarray,
+    away_mu: np.ndarray,
+    home_share: np.ndarray,
+    prior_probs: dict[str, np.ndarray],
+    path_version: str,
+) -> pd.DataFrame:
+    if path_version != "pmf_surface_blended_v2":
+        return x
+    prior_frame = pd.DataFrame(
+        {
+            "prior_total_corners_mu": np.asarray(total_mu, dtype=float),
+            "prior_home_corners_mu": np.asarray(home_mu, dtype=float),
+            "prior_away_corners_mu": np.asarray(away_mu, dtype=float),
+            "prior_home_share": np.asarray(home_share, dtype=float),
+            **{
+                f"prior_{market}": np.asarray(values, dtype=float)
+                for market, values in prior_probs.items()
+            },
+        }
+    )
+    return pd.concat([x.reset_index(drop=True), prior_frame.reset_index(drop=True)], axis=1)
 
 
 def _fit_blend_weight(
@@ -949,6 +999,7 @@ def _fit_pmf_surface_models(
     model_type: str,
     total_model: Any,
     share_model: Any,
+    path_version: str,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, float], dict[str, Any]]:
     ordered = train_df.copy()
     sort_cols = [col for col in ["match_datetime_utc", "fixture_id"] if col in ordered.columns]
@@ -958,6 +1009,7 @@ def _fit_pmf_surface_models(
         ordered = ordered.reset_index(drop=True)
 
     all_markets = TOTAL_HEAD_MARKETS + TEAM_HEAD_MARKETS
+    max_count = _resolve_pmf_max_count(train_df=ordered, path_version=path_version)
     oof_raw = {market: np.full(len(ordered), np.nan, dtype=float) for market in all_markets}
     oof_prior = {market: np.full(len(ordered), np.nan, dtype=float) for market in all_markets}
     for train_end, test_end in _walkforward_ranges(len(ordered), folds=4):
@@ -969,6 +1021,17 @@ def _fit_pmf_surface_models(
         fold_share_model = _build_share_regressor()
         fold_total_model.fit(fold_train[features], fold_train["total_corners"].astype(float))
         fold_share_model.fit(fold_train[features], _home_share_target(fold_train))
+        fold_train_total_mu = np.clip(fold_total_model.predict(fold_train[features]), 0.1, 30.0)
+        fold_train_share = np.clip(fold_share_model.predict(fold_train[features]), 0.05, 0.95)
+        fold_train_home_mu: list[float] = []
+        fold_train_away_mu: list[float] = []
+        for total_value, share_value in zip(fold_train_total_mu, fold_train_share, strict=True):
+            hm, am = reconcile_team_means_from_total_share(
+                total_mu=float(total_value),
+                home_share=float(share_value),
+            )
+            fold_train_home_mu.append(hm)
+            fold_train_away_mu.append(am)
         fold_total_mu = np.clip(fold_total_model.predict(fold_test[features]), 0.1, 30.0)
         fold_share = np.clip(fold_share_model.predict(fold_test[features]), 0.05, 0.95)
         fold_home_mu: list[float] = []
@@ -991,12 +1054,38 @@ def _fit_pmf_surface_models(
             home_r=fold_home_r,
             away_r=fold_away_r,
         )
-        fold_home_model = _build_count_distribution_model()
-        fold_away_model = _build_count_distribution_model()
-        fold_home_model.fit(fold_train[features], _count_target(fold_train, "home_corners"))
-        fold_away_model.fit(fold_train[features], _count_target(fold_train, "away_corners"))
-        fold_home_pmf = _full_count_probability_matrix(fold_home_model, fold_test[features])
-        fold_away_pmf = _full_count_probability_matrix(fold_away_model, fold_test[features])
+        fold_train_prior = _derive_full_market_prior_probs(
+            total_mu=np.asarray(fold_train_total_mu, dtype=float),
+            home_mu=np.asarray(fold_train_home_mu, dtype=float),
+            away_mu=np.asarray(fold_train_away_mu, dtype=float),
+            total_r=fold_total_r,
+            home_r=fold_home_r,
+            away_r=fold_away_r,
+        )
+        fold_train_pmf_x = _build_pmf_head_frame(
+            fold_train[features],
+            total_mu=np.asarray(fold_train_total_mu, dtype=float),
+            home_mu=np.asarray(fold_train_home_mu, dtype=float),
+            away_mu=np.asarray(fold_train_away_mu, dtype=float),
+            home_share=np.asarray(fold_train_share, dtype=float),
+            prior_probs=fold_train_prior,
+            path_version=path_version,
+        )
+        fold_test_pmf_x = _build_pmf_head_frame(
+            fold_test[features],
+            total_mu=np.asarray(fold_total_mu, dtype=float),
+            home_mu=np.asarray(fold_home_mu, dtype=float),
+            away_mu=np.asarray(fold_away_mu, dtype=float),
+            home_share=np.asarray(fold_share, dtype=float),
+            prior_probs=fold_prior,
+            path_version=path_version,
+        )
+        fold_home_model = _build_count_distribution_model(path_version=path_version)
+        fold_away_model = _build_count_distribution_model(path_version=path_version)
+        fold_home_model.fit(fold_train_pmf_x, _count_target(fold_train, "home_corners", max_count))
+        fold_away_model.fit(fold_train_pmf_x, _count_target(fold_train, "away_corners", max_count))
+        fold_home_pmf = _full_count_probability_matrix(fold_home_model, fold_test_pmf_x, max_count)
+        fold_away_pmf = _full_count_probability_matrix(fold_away_model, fold_test_pmf_x, max_count)
         fold_total_probs, fold_team_probs, _, _, _ = _derive_distribution_surface_probs(
             home_pmf=fold_home_pmf,
             away_pmf=fold_away_pmf,
@@ -1008,16 +1097,6 @@ def _fit_pmf_surface_models(
             oof_prior[market][train_end:test_end] = fold_prior[market]
             oof_raw[market][train_end:test_end] = fold_team_probs[market]
 
-    final_home_model = _build_count_distribution_model()
-    final_away_model = _build_count_distribution_model()
-    final_home_model.fit(ordered[features], _count_target(ordered, "home_corners"))
-    final_away_model.fit(ordered[features], _count_target(ordered, "away_corners"))
-    full_home_pmf = _full_count_probability_matrix(final_home_model, ordered[features])
-    full_away_pmf = _full_count_probability_matrix(final_away_model, ordered[features])
-    full_total_probs, full_team_probs, _, _, _ = _derive_distribution_surface_probs(
-        home_pmf=full_home_pmf,
-        away_pmf=full_away_pmf,
-    )
     total_r_full = estimate_nb_dispersion(ordered["total_corners"].to_numpy(dtype=float))
     home_r_full = estimate_nb_dispersion(ordered["home_corners"].to_numpy(dtype=float))
     away_r_full = estimate_nb_dispersion(ordered["away_corners"].to_numpy(dtype=float))
@@ -1039,6 +1118,25 @@ def _fit_pmf_surface_models(
         total_r=total_r_full,
         home_r=home_r_full,
         away_r=away_r_full,
+    )
+    full_pmf_x = _build_pmf_head_frame(
+        ordered[features],
+        total_mu=np.asarray(full_total_mu, dtype=float),
+        home_mu=np.asarray(full_home_mu, dtype=float),
+        away_mu=np.asarray(full_away_mu, dtype=float),
+        home_share=np.asarray(full_share, dtype=float),
+        prior_probs=full_prior,
+        path_version=path_version,
+    )
+    final_home_model = _build_count_distribution_model(path_version=path_version)
+    final_away_model = _build_count_distribution_model(path_version=path_version)
+    final_home_model.fit(full_pmf_x, _count_target(ordered, "home_corners", max_count))
+    final_away_model.fit(full_pmf_x, _count_target(ordered, "away_corners", max_count))
+    full_home_pmf = _full_count_probability_matrix(final_home_model, full_pmf_x, max_count)
+    full_away_pmf = _full_count_probability_matrix(final_away_model, full_pmf_x, max_count)
+    full_total_probs, full_team_probs, _, _, _ = _derive_distribution_surface_probs(
+        home_pmf=full_home_pmf,
+        away_pmf=full_away_pmf,
     )
     for market in all_markets:
         full_market_raw = full_total_probs[market] if market in TOTAL_HEAD_MARKETS else full_team_probs[market]
@@ -1076,7 +1174,7 @@ def _fit_pmf_surface_models(
             y_true=y_true,
         )
     return (
-        {"home": final_home_model, "away": final_away_model, "max_count": PMF_MAX_COUNT},
+        {"home": final_home_model, "away": final_away_model, "max_count": max_count},
         calibrators,
         blend,
         calibration_report,
@@ -1220,6 +1318,7 @@ def _fit_corner_models(
                 model_type=model_type,
                 total_model=total_model,
                 share_model=share_model,
+                path_version=path_version,
             )
         elif path_version in TOTAL_SURFACE_PATHS:
             (
@@ -1393,12 +1492,6 @@ def _predict_corner_rates(
         if path_version in PMF_SURFACE_PATHS:
             pmf_models = models["pmf_surface_models"]
             max_count = int(pmf_models.get("max_count", PMF_MAX_COUNT))
-            home_pmf = _full_count_probability_matrix(pmf_models["home"], x, max_count)
-            away_pmf = _full_count_probability_matrix(pmf_models["away"], x, max_count)
-            raw_total_probs, raw_team_probs, raw_home_mu, raw_away_mu, raw_total_mu = _derive_distribution_surface_probs(
-                home_pmf=home_pmf,
-                away_pmf=away_pmf,
-            )
             prior_all = _derive_full_market_prior_probs(
                 total_mu=np.asarray(total_mu, dtype=float),
                 home_mu=np.asarray(home_mu, dtype=float),
@@ -1406,6 +1499,21 @@ def _predict_corner_rates(
                 total_r=total_r,
                 home_r=home_r,
                 away_r=away_r,
+            )
+            pmf_x = _build_pmf_head_frame(
+                x,
+                total_mu=np.asarray(total_mu, dtype=float),
+                home_mu=np.asarray(home_mu, dtype=float),
+                away_mu=np.asarray(away_mu, dtype=float),
+                home_share=np.asarray(home_share, dtype=float),
+                prior_probs=prior_all,
+                path_version=path_version,
+            )
+            home_pmf = _full_count_probability_matrix(pmf_models["home"], pmf_x, max_count)
+            away_pmf = _full_count_probability_matrix(pmf_models["away"], pmf_x, max_count)
+            raw_total_probs, raw_team_probs, raw_home_mu, raw_away_mu, raw_total_mu = _derive_distribution_surface_probs(
+                home_pmf=home_pmf,
+                away_pmf=away_pmf,
             )
             total_market_probs: dict[str, np.ndarray] = {}
             team_market_probs: dict[str, np.ndarray] = {}
@@ -2136,7 +2244,7 @@ def main() -> None:
         "model_type_selected": model_type_selected,
         "direct_total_markets": (list(TOTAL_HEAD_MARKETS) if str(args.path_version) in (TOTAL_SURFACE_PATHS | NEURAL_TOTAL_LADDER_PATHS | PMF_SURFACE_PATHS) else []),
         "direct_team_markets": (list(TEAM_HEAD_MARKETS) if str(args.path_version) in (MARKET_HEAD_PATHS | PMF_SURFACE_PATHS) else []),
-        "pmf_max_count": int(PMF_MAX_COUNT),
+        "pmf_max_count": int((models.get("pmf_surface_models") or {}).get("max_count", PMF_MAX_COUNT)),
         "home_share_prior_blend": float(models.get("home_share_prior_blend", 1.0)),
         "pmf_market_blend": (models.get("pmf_market_blend") or {}),
         "total_market_head_blend": (models.get("total_market_head_blend") or {}),

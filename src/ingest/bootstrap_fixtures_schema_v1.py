@@ -16,6 +16,8 @@ CREATE TABLE IF NOT EXISTS leagues (
     league_code TEXT NOT NULL UNIQUE,
     league_name TEXT NOT NULL,
     country TEXT,
+    sofascore_league_id BIGINT,
+    sofascore_season_id BIGINT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -24,6 +26,7 @@ CREATE TABLE IF NOT EXISTS teams (
     team_id BIGSERIAL PRIMARY KEY,
     team_name TEXT NOT NULL,
     league_code TEXT REFERENCES leagues(league_code) ON DELETE SET NULL,
+    sofascore_id BIGINT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -32,12 +35,15 @@ ALTER TABLE leagues ADD COLUMN IF NOT EXISTS league_id BIGSERIAL;
 ALTER TABLE leagues ADD COLUMN IF NOT EXISTS league_code TEXT;
 ALTER TABLE leagues ADD COLUMN IF NOT EXISTS league_name TEXT;
 ALTER TABLE leagues ADD COLUMN IF NOT EXISTS country TEXT;
+ALTER TABLE leagues ADD COLUMN IF NOT EXISTS sofascore_league_id BIGINT;
+ALTER TABLE leagues ADD COLUMN IF NOT EXISTS sofascore_season_id BIGINT;
 ALTER TABLE leagues ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 ALTER TABLE leagues ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_id BIGSERIAL;
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS team_name TEXT;
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS league_code TEXT;
+ALTER TABLE teams ADD COLUMN IF NOT EXISTS sofascore_id BIGINT;
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 ALTER TABLE teams ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
@@ -75,6 +81,9 @@ CREATE TABLE IF NOT EXISTS fixtures (
     match_datetime_utc TIMESTAMPTZ,
     status TEXT NOT NULL CHECK (status IN ('scheduled', 'live', 'ft', 'postponed', 'cancelled', 'abandoned')),
     flashscore_url TEXT,
+    season VARCHAR(16),
+    settlement_status TEXT,
+    sofascore_id VARCHAR(64),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CHECK (
@@ -83,6 +92,43 @@ CREATE TABLE IF NOT EXISTS fixtures (
         OR home_team_id <> away_team_id
     )
 );
+
+ALTER TABLE fixtures ADD COLUMN IF NOT EXISTS season VARCHAR(16);
+ALTER TABLE fixtures ADD COLUMN IF NOT EXISTS settlement_status TEXT;
+ALTER TABLE fixtures ADD COLUMN IF NOT EXISTS sofascore_id VARCHAR(64);
+
+CREATE TABLE IF NOT EXISTS players (
+    player_id SERIAL PRIMARY KEY,
+    sofascore_id TEXT UNIQUE,
+    name TEXT NOT NULL,
+    slug TEXT,
+    short_name TEXT,
+    position TEXT,
+    user_count INTEGER,
+    market_value_euro BIGINT,
+    nationality_code TEXT,
+    country_name TEXT,
+    date_of_birth DATE,
+    height INTEGER,
+    preferred_foot TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+ALTER TABLE players ADD COLUMN IF NOT EXISTS sofascore_id TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS short_name TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS position TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS user_count INTEGER;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS market_value_euro BIGINT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS nationality_code TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS country_name TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS date_of_birth DATE;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS height INTEGER;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS preferred_foot TEXT;
+ALTER TABLE players ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+ALTER TABLE players ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
 
 CREATE TABLE IF NOT EXISTS fixture_results (
     result_id BIGSERIAL PRIMARY KEY,
@@ -142,10 +188,19 @@ CREATE TABLE IF NOT EXISTS fixture_stats_premium (
     a_interceptions INTEGER,
     h_errors_lead_to_shot INTEGER,
     a_errors_lead_to_shot INTEGER,
+    h_yellow_cards INTEGER,
+    a_yellow_cards INTEGER,
+    h_red_cards INTEGER,
+    a_red_cards INTEGER,
     fidelity_score DOUBLE PRECISION NOT NULL DEFAULT 0.0 CHECK (fidelity_score >= 0.0 AND fidelity_score <= 1.0),
     raw_json JSONB NOT NULL DEFAULT '{}'::jsonb,
     ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE fixture_stats_premium ADD COLUMN IF NOT EXISTS h_yellow_cards INTEGER;
+ALTER TABLE fixture_stats_premium ADD COLUMN IF NOT EXISTS a_yellow_cards INTEGER;
+ALTER TABLE fixture_stats_premium ADD COLUMN IF NOT EXISTS h_red_cards INTEGER;
+ALTER TABLE fixture_stats_premium ADD COLUMN IF NOT EXISTS a_red_cards INTEGER;
 
 CREATE TABLE IF NOT EXISTS team_premium_snapshots (
     fixture_id BIGINT NOT NULL REFERENCES fixtures(fixture_id) ON DELETE CASCADE,
@@ -173,6 +228,147 @@ CREATE TABLE IF NOT EXISTS team_premium_snapshots (
     fidelity_score DOUBLE PRECISION,
     built_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     PRIMARY KEY (fixture_id, team_id, is_home)
+);
+
+CREATE TABLE IF NOT EXISTS team_external_context (
+    context_id BIGSERIAL PRIMARY KEY,
+    provider TEXT NOT NULL,
+    context_type TEXT NOT NULL,
+    team_id BIGINT REFERENCES teams(team_id) ON DELETE SET NULL,
+    provider_team_id TEXT NOT NULL,
+    league_code TEXT REFERENCES leagues(league_code) ON DELETE SET NULL,
+    provider_league_id BIGINT,
+    season_label TEXT,
+    provider_season_id BIGINT,
+    snapshot_time_utc TIMESTAMPTZ NOT NULL,
+    overall_rank INTEGER,
+    overall_points INTEGER,
+    overall_played INTEGER,
+    overall_wins INTEGER,
+    overall_draws INTEGER,
+    overall_losses INTEGER,
+    overall_goals_for INTEGER,
+    overall_goals_against INTEGER,
+    overall_goal_diff INTEGER,
+    home_rank INTEGER,
+    home_points INTEGER,
+    home_played INTEGER,
+    home_wins INTEGER,
+    home_draws INTEGER,
+    home_losses INTEGER,
+    home_goals_for INTEGER,
+    home_goals_against INTEGER,
+    home_goal_diff INTEGER,
+    away_rank INTEGER,
+    away_points INTEGER,
+    away_played INTEGER,
+    away_wins INTEGER,
+    away_draws INTEGER,
+    away_losses INTEGER,
+    away_goals_for INTEGER,
+    away_goals_against INTEGER,
+    away_goal_diff INTEGER,
+    form_sequence TEXT,
+    form_points_last5 INTEGER,
+    form_wins_last5 INTEGER,
+    form_draws_last5 INTEGER,
+    form_losses_last5 INTEGER,
+    pregame_avg_rating DOUBLE PRECISION,
+    pregame_position INTEGER,
+    pregame_value DOUBLE PRECISION,
+    performance_graph_points_avg DOUBLE PRECISION,
+    performance_graph_goal_diff_avg DOUBLE PRECISION,
+    performance_graph_samples INTEGER,
+    league_stats_matches INTEGER,
+    league_stats_goals_scored INTEGER,
+    league_stats_goals_conceded INTEGER,
+    league_stats_big_chances INTEGER,
+    league_stats_shots_on_target INTEGER,
+    league_stats_corners INTEGER,
+    league_stats_average_ball_possession DOUBLE PRECISION,
+    league_stats_accurate_passes_percentage DOUBLE PRECISION,
+    league_stats_accurate_long_balls_percentage DOUBLE PRECISION,
+    league_stats_accurate_crosses_percentage DOUBLE PRECISION,
+    league_stats_clean_sheets INTEGER,
+    league_stats_tackles INTEGER,
+    league_stats_interceptions INTEGER,
+    league_stats_saves INTEGER,
+    league_stats_errors_leading_to_shot INTEGER,
+    league_stats_total_duels INTEGER,
+    league_stats_duels_won_percentage DOUBLE PRECISION,
+    league_stats_total_aerial_duels INTEGER,
+    league_stats_aerial_duels_won_percentage DOUBLE PRECISION,
+    league_stats_possession_lost INTEGER,
+    league_stats_offsides INTEGER,
+    league_stats_fouls INTEGER,
+    league_stats_yellow_cards INTEGER,
+    league_stats_red_cards INTEGER,
+    raw_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (provider, context_type, provider_team_id, league_code, season_label, snapshot_time_utc)
+);
+
+CREATE TABLE IF NOT EXISTS match_external_context (
+    context_id BIGSERIAL PRIMARY KEY,
+    provider TEXT NOT NULL,
+    context_type TEXT NOT NULL,
+    fixture_id BIGINT REFERENCES fixtures(fixture_id) ON DELETE SET NULL,
+    provider_fixture_id TEXT NOT NULL,
+    snapshot_time_utc TIMESTAMPTZ NOT NULL,
+    home_form_sequence TEXT,
+    away_form_sequence TEXT,
+    home_form_points_last5 INTEGER,
+    away_form_points_last5 INTEGER,
+    home_avg_rating DOUBLE PRECISION,
+    away_avg_rating DOUBLE PRECISION,
+    home_position INTEGER,
+    away_position INTEGER,
+    home_value DOUBLE PRECISION,
+    away_value DOUBLE PRECISION,
+    home_streak_win INTEGER,
+    away_streak_win INTEGER,
+    home_streak_unbeaten INTEGER,
+    away_streak_unbeaten INTEGER,
+    h2h_home_wins_last_n INTEGER,
+    h2h_draws_last_n INTEGER,
+    h2h_away_wins_last_n INTEGER,
+    h2h_matches_count INTEGER,
+    win_probability_home DOUBLE PRECISION,
+    win_probability_draw DOUBLE PRECISION,
+    win_probability_away DOUBLE PRECISION,
+    provider_match_code TEXT,
+    raw_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (provider, context_type, provider_fixture_id, snapshot_time_utc)
+);
+
+CREATE TABLE IF NOT EXISTS player_external_context (
+    context_id BIGSERIAL PRIMARY KEY,
+    provider TEXT NOT NULL,
+    context_type TEXT NOT NULL,
+    player_id INTEGER REFERENCES players(player_id) ON DELETE SET NULL,
+    provider_player_id TEXT NOT NULL,
+    league_code TEXT REFERENCES leagues(league_code) ON DELETE SET NULL,
+    provider_league_id BIGINT,
+    season_label TEXT,
+    provider_season_id BIGINT,
+    snapshot_time_utc TIMESTAMPTZ NOT NULL,
+    position_group TEXT,
+    attribute_attacking INTEGER,
+    attribute_technical INTEGER,
+    attribute_tactical INTEGER,
+    attribute_defending INTEGER,
+    attribute_creativity INTEGER,
+    rating_avg DOUBLE PRECISION,
+    minutes_played INTEGER,
+    goals INTEGER,
+    assists INTEGER,
+    expected_goals DOUBLE PRECISION,
+    expected_assists DOUBLE PRECISION,
+    market_value_euro_snapshot BIGINT,
+    raw_json JSONB NOT NULL DEFAULT '{}'::jsonb,
+    ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (provider, context_type, provider_player_id, league_code, season_label, snapshot_time_utc)
 );
 
 ALTER TABLE team_premium_snapshots ADD COLUMN IF NOT EXISTS rolling_xg_against DOUBLE PRECISION;
@@ -259,6 +455,36 @@ CREATE TABLE IF NOT EXISTS data_quality_runs (
 
 CREATE INDEX IF NOT EXISTS idx_fixtures_status_match_datetime_utc
     ON fixtures(status, match_datetime_utc);
+
+CREATE INDEX IF NOT EXISTS idx_teams_sofascore_id
+    ON teams(sofascore_id)
+    WHERE sofascore_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_players_sofascore_id
+    ON players(sofascore_id)
+    WHERE sofascore_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_fixtures_sofascore_id
+    ON fixtures(sofascore_id)
+    WHERE sofascore_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS idx_team_external_context_team_snapshot
+    ON team_external_context(team_id, snapshot_time_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_team_external_context_provider_snapshot
+    ON team_external_context(provider, context_type, league_code, snapshot_time_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_match_external_context_fixture_snapshot
+    ON match_external_context(fixture_id, snapshot_time_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_match_external_context_provider_snapshot
+    ON match_external_context(provider, context_type, snapshot_time_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_player_external_context_player_snapshot
+    ON player_external_context(player_id, snapshot_time_utc DESC);
+
+CREATE INDEX IF NOT EXISTS idx_player_external_context_provider_snapshot
+    ON player_external_context(provider, context_type, league_code, snapshot_time_utc DESC);
 
 CREATE INDEX IF NOT EXISTS idx_fixture_odds_snapshots_fixture_snapshot_time
     ON fixture_odds_snapshots(fixture_id, snapshot_time_utc DESC);

@@ -9,8 +9,8 @@ def _args(**overrides: object) -> argparse.Namespace:
     payload = {
         "python_bin": "python",
         "scope": "model_v2/market_scope.yaml",
-        "scoreline_dir": "model_artifacts/v2/scoreline",
-        "anytime_dir": "model_artifacts/v2/anytime",
+        "scoreline_dir": "model_artifacts/v2/scoreline_external_context_v1_candidate_20260316",
+        "anytime_dir": "model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308",
         "out_dir": "artifacts/v2/predictions/hybrid",
         "league": None,
         "days": 3,
@@ -34,6 +34,8 @@ def test_build_run_plan_seeds_from_legacy_then_overlays_v2_families() -> None:
     assert names == ["predict.base_legacy", "predict.scoreline", "predict.anytime"]
     commands = dict(plan)
     assert commands["predict.base_legacy"][1].endswith("predict_market_outcomes_fixtures_first.py")
+    assert any(arg.endswith("scoreline_external_context_v1_candidate_20260316") for arg in commands["predict.scoreline"])
+    assert any(arg.endswith("anytime_direct_monotone_v1_candidate_20260308") for arg in commands["predict.anytime"])
     for name in ["predict.scoreline", "predict.anytime"]:
         assert "--model-name" in commands[name] and "market_outcome_v2" in commands[name]
         assert "--model-version" in commands[name] and "hybrid_v1" in commands[name]

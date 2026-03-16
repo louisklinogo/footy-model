@@ -18,8 +18,8 @@ from src.db.db_utils import connect_db
 
 
 DEFAULT_SCOPE = ROOT_DIR / "model_v2" / "market_scope.yaml"
-DEFAULT_SCORELINE_DIR = ROOT_DIR / "model_artifacts" / "v2" / "scoreline"
-DEFAULT_ANYTIME_DIR = ROOT_DIR / "model_artifacts" / "v2" / "anytime"
+DEFAULT_SCORELINE_DIR = ROOT_DIR / "model_artifacts" / "v2" / "scoreline_external_context_v1_candidate_20260316"
+DEFAULT_ANYTIME_DIR = ROOT_DIR / "model_artifacts" / "v2" / "anytime_direct_monotone_v1_candidate_20260308"
 DEFAULT_OUT_DIR = ROOT_DIR / "artifacts" / "v2" / "predictions" / "hybrid"
 DEFAULT_EXPORT_PATH = ROOT_DIR / "storage" / "reports" / "market_predictions_hybrid_v1.csv"
 DEFAULT_BASE_MODEL_NAME = "market_outcome_gbm"

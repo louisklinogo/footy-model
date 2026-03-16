@@ -40,6 +40,7 @@ from src.modeling.v2.families.anytime.derive_markets import (
 )
 from src.modeling.v2.families.anytime.features import build_anytime_features
 from src.modeling.v2.families.anytime.labels import prepare_state_ladder_labels
+from src.modeling.v2.db_reuse_features import build_feature_coverage_snapshot
 from src.modeling.v2.io.artifact_identity import build_artifact_metadata, write_artifact_metadata
 from src.modeling.v2.io.baseline_registry import load_scope_markets
 from src.modeling.v2.io.contracts import load_feature_contract
@@ -1471,8 +1472,10 @@ def main() -> None:
         "walkforward_league_rows": int(len(walkforward_league_rows)),
         "holdout_league_rows": int(len(holdout_league_rows)),
         "holdout_prediction_rows": int(len(holdout_prediction_frame)),
+        "feature_coverage_snapshot_rows": int(len(features)),
         "trained_at_utc": datetime.now(tz=UTC).isoformat(),
     }
+    feature_coverage_snapshot = build_feature_coverage_snapshot(df, features)
     if path_version in {"phase_split", "state_ladder"}:
         diagnostics["home_goals_p1_mae"] = float(
             mean_absolute_error(test_df["home_goals_p1"].astype(float), preds["home_p1"])
@@ -1599,6 +1602,9 @@ def main() -> None:
     )
     (args.output_dir / "metrics_walkforward.json").write_text(
         json.dumps(walkforward_summary, indent=2), encoding="utf-8"
+    )
+    (args.output_dir / "feature_coverage_snapshot.json").write_text(
+        json.dumps(feature_coverage_snapshot, indent=2), encoding="utf-8"
     )
     (args.output_dir / "training_report.json").write_text(
         json.dumps(diagnostics, indent=2), encoding="utf-8"
