@@ -317,6 +317,32 @@ Observed Phase 5 initial result:
   - player league stats canonical entities: `9017`
 - Practical implication: Phase 5 has moved from “schema/scaffolding” to “real reusable model surface”. The next justified modeling step is a first external-context challenger, starting with scoreline.
 
+- Scoreline directional-shrink follow-up (2026-03-17):
+  - implemented `one_sided_anchor` as a bounded post-holdout calibration candidate for the home-leaning directional seam
+  - scope was intentionally narrow:
+    - `1x2_h`
+    - `dc_x2`
+    - `ah2_home_m05`
+    - `ah2_away_p05`
+    - `ah2_home_m15`
+    - `ah2_away_p15`
+    - `eh3_0_1_home`
+    - `eh3_0_1_away`
+  - focused tests added:
+    - `tests/v2/test_calibration_methods.py`
+  - variant artifact:
+    - `model_artifacts/v2/scoreline_external_context_directional_shrink_v1_candidate_20260317/`
+  - evaluation:
+    - `model_artifacts/v2/evaluation_scoreline_external_context_directional_shrink_v1_candidate_20260317/`
+  - observed result:
+    - useful no-go
+    - targeted shrink did not improve the intended seam on the current scoreline leader
+    - resulting calibrator set matched the existing `scoreline_external_context_v1_candidate_20260316` directional seam outcome
+    - promotion registry stayed unchanged at `59 / 76` scoped markets passed
+  - practical implication:
+    - the remaining scoreline log-loss issue is not fixed by a simple one-sided calibration shrink
+    - the next justified scoreline follow-up, if we continue, needs a stronger directional residual hypothesis
+
 ## Acceptance Policy
 
 A wave is only considered complete when:

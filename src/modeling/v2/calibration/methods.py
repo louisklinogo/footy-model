@@ -10,6 +10,18 @@ from sklearn.linear_model import LogisticRegression
 from src.modeling.v2.eval.metrics import binary_metric_values
 
 CLIP_EPS = 0.001
+ONE_SIDED_ANCHOR_MARKETS: frozenset[str] = frozenset(
+    {
+        "1x2_h",
+        "dc_x2",
+        "ah2_home_m05",
+        "ah2_away_p05",
+        "ah2_home_m15",
+        "ah2_away_p15",
+        "eh3_0_1_home",
+        "eh3_0_1_away",
+    }
+)
 
 
 def _clip_probabilities(values: pd.Series | np.ndarray | list[float]) -> np.ndarray:
@@ -19,6 +31,22 @@ def _clip_probabilities(values: pd.Series | np.ndarray | list[float]) -> np.ndar
 def _logit(values: np.ndarray) -> np.ndarray:
     clipped = _clip_probabilities(values)
     return np.log(clipped / (1.0 - clipped))
+
+
+def _apply_one_sided_anchor_transform(
+    values: pd.Series | np.ndarray | list[float],
+    *,
+    anchor: float,
+    alpha: float,
+) -> np.ndarray:
+    clipped = _clip_probabilities(values)
+    anchor_value = float(np.clip(float(anchor), CLIP_EPS, 1.0 - CLIP_EPS))
+    alpha_value = float(np.clip(float(alpha), 0.0, 1.0))
+    if anchor_value <= 0.5:
+        adjusted = clipped - alpha_value * np.maximum(0.0, clipped - anchor_value)
+    else:
+        adjusted = clipped + alpha_value * np.maximum(0.0, anchor_value - clipped)
+    return _clip_probabilities(adjusted)
 
 
 def order_calibration_frame(frame: pd.DataFrame) -> pd.DataFrame:
@@ -59,12 +87,20 @@ def fit_binary_calibrator(
     *,
     p_model: pd.Series | np.ndarray | list[float],
     y_true: pd.Series | np.ndarray | list[int],
+    alpha: float | None = None,
 ) -> dict[str, Any]:
     y = np.asarray(y_true, dtype=int)
     if np.unique(y).size < 2:
         raise ValueError("Calibration fit requires both classes")
     if method == "identity":
         return {"method": "identity"}
+    if method == "one_sided_anchor":
+        anchor = float(np.mean(y))
+        return {
+            "method": method,
+            "anchor": anchor,
+            "alpha": float(0.0 if alpha is None else alpha),
+        }
     if method == "sigmoid":
         model = LogisticRegression(solver="lbfgs")
         model.fit(_logit(_clip_probabilities(p_model)).reshape(-1, 1), y)
@@ -84,6 +120,12 @@ def apply_binary_calibrator(
     clipped = _clip_probabilities(p_model)
     if method == "identity":
         return clipped
+    if method == "one_sided_anchor":
+        return _apply_one_sided_anchor_transform(
+            clipped,
+            anchor=float(calibrator.get("anchor") or 0.5),
+            alpha=float(calibrator.get("alpha") or 0.0),
+        )
     model = calibrator.get("model")
     if method == "sigmoid":
         return _clip_probabilities(model.predict_proba(_logit(clipped).reshape(-1, 1))[:, 1])
@@ -167,11 +209,62 @@ def evaluate_market_calibration(
     best_metrics = raw_eval
     best_calibrator: dict[str, Any] | None = None
     raw_auc = _to_float(raw_eval.get("auc"))
-    for method in ("sigmoid", "isotonic"):
+    candidate_methods = ["sigmoid", "isotonic"]
+    market_name: str | None = None
+    if "market" in filtered.columns:
+        market_values = filtered["market"].dropna().astype(str).unique().tolist()
+        if len(market_values) == 1:
+            market_name = market_values[0]
+    if market_name in ONE_SIDED_ANCHOR_MARKETS:
+        candidate_methods.append("one_sided_anchor")
+    for method in candidate_methods:
         try:
-            calibrator = fit_binary_calibrator(method, p_model=fit_df["p_model"], y_true=fit_df["y_true"])
-            calibrated_eval = apply_binary_calibrator(calibrator, eval_df["p_model"])
-            metrics = binary_metric_values(eval_df["y_true"], calibrated_eval)
+            if method == "one_sided_anchor":
+                anchor = float(np.mean(fit_df["y_true"].to_numpy(dtype=int)))
+                best_method_metrics: dict[str, Any] | None = None
+                best_method_calibrator: dict[str, Any] | None = None
+                best_method_rank: tuple[float, float, float, float] | None = None
+                for alpha in np.linspace(0.05, 1.0, 20):
+                    calibrator = fit_binary_calibrator(
+                        method,
+                        p_model=fit_df["p_model"],
+                        y_true=fit_df["y_true"],
+                        alpha=float(alpha),
+                    )
+                    calibrated_eval = apply_binary_calibrator(calibrator, eval_df["p_model"])
+                    metrics = binary_metric_values(eval_df["y_true"], calibrated_eval)
+                    candidate_auc = _to_float(metrics.get("auc"))
+                    auc_drop = (
+                        float(raw_auc - candidate_auc)
+                        if raw_auc is not None and candidate_auc is not None
+                        else 0.0
+                    )
+                    if auc_drop > float(max_auc_drop):
+                        continue
+                    if not _candidate_beats_raw(raw_eval, metrics):
+                        continue
+                    rank = _metric_rank(metrics)
+                    if best_method_rank is None or rank < best_method_rank:
+                        best_method_rank = rank
+                        best_method_calibrator = calibrator
+                        best_method_metrics = {
+                            **metrics,
+                            "anchor": anchor,
+                            "alpha": float(alpha),
+                        }
+                report["candidate_metrics"][method] = best_method_metrics or {
+                    "anchor": anchor,
+                    "status": "no_improving_alpha",
+                }
+                if best_method_calibrator is None or best_method_metrics is None:
+                    continue
+                calibrator = best_method_calibrator
+                metrics = best_method_metrics
+            else:
+                calibrator = fit_binary_calibrator(method, p_model=fit_df["p_model"], y_true=fit_df["y_true"])
+                calibrated_eval = apply_binary_calibrator(calibrator, eval_df["p_model"])
+                metrics = binary_metric_values(eval_df["y_true"], calibrated_eval)
+                report["candidate_metrics"][method] = metrics
             report["candidate_metrics"][method] = metrics
             candidate_auc = _to_float(metrics.get("auc"))
             auc_drop = (

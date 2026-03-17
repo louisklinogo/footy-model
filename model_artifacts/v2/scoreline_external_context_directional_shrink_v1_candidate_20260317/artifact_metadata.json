@@ -1,0 +1,9 @@
+{
+  "family": "scoreline",
+  "model_name": "scoreline_v2",
+  "model_version": "scoreline_external_context_directional_shrink_v1_candidate_20260317",
+  "artifact_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\scoreline_external_context_directional_shrink_v1_candidate_20260317",
+  "trained_at_utc": "2026-03-16T03:36:59.014230+00:00",
+  "model_type_selected": "poisson_glm",
+  "data_source": "legacy_fetch_dataset"
+}
