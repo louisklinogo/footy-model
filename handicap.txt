@@ -1,0 +1,199 @@
+Alright — let’s turn your idea into something **clean, correct, and testable**. This is what you can literally hand to your AI agent.
+
+---
+
+# 🚀 TL;DR
+
+You are building:
+
+> **A Handicap-Based Probability & Value Strategy using simulated scorelines**
+
+NOT changing λ, but **re-evaluating outcomes under handicaps**.
+
+---
+
+# 🧠 CORE IDEA (clean statement)
+
+> Use model-generated goal expectations (λ) to simulate match scorelines, then apply handicap adjustments to those outcomes to compute probabilities for safer markets (e.g. +1, +2, +3), and identify value opportunities.
+
+---
+
+# 🔍 FULL STRATEGY (structured)
+
+## 1) INPUT (from your existing model)
+
+For each match:
+
+* λ_home
+* λ_away
+
+*(already corrected by your pipeline)*
+
+---
+
+## 2) SCORELINE GENERATION
+
+Use a Poisson model:
+
+* Simulate or compute probability matrix for:
+
+  * Home goals: 0–6
+  * Away goals: 0–6
+
+This gives:
+
+> P(Home = i, Away = j)
+
+---
+
+## 3) DEFINE HANDICAP MARKETS
+
+For each handicap line:
+
+* Away +1
+* Away +2
+* Away +3
+
+(or home side if needed)
+
+---
+
+## 4) APPLY HANDICAP (CRITICAL STEP)
+
+For each simulated score (i, j):
+
+Instead of changing λ:
+
+> Adjust the RESULT
+
+### Example:
+
+If testing **Away +2**:
+
+* Adjusted score =
+
+  * Home = i
+  * Away = j + 2
+
+---
+
+## 5) EVALUATE OUTCOME
+
+For each adjusted score:
+
+* If Away + handicap ≥ Home → win/draw
+* Else → loss
+
+---
+
+## 6) COMPUTE PROBABILITY
+
+Sum probabilities:
+
+> P(Away +2 succeeds) = Σ P(i, j) where (j + 2 ≥ i)
+
+Repeat for:
+
+* +1
+* +2
+* +3
+
+---
+
+## 7) (OPTIONAL) MARKET COMPARISON
+
+If odds are available:
+
+* Convert odds → implied probability
+* Compute:
+
+> Edge = Model Probability – Market Probability
+
+---
+
+## 🔥 WHAT THIS STRATEGY CAPTURES
+
+* Strength difference between teams
+* Scoreline distribution (not just averages)
+* “How much a team can lose by”
+* Safer betting structures (double chance ≈ handicap 0/+0.5)
+
+---
+
+## ⚠️ IMPORTANT RULES
+
+❌ Do NOT:
+
+* Add handicap to λ
+* Modify expected goals directly
+
+✅ ALWAYS:
+
+* Apply handicap at the **outcome level**
+
+---
+
+## 🧩 OPTIONAL EXTENSIONS (if you want edge later)
+
+### 1) Confidence / Stability Score
+
+* Check how probability changes across:
+
+  * +1 → +2 → +3
+
+👉 If small change = stable match
+👉 If big jump = volatile match
+
+---
+
+### 2) Directional Bias
+
+* Compare:
+
+  * Home -1 vs Away +1
+
+👉 Detect asymmetry in model expectations
+
+---
+
+### 3) Market Selection Logic
+
+Example rules:
+
+* Only select bets where:
+
+  * Probability > 65%
+  * Edge > 5%
+
+---
+
+# 🧠 SIMPLE MENTAL MODEL
+
+> “Don’t make the team stronger — make the condition easier.”
+
+---
+
+# 🟢 FINAL OUTPUT YOUR AGENT SHOULD PRODUCE
+
+For each match:
+
+* Probability (Away +1 wins)
+* Probability (Away +2 wins)
+* Probability (Away +3 wins)
+* (Optional) Edge vs market
+* Suggested best handicap line
+
+---
+
+# ⚡ ONE-LINE VERSION (for your agent)
+
+> Generate scoreline probabilities from λ, apply handicap adjustments to outcomes (not λ), compute success probabilities for each handicap line, and identify value opportunities.
+
+---
+
+If you want, next step I can:
+
+* convert this into **actual Python code your agent can run**, or
+* plug it directly into your current lambda → residual pipeline structure
+
+Just say which.

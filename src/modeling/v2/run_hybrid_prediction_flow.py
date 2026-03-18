@@ -18,8 +18,9 @@ from src.db.db_utils import connect_db
 
 
 DEFAULT_SCOPE = ROOT_DIR / "model_v2" / "market_scope.yaml"
-DEFAULT_SCORELINE_DIR = ROOT_DIR / "model_artifacts" / "v2" / "scoreline_external_context_v1_candidate_20260316"
-DEFAULT_ANYTIME_DIR = ROOT_DIR / "model_artifacts" / "v2" / "anytime_direct_monotone_v1_candidate_20260308"
+DEFAULT_SCORELINE_DIR = None  # Read from production_pointers.json by default
+DEFAULT_ANYTIME_DIR = None    # Read from production_pointers.json by default
+DEFAULT_CORNERS_DIR = None    # Read from production_pointers.json by default
 DEFAULT_OUT_DIR = ROOT_DIR / "artifacts" / "v2" / "predictions" / "hybrid"
 DEFAULT_EXPORT_PATH = ROOT_DIR / "storage" / "reports" / "market_predictions_hybrid_v1.csv"
 DEFAULT_BASE_MODEL_NAME = "market_outcome_gbm"
@@ -34,6 +35,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scope", type=Path, default=DEFAULT_SCOPE)
     parser.add_argument("--scoreline-dir", type=Path, default=DEFAULT_SCORELINE_DIR)
     parser.add_argument("--anytime-dir", type=Path, default=DEFAULT_ANYTIME_DIR)
+    parser.add_argument("--corners-dir", type=Path, default=DEFAULT_CORNERS_DIR)
+    parser.add_argument("--skip-gbm-seed", action="store_true", default=True,
+                        help="Skip GBM seeding steps (default: True, V2 is self-contained)")
+    parser.add_argument("--use-gbm-seed", action="store_true", default=False,
+                        help="Enable GBM seeding for backwards compatibility")
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--league", type=str, default=None)
     parser.add_argument("--days", type=int, default=3)
@@ -55,17 +61,21 @@ def build_run_plan(args: argparse.Namespace) -> list[tuple[str, list[str]]]:
     model_version = str(args.model_version)
     plan: list[tuple[str, list[str]]] = []
 
-    base_cmd = [
-        python_bin,
-        str(ROOT_DIR / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"),
-        "--days",
-        str(int(args.days)),
-    ]
-    if args.league:
-        base_cmd.extend(["--league", str(args.league)])
-    if args.limit is not None and int(args.limit) > 0:
-        base_cmd.extend(["--limit", str(int(args.limit))])
-    plan.append(("predict.base_legacy", base_cmd))
+    # GBM seeding is optional - V2 is self-contained by default
+    use_gbm_seed = args.use_gbm_seed and not args.skip_gbm_seed
+    
+    if use_gbm_seed:
+        base_cmd = [
+            python_bin,
+            str(ROOT_DIR / "src" / "modeling" / "evaluation" / "predict_market_outcomes_fixtures_first.py"),
+            "--days",
+            str(int(args.days)),
+        ]
+        if args.league:
+            base_cmd.extend(["--league", str(args.league)])
+        if args.limit is not None and int(args.limit) > 0:
+            base_cmd.extend(["--limit", str(int(args.limit))])
+        plan.append(("predict.base_legacy", base_cmd))
 
     family_specs = [
         (
@@ -77,6 +87,11 @@ def build_run_plan(args: argparse.Namespace) -> list[tuple[str, list[str]]]:
             "predict.anytime",
             ROOT_DIR / "src" / "modeling" / "v2" / "families" / "anytime" / "predict_anytime.py",
             Path(args.anytime_dir),
+        ),
+        (
+            "predict.corners",
+            ROOT_DIR / "src" / "modeling" / "v2" / "families" / "corners" / "predict_corners.py",
+            Path(args.corners_dir) if args.corners_dir else None,
         ),
     ]
     for name, script_path, artifact_dir in family_specs:
@@ -272,14 +287,68 @@ def _run_step(name: str, command: list[str], *, dry_run: bool) -> dict[str, Any]
     return result
 
 
+def _load_production_pointers() -> dict[str, Any]:
+    """Load production artifact pointers from JSON file."""
+    pointers_path = ROOT_DIR / "model_artifacts" / "v2" / "production_pointers.json"
+    if not pointers_path.exists():
+        raise RuntimeError(f"Production pointers file not found: {pointers_path}")
+    with open(pointers_path, encoding="utf-8") as f:
+        return json.load(f)
+
+
 def main() -> None:
     args = parse_args()
+    
+    # Resolve artifact directories from production pointers if not explicitly provided
+    if args.scoreline_dir is None:
+        pointers = _load_production_pointers()
+        families = pointers.get("families", {})
+        scoreline_entry = families.get("scoreline", {})
+        artifact_dir = scoreline_entry.get("artifact_dir")
+        model_version = scoreline_entry.get("model_version")
+        if artifact_dir and model_version:
+            args.scoreline_dir = ROOT_DIR / artifact_dir
+            print(f"[production] Using scoreline: {model_version}")
+        else:
+            raise RuntimeError("No scoreline production artifact configured in production_pointers.json")
+    
+    if args.anytime_dir is None:
+        pointers = _load_production_pointers()
+        families = pointers.get("families", {})
+        anytime_entry = families.get("anytime", {})
+        artifact_dir = anytime_entry.get("artifact_dir")
+        model_version = anytime_entry.get("model_version")
+        if artifact_dir and model_version:
+            args.anytime_dir = ROOT_DIR / artifact_dir
+            print(f"[production] Using anytime: {model_version}")
+        else:
+            raise RuntimeError("No anytime production artifact configured in production_pointers.json")
+    
+    if args.corners_dir is None:
+        pointers = _load_production_pointers()
+        families = pointers.get("families", {})
+        corners_entry = families.get("corners", {})
+        artifact_dir = corners_entry.get("artifact_dir")
+        model_version = corners_entry.get("model_version")
+        if artifact_dir and model_version:
+            args.corners_dir = ROOT_DIR / artifact_dir
+            print(f"[production] Using corners: {model_version}")
+        else:
+            print("[production] No corners artifact configured, skipping corners family")
+    
+    # Determine if GBM seeding should be used
+    use_gbm_seed = args.use_gbm_seed and not args.skip_gbm_seed
+    
     Path(args.out_dir).mkdir(parents=True, exist_ok=True)
     plan = build_run_plan(args)
     results: list[dict[str, Any]] = []
-    for idx, (name, command) in enumerate(plan):
+    
+    # Track step index for seeding logic
+    step_idx = 0
+    for name, command in plan:
         results.append(_run_step(name, command, dry_run=bool(args.dry_run)))
-        if idx == 0:
+        # Only seed after predict.base_legacy if GBM seeding is enabled
+        if name == "predict.base_legacy":
             if bool(args.dry_run):
                 results.append(
                     {
@@ -292,9 +361,11 @@ def main() -> None:
                 )
             else:
                 results.append(seed_hybrid_predictions(args))
+        step_idx += 1
     report = {
         "generated_at_utc": datetime.now(tz=UTC).isoformat(),
         "dry_run": bool(args.dry_run),
+        "use_gbm_seed": use_gbm_seed,
         "base_model_name": str(args.base_model_name),
         "base_model_version": str(args.base_model_version),
         "model_name": str(args.model_name),
@@ -302,6 +373,7 @@ def main() -> None:
         "scope": str(args.scope),
         "scoreline_dir": str(args.scoreline_dir),
         "anytime_dir": str(args.anytime_dir),
+        "corners_dir": str(args.corners_dir) if args.corners_dir else None,
         "out_dir": str(args.out_dir),
         "export_out": str(args.export_out) if args.export_out is not None else None,
         "steps": results,

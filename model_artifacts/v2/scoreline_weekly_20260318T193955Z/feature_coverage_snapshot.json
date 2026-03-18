@@ -1,0 +1,470 @@
+[
+  {
+    "feature": "home_sample_size",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_sample_size",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_rolling_xg",
+    "present": true,
+    "non_null_rows": 8071,
+    "coverage_ratio": 0.9221892138939671
+  },
+  {
+    "feature": "home_rolling_xg_against",
+    "present": true,
+    "non_null_rows": 8071,
+    "coverage_ratio": 0.9221892138939671
+  },
+  {
+    "feature": "away_rolling_xg",
+    "present": true,
+    "non_null_rows": 8080,
+    "coverage_ratio": 0.923217550274223
+  },
+  {
+    "feature": "away_rolling_xg_against",
+    "present": true,
+    "non_null_rows": 8080,
+    "coverage_ratio": 0.923217550274223
+  },
+  {
+    "feature": "home_rolling_sot",
+    "present": true,
+    "non_null_rows": 8071,
+    "coverage_ratio": 0.9221892138939671
+  },
+  {
+    "feature": "away_rolling_sot",
+    "present": true,
+    "non_null_rows": 8080,
+    "coverage_ratio": 0.923217550274223
+  },
+  {
+    "feature": "lambda_home_l1",
+    "present": true,
+    "non_null_rows": 8029,
+    "coverage_ratio": 0.917390310786106
+  },
+  {
+    "feature": "lambda_away_l1",
+    "present": true,
+    "non_null_rows": 8029,
+    "coverage_ratio": 0.917390310786106
+  },
+  {
+    "feature": "xg_net_diff",
+    "present": true,
+    "non_null_rows": 8029,
+    "coverage_ratio": 0.917390310786106
+  },
+  {
+    "feature": "goal_diff_proxy",
+    "present": true,
+    "non_null_rows": 8029,
+    "coverage_ratio": 0.917390310786106
+  },
+  {
+    "feature": "odds_over_15",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "odds_under_15",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "odds_over_25",
+    "present": true,
+    "non_null_rows": 8215,
+    "coverage_ratio": 0.9386425959780622
+  },
+  {
+    "feature": "odds_under_25",
+    "present": true,
+    "non_null_rows": 8215,
+    "coverage_ratio": 0.9386425959780622
+  },
+  {
+    "feature": "odds_over_35",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "odds_under_35",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "implied_over15",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "implied_under15",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "implied_over25",
+    "present": true,
+    "non_null_rows": 8215,
+    "coverage_ratio": 0.9386425959780622
+  },
+  {
+    "feature": "implied_under25",
+    "present": true,
+    "non_null_rows": 8215,
+    "coverage_ratio": 0.9386425959780622
+  },
+  {
+    "feature": "implied_over35",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "implied_under35",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "odds_gap_15",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "odds_gap_25",
+    "present": true,
+    "non_null_rows": 8215,
+    "coverage_ratio": 0.9386425959780622
+  },
+  {
+    "feature": "odds_gap_35",
+    "present": true,
+    "non_null_rows": 8214,
+    "coverage_ratio": 0.9385283363802559
+  },
+  {
+    "feature": "adj_lambda_home_final",
+    "present": true,
+    "non_null_rows": 835,
+    "coverage_ratio": 0.09540676416819013
+  },
+  {
+    "feature": "adj_lambda_away_final",
+    "present": true,
+    "non_null_rows": 835,
+    "coverage_ratio": 0.09540676416819013
+  },
+  {
+    "feature": "rule_fired_home",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "rule_fired_away",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_rolling_big_chances",
+    "present": true,
+    "non_null_rows": 7494,
+    "coverage_ratio": 0.8562614259597806
+  },
+  {
+    "feature": "away_rolling_big_chances",
+    "present": true,
+    "non_null_rows": 7503,
+    "coverage_ratio": 0.8572897623400365
+  },
+  {
+    "feature": "home_rolling_xgot",
+    "present": true,
+    "non_null_rows": 6054,
+    "coverage_ratio": 0.69172760511883
+  },
+  {
+    "feature": "away_rolling_xgot",
+    "present": true,
+    "non_null_rows": 6054,
+    "coverage_ratio": 0.69172760511883
+  },
+  {
+    "feature": "home_season_baseline_xg",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_season_baseline_xg",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_recent_xg_mean_5",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_recent_xg_mean_5",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_recent_vs_baseline_zscore",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_recent_vs_baseline_zscore",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_regressed_recent_xg",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_regressed_recent_xg",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "regressed_xg_diff",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "recent_vs_baseline_gap",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_rolling_possession",
+    "present": true,
+    "non_null_rows": 8091,
+    "coverage_ratio": 0.9244744058500914
+  },
+  {
+    "feature": "away_rolling_possession",
+    "present": true,
+    "non_null_rows": 8101,
+    "coverage_ratio": 0.9256170018281535
+  },
+  {
+    "feature": "home_defenders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_midfielders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_forwards",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_defenders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_midfielders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_forwards",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "style_delta",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_availability_known",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_availability_known",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_lineup_known",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_lineup_known",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_missing_players",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_missing_players",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_missing_defenders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_missing_midfielders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_missing_forwards",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_missing_defenders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_missing_midfielders",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_missing_forwards",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_availability_freshness_hours",
+    "present": true,
+    "non_null_rows": 8420,
+    "coverage_ratio": 0.9620658135283364
+  },
+  {
+    "feature": "away_availability_freshness_hours",
+    "present": true,
+    "non_null_rows": 8420,
+    "coverage_ratio": 0.9620658135283364
+  },
+  {
+    "feature": "home_lineup_freshness_hours",
+    "present": true,
+    "non_null_rows": 8400,
+    "coverage_ratio": 0.9597806215722121
+  },
+  {
+    "feature": "away_lineup_freshness_hours",
+    "present": true,
+    "non_null_rows": 8400,
+    "coverage_ratio": 0.9597806215722121
+  },
+  {
+    "feature": "home_season_baseline_xg_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_season_baseline_xg_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_recent_xg_mean_5_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_recent_xg_mean_5_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_availability_freshness_hours_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_availability_freshness_hours_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "home_lineup_freshness_hours_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  },
+  {
+    "feature": "away_lineup_freshness_hours_is_missing",
+    "present": true,
+    "non_null_rows": 8752,
+    "coverage_ratio": 1.0
+  }
+]

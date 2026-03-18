@@ -1,0 +1,16 @@
+{
+  "families": {
+    "scoreline": {
+      "artifact_dir": "model_artifacts/v2/scoreline_external_context_v1_candidate_20260316",
+      "model_version": "external_context_v1_candidate_20260316"
+    },
+    "anytime": {
+      "artifact_dir": "model_artifacts/v2/anytime_direct_monotone_v1_candidate_20260308",
+      "model_version": "direct_monotone_v1_candidate_20260308"
+    },
+    "corners": {
+      "artifact_dir": "model_artifacts/v2/corners",
+      "model_version": "champion_v1"
+    }
+  }
+}
