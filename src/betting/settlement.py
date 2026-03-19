@@ -149,6 +149,56 @@ def settle_market(
             return SettlementResult(market_code, None, 1.0, "push")
         return _binary(market_code, False, odds)
 
+    # 1X2 Markets
+    # 1x2_h = home win (home_goals > away_goals)
+    # 1x2_d = draw (home_goals == away_goals)
+    # 1x2_a = away win (home_goals < away_goals)
+    if market_code == "1x2_h":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, home_goals > away_goals, odds)
+    if market_code == "1x2_d":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, home_goals == away_goals, odds)
+    if market_code == "1x2_a":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, home_goals < away_goals, odds)
+
+    # Over/Under Goals Markets
+    # Format: ou_{line}_{selection} where line is 0.5, 1.5, 2.5, 3.5, 4.5, 5.5
+    # ou_2.5_over = total goals > 2.5
+    # ou_2.5_under = total goals < 2.5
+    if market_code.startswith("ou_"):
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        # Parse: ou_2.5_over -> line=2.5, selection=over
+        parts = market_code.split("_")
+        if len(parts) != 3:
+            raise ValueError(f"invalid O/U market_code: {market_code}")
+        line = float(parts[1])
+        selection = parts[2]
+        total = home_goals + away_goals
+        if selection == "over":
+            return _binary(market_code, total > line, odds)
+        elif selection == "under":
+            return _binary(market_code, total < line, odds)
+        else:
+            raise ValueError(f"invalid O/U selection: {selection}")
+
+    # BTTS Markets
+    # btts_yes = both teams score (home_goals >= 1 and away_goals >= 1)
+    # btts_no = at least one team fails to score
+    if market_code == "btts_yes":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, home_goals >= 1 and away_goals >= 1, odds)
+    if market_code == "btts_no":
+        if home_goals is None or away_goals is None:
+            return _void(market_code)
+        return _binary(market_code, home_goals == 0 or away_goals == 0, odds)
+
     goals_markets: dict[str, GoalsRule] = {
         "dc_1x": lambda h, a: h >= a,
         "dc_x2": lambda h, a: a >= h,
@@ -275,6 +325,9 @@ def settle_market(
 
 def supported_market_codes() -> tuple[str, ...]:
     return (
+        "1x2_a",
+        "1x2_d",
+        "1x2_h",
         "a_1up",
         "a_2up",
         "ac25",
@@ -286,6 +339,8 @@ def supported_market_codes() -> tuple[str, ...]:
         "ah_h05",
         "ah_h15",
         "ao15",
+        "btts_no",
+        "btts_yes",
         "c105",
         "c75",
         "c85",
@@ -341,6 +396,18 @@ def supported_market_codes() -> tuple[str, ...]:
         "ms_other_awaywin",
         "ms_other_homewin",
         "o15",
+        "ou_0.5_over",
+        "ou_0.5_under",
+        "ou_1.5_over",
+        "ou_1.5_under",
+        "ou_2.5_over",
+        "ou_2.5_under",
+        "ou_3.5_over",
+        "ou_3.5_under",
+        "ou_4.5_over",
+        "ou_4.5_under",
+        "ou_5.5_over",
+        "ou_5.5_under",
         "u35",
     )
 

@@ -19,25 +19,44 @@ from src.betting.match_profile import MatchProfile, OddsContext
 from src.betting.story_generator import MatchStory
 
 # Story signals and their market implications
-SETTLEABLE_MARKETS = {"ah2_home_m05", "ah2_home_p05", "ah2_home_m15", "ah2_home_p15", "ah2_away_m05", "ah2_away_p05", "ah2_away_m15", "ah2_away_p15", "ah_h05", "ah_a05", "ah_h15", "ah_a15", "hc25", "ac25", "h_1up", "a_1up", "h_2up", "a_2up"}
+SETTLEABLE_MARKETS = {
+    # AH2
+    'ah2_home_m05', 'ah2_home_p05', 'ah2_home_m15', 'ah2_home_p15',
+    'ah2_away_m05', 'ah2_away_p05', 'ah2_away_m15', 'ah2_away_p15',
+    # AH
+    'ah_h05', 'ah_a05', 'ah_h15', 'ah_a15',
+    # Corners
+    'hc25', 'ac25', 'h_1up', 'a_1up', 'h_2up', 'a_2up',
+    # 1X2
+    '1x2_h', '1x2_d', '1x2_a',
+    # O/U
+    'ou_0.5_over', 'ou_0.5_under',
+    'ou_1.5_over', 'ou_1.5_under',
+    'ou_2.5_over', 'ou_2.5_under',
+    'ou_3.5_over', 'ou_3.5_under',
+    'ou_4.5_over', 'ou_4.5_under',
+    # BTTS
+    'btts_yes', 'btts_no',
+}
 
 STORY_MARKET_ALIGNMENT = {
     "possession_vs_direct": {"aligned": ["corners_ou_9.5_over", "ou_2.5_over"], "contradictory": ["corners_ou_9.5_under"]},
     "possession_vs_block": {"aligned": ["ou_2.5_under", "corners_ou_9.5_over", "1x2_h"], "contradictory": ["ou_2.5_over"]},
     "hot_home_vs_cold_away": {"aligned": ["1x2_h", "ah_home_-0.5", "ou_2.5_over", "eh_home_-1", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["1x2_a"]},
     "hot_away_vs_cold_home": {"aligned": ["1x2_a", "ah_away_+0.5", "ah2_away_m05", "ah2_away_p05"], "contradictory": ["1x2_h"]},
-    "hot_vs_hot": {"aligned": ["btts_yes", "ou_2.5_over"], "contradictory": ["btts_no"]},
-    "cold_vs_cold": {"aligned": ["ou_2.5_under", "btts_no"], "contradictory": ["ou_2.5_over"]},
-    "title_race_home": {"aligned": ["1x2_h", "eh_home_-1", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["1x2_a"]},
-    "relegation_battle": {"aligned": ["cards_ou_3.5_over", "btts_yes"], "contradictory": ["cards_ou_3.5_under"]},
-    "expected_2_0": {"aligned": ["1x2_h", "eh_home_-1", "ou_3.5_under", "ah2_home_m15"], "contradictory": ["btts_yes", "1x2_a"]},
-    "expected_1_1": {"aligned": ["1x2_d", "btts_yes", "ou_2.5_under", "ah2_home_p05", "ah2_away_p05"], "contradictory": ["eh_home_-1"]},
+    "hot_vs_hot": {"aligned": ["ou_2.5_over", "ou_3.5_over", "btts_yes"], "contradictory": ["ou_2.5_under", "btts_no"]},
+    "cold_vs_cold": {"aligned": ["ou_2.5_under", "btts_no"], "contradictory": ["ou_2.5_over", "btts_yes"]},
+    "title_race_home": {"aligned": ["1x2_h", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["1x2_a", "ah2_away_m05"]},
+    "relegation_battle": {"aligned": ["btts_yes", "ou_2.5_over"], "contradictory": ["btts_no"]},
+    "expected_2_0": {"aligned": ["1x2_h", "ou_1.5_over", "ou_2.5_under", "btts_no", "ah2_home_m15"], "contradictory": ["1x2_a", "1x2_d", "btts_yes"]},
+    "expected_1_0": {"aligned": ["1x2_h", "ou_2.5_under", "btts_no", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["1x2_a", "btts_yes"]},
+    "expected_1_1": {"aligned": ["1x2_d", "ou_2.5_under", "btts_yes", "ah2_home_p05", "ah2_away_p05"], "contradictory": ["1x2_h", "1x2_a"]},
     "expected_0_1": {"aligned": ["1x2_a", "ou_2.5_under", "ah2_away_m05", "ah2_away_p05"], "contradictory": ["1x2_h", "btts_yes"]},
-    "expected_1_0": {"aligned": ["1x2_h", "ou_2.5_under", "btts_no", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["ou_3.5_over"]},
-    "expected_2_1": {"aligned": ["1x2_h", "btts_yes", "ou_2.5_over", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["eh_home_-1"]},
-    "derby": {"aligned": ["cards_ou_3.5_over", "btts_yes", "1x2_d"], "contradictory": ["cards_ou_3.5_under"]},
-    "home_dominant": {"aligned": ["1x2_h", "corners_ou_9.5_over", "eh_home_-1", "ah2_home_m05", "ah2_home_p05"], "contradictory": ["1x2_a"]},
-    "away_dominant": {"aligned": ["1x2_a", "ah_away_+0.5", "ah2_away_m05", "ah2_away_p05"], "contradictory": ["1x2_h"]},
+    "expected_2_1": {"aligned": ["1x2_h", "ou_2.5_over", "btts_yes", "ah2_home_m05"], "contradictory": ["1x2_a", "ou_2.5_under"]},
+    "expected_3_1": {"aligned": ["1x2_h", "ou_2.5_over", "ou_3.5_over", "btts_yes"], "contradictory": ["1x2_a", "ou_2.5_under"]},
+    "derby": {"aligned": ["1x2_d", "btts_yes", "ou_2.5_over"], "contradictory": ["btts_no"]},
+    "home_dominant": {"aligned": ["1x2_h", "ou_2.5_over", "ah2_home_m05"], "contradictory": ["1x2_a"]},
+    "away_dominant": {"aligned": ["1x2_a", "ou_2.5_over", "ah2_away_m05"], "contradictory": ["1x2_h"]},
     "high_corners_expected": {"aligned": ["corners_ou_9.5_over", "corners_ou_10.5_over"], "contradictory": ["corners_ou_9.5_under"]},
     "low_corners_expected": {"aligned": ["corners_ou_9.5_under"], "contradictory": ["corners_ou_9.5_over"]},
     "top_vs_bottom": {"aligned": ["ah_home_-1.5", "eh_home_-2", "ou_3.5_over"], "contradictory": ["1x2_a"]},
@@ -52,6 +71,14 @@ HIGH_PERFORMANCE_SIGNALS = {
     "expected_2_1",
     "hot_home_vs_cold_away",
     "home_dominant",
+}
+
+# Markets that have demonstrated 80%+ win rate in backtests
+# Only these markets should be used for conservative strategy
+HIGH_PERFORMANCE_MARKETS = {
+    "ah2_home_p05",  # 90% win rate
+    "ah2_home_m05",  # high win rate
+    # Add more as they prove themselves
 }
 
 # Signals to avoid (below 70% win rate)
@@ -143,6 +170,11 @@ def find_opportunities(profile: MatchProfile, story: MatchStory, top_n: int = 10
         if mkt not in SETTLEABLE_MARKETS:
             continue
         align, align_sigs = check_story_alignment(mkt, signals)
+        # For conservative strategy: only HIGH_PERFORMANCE_MARKETS can be "aligned"
+        # Non-proven markets are downgraded to "neutral" even if they have story alignment
+        if align == "aligned" and mkt not in HIGH_PERFORMANCE_MARKETS:
+            align = "neutral"
+            align_sigs = []
         edge = None
         odds = None
         for o in profile.odds:
