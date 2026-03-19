@@ -659,7 +659,7 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
                 health_path = ROOT / "artifacts" / "reports" / "backbone_health" / f"backbone_health_{league}.json"
                 run_command([sys.executable, str(ROOT / "src" / "features" / "build_team_premium_snapshots_v1.py"), "--league", league], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], True)
-                run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], True)
+                run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--rule-layer-only", "--enable-rule-layer", "--rule-overlap-mode", "override"], True)
                 run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], True)
                 if options.predict_runtime == "hybrid_v2":
                     run_command(build_hybrid_predict_command(options, league), True)
@@ -688,7 +688,7 @@ def run_predict_phase(options: Options, leagues: Sequence[str]) -> None:
             health_path = ROOT / "artifacts" / "reports" / "backbone_health" / f"backbone_health_{league}.json"
             run_command([sys.executable, str(ROOT / "src" / "features" / "build_team_premium_snapshots_v1.py"), "--league", league], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer1_poisson" / "predict_lambda.py"), "--league", league], False)
-            run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--enable-rule-layer", "--rule-overlap-mode", "override"], False)
+            run_command([sys.executable, str(ROOT / "src" / "modeling" / "layer2_situational" / "predict_situational_residual.py"), "--league", league, "--days", str(options.predict_days), "--rule-layer-only", "--enable-rule-layer", "--rule-overlap-mode", "override"], False)
             run_command([sys.executable, str(ROOT / "src" / "modeling" / "evaluation" / "validate_prediction_backbone_health.py"), "--league", league, "--days", str(options.predict_days), "--min-l1-coverage", "0.98", "--enforce-adj-enabled-league", "--min-adj-enabled-coverage", "0.95", "--output", str(health_path)], False)
             if options.predict_runtime == "hybrid_v2":
                 run_command(build_hybrid_predict_command(options, league), False)

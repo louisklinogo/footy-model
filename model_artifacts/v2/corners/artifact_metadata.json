@@ -1,0 +1,10 @@
+{
+  "family": "corners",
+  "model_name": "corners_v2",
+  "model_version": "distribution_head_v1",
+  "artifact_dir": "C:\\Developer\\soccer\\footy-model\\model_artifacts\\v2\\corners",
+  "trained_at_utc": "2026-03-19T01:28:23.913865+00:00",
+  "model_type_selected": "histgb_poisson",
+  "data_source": "legacy_fetch_dataset",
+  "path_version": "sum_heads"
+}

@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-03-19T02:23:38.160108Z",
+  "test_n": 1585,
+  "test_range": {
+    "start": "2026-02-07 15:15:00+00:00",
+    "end": "2026-03-18 20:00:00+00:00"
+  },
+  "approaches": {
+    "base_lambda": {
+      "poisson_log_likelihood": {
+        "home": -1.4994495188262267,
+        "away": -1.4062634826730922,
+        "mean": -1.4528565007496594
+      },
+      "poisson_deviance": {
+        "home": 1696.714780865196,
+        "away": 1772.622467479537,
+        "total": 3469.337248344733
+      },
+      "brier_score_1x2": 0.20783529623007738
+    },
+    "rule_layer": {
+      "poisson_log_likelihood": {
+        "home": -1.500669210649808,
+        "away": -1.4062634826730922,
+        "mean": -1.4534663466614501
+      },
+      "poisson_deviance": {
+        "home": 1700.5812039459547,
+        "away": 1772.622467479537,
+        "total": 3473.203671425492
+      },
+      "brier_score_1x2": 0.2076077666577453
+    }
+  },
+  "ranking": {
+    "by_poisson_ll": [
+      "base_lambda",
+      "rule_layer"
+    ],
+    "by_brier_score": [
+      "rule_layer",
+      "base_lambda"
+    ],
+    "best_overall": "base_lambda"
+  }
+}

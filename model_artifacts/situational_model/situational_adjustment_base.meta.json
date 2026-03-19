@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-03-19T02:12:53.020468Z",
+  "model_type": "bounded_lambda_adjustment",
+  "alpha_bounds": {
+    "min": 0.5,
+    "max": 2.0
+  },
+  "train_range": {
+    "start": "2023-11-28 17:45:00+00:00",
+    "end": "2026-02-07 15:01:00+00:00"
+  },
+  "test_range": {
+    "start": "2026-02-07 15:15:00+00:00",
+    "end": "2026-03-18 20:00:00+00:00"
+  },
+  "train_n": 5104,
+  "test_n": 1585,
+  "features": [
+    "home_rolling_xg",
+    "home_rolling_xg_against",
+    "away_rolling_xg",
+    "away_rolling_xg_against",
+    "xg_diff",
+    "home_rolling_corners",
+    "rest_delta",
+    "congestion_flag",
+    "home_upcoming_tier",
+    "away_upcoming_tier",
+    "position_gap",
+    "points_gap",
+    "home_lame_duck",
+    "away_lame_duck",
+    "is_derby",
+    "home_form_streak",
+    "away_form_streak",
+    "home_xg_lost",
+    "away_xg_lost",
+    "home_key_absent",
+    "away_key_absent",
+    "injury_impact",
+    "home_xg_over_scored",
+    "home_xg_over_conceded",
+    "away_xg_over_scored",
+    "away_xg_over_conceded",
+    "home_playing_top4",
+    "away_playing_top4",
+    "derby_position_gap",
+    "away_rolling_corners",
+    "home_rolling_tackles_pct",
+    "away_rolling_tackles_pct",
+    "home_rolling_errors_lead_to_shot",
+    "away_rolling_errors_lead_to_shot",
+    "odds_model_gap_home",
+    "odds_model_gap_draw",
+    "odds_model_gap_away",
+    "odds_opening_gap_home",
+    "odds_opening_gap_draw",
+    "odds_opening_gap_away"
+  ],
+  "feature_hash": "932394052fea445de225a6cd36dac7349a3716b2df964fee2bcdbe5684504c79",
+  "hyperparams": {
+    "n_estimators": 200,
+    "max_depth": 3,
+    "min_samples_leaf": 30,
+    "learning_rate": 0.05,
+    "random_state": 42
+  },
+  "git_commit": "49c81f90c187ff0caae29299cff4ae6f5543cd50",
+  "metrics": {
+    "poisson_log_likelihood": {
+      "home": {
+        "base": -1.4994495188262267,
+        "adjusted": -1.4963165528210227
+      },
+      "away": {
+        "base": -1.4062634826730922,
+        "adjusted": -1.4096282817214036
+      }
+    },
+    "poisson_deviance": {
+      "home": {
+        "base": 1696.714780865196,
+        "adjusted": 1686.7832786286979
+      },
+      "away": {
+        "base": 1772.622467479537,
+        "adjusted": 1783.2888804626807
+      }
+    },
+    "brier_score_1x2": {
+      "base": 0.20783529623007738,
+      "adjusted": 0.2048878857823413
+    },
+    "log_alpha_mse": {
+      "home": 0.2578135031182675,
+      "away": 0.2834934337445785
+    }
+  }
+}

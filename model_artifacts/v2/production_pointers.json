@@ -10,7 +10,7 @@
     },
     "corners": {
       "artifact_dir": "model_artifacts/v2/corners",
-      "model_version": "champion_v1"
+      "model_version": "sum_heads_histgb_v1"
     }
   }
 }
