@@ -613,6 +613,40 @@ def get_todays_match_opportunities(league: str | None = None) -> list[MatchOppor
     return match_opps
 
 
+def write_accas_json(accas: list[Acca], output_file: str, strategy: str) -> None:
+    """Write accas to JSON file compatible with sportybet_booker.py.
+    
+    Args:
+        accas: List of accumulators to write
+        output_file: Path to output JSON file
+        strategy: Strategy name used to generate accas
+    """
+    data = {
+        "accas": [],
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "strategy": strategy,
+    }
+    for acca in accas:
+        acca_data = {
+            "name": f"Acca {len(data['accas']) + 1}",
+            "legs": [
+                {
+                    "home_team": leg.teams[0],
+                    "away_team": leg.teams[1],
+                    "market_code": leg.market_code,
+                    "odds": leg.odds,
+                }
+                for leg in acca.legs
+            ]
+        }
+        data["accas"].append(acca_data)
+    
+    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+    with open(output_file, "w") as f:
+        json.dump(data, f, indent=2)
+    print(f"Written {len(accas)} accas to {output_file}")
+
+
 def format_acca_summary(acca: Acca) -> str:
     """Format an accumulator for display."""
     lines = [
@@ -717,6 +751,12 @@ def parse_args() -> argparse.Namespace:
         help="Output format (default: text)",
     )
     
+    parser.add_argument(
+        "--output-file",
+        type=str,
+        help="Write accas to JSON file for sportybet_booker.py",
+    )
+    
     return parser.parse_args()
 
 
@@ -778,7 +818,9 @@ def main() -> int:
     print(f"\nGenerated {len(accas)} valid accumulators\n")
     
     # Output
-    if args.output == "json":
+    if args.output_file:
+        write_accas_json(accas, args.output_file, strategy.value)
+    elif args.output == "json":
         output = {
             "strategy": strategy.value,
             "total_accas": len(accas),
