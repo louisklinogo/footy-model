@@ -187,3 +187,64 @@
  2. **Get better odds data** for AH/EH/Corners
  3. **Build formulas** for each market
  4. **Integrate into daily report** for forward testing
+---
+
+## 8. LAMBDA RATIO (THE CLEANEST METRIC)
+
+Lambda ratio = lambda_away / lambda_home
+
+| Ratio | Away Win Rate | AH +0.5 Win Rate |
+|-------|---------------|-----------------|
+| 0.5-0.8 | 23.5% | 48.1% |
+| 0.8-1.0 | 32.5% | 59.7% |
+| 1.0-1.2 | 39.3% | 68.0% |
+| 1.2-1.5 | 46.6% | 72.7% |
+| 1.5-3.0 | **57.6%** | **81.4%** |
+
+### AH +0.5 with Odds (Small Sample)
+| Ratio | Bets | Win Rate | ROI |
+|-------|------|----------|-----|
+| 0.8-1.0 | 4 | 75.0% | +43.8% |
+| 1.0-1.2 | 10 | 80.0% | **+50.3%** |
+| 1.2-1.5 | 4 | 75.0% | +39.4% |
+| 1.5-3.0 | 8 | 87.5% | **+68.8%** |
+
+---
+
+## 9. FINAL FORMULAS
+
+### 1X2 Away Win
+`
+lambda_ratio = lambda_away / lambda_home
+IF lambda_ratio >= 1.5 AND odds >= 2.0:
+    p_win = 57.6%
+`
+
+### AH Away +0.5
+`
+IF lambda_ratio >= 1.0 AND odds >= 1.85:
+    p_win = 68-80%
+IF lambda_ratio >= 1.5:
+    p_win = 81%
+`
+
+### AH Away +1.5
+`
+IF lambda_away >= 1.0:
+    p_win = 80%
+IF lambda_away >= 1.5:
+    p_win = 87%
+`
+
+### Over 9.5 Corners
+`
+lambda_sum = lambda_home + lambda_away
+IF lambda_sum >= 3.5:
+    p_over = 56%
+`
+
+### EH Away -1 (wins by 2+)
+`
+IF lambda_ratio >= 1.5:
+    p_win = 30%
+`
