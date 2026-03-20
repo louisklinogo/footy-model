@@ -138,9 +138,15 @@ def parse_date_range(date_range: str) -> tuple[date, date]:
 
 
 def format_datetime(dt: datetime | None) -> str:
-    """Format a datetime for display."""
+    """Format a datetime for display.
+    
+    If time is 00:00 (midnight), show as TBD since the actual time is likely not set.
+    """
     if dt is None:
         return "N/A"
+    # If time is midnight (00:00), it's likely TBD
+    if dt.hour == 0 and dt.minute == 0:
+        return f"{dt.strftime('%Y-%m-%d')} TBD"
     return dt.strftime("%Y-%m-%d %H:%M")
 
 
@@ -340,6 +346,9 @@ def analyze_fixtures(
     if not decisions:
         print("No valid fixtures to analyze.", file=sys.stderr)
         return 1
+
+    # Sort by datetime (None values go to the end)
+    decisions.sort(key=lambda d: (d.match_datetime_utc is None, d.match_datetime_utc))
 
     if as_json:
         output = [fixture_to_dict(d, top, min_score) for d in decisions]
