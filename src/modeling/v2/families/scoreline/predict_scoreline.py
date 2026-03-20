@@ -50,6 +50,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--days", type=int, default=3, help="Horizon in days.")
     parser.add_argument("--limit", type=int, default=None, help="Max fixtures.")
     parser.add_argument(
+        "--backfill-days",
+        type=int,
+        default=None,
+        help="Backfill historical fixtures within this many days.",
+    )
+    parser.add_argument(
         "--artifact-dir",
         type=Path,
         default=DEFAULT_ARTIFACT_DIR,
@@ -70,7 +76,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--max-goals",
         type=int,
-        default=10,
+        default=15,  # Changed from 10 to capture 99.99% probability mass
         help="Scoreline matrix truncation cap.",
     )
     parser.add_argument(
@@ -270,7 +276,7 @@ def main() -> None:
         days=args.days,
         league=args.league,
         limit=args.limit,
-        backfill_days=None,
+        backfill_days=args.backfill_days,
     )
     if fixtures.empty:
         print("No eligible fixtures for scoreline v2 prediction.")
@@ -279,7 +285,7 @@ def main() -> None:
     fixtures["match_datetime_utc"] = pd.to_datetime(
         fixtures["match_datetime_utc"], utc=True, errors="coerce"
     )
-    featured = add_derived_features(fixtures, include_external_team_match_context=True)
+    featured = add_derived_features(fixtures, include_external_team_match_context=False)
     for feat in features:
         if feat not in featured.columns:
             featured[feat] = np.nan

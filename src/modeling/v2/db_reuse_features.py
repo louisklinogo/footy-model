@@ -1079,11 +1079,14 @@ def add_db_reuse_context_features(
                     if config.fixture_player_stats_available
                     else pd.DataFrame()
                 )
-                combined = per_team_value.merge(
-                    attack_context,
-                    on=["fixture_id", "team_id"],
-                    how="outer",
-                )
+                if attack_context.empty or "fixture_id" not in attack_context.columns:
+                    combined = per_team_value
+                else:
+                    combined = per_team_value.merge(
+                        attack_context,
+                        on=["fixture_id", "team_id"],
+                        how="outer",
+                    )
                 player_context = _pivot_team_features(base_fixture_frame, combined)
                 if not player_context.empty:
                     player_context["home_availability_refresh_hours_dbreuse"] = np.where(
