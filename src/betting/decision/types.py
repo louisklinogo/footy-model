@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Literal
 
 
@@ -54,6 +55,8 @@ class FixtureDecision:
     home_team: str
     away_team: str
     league_code: str
+    league_name: str
+    match_datetime_utc: datetime | None
     lambda_ctx: LambdaContext
     recommendations: tuple[MarketRecommendation, ...]
     top_pick: MarketRecommendation | None

@@ -7,6 +7,7 @@ for a fixture and returns ranked recommendations.
 
 from __future__ import annotations
 
+from datetime import date, datetime
 from typing import Any
 
 from src.db.db_utils import connect_db
@@ -58,6 +59,8 @@ class DecisionFramework:
                 raise ValueError(f"Fixture {fixture_id} not found")
 
             league_code = fixture_info["league_code"]
+            league_name = fixture_info.get("league_name") or league_code
+            match_datetime_utc = fixture_info.get("match_datetime_utc")
             home_team = fixture_info["home_team"]
             away_team = fixture_info["away_team"]
 
@@ -102,6 +105,8 @@ class DecisionFramework:
                 home_team=home_team,
                 away_team=away_team,
                 league_code=league_code,
+                league_name=league_name,
+                match_datetime_utc=match_datetime_utc,
                 lambda_ctx=lambda_ctx,
                 recommendations=tuple(recommendations),
                 top_pick=recommendations[0] if recommendations else None,
@@ -122,6 +127,62 @@ class DecisionFramework:
         """
         return [self.analyze(fid) for fid in fixture_ids]
 
+    def get_fixture_ids_by_date(self, target_date: date) -> list[int]:
+        """
+        Get fixture IDs for a specific date.
+
+        Args:
+            target_date: The date to query
+
+        Returns:
+            List of fixture IDs for that date
+        """
+        conn = connect_db()
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT fixture_id
+                    FROM fixtures
+                    WHERE DATE(match_datetime_utc) = %s
+                    ORDER BY match_datetime_utc, fixture_id
+                    """,
+                    (target_date,),
+                )
+                return [row[0] for row in cur.fetchall()]
+        finally:
+            conn.close()
+
+    def get_fixture_ids_by_date_range(
+        self, start_date: date, end_date: date
+    ) -> list[int]:
+        """
+        Get fixture IDs for a date range (inclusive).
+
+        Args:
+            start_date: Start date (inclusive)
+            end_date: End date (inclusive)
+
+        Returns:
+            List of fixture IDs in the range
+        """
+        conn = connect_db()
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    """
+                    SELECT fixture_id
+                    FROM fixtures
+                    WHERE DATE(match_datetime_utc) >= %s
+                      AND DATE(match_datetime_utc) <= %s
+                    ORDER BY match_datetime_utc, fixture_id
+                    """,
+                    (start_date, end_date),
+                )
+                return [row[0] for row in cur.fetchall()]
+        finally:
+            conn.close()
+
     # -------------------------------------------------------------------------
     # Private helper methods
     # -------------------------------------------------------------------------
@@ -136,11 +197,14 @@ class DecisionFramework:
                 SELECT
                     f.fixture_id,
                     f.league_code,
+                    l.league_name,
+                    f.match_datetime_utc,
                     ht.team_name as home_team,
                     at.team_name as away_team
                 FROM fixtures f
                 JOIN teams ht ON ht.team_id = f.home_team_id
                 JOIN teams at ON at.team_id = f.away_team_id
+                LEFT JOIN leagues l ON l.league_code = f.league_code
                 WHERE f.fixture_id = %s
                 """,
                 (fixture_id,),
